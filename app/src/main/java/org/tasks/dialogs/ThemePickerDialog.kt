@@ -1,0 +1,137 @@
+package org.tasks.dialogs
+
+import android.app.Dialog
+import android.content.DialogInterface
+import android.os.Bundle
+import android.os.Handler
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
+import androidx.fragment.app.DialogFragment
+import com.todoroo.andlib.utility.AndroidUtilities.preS
+import androidx.core.graphics.ColorUtils
+import com.google.android.material.color.MaterialColors
+import dagger.hilt.android.AndroidEntryPoint
+import org.tasks.R
+import org.tasks.billing.Inventory
+import org.tasks.themes.ThemeBase
+import org.tasks.themes.ThemeBase.EXTRA_THEME_OVERRIDE
+import javax.inject.Inject
+
+@AndroidEntryPoint
+class ThemePickerDialog : DialogFragment() {
+
+    companion object {
+        const val EXTRA_SELECTED = "extra_selected"
+        const val EXTRA_WIDGET = "extra_widget"
+        const val REQUEST_KEY = "theme_picker_result"
+
+        fun newThemePickerDialog(
+            selected: Int,
+            widget: Boolean = false
+        ): ThemePickerDialog {
+            val args = Bundle()
+            args.putInt(EXTRA_SELECTED, selected)
+            args.putBoolean(EXTRA_WIDGET, widget)
+            val dialog = ThemePickerDialog()
+            dialog.arguments = args
+            return dialog
+        }
+    }
+
+    @Inject lateinit var inventory: Inventory
+    @Inject lateinit var dialogBuilder: DialogBuilder
+    @Inject lateinit var themeBase: ThemeBase
+
+    var adapter: ArrayAdapter<String>? = null
+    var dialog: AlertDialog? = null
+    var selected = -1
+    var widget = false
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        selected = savedInstanceState?.getInt(EXTRA_SELECTED) ?: requireArguments().getInt(EXTRA_SELECTED)
+        widget = arguments?.getBoolean(EXTRA_WIDGET) ?: false
+        val themes = resources
+            .getStringArray(if (widget) R.array.widget_themes else R.array.base_theme_names)
+            .let { if (widget && (preS() || !inventory.hasPro)) it.dropLast(1).toTypedArray() else it }
+
+        adapter = object : ArrayAdapter<String>(requireActivity(), R.layout.simple_list_item_single_choice, themes) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                val onSurface = MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnSurface, 0)
+                val textColor = if (isAvailable(position)) onSurface
+                    else ColorUtils.setAlphaComponent(onSurface, 0x61)
+                val text: TextView = view.findViewById(R.id.text1)
+                text.setTextColor(textColor)
+                return view
+            }
+        }
+
+        dialog = dialogBuilder.newDialog()
+                .setTitle(R.string.theme)
+                .setSingleChoiceItems(adapter, requireArguments().getInt(EXTRA_SELECTED)) { _, which ->
+                    selected = which
+                    if (available()) {
+                        deliverResult()
+                    } else {
+                        updateButton()
+                        activity?.intent?.putExtra(EXTRA_THEME_OVERRIDE, which)
+                        Handler().post {
+                            ThemeBase(which).setDefaultNightMode()
+                            activity?.recreate()
+                        }
+                    }
+                }
+                .setPositiveButton(R.string.ok) { _, _ ->
+                    deliverResult()
+                }
+                .show()
+        updateButton()
+        return dialog as Dialog
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        if (available()) {
+            deliverResult()
+        } else {
+            // Restore original theme on cancel
+            val original = requireArguments().getInt(EXTRA_SELECTED)
+            parentFragmentManager.setFragmentResult(
+                REQUEST_KEY,
+                bundleOf(EXTRA_SELECTED to original)
+            )
+        }
+    }
+
+    private fun deliverResult() {
+        dialog?.dismiss()
+        parentFragmentManager.setFragmentResult(
+            REQUEST_KEY,
+            bundleOf(EXTRA_SELECTED to selected)
+        )
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(EXTRA_SELECTED, selected)
+    }
+
+    private fun updateButton() {
+        val stringRes = if (available()) {
+            R.string.cancel
+        } else {
+            R.string.name_your_price
+        }
+
+        dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.text = getString(stringRes)
+    }
+
+    private fun available() = isAvailable(selected)
+
+    private fun isAvailable(index: Int) =
+        inventory.purchasedThemes() || ThemeBase(index).isFree || widget
+}

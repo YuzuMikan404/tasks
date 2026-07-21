@@ -1,0 +1,277 @@
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPosition
+import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
+import co.touchlab.kermit.Logger
+import co.touchlab.kermit.platformLogWriter
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.koin.compose.koinInject
+import org.koin.core.context.startKoin
+import org.koin.mp.KoinPlatform
+import org.tasks.TasksBuildConfig
+import org.tasks.analytics.AnalyticsEvents
+import org.tasks.analytics.PostHogReporting
+import org.tasks.analytics.Reporting
+import org.tasks.App
+import org.tasks.auth.TasksServerEnvironment
+import org.tasks.jobs.BackgroundWork
+import org.tasks.PlatformConfiguration
+import org.tasks.preferences.AppPreferences
+import org.tasks.preferences.TasksPreferences
+import org.tasks.preferences.recordInstallIfNeeded
+import at.bitfire.cert4android.DesktopUserDecisionRegistry
+import org.tasks.ssl.TrustCertificateDialog
+import org.tasks.sse.SseClient
+import org.tasks.sync.SyncSource
+import org.tasks.di.commonModule
+import org.tasks.di.dataDir
+import org.tasks.di.logDir
+import org.tasks.di.platformModule
+import org.tasks.logging.FileLogWriter
+import java.awt.Desktop
+import java.awt.Dimension
+import java.awt.EventQueue
+import java.awt.Frame
+import java.awt.event.WindowEvent
+import java.awt.event.WindowFocusListener
+import java.io.File
+import java.io.RandomAccessFile
+import java.net.InetAddress
+import java.net.ServerSocket
+import java.net.Socket
+import java.nio.channels.FileChannel
+import org.tasks.extensions.openInBrowser
+
+private val portFile = File(dataDir, ".ipc_port")
+private val lockFile = File(dataDir, ".lock")
+private var lockChannel: FileChannel? = null
+private var ipcServer: ServerSocket? = null
+
+private fun acquireLock(): Boolean {
+    var channel: FileChannel? = null
+    return try {
+        lockFile.parentFile?.mkdirs()
+        channel = RandomAccessFile(lockFile, "rw").channel
+        val lock = channel.tryLock()
+        if (lock != null) {
+            lockChannel = channel
+            true
+        } else {
+            channel.close()
+            false
+        }
+    } catch (e: Exception) {
+        channel?.close()
+        Logger.e(e) { "Failed to acquire lock" }
+        false
+    }
+}
+
+private fun signalExistingInstance(): Boolean {
+    return try {
+        val port = portFile.readText().trim().toInt()
+        Socket(InetAddress.getLoopbackAddress(), port).use { it.getOutputStream().write(1) }
+        true
+    } catch (e: Exception) {
+        Logger.e(e) { "Failed to signal existing instance" }
+        false
+    }
+}
+
+private fun startIpcServer() {
+    val server = ServerSocket(0, 1, InetAddress.getLoopbackAddress())
+    ipcServer = server
+    portFile.writeText(server.localPort.toString())
+    portFile.deleteOnExit()
+    val thread = Thread({
+        while (true) {
+            try {
+                server.accept().use { it.getInputStream().read() }
+                EventQueue.invokeLater {
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().requestForeground(true)
+                    }
+                    Frame.getFrames().forEach { frame ->
+                        frame.isVisible = true
+                        frame.extendedState = frame.extendedState and Frame.ICONIFIED.inv()
+                        frame.toFront()
+                        frame.requestFocus()
+                    }
+                }
+            } catch (e: Exception) {
+                Logger.w(e) { "IPC server stopped" }
+                break
+            }
+        }
+    }, "ipc-server")
+    thread.isDaemon = true
+    thread.start()
+}
+
+private val MIN_WIDTH = 400.dp
+private val MIN_HEIGHT = 300.dp
+private val DEFAULT_WIDTH = 800.dp
+private val DEFAULT_HEIGHT = 600.dp
+
+@OptIn(FlowPreview::class)
+fun main() {
+    val gotLock = acquireLock()
+    if (!gotLock) {
+        if (signalExistingInstance()) return
+        Logger.w { "Lock failed, but no existing instance was found. Continuing startup." }
+    } else {
+        startIpcServer()
+    }
+    org.tasks.caldav.CaldavSynchronizer.registerFactories()
+    Logger.setLogWriters(
+        buildList {
+            if (TasksBuildConfig.DEBUG) add(platformLogWriter())
+            add(FileLogWriter(logDir))
+        }
+    )
+
+    startKoin {
+        modules(commonModule, platformModule())
+    }
+    val koin = KoinPlatform.getKoin()
+    runCatching {
+        runBlocking {
+            koin.get<AppPreferences>()
+                .recordInstallIfNeeded(koin.get<PlatformConfiguration>().versionCode)
+        }
+    }.onFailure { e ->
+        Logger.w(e) { "Failed to record install metadata" }
+    }
+    Runtime.getRuntime().addShutdownHook(Thread {
+        (koin.get<Reporting>() as? PostHogReporting)?.close()
+        ipcServer?.close()
+        portFile.delete()
+        lockChannel?.close()
+        lockFile.delete()
+    })
+
+    application {
+        val preferences = koinInject<TasksPreferences>()
+        val windowState = rememberWindowState(size = DpSize(DEFAULT_WIDTH, DEFAULT_HEIGHT))
+        var windowReady by remember { mutableStateOf(false) }
+        // Restore saved window size and position before showing the window
+        LaunchedEffect(Unit) {
+            val w = preferences.get(TasksPreferences.windowWidth, 0)
+            val h = preferences.get(TasksPreferences.windowHeight, 0)
+            if (w > 0 && h > 0) {
+                windowState.size = DpSize(
+                    maxOf(w.dp, MIN_WIDTH),
+                    maxOf(h.dp, MIN_HEIGHT),
+                )
+            }
+            val x = preferences.get(TasksPreferences.windowX, Int.MIN_VALUE)
+            val y = preferences.get(TasksPreferences.windowY, Int.MIN_VALUE)
+            if (x != Int.MIN_VALUE && y != Int.MIN_VALUE) {
+                windowState.position = WindowPosition(x.dp, y.dp)
+            }
+            windowReady = true
+        }
+        // Persist window size and position on changes
+        LaunchedEffect(Unit) {
+            snapshotFlow { windowState.size to windowState.position }
+                .drop(1)
+                .debounce(500)
+                .collect { (size, position) ->
+                    preferences.set(TasksPreferences.windowWidth, size.width.value.toInt())
+                    preferences.set(TasksPreferences.windowHeight, size.height.value.toInt())
+                    if (position is WindowPosition.Absolute) {
+                        preferences.set(TasksPreferences.windowX, position.x.value.toInt())
+                        preferences.set(TasksPreferences.windowY, position.y.value.toInt())
+                    }
+                }
+        }
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = "Tasks",
+            state = windowState,
+            visible = windowReady,
+        ) {
+            window.minimumSize = Dimension(MIN_WIDTH.value.toInt(), MIN_HEIGHT.value.toInt())
+            val reporting = koinInject<Reporting>()
+            val sseClient = koinInject<SseClient>()
+            val backgroundWork = koinInject<BackgroundWork>()
+            val platformConfig = koinInject<PlatformConfiguration>()
+            val lifecycleScope = rememberCoroutineScope()
+            LaunchedEffect(Unit) {
+                Thread.setDefaultUncaughtExceptionHandler { _, throwable ->
+                    reporting.reportException(throwable, fatal = true)
+                }
+                val versionCode = platformConfig.versionCode
+                if (versionCode > 0) {
+                    preferences.set(TasksPreferences.currentVersion, versionCode)
+                }
+                reporting.logEvent(
+                    AnalyticsEvents.APP_OPENED,
+                    AnalyticsEvents.PARAM_FROM_BACKGROUND to false,
+                )
+                sseClient.start()
+            }
+            DisposableEffect(window) {
+                var backgrounded = false
+                val focusListener = object : WindowFocusListener {
+                    override fun windowGainedFocus(e: WindowEvent?) {
+                        if (backgrounded) {
+                            backgrounded = false
+                            reporting.logEvent(
+                                AnalyticsEvents.APP_OPENED,
+                                AnalyticsEvents.PARAM_FROM_BACKGROUND to true,
+                            )
+                            sseClient.reconnect()
+                            lifecycleScope.launch {
+                                backgroundWork.sync(SyncSource.APP_RESUME)
+                            }
+                        }
+                    }
+
+                    override fun windowLostFocus(e: WindowEvent?) {
+                        if (!backgrounded) {
+                            backgrounded = true
+                            reporting.logEvent(AnalyticsEvents.APP_BACKGROUNDED)
+                        }
+                    }
+                }
+                window.addWindowFocusListener(focusListener)
+                onDispose {
+                    window.removeWindowFocusListener(focusListener)
+                }
+            }
+            val userDecisionRegistry = koinInject<DesktopUserDecisionRegistry>()
+            TrustCertificateDialog(userDecisionRegistry)
+            val serverEnv = koinInject<TasksServerEnvironment>()
+            val scope = rememberCoroutineScope()
+            var currentEnv by remember { mutableStateOf(serverEnv.currentEnvironment) }
+            App(
+                openUrl = { url ->
+                    openInBrowser(url)
+                },
+                environments = serverEnv.environments,
+                currentEnvironment = currentEnv,
+                onSelectEnvironment = { env ->
+                    scope.launch {
+                        serverEnv.setEnvironment(env)
+                        currentEnv = env
+                    }
+                },
+            )
+        }
+    }
+}

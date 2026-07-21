@@ -1,0 +1,24 @@
+package org.tasks.utility
+
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.os.Build
+import android.widget.Toast.LENGTH_SHORT
+import androidx.core.content.ContextCompat.getSystemService
+import org.tasks.R
+import org.tasks.extensions.Context.toast
+
+fun copyToClipboard(context: Context, labelRes: Int, message: String) {
+    copyToClipboard(context, context.getString(labelRes), message)
+}
+
+fun copyToClipboard(context: Context, label: String, message: String) {
+    val clipboard = getSystemService(context, ClipboardManager::class.java)
+    if (clipboard != null) {
+        clipboard.setPrimaryClip(ClipData.newPlainText(label, message))
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            context.toast(R.string.copied_to_clipboard, label, duration = LENGTH_SHORT)
+        }
+    }
+}

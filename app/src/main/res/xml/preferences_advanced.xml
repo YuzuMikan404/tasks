@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <SwitchPreferenceCompat
+    android:defaultValue="false"
+    android:key="@string/p_astrid_sort_enabled"
+    android:title="@string/astrid_sort_order"
+    android:summary="@string/astrid_sort_order_summary" />
+
+  <Preference
+    android:icon="@drawable/ic_outline_attachment_24px"
+    android:key="@string/p_attachment_dir"
+    android:title="@string/attachment_directory" />
+
+  <SwitchPreferenceCompat
+    android:defaultValue="true"
+    android:icon="@drawable/ic_outline_event_24px"
+    android:key="@string/p_end_at_deadline"
+    android:summaryOff="@string/EPr_cal_end_at_due_time"
+    android:summaryOn="@string/EPr_cal_start_at_due_time"
+    android:title="@string/EPr_cal_end_or_start_at_due_time"
+    app:allowDividerAbove="true"
+    app:singleLineTitle="false" />
+
+  <Preference
+    android:key="@string/EPr_manage_delete_completed_gcal"
+    android:title="@string/EPr_manage_delete_completed_gcal" />
+
+  <Preference
+    android:key="@string/EPr_manage_delete_all_gcal"
+    android:title="@string/EPr_manage_delete_all_gcal" />
+
+  <Preference
+    android:key="@string/EPr_reset_preferences"
+    app:allowDividerAbove="true"
+    android:title="@string/EPr_reset_preferences" />
+
+  <Preference
+    android:icon="@drawable/ic_outline_delete_24px"
+    android:key="@string/EPr_delete_task_data"
+    android:title="@string/EPr_delete_task_data" />
+
+</PreferenceScreen>

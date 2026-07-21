@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <Preference
+    android:key="@string/documentation"
+    android:title="@string/documentation"
+    android:icon="@drawable/ic_open_in_new_24px" />
+
+  <Preference
+    android:key="@string/p_backup_dir"
+    android:title="@string/backup_directory"
+    app:allowDividerAbove="true" />
+
+  <Preference
+    android:key="@string/backup_BAc_export"
+    android:title="@string/backup_BAc_export" />
+
+  <Preference
+    android:key="@string/backup_BAc_import"
+    android:title="@string/backup_BAc_import" />
+
+  <PreferenceCategory
+    android:title="@string/automatic_backups">
+
+    <SwitchPreferenceCompat
+      android:key="@string/p_backups_enabled"
+      android:defaultValue="true"
+      android:title="@string/enabled" />
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+    android:title="@string/android_auto_backup">
+
+    <SwitchPreferenceCompat
+      android:defaultValue="true"
+      android:key="@string/p_backups_android_backup_enabled"
+      android:title="@string/enabled" />
+
+    <Preference
+      android:title="@string/device_settings"
+      android:summary="@string/android_auto_backup_device_summary"
+      app:icon="@drawable/ic_open_in_new_24px">
+      <intent android:action="android.settings.SETTINGS" />
+    </Preference>
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+    android:title="@string/google_drive_backup">
+
+    <SwitchPreferenceCompat
+      android:key="@string/google_drive_backup"
+      android:title="@string/enabled" />
+
+    <Preference
+      android:key="@string/p_google_drive_backup_account"
+      android:title="@string/account"
+      android:summary="@string/none"/>
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+    android:title="@string/preferences_advanced">
+
+    <SwitchPreferenceCompat
+      android:defaultValue="false"
+      android:key="@string/p_backups_ignore_warnings"
+      android:title="@string/backups_ignore_warnings"
+      android:summary="@string/backups_ignore_warnings_summary" />
+
+  </PreferenceCategory>
+
+</PreferenceScreen>

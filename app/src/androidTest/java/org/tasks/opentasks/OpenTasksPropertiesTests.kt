@@ -1,0 +1,509 @@
+package org.tasks.opentasks
+
+import com.natpryce.makeiteasy.MakeItEasy.with
+import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
+import org.tasks.SuspendFreeze.Companion.freezeAt
+import org.tasks.TestUtilities.withTZ
+import org.tasks.caldav.Ical4androidTaskAdapter
+import org.tasks.caldav.iCalendar.Companion.collapsed
+import org.tasks.caldav.iCalendar.Companion.order
+import org.tasks.caldav.iCalendar.Companion.parent
+import org.tasks.caldav.iCalendar.Companion.snooze
+import org.tasks.data.entity.CaldavCalendar
+import org.tasks.data.dao.AlarmDao
+import org.tasks.data.dao.TagDao
+import org.tasks.data.dao.TagDataDao
+import org.tasks.data.entity.Alarm
+import org.tasks.data.entity.Alarm.Companion.TYPE_SNOOZE
+import org.tasks.data.entity.Tag
+import org.tasks.data.entity.TagData
+import org.tasks.data.entity.Task
+import org.tasks.makers.CaldavTaskMaker
+import org.tasks.makers.CaldavTaskMaker.CALENDAR
+import org.tasks.makers.CaldavTaskMaker.REMOTE_ID
+import org.tasks.makers.CaldavTaskMaker.newCaldavTask
+import org.tasks.makers.TaskMaker
+import org.tasks.makers.TaskMaker.COLLAPSED
+import org.tasks.makers.TaskMaker.ORDER
+import org.tasks.makers.TaskMaker.newTask
+import org.tasks.time.DateTime
+import java.util.TimeZone
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+
+@HiltAndroidTest
+class OpenTasksPropertiesTests : OpenTasksTest() {
+
+    @Inject lateinit var tagDataDao: TagDataDao
+    @Inject lateinit var tagDao: TagDao
+    @Inject lateinit var alarmDao: AlarmDao
+
+    @Test
+    fun loadRemoteParentInfo() = runBlocking {
+        val (_, list) = withVtodo(SUBTASK)
+
+        synchronizer.sync(hasPro = true)
+
+        val task = caldavDao.getTaskByRemoteId(list.uuid!!, "dfede1b0-435b-4bba-9708-2422e781747c")
+        assertEquals("7daa4a5c-cc76-4ddf-b4f8-b9d3a9cb00e7", task?.remoteParent)
+    }
+
+    @Test
+    fun pushParentInfo() = runBlocking {
+        val (listId, list) = openTaskDao.insertList()
+        val taskId = taskDao.createNew(newTask(with(TaskMaker.PARENT, 594)))
+
+        caldavDao.insert(newCaldavTask(
+                with(CALENDAR, list.uuid),
+                with(CaldavTaskMaker.TASK, taskId),
+                with(REMOTE_ID, "abcd"),
+                with(CaldavTaskMaker.REMOTE_PARENT, "1234")
+        ))
+
+        synchronizer.sync(hasPro = true)
+
+        assertEquals("1234", openTaskDao.getTask(listId, "abcd")?.task?.let(::Ical4androidTaskAdapter)?.parent)
+    }
+
+    @Test
+    fun createNewTags() = runBlocking {
+        val (_, list) = withVtodo(TWO_TAGS)
+
+        synchronizer.sync(hasPro = true)
+
+        assertEquals(
+                setOf("Tag1", "Tag2"),
+                caldavDao.getTaskByRemoteId(list.uuid!!, "3076145036806467726")
+                        ?.task
+                        ?.let { tagDao.getTagsForTask(it) }
+                        ?.map { it.name }
+                        ?.toSet()
+        )
+    }
+
+    @Test
+    fun matchExistingTag() = runBlocking {
+        val (_, list) = withVtodo(ONE_TAG)
+        val tag = TagData(name = "Tag1").let { it.copy(id = tagDataDao.insert(it)) }
+
+        synchronizer.sync(hasPro = true)
+
+        assertEquals(
+                listOf(tag),
+                caldavDao.getTaskByRemoteId(list.uuid!!, "3076145036806467726")
+                        ?.task
+                        ?.let { tagDataDao.getTagDataForTask(it)}
+        )
+    }
+
+    @Test
+    fun uploadTags() = runBlocking {
+        val (listId, list) = openTaskDao.insertList()
+        val task = newTask().apply { taskDao.createNew(this) }
+        caldavDao.insert(newCaldavTask(
+                with(CALENDAR, list.uuid),
+                with(REMOTE_ID, "1234"),
+                with(CaldavTaskMaker.TASK, task.id)
+        ))
+        insertTag(task, "Tag1")
+        insertTag(task, "Tag2")
+
+        synchronizer.sync(hasPro = true)
+
+        assertEquals(
+                setOf("Tag1", "Tag2"),
+                openTaskDao.getTask(listId, "1234")?.task?.categories?.toSet()
+        )
+    }
+
+    @Test
+    fun loadOrder() = runBlocking {
+        val (_, list) = withVtodo(ONE_TAG)
+
+        synchronizer.sync(hasPro = true)
+
+        val task = caldavDao.getTaskByRemoteId(list.uuid!!, "3076145036806467726")!!.task
+        assertEquals(633734058L, taskDao.fetch(task)?.order)
+    }
+
+    @Test
+    fun pushOrder() = runBlocking {
+        val (listId, list) = openTaskDao.insertList()
+        val task = newTask(with(ORDER, 5678L))
+        taskDao.createNew(task)
+        caldavDao.insert(newCaldavTask(
+                with(CALENDAR, list.uuid),
+                with(REMOTE_ID, "1234"),
+                with(CaldavTaskMaker.TASK, task.id)
+        ))
+
+        synchronizer.sync(hasPro = true)
+
+        assertEquals(
+                5678L,
+                openTaskDao.getTask(listId, "1234")?.task?.let(::Ical4androidTaskAdapter)?.order
+        )
+    }
+
+    @Test
+    fun readCollapsedState() = runBlocking {
+        val (_, list) = withVtodo(HIDE_SUBTASKS)
+
+        synchronizer.sync(hasPro = true)
+
+        val task = caldavDao
+                .getTaskByRemoteId(list.uuid!!, "2822976a-b71e-4962-92e4-db7297789c20")
+                ?.let { taskDao.fetch(it.task) }
+        assertTrue(task!!.isCollapsed)
+    }
+
+    @Test
+    fun pushCollapsedState() = runBlocking {
+        val (listId, list) = openTaskDao.insertList()
+        val taskId = taskDao.createNew(newTask(with(COLLAPSED, true)))
+
+        caldavDao.insert(newCaldavTask(
+                with(CALENDAR, list.uuid),
+                with(CaldavTaskMaker.TASK, taskId),
+                with(REMOTE_ID, "abcd")
+        ))
+
+        synchronizer.sync(hasPro = true)
+
+        assertTrue(Ical4androidTaskAdapter(openTaskDao.getTask(listId, "abcd")?.task!!).collapsed)
+    }
+
+    @Test
+    fun removeCollapsedState() = runBlocking {
+        val (listId, list) = withVtodo(HIDE_SUBTASKS)
+
+        synchronizer.sync(hasPro = true)
+
+        val task = caldavDao.getTaskByRemoteId(list.uuid!!, "2822976a-b71e-4962-92e4-db7297789c20")
+
+        taskSaver.setCollapsed(task!!.task, false)
+
+        synchronizer.sync(hasPro = true)
+
+        assertFalse(
+                Ical4androidTaskAdapter(
+                        openTaskDao
+                                .getTask(listId, "2822976a-b71e-4962-92e4-db7297789c20")
+                                ?.task!!
+                ).collapsed
+        )
+    }
+
+    @Test
+    fun readSnoozeTime() = runBlocking {
+        val (_, list) = withVtodo(SNOOZED)
+
+        withTZ(CHICAGO) {
+            synchronizer.sync(hasPro = true)
+        }
+
+        val task = caldavDao
+                .getTaskByRemoteId(list.uuid!!, "4CBBC669-70E3-474D-A0A3-0FC42A14A5A5")
+                ?.let { taskDao.fetch(it.task) }
+
+        assertEquals(
+            listOf(
+                Alarm(
+                    id = 1,
+                    task = task!!.id,
+                    time = 1612972355000,
+                    type = TYPE_SNOOZE
+                )
+            ),
+            alarmDao.getAlarms(task.id)
+        )
+    }
+
+    @Test
+    fun pushSnoozeTime() = withTZ(CHICAGO) {
+        val (listId, list) = openTaskDao.insertList()
+        val taskId = taskDao.createNew(newTask())
+        alarmDao.insert(
+            Alarm(
+                task = taskId,
+                time = DateTime(2021, 2, 4, 13, 30).millis,
+                type = TYPE_SNOOZE
+            )
+        )
+
+        caldavDao.insert(newCaldavTask(
+                with(CALENDAR, list.uuid),
+                with(CaldavTaskMaker.TASK, taskId),
+                with(REMOTE_ID, "abcd")
+        ))
+
+        freezeAt(DateTime(2021, 2, 4, 12, 30, 45, 125)) {
+            synchronizer.sync(hasPro = true)
+        }
+
+        assertEquals(1612467000000, Ical4androidTaskAdapter(openTaskDao.getTask(listId, "abcd")?.task!!).snooze)
+    }
+
+    @Test
+    fun dontPushLapsedSnoozeTime() = withTZ(CHICAGO) {
+        val (listId, list) = openTaskDao.insertList()
+        val taskId = taskDao.createNew(newTask())
+        alarmDao.insert(
+            Alarm(
+                task = taskId,
+                time = DateTime(2021, 2, 4, 13, 30).millis,
+                type = TYPE_SNOOZE
+            )
+        )
+
+        caldavDao.insert(newCaldavTask(
+                with(CALENDAR, list.uuid),
+                with(CaldavTaskMaker.TASK, taskId),
+                with(REMOTE_ID, "abcd")
+        ))
+
+        freezeAt(DateTime(2021, 2, 4, 13, 30, 45, 125)) {
+            synchronizer.sync(hasPro = true)
+        }
+
+        assertNull(Ical4androidTaskAdapter(openTaskDao.getTask(listId, "abcd")?.task!!).snooze)
+    }
+
+    @Test
+    fun removeSnoozeTime() = withTZ(CHICAGO) {
+        val (listId, list) = withVtodo(SNOOZED)
+
+        synchronizer.sync(hasPro = true)
+
+        val task = caldavDao.getTaskByRemoteId(list.uuid!!, "4CBBC669-70E3-474D-A0A3-0FC42A14A5A5")
+            ?: throw IllegalStateException("Missing task")
+        assertEquals(
+            listOf(Alarm(1, task.id, DateTime(2021, 2, 10, 9, 52, 35).millis, TYPE_SNOOZE)),
+            alarmDao.getAlarms(1)
+        )
+        alarmDao.deleteSnoozed(listOf(1))
+        dirtyDao.setDirty(listOf(task.task))
+
+        synchronizer.sync(hasPro = true)
+
+        assertNull(
+                Ical4androidTaskAdapter(
+                        openTaskDao
+                                .getTask(listId, "4CBBC669-70E3-474D-A0A3-0FC42A14A5A5")
+                                ?.task!!
+                ).snooze
+        )
+    }
+
+    @Test
+    fun repeatingAlarmSurvivesReflattenedRoundTrip() = runBlocking {
+        val synced = syncTaskWithRepeatingAlarm()
+
+        val caldavTask = caldavDao.getTaskByRemoteId(synced.list.uuid!!, "abcd")!!
+        caldavDao.update(caldavTask.copy(etag = null)) // force the flattened task to be re-fetched
+        synchronizer.sync(hasPro = true)
+
+        assertEquals(15, alarmDao.getAlarms(synced.taskId).single().repeat)
+    }
+
+    // A real remote edit to an unrelated field triggers a re-fetch; the flattened alarm must not be
+    // read as a reminder change, so the edit applies AND the local repeating alarm survives.
+    @Test
+    fun unrelatedRemoteEditPreservesRepeatingAlarm() = runBlocking {
+        val synced = syncTaskWithRepeatingAlarm()
+
+        openTaskDao.setDescription(synced.listId, "abcd", "remote notes")
+        synchronizer.sync(hasPro = true)
+
+        assertEquals("remote notes", taskDao.fetch(synced.taskId)!!.notes)
+        assertEquals(15, alarmDao.getAlarms(synced.taskId).single().repeat)
+    }
+
+    private data class SyncedTask(val listId: Long, val list: CaldavCalendar, val taskId: Long)
+
+    private suspend fun syncTaskWithRepeatingAlarm(): SyncedTask {
+        val (listId, list) = openTaskDao.insertList()
+        val taskId = taskDao.createNew(newTask())
+        alarmDao.insert(
+            Alarm(
+                task = taskId,
+                time = TimeUnit.HOURS.toMillis(32),
+                type = Alarm.TYPE_REL_START,
+                repeat = 15,
+                interval = TimeUnit.MINUTES.toMillis(15),
+            )
+        )
+        caldavDao.insert(newCaldavTask(
+            with(CALENDAR, list.uuid),
+            with(CaldavTaskMaker.TASK, taskId),
+            with(REMOTE_ID, "abcd"),
+        ))
+        synchronizer.sync(hasPro = true) // push flattens the alarm into dmfs
+        return SyncedTask(listId, list, taskId)
+    }
+
+    @Test
+    fun addRemoteTagToExistingTask() = runBlocking {
+        val (listId, list) = syncTaskWithTags("Tag1")
+
+        replaceRemoteTask(listId, vtodo("Tag1,Tag2"))
+        synchronizer.sync(hasPro = true)
+
+        assertTags(list, "Tag1", "Tag2")
+    }
+
+    @Test
+    fun removeRemoteTagFromExistingTask() = runBlocking {
+        val (listId, list) = syncTaskWithTags("Tag1,Tag2")
+
+        replaceRemoteTask(listId, vtodo("Tag1"))
+        synchronizer.sync(hasPro = true)
+
+        assertTags(list, "Tag1")
+    }
+
+    @Test
+    fun replaceRemoteTagOnExistingTask() = runBlocking {
+        val (listId, list) = syncTaskWithTags("Tag1")
+
+        replaceRemoteTask(listId, vtodo("Tag3"))
+        synchronizer.sync(hasPro = true)
+
+        assertTags(list, "Tag3")
+    }
+
+    private suspend fun syncTaskWithTags(categories: String): Pair<Long, CaldavCalendar> {
+        val result = withVtodo(vtodo(categories))
+        synchronizer.sync(hasPro = true)
+        return result
+    }
+
+    private suspend fun replaceRemoteTask(listId: Long, vtodo: String) {
+        openTaskDao.batch(listOf(openTaskDao.delete(listId, TASK_UID)))
+        openTaskDao.insertTask(listId, vtodo)
+    }
+
+    private suspend fun assertTags(list: CaldavCalendar, vararg expectedTags: String) {
+        assertEquals(
+            expectedTags.toSet(),
+            caldavDao.getTaskByRemoteId(list.uuid!!, TASK_UID)
+                ?.task
+                ?.let { tagDao.getTagsForTask(it) }
+                ?.mapNotNull { it.name }
+                ?.toSet()
+        )
+    }
+
+    private suspend fun insertTag(task: Task, name: String) =
+        TagData(name = name)
+            .apply { tagDataDao.insert(this) }
+            .let { tagDao.insert(Tag(task = task.id, taskUid = task.uuid, tagUid = it.remoteId)) }
+
+    companion object {
+        private const val TASK_UID = "3076145036806467726"
+        private val CHICAGO = TimeZone.getTimeZone("America/Chicago")
+
+        private val SUBTASK = """
+            BEGIN:VCALENDAR
+            VERSION:2.0
+            PRODID:-//Nextcloud Tasks v0.13.6
+            BEGIN:VTODO
+            UID:dfede1b0-435b-4bba-9708-2422e781747c
+            CREATED:20210128T150333
+            LAST-MODIFIED:20210128T150338
+            DTSTAMP:20210128T150338
+            SUMMARY:Child
+            RELATED-TO:7daa4a5c-cc76-4ddf-b4f8-b9d3a9cb00e7
+            END:VTODO
+            END:VCALENDAR
+        """.trimIndent()
+
+        private val ONE_TAG = """
+            BEGIN:VCALENDAR
+            VERSION:2.0
+            PRODID:+//IDN tasks.org//android-110304//EN
+            BEGIN:VTODO
+            DTSTAMP:20210201T204211Z
+            UID:3076145036806467726
+            CREATED:20210201T204143Z
+            LAST-MODIFIED:20210201T204209Z
+            SUMMARY:Tags
+            CATEGORIES:Tag1
+            X-APPLE-SORT-ORDER:633734058
+            END:VTODO
+            END:VCALENDAR
+        """.trimIndent()
+
+        private val TWO_TAGS = """
+            BEGIN:VCALENDAR
+            VERSION:2.0
+            PRODID:+//IDN tasks.org//android-110304//EN
+            BEGIN:VTODO
+            DTSTAMP:20210201T204211Z
+            UID:3076145036806467726
+            CREATED:20210201T204143Z
+            LAST-MODIFIED:20210201T204209Z
+            SUMMARY:Tags
+            CATEGORIES:Tag1,Tag2
+            X-APPLE-SORT-ORDER:633734058
+            END:VTODO
+            END:VCALENDAR
+        """.trimIndent()
+
+        private fun vtodo(categories: String) = """
+            BEGIN:VCALENDAR
+            VERSION:2.0
+            PRODID:+//IDN tasks.org//android-110304//EN
+            BEGIN:VTODO
+            DTSTAMP:20210201T204211Z
+            UID:$TASK_UID
+            CREATED:20210201T204143Z
+            LAST-MODIFIED:20210201T204209Z
+            SUMMARY:Tags
+            CATEGORIES:$categories
+            END:VTODO
+            END:VCALENDAR
+        """.trimIndent()
+
+        private val HIDE_SUBTASKS = """
+            BEGIN:VCALENDAR
+            VERSION:2.0
+            PRODID:-//Nextcloud Tasks v0.13.6
+            BEGIN:VTODO
+            UID:2822976a-b71e-4962-92e4-db7297789c20
+            CREATED:20210209T104536
+            LAST-MODIFIED:20210209T104548
+            DTSTAMP:20210209T104548
+            SUMMARY:Parent
+            X-OC-HIDESUBTASKS:1
+            END:VTODO
+            END:VCALENDAR
+        """.trimIndent()
+
+        private val SNOOZED = """
+            BEGIN:VCALENDAR
+            PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN
+            VERSION:2.0
+            BEGIN:VTODO
+            CREATED:20210210T151826Z
+            LAST-MODIFIED:20210210T152235Z
+            DTSTAMP:20210210T152235Z
+            UID:4CBBC669-70E3-474D-A0A3-0FC42A14A5A5
+            SUMMARY:Test snooze
+            STATUS:NEEDS-ACTION
+            X-MOZ-LASTACK:20210210T152235Z
+            DTSTART;TZID=America/Chicago:20210210T091900
+            DUE;TZID=America/Chicago:20210210T091900
+            X-MOZ-SNOOZE-TIME:20210210T155235Z
+            X-MOZ-GENERATION:1
+            END:VTODO
+            END:VCALENDAR
+        """.trimIndent()
+    }
+}

@@ -1,0 +1,617 @@
+package org.tasks.backup
+
+import android.content.Context
+import android.net.Uri
+import android.util.JsonReader
+import org.tasks.data.dao.DirtyDao
+import org.tasks.data.dao.TaskDao
+import org.tasks.data.TaskSaver
+import org.tasks.data.entity.Alarm
+import org.tasks.data.entity.Alarm.Companion.TYPE_RANDOM
+import org.tasks.data.entity.Alarm.Companion.TYPE_REL_END
+import org.tasks.data.entity.Alarm.Companion.TYPE_REL_START
+import org.tasks.data.TaskMover
+import com.todoroo.astrid.service.Upgrade_13_11.Companion.migrateLegacyIcon
+import com.todoroo.astrid.service.Upgrade_13_2
+import com.todoroo.astrid.service.Upgrade_14_11
+import com.todoroo.astrid.service.Upgrade_14_13
+import com.todoroo.astrid.service.Upgrader
+import com.todoroo.astrid.service.Upgrader.Companion.V12_4
+import com.todoroo.astrid.service.Upgrader.Companion.V12_8
+import com.todoroo.astrid.service.Upgrader.Companion.V6_4
+import com.todoroo.astrid.service.Upgrader.Companion.getAndroidColor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.longOrNull
+import org.tasks.extensions.lenientJson
+import org.tasks.broadcast.RefreshBroadcaster
+import org.tasks.R
+import org.tasks.analytics.Firebase
+import org.tasks.caldav.VtodoCache
+import org.tasks.data.GoogleTaskAccount
+import org.tasks.data.GoogleTaskList
+import org.tasks.data.convertPictureUri
+import org.tasks.data.dao.AlarmDao
+import org.tasks.data.dao.CaldavDao
+import org.tasks.data.dao.FilterDao
+import org.tasks.data.dao.LocationDao
+import org.tasks.data.dao.TagDao
+import org.tasks.data.dao.TagDataDao
+import org.tasks.data.dao.TaskAttachmentDao
+import org.tasks.data.dao.TaskListMetadataDao
+import org.tasks.data.dao.UserActivityDao
+import org.tasks.data.entity.Attachment
+import org.tasks.data.entity.CaldavAccount
+import org.tasks.data.entity.CaldavAccount.Companion.TYPE_GOOGLE_TASKS
+import org.tasks.data.entity.CaldavCalendar
+import org.tasks.data.entity.CaldavTask
+import org.tasks.data.entity.Filter
+import org.tasks.data.entity.Geofence
+import org.tasks.data.entity.Place
+import org.tasks.data.entity.Tag
+import org.tasks.data.entity.TagData
+import org.tasks.data.entity.Task
+import org.tasks.data.entity.TaskAttachment
+import org.tasks.data.entity.TaskDirtyVersion
+import org.tasks.data.entity.TaskListMetadata
+import org.tasks.db.Migrations.repeatFrom
+import org.tasks.db.Migrations.withoutFrom
+import org.tasks.extensions.forEach
+import org.tasks.extensions.jsonString
+import org.tasks.filters.FilterCriteriaProvider
+import org.tasks.preferences.Preferences
+import timber.log.Timber
+import java.io.IOException
+import java.io.InputStream
+import javax.inject.Inject
+
+@Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
+class TasksJsonImporter @Inject constructor(
+    private val tagDataDao: TagDataDao,
+    private val userActivityDao: UserActivityDao,
+    private val taskDao: TaskDao,
+    private val dirtyDao: DirtyDao,
+    private val taskSaver: TaskSaver,
+    private val locationDao: LocationDao,
+    private val refreshBroadcaster: RefreshBroadcaster,
+    private val alarmDao: AlarmDao,
+    private val tagDao: TagDao,
+    private val filterDao: FilterDao,
+    private val taskAttachmentDao: TaskAttachmentDao,
+    private val caldavDao: CaldavDao,
+    private val preferences: Preferences,
+    private val taskMover: TaskMover,
+    private val taskListMetadataDao: TaskListMetadataDao,
+    private val vtodoCache: VtodoCache,
+    private val filterCriteriaProvider: FilterCriteriaProvider,
+    private val firebase: Firebase,
+) {
+    suspend fun importTasks(
+        context: Context,
+        backupFile: Uri?,
+        onProgress: (suspend (String) -> Unit)? = null
+    ): ImportResult {
+        Timber.d("Importing backup file $backupFile")
+        return importTasks(
+            context,
+            { context.contentResolver.openInputStream(backupFile!!)!! },
+            onProgress,
+        )
+    }
+
+    internal suspend fun importTasks(
+        context: Context,
+        inputStreamProvider: () -> InputStream,
+        onProgress: (suspend (String) -> Unit)? = null
+    ): ImportResult = withContext(Dispatchers.IO) {
+        val result = ImportResult()
+        val accountUuidMap = mutableMapOf<String, String>()
+        val calendarUuidMap = mutableMapOf<String, String>()
+        try {
+            val version = importMetadata(context, inputStreamProvider, accountUuidMap, calendarUuidMap)
+            importTasks(context, inputStreamProvider, onProgress, version, result, calendarUuidMap)
+            if (version < Upgrader.V8_2) {
+                val themeIndex = preferences.getInt(R.string.p_theme_color, 7)
+                preferences.setInt(
+                        R.string.p_theme_color,
+                        getAndroidColor(context, themeIndex))
+            }
+            if (version < Upgrader.V9_6) {
+                taskMover.migrateLocalTasks()
+            }
+            Timber.d("Updating parents")
+            caldavDao.updateParents(force = true)
+            firebase.logEvent(
+                R.string.event_settings_click,
+                R.string.param_type to "import_backup_success",
+                R.string.param_value to version.toString(),
+                R.string.param_task_count to result.taskCount,
+                R.string.param_import_count to result.importCount,
+                R.string.param_skip_count to result.skipCount,
+            )
+        } catch (e: Exception) {
+            Timber.e(e)
+            firebase.logEvent(
+                R.string.event_settings_click,
+                R.string.param_type to "import_backup_failed",
+                R.string.param_error to e.javaClass.simpleName
+            )
+            if (e !is IOException) {
+                throw e
+            }
+        }
+        refreshBroadcaster.broadcastRefresh()
+        result
+    }
+
+    private suspend fun importMetadata(
+        context: Context,
+        inputStreamProvider: () -> InputStream,
+        accountUuidMap: MutableMap<String, String>,
+        calendarUuidMap: MutableMap<String, String>,
+    ): Int {
+        val `is` = inputStreamProvider()
+        val bufferedReader = `is`.bufferedReader(Charsets.UTF_8)
+        val reader = JsonReader(bufferedReader)
+        reader.isLenient = true
+        val ignoreKeys = ignorePrefs.map { context.getString(it) }
+        reader.beginObject()
+        var version = 0
+        while (reader.hasNext()) {
+            when (val name = reader.nextName()) {
+                "version" -> version = reader.nextInt().also { Timber.d("Backup version: $it") }
+                "timestamp" -> reader.nextLong().let { Timber.d("Backup timestamp: $it") }
+                "data" -> {
+                    reader.beginObject()
+                    while (reader.hasNext()) {
+                        when (val element = reader.nextName()) {
+                            "places" -> reader.forEach<Place> { place ->
+                                if (locationDao.getByUid(place.uid!!) == null) {
+                                    locationDao.insert(
+                                        place.copy(icon = place.icon.migrateLegacyIcon())
+                                    )
+                                }
+                            }
+                            "tags" -> reader.forEach<TagData> { tagData ->
+                                findTagData(tagData)?.let {
+                                    return@forEach
+                                }
+                                tagDataDao.insert(
+                                    tagData.copy(
+                                        color = themeToColor(context, version, tagData.color ?: 0),
+                                        icon = tagData.icon.migrateLegacyIcon(),
+                                    )
+                                )
+                            }
+                            "filters" -> reader.forEach<Filter> {
+                                it
+                                    .let {
+                                        if (version < Upgrade_13_2.VERSION)
+                                            filterCriteriaProvider.rebuildFilter(it)
+                                        else
+                                            it
+                                    }
+                                    .let { filter ->
+                                        if (filterDao.getByName(filter.title!!) == null) {
+                                            filterDao.insert(
+                                                filter.copy(
+                                                    color = themeToColor(context, version, filter.color ?: 0),
+                                                    icon = filter.icon.migrateLegacyIcon(),
+                                                )
+                                            )
+                                        }
+                                    }
+                            }
+                            "caldavAccounts" -> reader.forEach<CaldavAccount> { account ->
+                                if (caldavDao.getAccountByUuid(account.uuid!!) != null) {
+                                    return@forEach
+                                }
+                                val existing = findExistingAccount(account)
+                                if (existing != null) {
+                                    accountUuidMap[account.uuid!!] = existing.uuid!!
+                                } else {
+                                    caldavDao.insert(account)
+                                }
+                            }
+                            "caldavCalendars" -> reader.forEach<CaldavCalendar> { calendar ->
+                                if (caldavDao.getCalendarByUuid(calendar.uuid!!) != null) {
+                                    return@forEach
+                                }
+                                val remappedAccount = accountUuidMap[calendar.account] ?: calendar.account
+                                val existingByUrl = calendar.url
+                                    ?.takeIf { it.isNotBlank() }
+                                    ?.let { url ->
+                                        caldavDao.getCalendarByUrl(remappedAccount!!, url)
+                                    }
+                                if (existingByUrl != null) {
+                                    calendarUuidMap[calendar.uuid!!] = existingByUrl.uuid!!
+                                } else {
+                                    caldavDao.insert(
+                                        calendar.copy(
+                                            account = remappedAccount,
+                                            color = themeToColor(context, version, calendar.color),
+                                            icon = calendar.icon.migrateLegacyIcon(),
+                                        )
+                                    )
+                                }
+                            }
+                            "taskListMetadata" -> reader.forEach<TaskListMetadata> { tlm ->
+                                val id = tlm.filter.takeIf { it?.isNotBlank() == true } ?: tlm.tagUuid!!
+                                if (taskListMetadataDao.fetchByTagOrFilter(id) == null) {
+                                    taskListMetadataDao.insert(tlm)
+                                }
+                            }
+                            "taskAttachments" -> reader.forEach<TaskAttachment> { attachment ->
+                                if (taskAttachmentDao.getAttachment(attachment.remoteId) == null) {
+                                    taskAttachmentDao.insert(attachment)
+                                }
+                            }
+                            "intPrefs" ->
+                                lenientJson.decodeFromString<Map<String, Integer>>(reader.jsonString())
+                                    .filterNot { (key, _) -> ignoreKeys.contains(key) }
+                                    .forEach { (k, v) -> preferences.setInt(k, v as Int) }
+                            "longPrefs" ->
+                                lenientJson.decodeFromString<Map<String, java.lang.Long>>(reader.jsonString())
+                                    .filterNot { (key, _) -> ignoreKeys.contains(key) }
+                                    .forEach { (k, v) -> preferences.setLong(k, v as Long)}
+                            "stringPrefs" ->
+                                lenientJson.decodeFromString<Map<String, String>>(reader.jsonString())
+                                    .filterNot { (k, _) -> ignoreKeys.contains(k) }
+                                    .forEach { (k, v) -> preferences.setString(k, v)}
+                            "boolPrefs" ->
+                                lenientJson.decodeFromString<Map<String, java.lang.Boolean>>(reader.jsonString())
+                                    .filterNot { (k, _) -> ignoreKeys.contains(k) }
+                                    .forEach { (k, v) -> preferences.setBoolean(k, v as Boolean) }
+                            "setPrefs" ->
+                                lenientJson.decodeFromString<Map<String, Set<String>>>(reader.jsonString())
+                                    .filterNot { (k, _) -> ignoreKeys.contains(k) }
+                                    .forEach { (k, v) -> preferences.setStringSet(k, v as HashSet<String>)}
+                            "googleTaskAccounts" -> reader.forEach<GoogleTaskAccount> { googleTaskAccount ->
+                                if (caldavDao.getAccount(TYPE_GOOGLE_TASKS, googleTaskAccount.account!!) == null) {
+                                    caldavDao.insert(
+                                        CaldavAccount(
+                                            accountType = TYPE_GOOGLE_TASKS,
+                                            uuid = googleTaskAccount.account,
+                                            name = googleTaskAccount.account,
+                                            username = googleTaskAccount.account,
+                                        )
+                                    )
+                                }
+                            }
+                            "googleTaskLists" -> reader.forEach<GoogleTaskList> { googleTaskList ->
+                                if (caldavDao.getCalendar(googleTaskList.remoteId!!) == null) {
+                                    caldavDao.insert(
+                                        CaldavCalendar(
+                                            account = googleTaskList.account,
+                                            uuid = googleTaskList.remoteId,
+                                            color = themeToColor(context, version, googleTaskList.color ?: 0),
+                                            icon = googleTaskList.icon?.toString().migrateLegacyIcon(),
+                                        )
+                                    )
+                                }
+                            }
+                            else -> {
+                                Timber.w("Skipping $element")
+                                reader.skipValue()
+                            }
+                        }
+                    }
+                    reader.endObject()
+                }
+                else -> {
+                    Timber.w("Skipping $name")
+                    reader.skipValue()
+                }
+            }
+        }
+        reader.close()
+        bufferedReader.close()
+        `is`.close()
+        return version
+    }
+
+    private suspend fun importTasks(
+        context: Context,
+        inputStreamProvider: () -> InputStream,
+        onProgress: (suspend (String) -> Unit)?,
+        version: Int,
+        result: ImportResult,
+        calendarUuidMap: Map<String, String>,
+    ) {
+        val `is` = inputStreamProvider()
+        val bufferedReader = `is`.bufferedReader(Charsets.UTF_8)
+        val reader = JsonReader(bufferedReader)
+        reader.isLenient = true
+        reader.beginObject()
+        while (reader.hasNext()) {
+            when (val name = reader.nextName()) {
+                "data" -> {
+                    reader.beginObject()
+                    while (reader.hasNext()) {
+                        when (val element = reader.nextName()) {
+                            "tasks" -> {
+                                reader.beginArray()
+                                while (reader.hasNext()) {
+                                    val rawJson = reader.jsonString()
+                                    val backup = lenientJson.decodeFromString<TaskBackup>(rawJson)
+                                    result.taskCount++
+                                    onProgress?.invoke(
+                                        context.getString(R.string.import_progress_read, result.taskCount)
+                                    )
+                                    importTask(backup, version, rawJson, result, calendarUuidMap)
+                                }
+                                reader.endArray()
+                            }
+                            else -> {
+                                Timber.w("Skipping $element")
+                                reader.skipValue()
+                            }
+                        }
+                    }
+                    reader.endObject()
+                }
+                else -> {
+                    Timber.w("Skipping $name")
+                    reader.skipValue()
+                }
+            }
+        }
+        reader.close()
+        bufferedReader.close()
+        `is`.close()
+    }
+
+    private suspend fun importTask(
+        backup: TaskBackup,
+        version: Int,
+        rawJson: String,
+        result: ImportResult,
+        calendarUuidMap: Map<String, String>,
+    ) {
+        val task = backup.task
+        val perTaskDirty: Pair<Long, Long>? = when {
+            backup.dirtyVersion != null && backup.syncedVersion != null ->
+                backup.dirtyVersion to backup.syncedVersion
+            version >= DIRTY_FLAG_VERSION -> {
+                val synced = backup.syncedVersion ?: 0L
+                val dirty = backup.dirtyVersion ?: (synced + 1)
+                dirty to synced
+            }
+            else -> null
+        }
+        val googleLastSync = if (perTaskDirty == null) lastSyncValues(rawJson, "google") else emptyList()
+        val caldavLastSync = if (perTaskDirty == null) lastSyncValues(rawJson, "caldavTasks") else emptyList()
+        taskDao.fetch(task.uuid)
+            ?.let {
+                result.skipCount++
+                return
+            }
+        if (
+            backup.caldavTasks
+                ?.filter { it.deleted == 0L }
+                ?.any {
+                    val calendar = calendarUuidMap[it.calendar] ?: it.calendar
+                    val existing = if (
+                        it.obj.isNullOrBlank() ||
+                        it.obj == "null.ics" // caused by an old bug
+                    ) {
+                        it.remoteId?.let { remoteId ->
+                            caldavDao.getTaskByRemoteId(calendar!!, remoteId)
+                        }
+                    } else {
+                        caldavDao.getTask(calendar!!, it.obj!!)
+                    }
+                    existing != null
+                } == true
+        ) {
+            result.skipCount++
+            return
+        }
+        task.suppressRefresh()
+        task.suppressSync()
+        taskDao.createNew(task)
+        val taskId = task.id
+        val taskUuid = task.uuid
+        val skipAllDayAlarms = version < Upgrade_14_13.VERSION
+                && task.hasDueDate()
+                && !task.hasDueTime()
+                && !preferences.isDefaultDueTimeEnabled()
+        backup.alarms
+            ?.map { it.copy(task = taskId) }
+            ?.let { if (skipAllDayAlarms) emptyList() else it }
+            ?.let { alarmDao.insert(it) }
+        if (version < V12_4) {
+            val alarms = Upgrade_14_11.fromLegacyFlags(task.ringFlags, task.id)
+                .filter { alarm ->
+                    when (alarm.type) {
+                        TYPE_REL_START -> task.hasStartDate()
+                        TYPE_REL_END -> task.hasDueDate()
+                        else -> true
+                    }
+                }
+                .let { if (skipAllDayAlarms) emptyList() else it }
+                .let {
+                    if (task.randomReminder > 0) {
+                        it + Alarm(task = task.id, time = task.randomReminder, type = TYPE_RANDOM)
+                    } else {
+                        it
+                    }
+                }
+            alarmDao.insert(alarms)
+            task.ringFlags = when {
+                task.isNotifyModeFive -> Task.NOTIFY_MODE_FIVE
+                task.isNotifyModeNonstop -> Task.NOTIFY_MODE_NONSTOP
+                else -> 0
+            }
+            taskSaver.save(task, null)
+        }
+        if (version < V12_8) {
+            task.repeatFrom = task.recurrence.repeatFrom()
+            task.recurrence = task.recurrence.withoutFrom()
+        }
+        backup.comments?.forEach { comment ->
+            comment.targetId = taskUuid
+            if (version < V6_4) {
+                comment.convertPictureUri()
+            }
+            userActivityDao.createNew(comment)
+        }
+        backup.google?.forEachIndexed { index, googleTask ->
+            val id = caldavDao.insert(
+                CaldavTask(
+                    task = taskId,
+                    calendar = googleTask.listId,
+                    remoteId = googleTask.remoteId,
+                    remoteOrder = googleTask.remoteOrder,
+                    remoteParent = googleTask.remoteParent,
+                    deleted = googleTask.deleted,
+                )
+            )
+            if (googleTask.deleted == 0L) {
+                val (dirty, synced) = perTaskDirty
+                    ?: reconstructDirtyVersion(googleLastSync.getOrNull(index), task.modificationDate)
+                dirtyDao.setDirtyState(id, dirty, synced)
+            }
+        }
+        backup.locations?.forEach { location ->
+            val place = Place(
+                longitude = location.longitude,
+                latitude = location.latitude,
+                name = location.name,
+                address = location.address,
+                url = location.url,
+                phone = location.phone,
+            )
+            locationDao.insert(place)
+            locationDao.insert(
+                Geofence(
+                    task = taskId,
+                    place = place.uid,
+                    isArrival = location.arrival,
+                    isDeparture = location.departure,
+                )
+            )
+        }
+        backup.tags?.forEach tags@ { tag ->
+            val tagData = findTagData(tag) ?: return@tags
+            tagDao.insert(
+                tag.copy(
+                    task = taskId,
+                    taskUid = task.remoteId,
+                    tagUid = tagData.remoteId
+                )
+            )
+        }
+        backup.geofences?.forEach { geofence ->
+            locationDao.insert(
+                geofence.copy(task = taskId)
+            )
+        }
+        backup.attachments
+            ?.mapNotNull { taskAttachmentDao.getAttachment(it.attachmentUid) }
+            ?.map {
+                Attachment(
+                    task = taskId,
+                    fileId = it.id!!,
+                    attachmentUid = it.remoteId,
+                )
+            }
+            ?.let { taskAttachmentDao.insert(it) }
+        backup.caldavTasks?.forEachIndexed { index, caldavTask ->
+            val remappedCalendar = calendarUuidMap[caldavTask.calendar] ?: caldavTask.calendar
+            val id = caldavDao.insert(caldavTask.copy(task = taskId, calendar = remappedCalendar))
+            if (!caldavTask.isDeleted()) {
+                val (dirty, synced) = perTaskDirty
+                    ?: reconstructDirtyVersion(caldavLastSync.getOrNull(index), task.modificationDate)
+                dirtyDao.setDirtyState(id, dirty, synced)
+            }
+        }
+        backup.vtodo?.let {
+            val caldavTask =
+                backup.caldavTasks?.firstOrNull { t -> !t.isDeleted() } ?: return@let
+            val remappedCalendar = calendarUuidMap[caldavTask.calendar] ?: caldavTask.calendar
+            val caldavCalendar = caldavDao.getCalendar(remappedCalendar!!) ?: return@let
+            vtodoCache.putVtodo(caldavCalendar, caldavTask.copy(calendar = remappedCalendar), it)
+        }
+        result.importCount++
+    }
+
+    private suspend fun findExistingAccount(account: CaldavAccount): CaldavAccount? =
+        caldavDao.getAccounts().firstOrNull { existing ->
+            existing.accountType == account.accountType &&
+                    when {
+                        account.url?.isNotBlank() == true ->
+                            existing.url == account.url &&
+                                    existing.username == account.username
+                        account.username?.isNotBlank() == true ->
+                            existing.username == account.username
+                        else -> false
+                    }
+        }
+
+    private suspend fun findTagData(tagData: TagData) =
+            findTagData(tagData.remoteId!!, tagData.name!!)
+
+    private suspend fun findTagData(tag: Tag) = findTagData(tag.tagUid!!, tag.name!!)
+
+    private suspend fun findTagData(uid: String, name: String): TagData? =
+            tagDataDao.getByUuid(uid) ?: tagDataDao.getTagByName(name)
+
+    private fun themeToColor(context: Context, version: Int, color: Int) =
+            if (version < Upgrader.V8_2) getAndroidColor(context, color) else color
+
+    class ImportResult {
+        var taskCount = 0
+        var importCount = 0
+        var skipCount = 0
+    }
+
+    @Deprecated("For backup use only")
+    @Serializable
+    class LegacyLocation {
+        var name: String? = null
+        var address: String? = null
+        var phone: String? = null
+        var url: String? = null
+        var latitude = 0.0
+        var longitude = 0.0
+        var radius = 0
+        var arrival = false
+        var departure = false
+    }
+
+    companion object {
+        const val DIRTY_FLAG_VERSION = 150706
+
+        private val ignorePrefs = intArrayOf(
+                R.string.p_current_version,
+                R.string.p_backups_android_backup_last,
+                R.string.p_device_install_version,
+        )
+
+        private fun lastSyncValues(rawJson: String, key: String): List<Long?> = try {
+            lenientJson.parseToJsonElement(rawJson).jsonObject[key]?.jsonArray
+                ?.map { entry ->
+                    entry.jsonObject["cd_last_sync"]?.jsonPrimitive?.longOrNull
+                        ?: entry.jsonObject["lastSync"]?.jsonPrimitive?.longOrNull
+                }
+                .orEmpty()
+        } catch (e: Exception) {
+            Timber.w(e, "Failed to parse lastSync values from backup")
+            emptyList()
+        }
+
+        /**
+         * Keep in sync with `CommonMigrations.MIGRATION_92_93`
+         */
+        private fun reconstructDirtyVersion(lastSync: Long?, modified: Long): Pair<Long, Long> = when {
+            lastSync == null || lastSync == 0L -> 1L to 0L
+            modified > lastSync -> 2L to 1L
+            else -> 1L to 1L
+        }
+    }
+}

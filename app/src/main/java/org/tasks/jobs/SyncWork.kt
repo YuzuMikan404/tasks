@@ -1,0 +1,176 @@
+package org.tasks.jobs
+
+import android.accounts.AccountManager
+import android.content.ContentResolver
+import android.content.Context
+import android.net.ConnectivityManager
+import android.os.Bundle
+import androidx.core.content.ContextCompat
+import androidx.core.net.ConnectivityManagerCompat
+import androidx.hilt.work.HiltWorker
+import androidx.work.WorkerParameters
+import dagger.Lazy
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import org.tasks.broadcast.RefreshBroadcaster
+import org.tasks.TasksApplication
+import org.tasks.analytics.Firebase
+import org.tasks.billing.Inventory
+import org.tasks.caldav.CaldavSynchronizer
+import org.tasks.data.OpenTaskDao
+import org.tasks.data.dao.CaldavDao
+import org.tasks.data.entity.CaldavAccount
+import org.tasks.data.entity.CaldavAccount.Companion.TYPE_CALDAV
+import org.tasks.data.entity.CaldavAccount.Companion.TYPE_ETEBASE
+import org.tasks.data.entity.CaldavAccount.Companion.TYPE_MICROSOFT
+import org.tasks.data.entity.CaldavAccount.Companion.TYPE_TASKS
+import org.tasks.etebase.EtebaseSynchronizer
+import org.tasks.extensions.Context.hasNetworkConnectivity
+import org.tasks.gtasks.AndroidGoogleTaskSynchronizer
+import org.tasks.injection.BaseWorker
+import org.tasks.opentasks.OpenTasksSynchronizer
+import org.tasks.preferences.Preferences
+import org.tasks.preferences.TasksPreferences
+import org.tasks.sync.microsoft.MicrosoftSynchronizer
+import org.tasks.sync.SyncSource
+import org.tasks.time.DateTimeUtils2.currentTimeMillis
+import timber.log.Timber
+
+@HiltWorker
+class SyncWork @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
+    firebase: Firebase,
+    private val refreshBroadcaster: RefreshBroadcaster,
+    private val preferences: Preferences,
+    private val caldavDao: CaldavDao,
+    private val caldavSynchronizer: Lazy<CaldavSynchronizer>,
+    private val etebaseSynchronizer: Lazy<EtebaseSynchronizer>,
+    private val googleTaskSynchronizer: Lazy<AndroidGoogleTaskSynchronizer>,
+    private val openTasksSynchronizer: Lazy<OpenTasksSynchronizer>,
+    private val microsoftSynchronizer: Lazy<MicrosoftSynchronizer>,
+    private val openTaskDao: OpenTaskDao,
+    private val inventory: Inventory,
+    private val tasksPreferences: TasksPreferences,
+) : BaseWorker(context, workerParams, firebase) {
+
+    override suspend fun run(): Result {
+        Timber.d("Starting...")
+
+        if (source == SyncSource.BACKGROUND) {
+            ContextCompat.getSystemService(context, ConnectivityManager::class.java)?.apply {
+                if (restrictBackgroundStatus == ConnectivityManagerCompat.RESTRICT_BACKGROUND_STATUS_ENABLED) {
+                    Timber.w("Background restrictions enabled, skipping sync")
+                    return Result.failure()
+                }
+            }
+        }
+
+        val alreadySyncing = tasksPreferences.getAndSet(TasksPreferences.syncOngoing, true) ?: false
+        if (alreadySyncing) {
+            Timber.d("Sync ongoing, source=$source")
+            setSyncSource(getSyncSource().upgrade(source))
+            refreshBroadcaster.broadcastRefresh()
+            return Result.retry()
+        }
+        setSyncSource(source)
+        Timber.d("Sync started, source=$source")
+        refreshBroadcaster.broadcastRefresh()
+        try {
+            doSync()
+            preferences.lastSync = currentTimeMillis()
+        } catch (e: Exception) {
+            firebase.reportException(e)
+        } finally {
+            tasksPreferences.set(TasksPreferences.syncOngoing, false)
+            setSyncSource(SyncSource.NONE)
+            refreshBroadcaster.broadcastRefresh()
+        }
+        return Result.success()
+    }
+
+    private val source: SyncSource
+        get() = SyncSource.fromString(inputData.getString(EXTRA_SOURCE))
+
+    private suspend fun getSyncSource(): SyncSource =
+        SyncSource.fromString(tasksPreferences.get(TasksPreferences.syncSource, SyncSource.NONE.name))
+
+    private suspend fun setSyncSource(source: SyncSource) =
+        tasksPreferences.set(TasksPreferences.syncSource, source.name)
+
+    private suspend fun hasTosAcceptance(): Boolean {
+        if (!TasksApplication.IS_GOOGLE_PLAY && !inventory.hasTasksAccount) {
+            return true
+        }
+        val currentTosVersion = firebase.getTosVersion()
+        val acceptedTosVersion = tasksPreferences.get(TasksPreferences.acceptedTosVersion, 0)
+        return acceptedTosVersion >= currentTosVersion
+    }
+
+    private suspend fun doSync() {
+        val hasNetworkConnectivity = context.hasNetworkConnectivity()
+        if (hasNetworkConnectivity && hasTosAcceptance()) {
+            googleTaskJobs().plus(caldavJobs()).awaitAll()
+        }
+        inventory.updateTasksAccount()
+        if (openTaskDao.shouldSync()) {
+            openTasksSynchronizer.get().sync(hasPro = inventory.hasPro)
+
+            if (source == SyncSource.USER_INITIATED) {
+                AccountManager
+                    .get(context)
+                    .accounts
+                    .filter { OpenTaskDao.SUPPORTED_TYPES.contains(it.type) }
+                    .forEach {
+                        Timber.d("Requesting sync for $it")
+                        ContentResolver.requestSync(
+                            it,
+                            openTaskDao.authority,
+                            Bundle().apply {
+                                putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)
+                                putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)
+                            }
+                        )
+                    }
+            }
+        }
+    }
+
+    private suspend fun googleTaskJobs(): List<Deferred<Unit>> = coroutineScope {
+        getGoogleAccounts()
+            .map { account ->
+                async(Dispatchers.IO) {
+                    googleTaskSynchronizer.get().sync(account)
+                }
+            }
+    }
+
+    private suspend fun caldavJobs(): List<Deferred<Unit>> = coroutineScope {
+        getCaldavAccounts().map {
+            async(Dispatchers.IO) {
+                Thread.currentThread().contextClassLoader = context.classLoader
+                when (it.accountType) {
+                    TYPE_ETEBASE -> etebaseSynchronizer.get().sync(it, inventory.hasPro)
+                    TYPE_TASKS,
+                    TYPE_CALDAV -> caldavSynchronizer.get().sync(it, inventory.hasPro)
+                    TYPE_MICROSOFT -> microsoftSynchronizer.get().sync(it)
+                }
+            }
+        }
+    }
+
+    private suspend fun getGoogleAccounts() =
+        caldavDao.getAccounts(CaldavAccount.TYPE_GOOGLE_TASKS)
+
+    private suspend fun getCaldavAccounts() =
+            caldavDao.getAccounts(TYPE_CALDAV, TYPE_TASKS, TYPE_ETEBASE, TYPE_MICROSOFT)
+
+    companion object {
+        const val EXTRA_SOURCE = "extra_source"
+    }
+}

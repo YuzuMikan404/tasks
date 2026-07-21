@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingTop="16dp"
+  android:paddingBottom="16dp"
+  android:background="?attr/selectableItemBackground"
+  android:clickable="true"
+  android:focusable="true">
+
+  <ImageView
+    android:id="@+id/place_icon"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true"
+    android:paddingStart="@dimen/keyline_first"
+    android:paddingEnd="@dimen/keyline_second"
+    android:src="@drawable/ic_outline_place_24px"
+    app:tint="?attr/colorOnSurface"/>
+
+  <ImageView
+    android:contentDescription="@string/place_settings"
+    android:id="@+id/location_settings"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:paddingStart="@dimen/keyline_first"
+    android:paddingEnd="@dimen/keyline_first"
+    android:src="@drawable/ic_outline_edit_24px"
+    app:tint="?attr/colorOnSurface" />
+
+  <TextView
+    android:id="@+id/name"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_toEndOf="@id/place_icon"
+    android:layout_toStartOf="@id/location_settings"
+    android:paddingStart="0dp"
+    android:paddingEnd="@dimen/keyline_first"
+    android:ellipsize="end"
+    android:gravity="start|top"
+    android:maxLines="2"
+    android:textAlignment="viewStart"
+    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
+
+  <TextView
+    android:id="@+id/address"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/name"
+    android:layout_toEndOf="@id/place_icon"
+    android:layout_toStartOf="@id/location_settings"
+    android:paddingStart="0dp"
+    android:paddingEnd="@dimen/keyline_first"
+    android:ellipsize="end"
+    android:maxLines="2"
+    android:visibility="gone"
+    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
+
+
+</RelativeLayout>

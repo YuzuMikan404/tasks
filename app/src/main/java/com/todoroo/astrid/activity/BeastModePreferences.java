@@ -1,0 +1,154 @@
+/*
+ * Copyright (c) 2012 Todoroo Inc
+ *
+ * See the file "LICENSE" for the full license governing this code.
+ */
+
+package com.todoroo.astrid.activity;
+
+import static org.tasks.Strings.isNullOrEmpty;
+import static java.util.Arrays.asList;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.ViewGroup;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import org.tasks.R;
+import org.tasks.databinding.BeastModePrefActivityBinding;
+import org.tasks.injection.ThemedInjectingAppCompatActivity;
+import org.tasks.preferences.Preferences;
+import org.tasks.preferences.beast.BeastModeRecyclerAdapter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
+public class BeastModePreferences extends ThemedInjectingAppCompatActivity
+    implements Toolbar.OnMenuItemClickListener {
+
+  private static String beastModeOrderPref;
+
+  private static String getBeastModeOrderPref(Context context) {
+    if (beastModeOrderPref == null) {
+      beastModeOrderPref = context.getString(R.string.p_beast_mode_order);
+    }
+    return beastModeOrderPref;
+  }
+  private static final String BEAST_MODE_PREF_ITEM_SEPARATOR = ";";
+
+  @Inject Preferences preferences;
+  private BeastModeRecyclerAdapter adapter;
+
+  public static void setDefaultOrder(Preferences preferences, Context context) {
+    if (preferences.getStringValue(getBeastModeOrderPref(context)) != null) {
+      return;
+    }
+
+    ArrayList<String> list = constructOrderedControlList(preferences, context);
+    StringBuilder newSetting = new StringBuilder();
+    for (String item : list) {
+      newSetting.append(item);
+      newSetting.append(BEAST_MODE_PREF_ITEM_SEPARATOR);
+    }
+    preferences.setString(getBeastModeOrderPref(context), newSetting.toString());
+  }
+
+  public static ArrayList<String> constructOrderedControlList(
+      Preferences preferences, Context context) {
+    String order = preferences.getStringValue(getBeastModeOrderPref(context));
+    ArrayList<String> list = new ArrayList<>();
+    String[] itemsArray;
+    if (order == null) {
+      itemsArray = context.getResources().getStringArray(R.array.TEA_control_sets_prefs);
+    } else {
+      itemsArray = order.split(BEAST_MODE_PREF_ITEM_SEPARATOR);
+    }
+
+    Collections.addAll(list, itemsArray);
+
+    if (order == null) {
+      return list;
+    }
+
+    itemsArray = context.getResources().getStringArray(R.array.TEA_control_sets_prefs);
+    for (int i = 0; i < itemsArray.length; i++) {
+      if (!list.contains(itemsArray[i])) {
+        list.add(i, itemsArray[i]);
+      }
+    }
+    return list;
+  }
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    EdgeToEdge.enable(this);
+
+    BeastModePrefActivityBinding binding = BeastModePrefActivityBinding.inflate(getLayoutInflater());
+    Toolbar toolbar = binding.toolbar.toolbar;
+    RecyclerView recyclerView = binding.recyclerView;
+    setContentView(binding.getRoot());
+
+    ViewCompat.setOnApplyWindowInsetsListener(
+        binding.getRoot(),
+        (v, insets) -> {
+          Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+          ViewGroup.MarginLayoutParams toolbarParams =
+              (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
+          toolbarParams.topMargin = systemBars.top;
+          recyclerView.setPadding(0, 0, 0, systemBars.bottom);
+          return insets;
+        });
+
+    toolbar.setNavigationIcon(
+        getDrawable(R.drawable.ic_outline_arrow_back_24px));
+    toolbar.setNavigationOnClickListener(v -> finish());
+    toolbar.inflateMenu(R.menu.beast_mode);
+    toolbar.setOnMenuItemClickListener(this);
+
+    adapter = new BeastModeRecyclerAdapter(this, constructOrderedControlList(preferences, this));
+    recyclerView.setHasFixedSize(true);
+    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    adapter.applyToRecyclerView(recyclerView);
+  }
+
+  @Override
+  public boolean onMenuItemClick(MenuItem item) {
+    if (item.getItemId() == R.id.menu_reset_to_defaults) {
+      String[] prefsArray = getResources().getStringArray(R.array.TEA_control_sets_prefs);
+      adapter.setItems(asList(prefsArray));
+      return true;
+    }
+    return onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void finish() {
+    List<String> items = adapter.getItems();
+    StringBuilder newSetting = new StringBuilder();
+    for (int i = 0; i < items.size(); i++) {
+      newSetting.append(items.get(i));
+      newSetting.append(BEAST_MODE_PREF_ITEM_SEPARATOR);
+    }
+    String oldValue = preferences.getStringValue(getBeastModeOrderPref(this));
+    String newValue = newSetting.toString();
+    if (isNullOrEmpty(oldValue) || !oldValue.equals(newValue)) {
+      preferences.setString(getBeastModeOrderPref(this), newSetting.toString());
+      setResult(RESULT_OK);
+    }
+    super.finish();
+  }
+}

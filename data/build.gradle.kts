@@ -1,0 +1,84 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.redacted)
+}
+
+kotlin {
+    applyDefaultHierarchyTemplate()
+    androidTarget {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            freeCompilerArgs.addAll("-P", "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=org.tasks.CommonParcelize")
+        }
+    }
+    jvm()
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.androidx.room)
+            implementation(libs.androidx.sqlite)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization)
+            implementation(libs.kermit)
+        }
+        jvmTest.dependencies {
+            implementation(libs.junit)
+            implementation(libs.androidx.room.testing)
+        }
+    }
+    task("testClasses")
+}
+tasks.withType<Test>().configureEach {
+    systemProperty("tasks.schemaDir", layout.projectDirectory.dir("schemas").asFile.absolutePath)
+}
+android {
+    namespace = "org.tasks.data"
+    compileSdk = 34
+
+    buildFeatures {
+        buildConfig = true
+    }
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+            arg("room.incremental", "true")
+            arg("room.generateKotlin", "true")
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+redacted {
+    redactedAnnotation = "org/tasks/data/Redacted"
+    enabled = gradle.startParameter.taskNames.any { it.contains("Release") }
+}
+
+dependencies {
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspJvm", libs.androidx.room.compiler)
+}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="import_summary_message">ಕಡತ %1$sಗಳು %2$sಗಳನ್ನು ಒಳಹೊಂದಿದ್ದವು.
+\n
+\n %3$sಗಳನ್ನು ಆಮದಿಸಲಾಗಿವೆ,
+\n %4$sಗಳು ಆಗಲೇ ಅಸ್ತಿತ್ವದಲ್ಲಿವೆ
+\n %5$sಗಳಲ್ಲಿ ದೋ಼ಷಗಳಿವೆ
+\n</string>
+    <string name="import_summary_title">ಸಾರಾಂಶವನ್ನು ಪುನಃಸ್ಥಾಪಿಸು</string>
+    <string name="backup_BAc_import">ಕಾದಿಟ್ಟದ್ದನ್ನು ಆಮದಿಸು</string>
+    <string name="backup_BAc_export">ಈಗ ಕಾದಿರಿಸು</string>
+    <string name="export_toast">%1$sರಿಂದ %2$sಕ್ಕೆ ಕಾದಿರಿಸು.</string>
+    <string name="display_name">ಹೆಸರನ್ನು ತೋರಿಸು</string>
+    <string name="TVA_add_comment">ಅಭಿಪ್ರಾಯವನ್ನು ಸೇರಿಸು…</string>
+    <string name="actfm_picture_clear">ಚಿತ್ರವನ್ನು ಅಳಿಸು</string>
+    <string name="import_progress_read">ಓದುವ ಕಾರ್ಯ %d…</string>
+    <string name="cancel">ರದ್ದುಮಾಡಿ</string>
+    <string name="ok">ಸರಿ</string>
+    <string name="WID_dateButtonUnset">ಸೆಟ್ ಮಾಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ</string>
+    <string name="DLG_undo">ಪೂರ್ವಕ್ರಿಯೆ</string>
+    <string name="DLG_hour_minutes">ಸಮಯ (ಗಂಟೆಗಳು : ನಿಮಿಷಗಳು)</string>
+    <string name="DLG_delete_this_task_question">ಈ ಕಾರ್ಯವನ್ನು ಅಳಿಸಿ\?</string>
+    <string name="keep_editing">ಸಂಪಾದನೆ ಮಾಡುತ್ತಲೇ ಇರಿ</string>
+    <string name="discard_confirmation">ನಿಮ್ಮ ಬದಲಾವಣೆಗಳನ್ನು ನೀವು ತ್ಯಜಿಸಲು ಖಚಿತವಾಗಿರುವಿರಾ\?</string>
+    <string name="read_permission_label">ಕಾರ್ಯಗಳ ಅನುಮತಿ</string>
+    <string name="TLA_no_items">ಇಲ್ಲಿ ಯಾವುದೇ ಕಾರ್ಯಗಳಿಲ್ಲ.</string>
+    <string name="TAd_actionEditTask">ತಿದ್ದು</string>
+    <string name="action_open">ತೆರೆ</string>
+    <string name="SSD_sort_start">ಪ್ರಾರಂಭ ದೆನಂಕದಿಂದ</string>
+    <string name="TLA_menu_settings">ಸೆಟ್ಟಿಂಗ್</string>
+    <string name="TLA_menu_search">ಹುಡುಕು</string>
+    <string name="action_call">ಕರೆ</string>
+    <string name="SSD_sort_my_order">ನನ್ನ ಅನುಕ್ರಮ</string>
+    <string name="SSD_sort_modified">ಕೊನೆಯದಾಗಿ ಮಾರ್ಪಡಿಸಿದ್ದರಿಂದ</string>
+    <string name="SSD_sort_auto">ಸ್ಮಾರ್ಟ್ ವಿಂಗಡಣೆ</string>
+    <string name="SSD_sort_importance">ಆದ್ಯತೆಯಿಂದ</string>
+    <string name="SSD_sort_due">ಕೊನೆಯ ದಿನಾಂಕದಿಂದ</string>
+    <string name="TLA_menu_sort">ವಿಂಗಡಿಸು</string>
+    <string name="app_settings">ಆಪ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು</string>
+    <string name="sort_created">ಸೃಷ್ಟಿ ಸಮಯದಿಂದ</string>
+    <string name="customize_drawer">ಡ್ರಾಯರ್ ಅನ್ನು ಕಸ್ಟಮೈಸ್ ಮಾಡಿ</string>
+    <string name="customize_drawer_summary">ಮೆನು ಐಟಂಗಳನ್ನು ಮರುಜೋಡಿಸಲು ಎಳೆದು ಬಿಡಿ</string>
+    <string name="SSD_sort_alpha">ಶೀರ್ಷಿಕೆಯಿಂದ</string>
+    <string name="astrid_sort_order">ಆಸ್ಟ್ರಿಡ್ ಹಸ್ತಚಾಲಿತ ವಿಂಗಡಣೆ</string>
+    <string name="astrid_sort_order_summary">ಆಸ್ಟ್ರಿಡ್‌ನ ಹಸ್ತಚಾಲಿತ ವಿಂಗಡಣೆ ಮೋಡ್ ಅನ್ನು \'ನನ್ನ ಕಾರ್ಯಗಳು\', \'ಇಂದು\' ಮತ್ತು ಟ್ಯಾಗ್‌ಗಳಿಗೆ ಸಕ್ರಿಯಗೊಳಿಸಿ. ಈ ವಿಂಗಡಣೆ ಮೋಡ್ ಭವಿಷ್ಯದ ನವೀಕರಣದಲ್ಲಿ \'ನನ್ನ ಕ್ರಮ\'ದಿಂದ ಬದಲಾಯಿಸಲಾಗುತ್ತದೆ</string>
+    <string name="FLA_new_filter">ಹೊಸ ಫಿಲ್ಟರ್ ರಚಿಸಿ</string>
+    <string name="sort_list">ಪಟ್ಟಿಯಿಂದ</string>
+    <string name="FLA_search_filter">\'%s\' ಗೆ ಹೊಂದಿಕೆ</string>
+</resources>

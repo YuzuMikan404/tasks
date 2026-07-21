@@ -1,0 +1,150 @@
+package org.tasks.presentation.screens
+
+import android.app.Activity.RESULT_OK
+import android.app.RemoteInput
+import android.content.Intent
+import android.view.inputmethod.EditorInfo
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material.Button
+import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.CircularProgressIndicator
+import androidx.wear.compose.material.Text
+import androidx.wear.input.RemoteInputIntentHelper
+import androidx.wear.input.wearableExtender
+import com.google.android.horologist.annotations.ExperimentalHorologistApi
+import com.google.android.horologist.compose.layout.ScalingLazyColumn
+import com.google.android.horologist.compose.layout.ScreenScaffold
+import com.google.android.horologist.compose.layout.fillMaxRectangle
+import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
+import org.jetbrains.compose.resources.stringResource
+import org.tasks.presentation.components.Card
+import org.tasks.presentation.components.Checkbox
+import tasks.kmp.generated.resources.Res
+import tasks.kmp.generated.resources.enter_title
+import tasks.kmp.generated.resources.new_task
+import tasks.kmp.generated.resources.save
+
+@OptIn(ExperimentalHorologistApi::class)
+@Composable
+fun TaskEditScreen(
+    uiState: UiState,
+    setTitle: (String) -> Unit,
+    toggleCompleted: () -> Unit,
+    save: () -> Unit,
+    back: () -> Unit,
+) {
+    val keyboardInputRequest: ManagedActivityResultLauncher<Intent, ActivityResult> = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == RESULT_OK) {
+            val text =
+                result
+                    .data
+                    ?.let { RemoteInput.getResultsFromIntent(it) }
+                    ?.getCharSequence("input")
+                    ?: return@rememberLauncherForActivityResult
+            setTitle(text.toString())
+        } else if (uiState.taskId == 0L) {
+            back()
+        }
+    }
+    val enterTitleLabel = stringResource(Res.string.enter_title)
+    LaunchedEffect(uiState.taskId) {
+        if (uiState.taskId == 0L) {
+            keyboardInputRequest.openKeyboard(enterTitleLabel)
+        }
+    }
+    if (!uiState.loaded) {
+        Box(
+            modifier = Modifier.fillMaxRectangle(),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
+        val columnState = rememberResponsiveColumnState(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        )
+        ScreenScaffold(
+            scrollState = columnState,
+        ) {
+            ScalingLazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                columnState = columnState,
+            ) {
+                if (uiState.taskId == 0L) {
+                    item {
+                        Text(stringResource(Res.string.new_task))
+                    }
+                }
+                item {
+                    Card(
+                        icon = {
+                            Checkbox(
+                                completed = uiState.completed,
+                                repeating = uiState.repeating,
+                                priority = uiState.priority,
+                                toggleComplete = toggleCompleted,
+                            )
+                        },
+                        content = {
+                            Text(
+                                text = uiState.title,
+                                modifier = Modifier.padding(top = 4.dp, end = 8.dp, bottom = 4.dp),
+                            )
+                        },
+                        onClick = { keyboardInputRequest.openKeyboard(enterTitleLabel) },
+                    )
+                }
+                if (uiState.description.isNotBlank()) {
+                    item {
+                        Text(
+                            text = uiState.description,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
+                        )
+                    }
+                }
+                item {
+                    Button(
+                        onClick = { save() },
+                        colors = ButtonDefaults.buttonColors(),
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text(stringResource(Res.string.save))
+                    }
+                }
+            }
+        }
+    }
+}
+
+private fun ManagedActivityResultLauncher<Intent, ActivityResult>.openKeyboard(label: String) {
+    val intent: Intent = RemoteInputIntentHelper.createActionRemoteInputIntent()
+    val remoteInputs: List<RemoteInput> = listOf(
+        RemoteInput
+            .Builder("input")
+            .setLabel(label)
+            .setAllowFreeFormInput(true)
+            .wearableExtender {
+                setInputActionType(EditorInfo.IME_ACTION_DONE)
+            }
+            .build()
+    )
+    RemoteInputIntentHelper.putRemoteInputsExtra(intent, remoteInputs)
+    launch(intent)
+}

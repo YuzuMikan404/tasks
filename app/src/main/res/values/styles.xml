@@ -1,0 +1,157 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+
+  <style name="SpinnerNoPadding" parent="Widget.AppCompat.TextView.SpinnerItem">
+    <item name="android:paddingStart">0dp</item>
+    <item name="android:paddingEnd">0dp</item>
+  </style>
+
+  <style name="TranslucentDialog" parent="DayNightDialog">
+    <item name="viewInflaterClass">androidx.appcompat.app.AppCompatViewInflater</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowCloseOnTouchOutside">false</item>
+    <item name="dialogTheme">@style/TasksDialog</item>
+    <item name="android:dialogTheme">@style/TasksDialog</item>
+    <item name="alertDialogTheme">@style/TasksDialogAlert</item>
+    <item name="materialAlertDialogTheme">@style/TasksDialogAlert</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    <item name="textInputStyle">@style/OutlinedBox</item>
+  </style>
+
+  <style name="TranslucentWindow" parent="TasksBase">
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowAnimationStyle">@null</item>
+    <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowIsFloating">false</item>
+  </style>
+
+  <style name="ToolbarTheme" parent="ThemeOverlay.Material3.Light">
+    <item name="toolbarNavigationButtonStyle">@style/BlackNavigation</item>
+    <item name="iconTint">?attr/colorOnSurface</item>
+    <item name="android:actionOverflowButtonStyle">@style/BlackOverflow</item>
+  </style>
+
+  <style name="WhiteNavigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+    <item name="android:tint">@color/white_100</item>
+  </style>
+
+  <style name="WhiteOverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
+    <item name="android:tint">@color/white_100</item>
+  </style>
+
+  <style name="ActionModeStyle" parent="Widget.AppCompat.ActionMode">
+    <item name="background">@color/content_background</item>
+    <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>
+  </style>
+
+  <style name="ActionModeTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
+    <item name="android:textColor">?attr/colorOnSurface</item>
+  </style>
+
+  <style name="ActionModeTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <item name="iconTint">?attr/colorOnSurface</item>
+    <item name="android:actionOverflowButtonStyle">@style/ActionModeOverflowButton</item>
+  </style>
+
+  <style name="ActionModeOverflowButton" parent="Widget.AppCompat.Light.ActionButton.Overflow">
+    <item name="android:tint">?attr/colorOnSurface</item>
+  </style>
+
+  <style name="ActionModeCloseButton" parent="Widget.AppCompat.ActionButton.CloseMode">
+    <item name="android:tint">?attr/colorOnSurface</item>
+  </style>
+
+  <style name="BlackNavigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+    <item name="android:tint">@color/black_100</item>
+  </style>
+
+  <style name="BlackOverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
+    <item name="android:tint">@color/black_100</item>
+  </style>
+
+  <style name="TagSettingsRow" parent="Widget.Design.TextInputLayout">
+    <item name="android:textSize">18sp</item>
+    <item name="android:clickable">true</item>
+    <item name="android:focusable">true</item>
+    <item name="android:padding">@dimen/keyline_first</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
+
+  <style name="TagSettingsEditText">
+    <item name="android:maxLines">1</item>
+    <item name="android:inputType">textNoSuggestions</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:imeOptions">flagNoExtractUi</item>
+  </style>
+
+  <!--=============================================== MainActivity == -->
+
+  <style name="BaseHorizontalDivider">
+    <item name="android:background">?attr/dividerHorizontal</item>
+  </style>
+
+  <style name="vertical_divider">
+    <item name="android:layout_width">0dp</item>
+    <item name="android:layout_height">0dp</item>
+    <item name="android:visibility">gone</item>
+  </style>
+
+  <style name="horizontal_divider" parent="BaseHorizontalDivider">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">1dp</item>
+  </style>
+
+  <style name="task_edit_row_divider" parent="horizontal_divider">
+    <item name="android:layout_gravity">end|bottom</item>
+  </style>
+
+  <style name="task_list_container">
+    <item name="android:elevation" tools:ignore="NewApi">@dimen/elevation_refresh_indicator</item>
+  </style>
+
+  <style name="AlertButtonStyle" parent="Widget.Material3.Button.TextButton.Dialog.Flush">
+    <item name="android:textColor">?attr/colorSecondary</item>
+  </style>
+
+  <style name="WidgetTitle" parent="TextAppearance.Material3.BodyMedium">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_centerVertical">true</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:gravity">start|center_vertical</item>
+    <item name="android:maxLines">2</item>
+    <item name="android:textAlignment">viewStart</item>
+    <item name="android:textSize">18sp</item>
+  </style>
+
+  <style name="WidgetButton">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_centerVertical">true</item>
+    <item name="android:background">@android:color/transparent</item>
+    <item name="android:scaleType">fitCenter</item>
+  </style>
+
+  <style name="OutlinedBox" parent="Widget.Material3.TextInputLayout.FilledBox">
+    <item name="boxStrokeColor">?attr/colorSecondary</item>
+    <item name="hintTextColor">?attr/colorSecondary</item>
+  </style>
+
+  <!-- Location picker -->
+
+  <style name="LocationPickerTheme" parent="ThemeOverlay.MaterialComponents.Light">
+    <item name="toolbarNavigationButtonStyle">@style/BlackNavigation</item>
+    <item name="iconTint">?attr/colorOnSurface</item>
+    <item name="android:actionOverflowButtonStyle">@style/BlackOverflow</item>
+  </style>
+
+  <style name="popup_overlay" parent="ThemeOverlay.Material3.Light"/>
+
+  <!---->
+
+</resources>

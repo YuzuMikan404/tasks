@@ -1,0 +1,172 @@
+package org.tasks.widget
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.todoroo.astrid.activity.MainActivity.Companion.FINISH_AFFINITY
+import org.tasks.data.dao.TaskDao
+import org.tasks.data.TaskSaver
+import org.tasks.service.TaskCompleter
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
+import org.tasks.R
+import org.tasks.analytics.Firebase
+import org.tasks.broadcast.RefreshBroadcaster
+import org.tasks.dialogs.BaseDateTimePicker.OnDismissHandler
+import org.tasks.dialogs.DateTimePicker.Companion.newDateTimePicker
+import org.tasks.filters.Filter
+import org.tasks.intents.TaskIntents
+import org.tasks.preferences.Preferences
+import timber.log.Timber
+import javax.inject.Inject
+
+@AndroidEntryPoint
+class WidgetClickActivity : AppCompatActivity(), OnDismissHandler {
+    @Inject lateinit var taskCompleter: TaskCompleter
+    @Inject lateinit var taskDao: TaskDao
+    @Inject lateinit var taskSaver: TaskSaver
+    @Inject lateinit var refreshBroadcaster: RefreshBroadcaster
+    @Inject lateinit var preferences: Preferences
+    @Inject lateinit var firebase: Firebase
+
+    private val widgetId: Int
+        get() = intent.getIntExtra(EXTRA_WIDGET, -1)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val intent = intent
+        val action = intent.action
+        if (action.isNullOrEmpty()) {
+            finish()
+            return
+        }
+        when (action) {
+            COMPLETE_TASK -> {
+                val taskId = intent.getLongExtra(EXTRA_TASK_ID, 0L)
+                val completed = intent.getBooleanExtra(EXTRA_COMPLETED, false)
+                Timber.tag("$action taskId=$taskId completed=$completed")
+                if (taskId > 0) {
+                    lifecycleScope.launch(NonCancellable) {
+                        taskCompleter.setComplete(taskId, completed)
+                        firebase.completeTask("widget")
+                    }
+                }
+                logWidgetClick("complete_task")
+                finish()
+            }
+            EDIT_TASK -> {
+                val filter = intent.getParcelableExtra<Filter?>(EXTRA_FILTER)
+                val taskId = intent.getLongExtra(EXTRA_TASK_ID, 0L)
+                Timber.tag("$action taskId=$taskId filter=$filter")
+                logWidgetClick("edit_task")
+                lifecycleScope.launch {
+                    if (taskId > 0) {
+                        val task = taskDao.fetch(taskId)
+                        startActivity(
+                            TaskIntents
+                                .getEditTaskIntent(this@WidgetClickActivity, filter, task)
+                                .putExtra(FINISH_AFFINITY, true)
+                        )
+                    }
+                    finish()
+                }
+            }
+            OPEN_TASK_LIST -> {
+                val filter = intent.getParcelableExtra<Filter?>(EXTRA_FILTER)
+                Timber.tag("$action filter=$filter")
+                logWidgetClick("open_list")
+                startActivity(
+                    TaskIntents
+                        .getTaskListIntent(this, filter)
+                        .putExtra(FINISH_AFFINITY, true)
+                )
+                finish()
+            }
+            TOGGLE_SUBTASKS -> {
+                val taskId = intent.getLongExtra(EXTRA_TASK_ID, 0L)
+                val collapsed = intent.getBooleanExtra(EXTRA_COLLAPSED, false)
+                Timber.d("$action collapsed=$collapsed taskId=$taskId")
+                logWidgetClick("toggle_subtasks")
+                if (taskId > 0) {
+                    lifecycleScope.launch(NonCancellable) {
+                        taskSaver.setCollapsed(taskId, collapsed)
+                    }
+                }
+                finish()
+            }
+            RESCHEDULE_TASK -> {
+                val taskId = intent.getLongExtra(EXTRA_TASK_ID, 0L)
+                Timber.d("$action taskId=$taskId")
+                logWidgetClick("reschedule")
+                val fragmentManager = supportFragmentManager
+                if (fragmentManager.findFragmentByTag(FRAG_TAG_DATE_TIME_PICKER) == null) {
+                    lifecycleScope.launch {
+                        val task = taskDao.fetch(taskId)
+                        if (task != null) {
+                            newDateTimePicker(
+                                preferences.getBoolean(
+                                    R.string.p_auto_dismiss_datetime_widget,
+                                    false
+                                ),
+                                task
+                            )
+                                .show(fragmentManager, FRAG_TAG_DATE_TIME_PICKER)
+                        } else {
+                            finish()
+                        }
+                    }
+                }
+            }
+            TOGGLE_GROUP -> {
+                val group = intent.getLongExtra(EXTRA_GROUP, -1)
+                val setCollapsed = intent.getBooleanExtra(EXTRA_COLLAPSED, false)
+                Timber.d("$action widgetId=$widgetId group=$group collapsed=$setCollapsed")
+                logWidgetClick("toggle_group")
+                val widgetPreferences =
+                    WidgetPreferences(applicationContext, preferences, widgetId)
+                val collapsed = widgetPreferences.collapsed.toMutableSet()
+                if (setCollapsed) {
+                    collapsed.add(group)
+                } else {
+                    collapsed.remove(group)
+                }
+                widgetPreferences.collapsed = collapsed
+                refreshBroadcaster.broadcastRefresh()
+                finish()
+            }
+            else -> {
+                Timber.e("Unknown action $action")
+                finish()
+            }
+        }
+    }
+
+    private fun logWidgetClick(type: String) {
+        firebase.logEvent(
+            R.string.event_widget_click,
+            R.string.param_type to type,
+            R.string.param_widget_id to widgetId,
+        )
+    }
+
+    override fun onDismiss() {
+        finish()
+    }
+
+    companion object {
+        const val COMPLETE_TASK = "COMPLETE_TASK"
+        const val EDIT_TASK = "EDIT_TASK"
+        const val OPEN_TASK_LIST = "OPEN_TASK_LIST"
+        const val TOGGLE_SUBTASKS = "TOGGLE_SUBTASKS"
+        const val RESCHEDULE_TASK = "RESCHEDULE_TASK"
+        const val TOGGLE_GROUP = "TOGGLE_GROUP"
+        const val EXTRA_FILTER = "extra_filter"
+        const val EXTRA_TASK_ID = "extra_task_id"
+        const val EXTRA_COLLAPSED = "extra_collapsed"
+        const val EXTRA_COMPLETED = "extra_completed"
+        const val EXTRA_GROUP = "extra_group"
+        const val EXTRA_WIDGET = "extra_widget"
+        private const val FRAG_TAG_DATE_TIME_PICKER = "frag_tag_date_time_picker"
+    }
+}

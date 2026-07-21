@@ -1,0 +1,120 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :beta do
+    gradle(task: "clean assembleRelease")
+    crashlytics
+  
+    # sh "your_script.sh"
+    # You can also use other beta testing services here
+  end
+
+  desc "Deploy to internal track"
+  lane :deploy do
+      upload_to_play_store(
+        aab: "app/build/outputs/bundle/googleplayRelease/app-googleplay-release.aab",
+        mapping: "app/build/outputs/mapping/googleplayRelease/mapping.txt",
+        track: "beta",
+        skip_upload_metadata: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true,
+      )
+      upload_to_play_store(
+        aab: "wear/build/outputs/bundle/release/wear-release.aab",
+        mapping: "wear/build/outputs/mapping/release/mapping.txt",
+        track: "wear:internal", # don't need to hold up reviews
+        skip_upload_metadata: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true,
+      )
+  end
+
+  desc "Download Play-signed universal APK"
+  lane :download_signed_apk do
+    version_code = File.read("../gradle/libs.versions.toml").match(/versionCode\s*=\s*"(\d+)"/)[1].to_i
+    download_universal_apk_from_google_play(
+      package_name: "org.tasks",
+      version_code: version_code,
+      json_key: "./fastlane.json",
+      destination: "tasks-googleplay-release.apk",
+    )
+  end
+
+  desc "Lint"
+  lane :lint do
+    gradle(task: ":app:lintGoogleplayRelease :app:lintGenericRelease --no-configuration-cache")
+  end
+
+  desc "Bundle"
+  lane :bundle do
+        gradle(
+            task: "app:bundleGoogleplayRelease wear:bundleRelease",
+            properties: {
+                "tasksKeyAlias": ENV["KEY_ALIAS"],
+                "tasksStoreFile": ENV["KEY_PATH"],
+                "tasksStorePassword": ENV["KEY_STORE_PASSWORD"],
+                "tasksKeyPassword": ENV["KEY_PASSWORD"],
+                "tasks_mapbox_key": ENV["MAPBOX_KEY"],
+                "tasks_google_key": ENV["GOOGLE_KEY"],
+                "tasks_posthog_key": ENV["POSTHOG_KEY"]
+            }
+        )
+        generate_apks
+  end
+
+  desc "Generate universal APKs from AABs using bundletool"
+  private_lane :generate_apks do
+    bundletool_version = "1.17.2"
+    bundletool = "bundletool.jar"
+    unless File.exist?("../#{bundletool}")
+      sh("curl -sLf https://github.com/google/bundletool/releases/download/#{bundletool_version}/bundletool-all-#{bundletool_version}.jar -o ../#{bundletool}")
+    end
+
+    bundles = [
+      "app/build/outputs/bundle/googleplayRelease/app-googleplay-release",
+      "wear/build/outputs/bundle/release/wear-release",
+    ]
+
+    bundles.each do |base|
+      aab = "../#{base}.aab"
+      apk = "../#{base}.apk"
+      apks = "../#{base}.apks"
+      sh(
+        "java", "-jar", "../#{bundletool}",
+        "build-apks",
+        "--bundle=#{aab}",
+        "--output=#{apks}",
+        "--mode=universal",
+        "--ks=#{ENV['KEY_PATH']}",
+        "--ks-key-alias=#{ENV['KEY_ALIAS']}",
+        "--ks-pass=pass:#{ENV['KEY_STORE_PASSWORD']}",
+        "--key-pass=pass:#{ENV['KEY_PASSWORD']}",
+        "--overwrite",
+      )
+      sh("unzip", "-o", apks, "universal.apk", "-d", File.dirname(apk))
+      File.rename(File.join(File.dirname(apk), "universal.apk"), apk)
+      File.delete(apks)
+    end
+  end
+end

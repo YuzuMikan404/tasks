@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+** Copyright (c) 2012 Todoroo Inc
+**
+** See the file "LICENSE" for the full license governing this code. 
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/task_list_coordinator"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:descendantFocusability="beforeDescendants"
+  android:focusable="true"
+  android:focusableInTouchMode="true"
+  android:orientation="vertical">
+
+  <com.google.android.material.appbar.AppBarLayout
+      android:id="@+id/appbarlayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:elevation="@dimen/elevation_app_bar">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_gravity="top"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/background"
+        android:theme="@style/ToolbarTheme"
+        app:hideOnScroll="true"
+        app:layout_scrollFlags="scroll|enterAlways"
+        tools:ignore="UnusedAttribute" />
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal">
+
+      <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="100">
+
+        <include
+            android:id="@+id/body_standard"
+            layout="@layout/task_list_body_standard" />
+
+        <include
+            android:id="@+id/body_empty"
+            layout="@layout/task_list_body_empty" />
+
+      </FrameLayout>
+
+      <View style="@style/vertical_divider"/>
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+  <View
+      android:id="@+id/systemBarScrim"
+      android:layout_width="match_parent"
+      android:layout_height="56dp"
+      android:layout_gravity="bottom"
+      android:visibility="visible" />
+
+  <com.google.android.material.bottomappbar.BottomAppBar
+      android:id="@+id/bottomAppBar"
+      style="@style/Widget.Material3.BottomAppBar"
+      android:theme="@style/ToolbarTheme"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom"
+      app:hideOnScroll="true"
+      app:navigationIcon="@drawable/ic_outline_menu_24px"/>
+
+  <com.google.android.material.floatingactionbutton.FloatingActionButton
+      android:id="@+id/fab"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:contentDescription="@string/action_create_new_task"
+      app:layout_anchor="@id/bottomAppBar"
+      app:layout_anchorGravity="top|end"
+      app:srcCompat="@drawable/ic_outline_add_24px"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

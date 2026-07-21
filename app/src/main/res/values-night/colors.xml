@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="window_background">#FF0F1416</color>
+  <color name="content_background">#FF0F1416</color>
+  <color name="dialog_background">#FF1B2023</color>
+  <color name="widget_background_follow_system">@color/md_background_dark</color>
+  <color name="drawer_color_selected">@color/drawer_background_dark_selected</color>
+  <color name="overdue">@color/error_color_material_dark</color>
+  <color name="divider">@color/white_12</color>
+</resources>

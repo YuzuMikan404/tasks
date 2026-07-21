@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <Preference
+    android:key="@string/p_widget_filter"
+    android:title="@string/filter" />
+
+  <Preference
+    android:key="@string/p_widget_theme"
+    android:title="@string/theme" />
+
+  <Preference
+    android:key="@string/p_widget_sort"
+    android:title="@string/TLA_menu_sort" />
+
+  <SwitchPreferenceCompat
+    android:key="@string/p_widget_show_hidden"
+    android:title="@string/show_unstarted" />
+
+  <SwitchPreferenceCompat
+    android:key="@string/p_widget_show_completed"
+    android:title="@string/show_completed" />
+
+  <PreferenceCategory
+    app:key="@string/preferences_advanced"
+    app:title="@string/opacity"
+    app:initialExpandedChildrenCount="1">
+
+    <SeekBarPreference
+      android:defaultValue="100"
+      android:key="@string/opacity"
+      android:max="100"
+      app:min="0"
+      app:seekBarIncrement="5"
+      app:showSeekBarValue="true" />
+
+    <SeekBarPreference
+      android:defaultValue="100"
+      android:key="@string/p_widget_header_opacity"
+      android:max="100"
+      android:title="@string/opacity_header"
+      app:min="0"
+      app:seekBarIncrement="5"
+      app:showSeekBarValue="true" />
+
+    <SeekBarPreference
+      android:defaultValue="100"
+      android:key="@string/p_widget_opacity"
+      android:max="100"
+      android:title="@string/opacity_row"
+      app:min="0"
+      app:seekBarIncrement="5"
+      app:showSeekBarValue="true" />
+
+    <SeekBarPreference
+      android:defaultValue="100"
+      android:key="@string/p_widget_footer_opacity"
+      android:max="100"
+      android:title="@string/opacity_footer"
+      app:min="0"
+      app:seekBarIncrement="5"
+      app:showSeekBarValue="true" />
+
+  </PreferenceCategory>
+
+  <PreferenceCategory android:title="@string/widget_header_settings">
+
+    <SwitchPreferenceCompat
+      android:key="@string/p_widget_show_header"
+      android:title="@string/widget_show_header" />
+
+    <Preference
+      android:key="@string/p_widget_color_v2"
+      android:title="@string/color" />
+
+    <ListPreference
+      android:defaultValue="0"
+      android:key="@string/p_widget_header_spacing"
+      android:entries="@array/widget_spacing_titles"
+      android:entryValues="@array/widget_spacing_values"
+      android:title="@string/header_spacing"
+      android:summary="%s" />
+
+    <SwitchPreferenceCompat
+      android:key="@string/p_widget_show_title"
+      android:title="@string/widget_show_title" />
+
+    <SwitchPreferenceCompat
+      android:key="@string/p_widget_show_menu"
+      android:title="@string/widget_show_menu" />
+
+    <SwitchPreferenceCompat
+      android:key="@string/p_widget_show_settings"
+      android:title="@string/widget_show_settings" />
+
+  </PreferenceCategory>
+
+  <PreferenceCategory android:title="@string/widget_row_settings">
+
+    <SeekBarPreference
+      android:defaultValue="16"
+      android:key="@string/p_widget_font_size"
+      android:max="22"
+      android:title="@string/font_size"
+      app:min="10"
+      app:showSeekBarValue="true" />
+
+    <ListPreference
+      android:defaultValue="0"
+      android:key="@string/p_widget_spacing"
+      android:entries="@array/widget_spacing_titles"
+      android:entryValues="@array/widget_spacing_values"
+      android:title="@string/row_spacing"
+      android:summary="%s" />
+
+    <ListPreference
+      android:defaultValue="0"
+      android:key="@string/p_widget_due_date_position"
+      android:title="@string/due_date"
+      android:entryValues="@array/widget_due_date_position_values"
+      android:entries="@array/widget_due_date_position"
+      android:summary="%s" />
+
+    <SwitchPreferenceCompat
+      android:defaultValue="true"
+      android:key="@string/p_widget_show_description"
+      android:title="@string/show_description" />
+
+    <SwitchPreferenceCompat
+      android:defaultValue="false"
+      android:key="@string/p_widget_show_full_description"
+      android:title="@string/show_full_description" />
+
+    <SwitchPreferenceCompat
+      android:key="@string/p_widget_show_checkboxes"
+      android:title="@string/widget_show_checkboxes" />
+
+    <SwitchPreferenceCompat
+      android:defaultValue="false"
+      android:key="@string/p_widget_show_full_task_title"
+      android:title="@string/EPr_fullTask_title"
+      app:singleLineTitle="false" />
+
+    <SwitchPreferenceCompat
+      android:defaultValue="true"
+      android:key="@string/p_widget_show_dividers"
+      android:title="@string/widget_show_dividers" />
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+    android:key="@string/chips"
+    android:title="@string/chips">
+
+    <SwitchPreferenceCompat
+      android:defaultValue="true"
+      android:key="@string/p_widget_show_subtasks"
+      android:title="@string/subtasks" />
+
+    <SwitchPreferenceCompat
+      android:defaultValue="true"
+      android:key="@string/p_widget_show_start_dates"
+      android:title="@string/start_date" />
+
+    <SwitchPreferenceCompat
+      android:defaultValue="true"
+      android:key="@string/p_widget_show_places"
+      android:title="@string/places" />
+
+    <SwitchPreferenceCompat
+      android:defaultValue="true"
+      android:key="@string/p_widget_show_lists"
+      android:title="@string/lists" />
+
+    <SwitchPreferenceCompat
+      android:defaultValue="true"
+      android:key="@string/p_widget_show_tags"
+      android:title="@string/tags" />
+
+  </PreferenceCategory>
+
+</PreferenceScreen>

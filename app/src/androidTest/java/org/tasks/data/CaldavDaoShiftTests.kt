@@ -1,0 +1,179 @@
+package org.tasks.data
+
+import com.natpryce.makeiteasy.MakeItEasy.with
+import com.natpryce.makeiteasy.PropertyValue
+import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Before
+import org.junit.Test
+import org.tasks.data.dao.CaldavDao
+import org.tasks.data.dao.DirtyDao
+import org.tasks.data.dao.TaskDao
+import org.tasks.data.entity.CaldavAccount
+import org.tasks.data.entity.CaldavAccount.Companion.TYPE_CALDAV
+import org.tasks.data.entity.CaldavCalendar
+import org.tasks.data.entity.CaldavTask
+import org.tasks.injection.InjectingTestCase
+import org.tasks.makers.TaskContainerMaker
+import org.tasks.makers.TaskContainerMaker.CREATED
+import org.tasks.time.DateTime
+import org.tasks.time.DateTimeUtils2.currentTimeMillis
+import javax.inject.Inject
+
+@HiltAndroidTest
+class CaldavDaoShiftTests : InjectingTestCase() {
+    @Inject lateinit var taskDao: TaskDao
+    @Inject lateinit var caldavDao: CaldavDao
+    @Inject lateinit var dirtyDao: DirtyDao
+
+    private val tasks = ArrayList<TaskContainer>()
+
+    @Before
+    override fun setUp() {
+        super.setUp()
+        runBlocking {
+            caldavDao.insert(CaldavAccount(uuid = "account", accountType = TYPE_CALDAV))
+            caldavDao.insert(CaldavCalendar(account = "account", uuid = "calendar"))
+        }
+    }
+
+    @Test
+    fun basicShiftDown() = runBlocking {
+        val created = DateTime(2020, 5, 17, 9, 53, 17)
+        addTask(with(CREATED, created))
+        addTask(with(CREATED, created.plusSeconds(1)))
+        addTask(with(CREATED, created.plusSeconds(2)))
+
+        caldavDao.shiftDown("calendar", 0, created.plusSeconds(1).toAppleEpoch())
+
+        checkOrder(null, tasks[0])
+        checkOrder(created.plusSeconds(2), tasks[1])
+        checkOrder(created.plusSeconds(3), tasks[2])
+    }
+
+    @Test
+    fun shiftDownOnlyWhenNecessary() = runBlocking {
+        val created = DateTime(2020, 5, 17, 9, 53, 17)
+        addTask(with(CREATED, created))
+        addTask(with(CREATED, created.plusSeconds(1)))
+        addTask(with(CREATED, created.plusSeconds(3)))
+        addTask(with(CREATED, created.plusSeconds(4)))
+
+        caldavDao.shiftDown("calendar", 0, created.plusSeconds(1).toAppleEpoch())
+
+        checkOrder(null, tasks[0])
+        checkOrder(created.plusSeconds(2), tasks[1])
+        checkOrder(null, tasks[2])
+        checkOrder(null, tasks[3])
+    }
+
+    @Test
+    fun ignoreUnnecessaryShiftDown() = runBlocking {
+        val created = DateTime(2020, 5, 17, 9, 53, 17)
+        addTask(with(CREATED, created))
+        addTask(with(CREATED, created.plusSeconds(2)))
+
+        caldavDao.shiftDown("calendar", 0, created.plusSeconds(1).toAppleEpoch())
+
+        checkOrder(null, tasks[0])
+        checkOrder(null, tasks[1])
+    }
+
+    @Test
+    fun ignoreOtherCalendarWhenShiftingDown() = runBlocking {
+        val created = DateTime(2020, 5, 17, 9, 53, 17)
+        addTask("calendar1", with(CREATED, created))
+        addTask("calendar2", with(CREATED, created))
+
+        caldavDao.shiftDown("calendar1", 0, created.toAppleEpoch())
+
+        checkOrder(created.plusSeconds(1), tasks[0])
+        checkOrder(null, tasks[1])
+    }
+
+    @Test
+    fun partialShiftDown() = runBlocking {
+        val created = DateTime(2020, 5, 17, 9, 53, 17)
+        addTask(with(CREATED, created))
+        addTask(with(CREATED, created.plusSeconds(1)))
+        addTask(with(CREATED, created.plusSeconds(2)))
+        addTask(with(CREATED, created.plusSeconds(3)))
+        addTask(with(CREATED, created.plusSeconds(4)))
+
+        caldavDao.shiftDown("calendar", 0, created.toAppleEpoch(), created.plusSeconds(3).toAppleEpoch())
+
+        checkOrder(created.plusSeconds(1), tasks[0])
+        checkOrder(created.plusSeconds(2), tasks[1])
+        checkOrder(created.plusSeconds(3), tasks[2])
+        checkOrder(null, tasks[3])
+        checkOrder(null, tasks[4])
+    }
+
+    @Test
+    fun ignoreMovedTasksWhenShiftingDown() = runBlocking {
+        val created = DateTime(2020, 5, 17, 9, 53, 17)
+        addTask(with(CREATED, created))
+        caldavDao.update(caldavDao.getTask(tasks[0].id).apply { this?.deleted =
+            currentTimeMillis()
+        }!!)
+
+        caldavDao.shiftDown("calendar", 0, created.toAppleEpoch())
+
+        assertNull(taskDao.fetch(tasks[0].id)!!.order)
+    }
+
+    @Test
+    fun ignoreDeletedTasksWhenShiftingDown() = runBlocking {
+        val created = DateTime(2020, 5, 17, 9, 53, 17)
+        addTask(with(CREATED, created))
+        taskDao.update(taskDao.fetch(tasks[0].id).apply { this?.deletionDate = currentTimeMillis() }!!)
+
+        caldavDao.shiftDown("calendar", 0, created.toAppleEpoch())
+
+        assertNull(taskDao.fetch(tasks[0].id)!!.order)
+    }
+
+    @Test
+    fun touchShiftedTasks() = runBlocking {
+        val created = DateTime(2020, 5, 17, 9, 53, 17)
+        addTask(with(CREATED, created))
+        addTask(with(CREATED, created.plusSeconds(1)))
+        dirtyDao.markSynced(tasks[0].caldavTask!!.id)
+        dirtyDao.markSynced(tasks[1].caldavTask!!.id)
+
+        caldavDao.shiftDown("calendar", 0, created.toAppleEpoch())
+
+        assertEquals(true, dirtyDao.isDirty(tasks[0].caldavTask!!.id))
+        assertEquals(true, dirtyDao.isDirty(tasks[1].caldavTask!!.id))
+    }
+
+    private suspend fun checkOrder(dateTime: DateTime?, task: TaskContainer) {
+        val order = taskDao.fetch(task.id)!!.order
+        if (dateTime == null) {
+            assertNull(order)
+        } else {
+            assertEquals(dateTime.toAppleEpoch(), order)
+        }
+    }
+
+    private suspend fun addTask(vararg properties: PropertyValue<in TaskContainer?, *>) = addTask("calendar", *properties)
+
+    private suspend fun addTask(calendar: String, vararg properties: PropertyValue<in TaskContainer?, *>) {
+        val t = TaskContainerMaker.newTaskContainer(*properties)
+        val task = t.task
+        taskDao.createNew(task)
+        val caldavTask = CaldavTask(task = t.id, calendar = calendar)
+        if (task.parent > 0) {
+            caldavTask.remoteParent = caldavDao.getRemoteIdForTask(task.parent)
+        }
+        tasks.add(
+            t.copy(
+                caldavTask = caldavTask.copy(
+                    id = caldavDao.insert(caldavTask)
+                )
+            )
+        )
+    }
+}

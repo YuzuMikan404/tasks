@@ -1,0 +1,540 @@
+/*
+ * Copyright 2015 The AppAuth for Android Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.tasks.auth
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.annotation.MainThread
+import androidx.annotation.WorkerThread
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource as kmpStringResource
+import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.lifecycleScope
+import at.bitfire.dav4jvm.okhttp.exception.HttpException
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.getString
+import tasks.kmp.generated.resources.Res
+import org.tasks.TasksUrls
+import tasks.kmp.generated.resources.url_sponsor
+import tasks.kmp.generated.resources.wrong_account
+import tasks.kmp.generated.resources.wrong_account_message
+import net.openid.appauth.AuthState
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationRequest
+import net.openid.appauth.AuthorizationServiceConfiguration
+import net.openid.appauth.ClientSecretBasic
+import net.openid.appauth.RegistrationRequest
+import net.openid.appauth.RegistrationResponse
+import net.openid.appauth.ResponseTypeValues
+import org.tasks.R
+import org.tasks.analytics.Constants
+import org.tasks.TasksApplication.Companion.IS_GENERIC
+import org.tasks.TasksApplication.Companion.IS_GOOGLE_PLAY
+import org.tasks.analytics.Firebase
+import org.tasks.billing.Inventory
+import org.tasks.billing.PurchaseActivity
+import org.tasks.billing.PurchaseActivityViewModel.Companion.EXTRA_GITHUB
+import org.tasks.billing.PurchaseActivityViewModel.Companion.EXTRA_NAME_YOUR_PRICE
+import org.tasks.billing.PurchaseActivityViewModel.Companion.EXTRA_SOURCE
+import org.tasks.data.dao.CaldavDao
+import org.tasks.data.entity.CaldavAccount
+import org.tasks.data.entity.CaldavAccount.Companion.TYPE_TASKS
+import org.tasks.fcm.PushTokenManager
+import org.tasks.extensions.Context.openUri
+import org.tasks.themes.TasksTheme
+import org.tasks.themes.Theme
+import tasks.kmp.generated.resources.ok
+import timber.log.Timber
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors.newSingleThreadExecutor
+import java.util.concurrent.atomic.AtomicReference
+import javax.inject.Inject
+
+/**
+ * Demonstrates the usage of the AppAuth to authorize a user with an OAuth2 / OpenID Connect
+ * provider
+ *
+ * - Retrieve an OpenID Connect discovery document for the provider, or use a local static
+ * configuration.
+ * - Utilize dynamic client registration, if no static client id is specified.
+ * - Initiate the authorization request using the built-in heuristics or a user-selected browser.
+ */
+@AndroidEntryPoint
+class SignInActivity : ComponentActivity() {
+    @Inject lateinit var theme: Theme
+    @Inject lateinit var inventory: Inventory
+    @Inject lateinit var firebase: Firebase
+    @Inject lateinit var pushTokenManager: PushTokenManager
+    @Inject lateinit var caldavDao: CaldavDao
+
+    private val viewModel: SignInViewModel by viewModels()
+
+    private val mClientId = AtomicReference<String?>()
+    private val mAuthRequest = AtomicReference<AuthorizationRequest>()
+    private val mAuthIntent = AtomicReference<CustomTabsIntent>()
+    private var mAuthIntentLatch = CountDownLatch(1)
+    private val mExecutor: ExecutorService = newSingleThreadExecutor()
+
+    private val authService: AuthorizationService
+        get() = viewModel.authService!!
+
+    private val configuration: Configuration
+        get() = authService.configuration
+
+    private val authStateManager: AuthStateManager
+        get() = authService.authStateManager
+
+    enum class Platform {
+        GOOGLE,
+        GITHUB,
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.error.observe(this, this::handleError)
+
+        lifecycleScope.launch {
+            val autoSelect = getAutoSelectPlatform()
+            if (autoSelect != null) {
+                setContent {
+                    TasksTheme(
+                        theme = theme.themeBase.index,
+                        primary = theme.themeColor.primaryColor,
+                    ) {
+                        ErrorDialogs()
+                    }
+                }
+                selectService(autoSelect)
+            } else {
+                setContent {
+                    TasksTheme(
+                        theme = theme.themeBase.index,
+                        primary = theme.themeColor.primaryColor,
+                    ) {
+                        ErrorDialogs()
+                        if (viewModel.showWrongAccountEmail == null && viewModel.showSubscriptionRequiredDialog == null) {
+                            Dialog(onDismissRequest = { finish() }) {
+                                org.tasks.compose.SignInProviderDialog(
+                                    onSelected = { provider ->
+                                        selectService(
+                                            when (provider) {
+                                                org.tasks.compose.SignInProvider.GOOGLE -> Platform.GOOGLE
+                                                org.tasks.compose.SignInProvider.GITHUB -> Platform.GITHUB
+                                            }
+                                        )
+                                    },
+                                    onHelp = {
+                                        openUri(R.string.help_url_sync)
+                                        finish()
+                                    },
+                                    onCancel = { finish() },
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun getAutoSelectPlatform(): Platform? {
+        val existingAccount = caldavDao.getAccounts(TYPE_TASKS).firstOrNull()
+        return when {
+            existingAccount != null ->
+                if (existingAccount.username?.startsWith("github") == true)
+                    Platform.GITHUB
+                else
+                    Platform.GOOGLE
+            IS_GOOGLE_PLAY && inventory.subscription.value?.isTasksSubscription == true ->
+                Platform.GOOGLE
+            else -> null
+        }
+    }
+
+    @Composable
+    private fun ErrorDialogs() {
+        if (viewModel.showWrongAccountEmail != null) {
+            WrongAccountDialog(
+                maskedEmail = viewModel.showWrongAccountEmail!!,
+                onDismiss = { finish() },
+            )
+        } else if (viewModel.showSubscriptionRequiredDialog != null) {
+            SubscriptionRequiredDialog(
+                isGitHub = viewModel.showSubscriptionRequiredDialog!!,
+                onDismiss = { finish() },
+            )
+        }
+    }
+
+    @Composable
+    private fun SubscriptionRequiredDialog(
+        isGitHub: Boolean,
+        onDismiss: () -> Unit,
+    ) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = {
+                Text(
+                    stringResource(
+                        if (isGitHub) R.string.github_sponsors else R.string.subscription
+                    )
+                )
+            },
+            text = {
+                Text(
+                    stringResource(
+                        if (isGitHub)
+                            R.string.sponsorship_required_fdroid
+                        else
+                            R.string.subscription_required_fdroid
+                    )
+                )
+            },
+            dismissButton = if (isGitHub) {
+                {
+                    TextButton(onClick = onDismiss) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                }
+            } else null,
+            confirmButton = {
+                TextButton(onClick = {
+                    if (isGitHub) {
+                        openUri(runBlocking { getString(Res.string.url_sponsor) })
+                    }
+                    onDismiss()
+                }) {
+                    Text(
+                        stringResource(
+                            if (isGitHub) R.string.github_sponsor else R.string.ok
+                        )
+                    )
+                }
+            },
+        )
+    }
+
+    @Composable
+    private fun WrongAccountDialog(
+        maskedEmail: String,
+        onDismiss: () -> Unit,
+    ) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = {
+                Text(kmpStringResource(Res.string.wrong_account))
+            },
+            text = {
+                Text(kmpStringResource(
+                    Res.string.wrong_account_message,
+                    maskedEmail,
+                    TasksUrls.SUPPORT_EMAIL,
+                ))
+            },
+            confirmButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(kmpStringResource(Res.string.ok))
+                }
+            },
+        )
+    }
+
+    private fun selectService(which: Platform) {
+        viewModel.initializeAuthService(when (which) {
+            Platform.GOOGLE -> AuthorizationService.ISS_GOOGLE
+            Platform.GITHUB -> AuthorizationService.ISS_GITHUB
+        })
+        startAuthorization()
+    }
+
+    private fun startAuthorization() {
+        if (authStateManager.current.isAuthorized &&
+                !configuration.hasConfigurationChanged()) {
+            Timber.i("User is already authenticated, signing out")
+            authStateManager.signOut()
+        }
+        if (!configuration.isValid) {
+            returnError(Exception(configuration.configurationError))
+            return
+        }
+        if (configuration.hasConfigurationChanged()) {
+            // discard any existing authorization state due to the change of configuration
+            Timber.i("Configuration change detected, discarding old state")
+            authStateManager.replace(AuthState())
+            configuration.acceptConfiguration()
+        }
+        mExecutor.submit { initializeAppAuth() }
+    }
+
+    private fun handleError(e: Throwable) {
+        if (e is HttpException && e.statusCode == 402) {
+            if (IS_GOOGLE_PLAY) {
+                startActivityForResult(
+                    Intent(this, PurchaseActivity::class.java)
+                        .putExtra(EXTRA_GITHUB, viewModel.authService?.isGitHub ?: IS_GENERIC)
+                        .putExtra(EXTRA_NAME_YOUR_PRICE, false)
+                        .putExtra(EXTRA_SOURCE, "sign_in"),
+                    RC_PURCHASE
+                )
+            } else {
+                viewModel.showSubscriptionRequired(viewModel.authService?.isGitHub ?: false)
+            }
+        } else {
+            returnError(e)
+        }
+    }
+
+    private suspend fun setupAccount(): CaldavAccount? {
+        return viewModel.setupAccount(authService)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        mExecutor.shutdownNow()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            RC_PURCHASE ->
+                if (inventory.subscription.value?.isTasksSubscription == true) {
+                    lifecycleScope.launch {
+                        val account = setupAccount()
+                        if (account != null) {
+                            pushTokenManager.registerTokenForAccount(account)
+                            firebase.logEvent(
+                                R.string.event_sync_add_account,
+                                R.string.param_type to Constants.SYNC_TYPE_TASKS_ORG
+                            )
+                            setResult(RESULT_OK)
+                            finish()
+                        }
+                    }
+                } else {
+                    finish()
+                }
+            RC_AUTH ->
+                if (resultCode == RESULT_OK) {
+                    lifecycleScope.launch {
+                        try {
+                            viewModel.handleResult(authService, data!!)
+                            if (authService.authStateManager.current.isAuthorized) {
+                                val account = setupAccount()
+                                if (account != null) {
+                                    pushTokenManager.registerTokenForAccount(account)
+                                    firebase.logEvent(
+                                        R.string.event_sync_add_account,
+                                        R.string.param_type to Constants.SYNC_TYPE_TASKS_ORG
+                                    )
+                                    setResult(RESULT_OK)
+                                    finish()
+                                }
+                            }
+                        } catch (e: Exception) {
+                            returnError(e)
+                        }
+                    }
+                } else {
+                    returnError(
+                        Exception(getString(R.string.authorization_cancelled)),
+                        report = false
+                    )
+                }
+            else -> super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    @MainThread
+    fun startAuth() {
+        // WrongThread inference is incorrect for lambdas
+        // noinspection WrongThread
+        mExecutor.submit { doAuth() }
+    }
+
+    /**
+     * Initializes the authorization service configuration if necessary, either from the local
+     * static values or by retrieving an OpenID discovery document.
+     */
+    @WorkerThread
+    private fun initializeAppAuth() {
+        Timber.i("Initializing AppAuth")
+        if (authStateManager.current.authorizationServiceConfiguration != null) {
+            // configuration is already created, skip to client initialization
+            Timber.i("auth config already established")
+            initializeClient()
+            return
+        }
+
+        // if we are not using discovery, build the authorization service configuration directly
+        // from the static configuration values.
+        if (configuration.discoveryUri == null) {
+            Timber.i("Creating auth config")
+            val config = AuthorizationServiceConfiguration(
+                    configuration.authEndpointUri!!,
+                    configuration.tokenEndpointUri!!,
+                    configuration.registrationEndpointUri)
+            authStateManager.replace(AuthState(config))
+            initializeClient()
+            return
+        }
+
+        // WrongThread inference is incorrect for lambdas
+        // noinspection WrongThread
+        Timber.i("Retrieving OpenID discovery doc")
+        AuthorizationServiceConfiguration.fetchFromUrl(
+                configuration.discoveryUri!!, { config: AuthorizationServiceConfiguration?, ex: AuthorizationException? -> handleConfigurationRetrievalResult(config, ex) },
+                configuration.connectionBuilder)
+    }
+
+    @MainThread
+    private fun handleConfigurationRetrievalResult(
+            config: AuthorizationServiceConfiguration?,
+            ex: AuthorizationException?) {
+        if (isFinishing || isDestroyed) {
+            return
+        }
+        if (config == null) {
+            returnError(ex ?: Exception("Failed to retrieve discovery document"))
+            return
+        }
+        Timber.i("Discovery document retrieved")
+        authStateManager.replace(AuthState(config))
+        mExecutor.submit { initializeClient() }
+    }
+
+    /**
+     * Initiates a dynamic registration request if a client ID is not provided by the static
+     * configuration.
+     */
+    @WorkerThread
+    private fun initializeClient() {
+        if (configuration.clientId != null) {
+            Timber.i("Using static client ID: %s", configuration.clientId)
+            // use a statically configured client ID
+            mClientId.set(configuration.clientId)
+            runOnUiThread { initializeAuthRequest() }
+            return
+        }
+        val lastResponse = authStateManager.current.lastRegistrationResponse
+        if (lastResponse != null) {
+            Timber.i("Using dynamic client ID: %s", lastResponse.clientId)
+            // already dynamically registered a client ID
+            mClientId.set(lastResponse.clientId)
+            runOnUiThread { initializeAuthRequest() }
+            return
+        }
+
+        // WrongThread inference is incorrect for lambdas
+        // noinspection WrongThread
+        Timber.i("Dynamically registering client")
+        val registrationRequest = RegistrationRequest.Builder(
+                authStateManager.current.authorizationServiceConfiguration!!, listOf(configuration.redirectUri))
+                .setTokenEndpointAuthenticationMethod(ClientSecretBasic.NAME)
+                .build()
+        authService.performRegistrationRequest(
+                registrationRequest) { response: RegistrationResponse?, ex: AuthorizationException? -> handleRegistrationResponse(response, ex) }
+    }
+
+    @MainThread
+    private fun handleRegistrationResponse(
+            response: RegistrationResponse?,
+            ex: AuthorizationException?) {
+        if (isFinishing || isDestroyed) {
+            return
+        }
+        authStateManager.updateAfterRegistration(response, ex)
+        if (response == null) {
+            runOnUiThread { returnError(ex ?: Exception("Failed to dynamically register client")) }
+            return
+        }
+        Timber.i("Dynamically registered client: %s", response.clientId)
+        mClientId.set(response.clientId)
+        initializeAuthRequest()
+        return
+    }
+
+    /**
+     * Performs the authorization request, using the browser selected in the spinner,
+     * and a user-provided `login_hint` if available.
+     */
+    @WorkerThread
+    private fun doAuth() {
+        try {
+            mAuthIntentLatch.await()
+        } catch (ex: InterruptedException) {
+            Timber.w("Interrupted while waiting for auth intent")
+        }
+        val intent = authService.getAuthorizationRequestIntent(
+                mAuthRequest.get(),
+                mAuthIntent.get())
+        startActivityForResult(intent, RC_AUTH)
+    }
+
+    @MainThread
+    private fun returnError(e: Throwable, report: Boolean = true) {
+        if (report) {
+            firebase.reportException(e)
+        }
+        setResult(RESULT_CANCELED, Intent().putExtra(EXTRA_ERROR, e.message))
+        finish()
+    }
+
+    @MainThread
+    private fun initializeAuthRequest() {
+        createAuthRequest()
+        warmUpBrowser()
+        startAuth()
+    }
+
+    private fun warmUpBrowser() {
+        mAuthIntentLatch = CountDownLatch(1)
+        mExecutor.execute {
+            Timber.i("Warming up browser instance for auth request")
+            mAuthIntent.set(authService.createCustomTabsIntent(
+                    mAuthRequest.get().toUri(),
+                    theme.themeColor.primaryColor
+            ))
+            mAuthIntentLatch.countDown()
+        }
+    }
+
+    private fun createAuthRequest() {
+        Timber.i("Creating auth request")
+        val authRequestBuilder = AuthorizationRequest.Builder(
+                authStateManager.current.authorizationServiceConfiguration!!,
+                mClientId.get()!!,
+                ResponseTypeValues.CODE,
+                configuration.redirectUri)
+                .setScope(configuration.scope)
+        mAuthRequest.set(authRequestBuilder.build())
+    }
+
+    companion object {
+        const val EXTRA_ERROR = "extra_error"
+        private const val RC_AUTH = 100
+        private const val RC_PURCHASE = 101
+    }
+}

@@ -1,0 +1,168 @@
+package org.tasks.billing
+
+import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.tasks.LocalBroadcastManager
+import org.tasks.R
+import org.tasks.TasksApplication.Companion.IS_GENERIC
+import org.tasks.analytics.Firebase
+import org.tasks.sync.SyncAdapters
+import org.tasks.sync.SyncSource
+import timber.log.Timber
+import java.util.Locale
+import javax.inject.Inject
+
+@HiltViewModel
+class PurchaseActivityViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val inventory: Inventory,
+    private val billingClient: BillingClient,
+    private val localBroadcastManager: LocalBroadcastManager,
+    private val syncAdapters: SyncAdapters,
+    private val firebase: Firebase,
+) : ViewModel() {
+
+    data class ViewState(
+        val nameYourPrice: Boolean,
+        val isGithub: Boolean,
+        val feature: Int = 0,
+        val source: String = "",
+        val showMoreOptions: Boolean,
+        val price: Float = -1f,
+        val subscription: Purchase? = null,
+        val error: String? = null,
+        val skus: List<Sku> = emptyList(),
+        val purchased: Boolean = false,
+    )
+
+    private val purchaseReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val subscription = inventory.subscription.value
+            _viewState.update { state ->
+                state.copy(
+                    subscription = subscription,
+                    price = state.price.takeIf { it > 0 }
+                        ?: subscription?.subscriptionPrice?.coerceAtMost(25)?.toFloat()
+                        ?: 10f
+                )
+            }
+        }
+    }
+
+    fun setPrice(price: Float) {
+        _viewState.update { it.copy(price = price) }
+    }
+
+    private val _viewState = MutableStateFlow(
+        run {
+            val nameYourPrice = savedStateHandle.get<Boolean>(EXTRA_NAME_YOUR_PRICE) ?: true
+            ViewState(
+                nameYourPrice = nameYourPrice,
+                isGithub = IS_GENERIC || (savedStateHandle.get<Boolean>(EXTRA_GITHUB) ?: false),
+                feature = savedStateHandle.get<Int>(EXTRA_FEATURE) ?: 0,
+                source = savedStateHandle.get<String>(EXTRA_SOURCE) ?: "",
+                showMoreOptions = savedStateHandle.get<Boolean>(EXTRA_SHOW_MORE_OPTIONS) ?: nameYourPrice,
+            )
+        }
+    )
+    val viewState: StateFlow<ViewState> = _viewState
+
+    init {
+        localBroadcastManager.registerPurchaseReceiver(purchaseReceiver)
+
+        viewModelScope.launch {
+            try {
+                billingClient.queryPurchases(throwError = true)
+            } catch (e: Exception) {
+                _viewState.update {
+                    it.copy(error = e.message)
+                }
+            }
+            try {
+                val skus =
+                    (1..25).map { it.toSku(false) }
+                    .plus((1..3).map { it.toSku(true) })
+                    .plus(30.toSku(false))
+                val loadedSkus = billingClient.getSkus(skus)
+                Timber.d("Loaded ${loadedSkus.size}/${skus.size} skus: ${loadedSkus.map { it.productId }}")
+                _viewState.update {
+                    it.copy(skus = loadedSkus)
+                }
+            } catch (e: Exception) {
+                Timber.e(e)
+                firebase.reportIabResult(
+                    (e.message ?: "unknown").take(100),
+                    state = "QUERY_SKUS_FAILED",
+                )
+                _viewState.update {
+                    it.copy(error = e.message)
+                }
+            }
+        }
+
+        firebase.logEvent(
+            R.string.event_showed_purchase_dialog,
+            R.string.param_source to _viewState.value.source,
+        )
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        localBroadcastManager.unregisterReceiver(purchaseReceiver)
+    }
+
+    fun purchase(activity: Activity, price: Int, monthly: Boolean) = viewModelScope.launch {
+        val newSku = price.toSku(monthly)
+        try {
+            billingClient.initiatePurchaseFlow(
+                activity,
+                newSku,
+                BillingClientImpl.TYPE_SUBS,
+                _viewState.value.subscription?.takeIf { it.sku != newSku },
+                onPurchased = {
+                    _viewState.update { it.copy(purchased = true) }
+                    syncAdapters.sync(SyncSource.PURCHASE_COMPLETED)
+                },
+            )
+        } catch (e: Exception) {
+            Timber.e(e)
+            firebase.reportIabResult(
+                (e.message ?: "unknown").take(100),
+                newSku,
+                state = "PURCHASE_FAILED",
+            )
+            _viewState.update {
+                it.copy(error = e.message)
+            }
+        }
+    }
+
+    fun setNameYourPrice(nameYourPrice: Boolean) {
+        _viewState.update { it.copy(nameYourPrice = nameYourPrice) }
+    }
+
+    fun dismissError() {
+        _viewState.update { it.copy(error = null) }
+    }
+
+    companion object {
+        const val EXTRA_GITHUB = "github"
+        const val EXTRA_NAME_YOUR_PRICE = "nameYourPrice"
+        const val EXTRA_SHOW_MORE_OPTIONS = "showMoreOptions"
+        const val EXTRA_FEATURE = "feature"
+        const val EXTRA_SOURCE = "source"
+
+        fun Int.toSku(monthly: Boolean) =
+            String.format(Locale.US, "%s_%02d", if (monthly) "monthly" else "annual", this)
+    }
+}

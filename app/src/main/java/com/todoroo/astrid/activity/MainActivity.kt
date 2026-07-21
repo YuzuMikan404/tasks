@@ -1,0 +1,711 @@
+/*
+ * Copyright (c) 2012 Todoroo Inc
+ *
+ * See the file "LICENSE" for the full license governing this code.
+ */
+package com.todoroo.astrid.activity
+
+import android.app.ActivityOptions
+import android.content.Intent
+import android.graphics.Color
+import android.os.Bundle
+import androidx.activity.SystemBarStyle
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
+import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.calculatePaneScaffoldDirectiveWithTwoPanesOnMediumWidth
+import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.unit.dp
+import androidx.core.content.IntentCompat.getParcelableExtra
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.todoroo.astrid.adapter.SubheaderClickHandler
+import com.todoroo.astrid.gtasks.auth.GtasksLoginActivity
+import com.todoroo.astrid.service.TaskCreator
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.tasks.BuildConfig
+import org.tasks.PlatformConfiguration
+import org.tasks.R
+import org.tasks.TasksApplication.Companion.IS_GOOGLE_PLAY
+import org.tasks.analytics.Constants
+import org.tasks.analytics.Firebase
+import org.tasks.analytics.logCloudOnboarding
+import org.tasks.auth.SignInActivity
+import org.tasks.auth.TasksServerEnvironment
+import org.tasks.billing.Inventory
+import org.tasks.billing.PurchaseActivity
+import org.tasks.billing.PurchaseActivityViewModel
+import org.tasks.billing.maybeTriggerCloudOnboarding
+import org.tasks.caldav.BaseCaldavCalendarSettingsActivity
+import org.tasks.caldav.CaldavSignInActivity
+import org.tasks.compose.AddAccountDestination
+import org.tasks.compose.HomeDestination
+import org.tasks.compose.ImportTasksViewModel
+import org.tasks.compose.PurchaseDestination
+import org.tasks.compose.PurchaseScreen
+import org.tasks.compose.SubscriptionOnboardingDestination
+import org.tasks.compose.SubscriptionOnboardingScreen
+import org.tasks.compose.TosUpdateDialog
+import org.tasks.compose.WelcomeDestination
+import org.tasks.compose.WelcomeScreen
+import org.tasks.compose.accounts.AddAccountScreenWrapper
+import org.tasks.compose.accounts.AddAccountViewModel
+import org.tasks.compose.accounts.Platform
+import org.tasks.compose.accounts.featureTitle
+import org.tasks.compose.accounts.openUrl
+import org.tasks.compose.home.HomeScreen
+import org.tasks.compose.navigateClearingBackStack
+import org.tasks.data.dao.AlarmDao
+import org.tasks.data.dao.CaldavDao
+import org.tasks.data.dao.LocationDao
+import org.tasks.data.dao.TagDataDao
+import org.tasks.data.entity.CaldavAccount
+import org.tasks.data.entity.Task
+import org.tasks.data.listSettingsClass
+import org.tasks.data.newLocalAccount
+import org.tasks.dialogs.NewFilterDialog
+import org.tasks.etebase.EtebaseSignInActivity
+import org.tasks.extensions.Context.nightMode
+import org.tasks.extensions.Context.openUri
+import org.tasks.extensions.Context.toast
+import org.tasks.extensions.broughtToFront
+import org.tasks.extensions.flagsToString
+import org.tasks.extensions.isFromHistory
+import org.tasks.files.FileHelper
+import org.tasks.filters.Filter
+import org.tasks.jobs.WorkManager
+import org.tasks.preferences.DefaultFilterProvider
+import org.tasks.preferences.Preferences
+import org.tasks.preferences.TasksPreferences
+import org.tasks.sync.SyncAdapters
+import org.tasks.sync.SyncSource
+import org.tasks.sync.microsoft.MicrosoftSignInViewModel
+import org.tasks.themes.ColorProvider
+import org.tasks.themes.TasksTheme
+import org.tasks.themes.Theme
+import org.tasks.viewmodel.SubscriptionOnboardingHiltViewModel
+import timber.log.Timber
+import javax.inject.Inject
+
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+    @Inject lateinit var preferences: Preferences
+    @Inject lateinit var defaultFilterProvider: DefaultFilterProvider
+    @Inject lateinit var theme: Theme
+    @Inject lateinit var taskCreator: TaskCreator
+    @Inject lateinit var inventory: Inventory
+    @Inject lateinit var colorProvider: ColorProvider
+    @Inject lateinit var locationDao: LocationDao
+    @Inject lateinit var tagDataDao: TagDataDao
+    @Inject lateinit var alarmDao: AlarmDao
+    @Inject lateinit var firebase: Firebase
+    @Inject lateinit var caldavDao: CaldavDao
+    @Inject lateinit var syncAdapters: SyncAdapters
+    @Inject lateinit var workManager: WorkManager
+    @Inject lateinit var tasksPreferences: TasksPreferences
+    @Inject lateinit var serverEnvironment: TasksServerEnvironment
+    @Inject lateinit var configuration: PlatformConfiguration
+
+    private val viewModel: MainActivityViewModel by viewModels()
+    private var currentNightMode = 0
+    private var currentPro = false
+    private var actionMode: ActionMode? = null
+    private var isReady = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        theme.themeBase.set(this)
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { !isReady }
+        currentNightMode = nightMode
+        currentPro = inventory.hasPro
+
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(
+                lightScrim = Color.TRANSPARENT,
+                darkScrim = Color.TRANSPARENT
+            ),
+            navigationBarStyle = if (theme.themeBase.isDarkTheme(this)) {
+                SystemBarStyle.dark(Color.TRANSPARENT)
+            } else {
+                SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+            }
+        )
+
+        setContent {
+            TasksTheme(
+                theme = theme.themeBase.index,
+                primary = theme.themeColor.primaryColor,
+            ) {
+                val navController = rememberNavController()
+                val hasAccount = viewModel
+                    .accountExists
+                    .collectAsStateWithLifecycle(null)
+                    .value
+                val currentTosVersion = firebase.getTosVersion()
+                val acceptedTosVersion by tasksPreferences
+                    .flow(TasksPreferences.acceptedTosVersion, 0)
+                    .collectAsStateWithLifecycle(0)
+                val needsTosAcceptance = acceptedTosVersion < currentTosVersion &&
+                        (IS_GOOGLE_PLAY || inventory.hasTasksAccount)
+                suspend fun setAcceptedTosVersion(version: Int) {
+                    tasksPreferences.set(TasksPreferences.acceptedTosVersion, version)
+                }
+
+                val currentEnv by tasksPreferences
+                    .flow(TasksPreferences.serverEnvironment, TasksServerEnvironment.ENV_PRODUCTION)
+                    .collectAsStateWithLifecycle(TasksServerEnvironment.ENV_PRODUCTION)
+
+                val needsCloudOnboarding by viewModel.needsCloudOnboarding
+                    .collectAsStateWithLifecycle(null)
+                val importViewModel: ImportTasksViewModel = hiltViewModel()
+                val importState by importViewModel.state.collectAsStateWithLifecycle()
+                val isImporting = importState !is ImportTasksViewModel.ImportState.Idle
+                LaunchedEffect(needsCloudOnboarding, hasAccount, isImporting) {
+                    Timber.d("hasAccount=$hasAccount isImporting=$isImporting needsCloudOnboarding=$needsCloudOnboarding")
+                    val routing =
+                        viewModel.routeOnboarding(hasAccount, needsCloudOnboarding, isImporting)
+                    when (val navigation = routing.navigation) {
+                        is MainActivityViewModel.OnboardingNavigation.Push ->
+                            navController.navigate(navigation.destination)
+                        is MainActivityViewModel.OnboardingNavigation.ClearBackStack ->
+                            navController.navigateClearingBackStack(navigation.destination)
+                        null -> Unit
+                    }
+                    if (routing.logOnboardingComplete) {
+                        viewModel.logOnboardingComplete()
+                    }
+                    routing.ready?.let { isReady = it }
+                }
+
+                LifecycleResumeEffect(Unit) {
+                    if (intent.getBooleanExtra(OPEN_ADD_ACCOUNT, false)) {
+                        intent.removeExtra(OPEN_ADD_ACCOUNT)
+                        navController.navigate(AddAccountDestination)
+                    }
+                    onPauseOrDispose {}
+                }
+
+                NavHost(
+                    navController = navController,
+                    startDestination = HomeDestination,
+                ) {
+                    composable<WelcomeDestination> {
+                        LaunchedEffect(Unit) {
+                            firebase.logEvent(R.string.event_screen_welcome)
+                        }
+                        WelcomeScreen(
+                            importViewModel = importViewModel,
+                            filePickerIntent = FileHelper.newFilePickerIntent(
+                                this@MainActivity,
+                                preferences.backupDirectory
+                            ),
+                            onBack = { finish() },
+                            onSignIn = {
+                                lifecycleScope.launch {
+                                    if (IS_GOOGLE_PLAY) {
+                                        firebase.logEvent(R.string.event_accept_tos)
+                                        setAcceptedTosVersion(currentTosVersion)
+                                    }
+                                    navController.navigate(AddAccountDestination)
+                                }
+                            },
+                            onContinueWithoutSync = {
+                                lifecycleScope.launch {
+                                    if (IS_GOOGLE_PLAY) {
+                                        firebase.logEvent(R.string.event_accept_tos)
+                                        setAcceptedTosVersion(currentTosVersion)
+                                    }
+                                    firebase.logEvent(R.string.event_add_account, R.string.param_source to "onboarding", R.string.param_selection to "local")
+                                    firebase.logEvent(R.string.event_sync_add_account, R.string.param_type to Constants.SYNC_TYPE_LOCAL)
+                                    caldavDao.newLocalAccount()
+                                }
+                            },
+                            onImportBackup = {
+                                lifecycleScope.launch {
+                                    if (IS_GOOGLE_PLAY) {
+                                        firebase.logEvent(R.string.event_accept_tos)
+                                        setAcceptedTosVersion(currentTosVersion)
+                                    }
+                                    firebase.logEvent(
+                                        R.string.event_add_account,
+                                        R.string.param_source to "onboarding",
+                                        R.string.param_selection to "import_backup"
+                                    )
+                                }
+                            },
+                            openLegalUrl = { url -> openUri(url) },
+                            environments = serverEnvironment.environments,
+                            currentEnvironment = currentEnv,
+                            onSelectEnvironment = { env ->
+                                lifecycleScope.launch {
+                                    serverEnvironment.setEnvironment(env)
+                                }
+                            },
+                        )
+                    }
+                    composable<AddAccountDestination> { backStackEntry ->
+                        LaunchedEffect(Unit) {
+                            firebase.logEvent(R.string.event_screen_add_account)
+                        }
+                        val addAccountViewModel: AddAccountViewModel = hiltViewModel()
+                        val microsoftVM: MicrosoftSignInViewModel = hiltViewModel()
+                        LaunchedEffect(Unit) {
+                            addAccountViewModel.accountAdded.collect {
+                                navController.popBackStack()
+                            }
+                        }
+                        val syncLauncher =
+                            rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                                if (result.resultCode != RESULT_OK) {
+                                    result.data
+                                        ?.getStringExtra(GtasksLoginActivity.EXTRA_ERROR)
+                                        ?.let { toast(it) }
+                                }
+                            }
+                        var pendingPlatform by rememberSaveable { mutableStateOf<String?>(null) }
+                        val purchased by backStackEntry.savedStateHandle
+                            .getStateFlow("purchased", false)
+                            .collectAsStateWithLifecycle()
+                        fun doSignIn(platform: Platform) {
+                            when (platform) {
+                                Platform.TASKS_ORG ->
+                                    syncLauncher.launch(
+                                        Intent(this@MainActivity, SignInActivity::class.java)
+                                    )
+
+                                Platform.GOOGLE_TASKS ->
+                                    syncLauncher.launch(
+                                        Intent(this@MainActivity, GtasksLoginActivity::class.java)
+                                    )
+
+                                Platform.MICROSOFT ->
+                                    microsoftVM.signIn(this@MainActivity)
+
+                                Platform.CALDAV ->
+                                    syncLauncher.launch(
+                                        Intent(this@MainActivity, CaldavSignInActivity::class.java)
+                                    )
+
+                                Platform.ETEBASE ->
+                                    syncLauncher.launch(
+                                        Intent(this@MainActivity, EtebaseSignInActivity::class.java)
+                                    )
+
+                                else -> throw IllegalArgumentException()
+                            }
+                        }
+                        fun doOpenUrl(platform: Platform) = openUrl(platform)
+                        fun requirePurchase(platform: Platform, nameYourPrice: Boolean = true) {
+                            pendingPlatform = platform.name
+                            navController.navigate(
+                                PurchaseDestination(
+                                    nameYourPrice = nameYourPrice,
+                                    feature = platform.featureTitle,
+                                    source = platform.name,
+                                )
+                            )
+                        }
+                        LaunchedEffect(purchased) {
+                            if (purchased) {
+                                backStackEntry.savedStateHandle["purchased"] = false
+                                pendingPlatform?.let { name ->
+                                    pendingPlatform = null
+                                    val platform = Platform.valueOf(name)
+                                    when (platform) {
+                                        Platform.CALDAV,
+                                        Platform.ETEBASE -> doSignIn(platform)
+                                        Platform.DAVX5, Platform.DECSYNC_CC -> doOpenUrl(platform)
+                                        else -> {}
+                                    }
+                                }
+                            }
+                        }
+                        AddAccountScreenWrapper(
+                            configuration = configuration,
+                            hasTasksAccount = addAccountViewModel.hasTasksAccount,
+                            hasPro = addAccountViewModel.hasPro,
+                            needsConsent = acceptedTosVersion < currentTosVersion,
+                            onBack = { navController.popBackStack() },
+                            signIn = { platform ->
+                                firebase.logEvent(R.string.event_add_account, R.string.param_source to "onboarding", R.string.param_selection to platform)
+                                when (platform) {
+                                    Platform.TASKS_ORG -> {
+                                        if (inventory.hasTasksSubscription) {
+                                            doSignIn(platform)
+                                        } else {
+                                            syncLauncher.launch(
+                                                Intent(this@MainActivity, PurchaseActivity::class.java)
+                                                    .putExtra(PurchaseActivityViewModel.EXTRA_NAME_YOUR_PRICE, false)
+                                                    .putExtra(PurchaseActivityViewModel.EXTRA_FEATURE, Platform.TASKS_ORG.featureTitle)
+                                                    .putExtra(PurchaseActivityViewModel.EXTRA_SOURCE, Platform.TASKS_ORG.name)
+                                            )
+                                        }
+                                    }
+                                    Platform.CALDAV, Platform.ETEBASE -> {
+                                        if (inventory.hasPro) {
+                                            doSignIn(platform)
+                                        } else {
+                                            requirePurchase(platform)
+                                        }
+                                    }
+                                    else -> doSignIn(platform)
+                                }
+                            },
+                            openUrl = { platform ->
+                                firebase.logEvent(R.string.event_add_account, R.string.param_source to "onboarding", R.string.param_selection to platform.name)
+                                when (platform) {
+                                    Platform.DAVX5, Platform.DECSYNC_CC -> {
+                                        if (inventory.hasPro) {
+                                            doOpenUrl(platform)
+                                        } else {
+                                            requirePurchase(platform)
+                                        }
+                                    }
+                                    else -> doOpenUrl(platform)
+                                }
+                            },
+                            openLegalUrl = { openUri(it) },
+                            onConsent = { setAcceptedTosVersion(currentTosVersion) },
+                            onNameYourPriceInfo = {
+                                firebase.logEvent(R.string.event_onboarding_name_your_price)
+                            },
+                        )
+                    }
+                    composable<PurchaseDestination> {
+                        PurchaseScreen(
+                            onBack = { navController.popBackStack() },
+                            onPurchased = {
+                                lifecycleScope.launch {
+                                    maybeTriggerCloudOnboarding(inventory, caldavDao, tasksPreferences, firebase::logCloudOnboarding)
+                                }
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set("purchased", true)
+                                navController.popBackStack()
+                            },
+                            onSignIn = {
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set("purchased", true)
+                                navController.popBackStack()
+                            },
+                            existingSubscriber = inventory.hasPro && !inventory.hasTasksSubscription,
+                        )
+                    }
+                    composable<SubscriptionOnboardingDestination> {
+                        LaunchedEffect(Unit) {
+                            Timber.d("CloudOnboarding: SubscriptionOnboardingDestination entered")
+                        }
+                        val onboardingViewModel: SubscriptionOnboardingHiltViewModel = hiltViewModel()
+                        val step by onboardingViewModel.step.collectAsStateWithLifecycle()
+                        LaunchedEffect(step) {
+                            Timber.d("CloudOnboarding: step=$step")
+                        }
+                        val currentStep = step ?: return@composable
+                        val signInLauncher = rememberLauncherForActivityResult(
+                            ActivityResultContracts.StartActivityForResult()
+                        ) { result ->
+                            Timber.d("CloudOnboarding: sign-in resultCode=${result.resultCode}")
+                            if (result.resultCode == RESULT_OK) {
+                                Timber.d("CloudOnboarding: sign-in succeeded, forcing sync")
+                                syncAdapters.sync(SyncSource.ACCOUNT_ADDED)
+                                workManager.updateBackgroundSync()
+                            }
+                        }
+                        val createListLauncher = rememberLauncherForActivityResult(
+                            ActivityResultContracts.StartActivityForResult()
+                        ) { result ->
+                            Timber.d("CloudOnboarding: create-list resultCode=${result.resultCode}")
+                            if (result.resultCode == RESULT_OK) {
+                                onboardingViewModel.onListCreated()
+                                result.data
+                                    ?.let { getParcelableExtra(it, OPEN_FILTER, Filter::class.java) }
+                                    ?.let { filter ->
+                                        Timber.d("CloudOnboarding: list created, opening $filter")
+                                        viewModel.setFilter(filter)
+                                    }
+                            } else {
+                                onboardingViewModel.dismiss()
+                            }
+                        }
+                        SubscriptionOnboardingScreen(
+                            step = currentStep,
+                            showConfetti = true,
+                            onSignIn = {
+                                Timber.d("CloudOnboarding: launching SignInActivity")
+                                onboardingViewModel.onSignInClicked()
+                                signInLauncher.launch(
+                                    Intent(this@MainActivity, SignInActivity::class.java)
+                                )
+                            },
+                            onCreateList = {
+                                Timber.d("CloudOnboarding: onCreateList -> new Tasks.org list")
+                                lifecycleScope.launch {
+                                    val tasksAccount = caldavDao
+                                        .getAccounts(CaldavAccount.TYPE_TASKS)
+                                        .firstOrNull()
+                                    if (tasksAccount == null) {
+                                        Timber.w("CloudOnboarding: onCreateList but no tasks.org account found")
+                                        return@launch
+                                    }
+                                    createListLauncher.launch(
+                                        Intent(
+                                            this@MainActivity,
+                                            tasksAccount.listSettingsClass(),
+                                        ).putExtra(
+                                            BaseCaldavCalendarSettingsActivity.EXTRA_CALDAV_ACCOUNT,
+                                            tasksAccount,
+                                        )
+                                    )
+                                }
+                            },
+                            onBack = {
+                                Timber.d("CloudOnboarding: onBack -> dismissing")
+                                onboardingViewModel.dismiss()
+                            },
+                        )
+                    }
+                    composable<HomeDestination> {
+                        if (hasAccount != true) {
+                            return@composable
+                        }
+                        // Show ToS update dialog for existing users that need re-acceptance
+                        if (needsTosAcceptance) {
+                            TosUpdateDialog(
+                                isUpdate = acceptedTosVersion > 0,
+                                onAccept = {
+                                    lifecycleScope.launch {
+                                        firebase.logEvent(R.string.event_accept_tos_update)
+                                        setAcceptedTosVersion(currentTosVersion)
+                                        workManager.sync(SyncSource.ACCOUNT_ADDED)
+                                    }
+                                },
+                                onExit = { finish() },
+                                openUrl = { openUri(it) }
+                            )
+                        }
+                        val scope = rememberCoroutineScope()
+                        val state = viewModel.state.collectAsStateWithLifecycle().value
+                        val drawerState = rememberDrawerState(
+                            initialValue = DrawerValue.Closed,
+                        )
+                        val navigator = rememberListDetailPaneScaffoldNavigator(
+                            calculatePaneScaffoldDirectiveWithTwoPanesOnMediumWidth(
+                                windowAdaptiveInfo = currentWindowAdaptiveInfo(),
+                            ).copy(
+                                horizontalPartitionSpacerSize = 0.dp,
+                                verticalPartitionSpacerSize = 0.dp,
+                            )
+                        )
+                        val keyboard = LocalSoftwareKeyboardController.current
+                        LaunchedEffect(state.task) {
+                            val pane = if (state.task == null) {
+                                ThreePaneScaffoldRole.Secondary
+                            } else {
+                                ThreePaneScaffoldRole.Primary
+                            }
+                            Timber.d("Navigating to $pane")
+                            navigator.navigateTo(pane = pane)
+                        }
+
+                        val isDetailVisible =
+                            navigator.scaffoldValue[ListDetailPaneScaffoldRole.Detail] == PaneAdaptedValue.Expanded
+                        BackHandler(enabled = state.task == null) {
+                            Timber.d("onBackPressed")
+                            if (isDetailVisible && navigator.canNavigateBack()) {
+                                scope.launch {
+                                    navigator.navigateBack()
+                                }
+                            } else {
+                                finish()
+                                if (!preferences.getBoolean(R.string.p_open_last_viewed_list, true)) {
+                                    runBlocking {
+                                        viewModel.resetFilter()
+                                    }
+                                }
+                            }
+                        }
+                        LaunchedEffect(state.filter, state.task) {
+                            actionMode?.finish()
+                            actionMode = null
+                            if (state.task == null) {
+                                keyboard?.hide()
+                            }
+                            drawerState.close()
+                        }
+                        HomeScreen(
+                            state = state,
+                            drawerState = drawerState,
+                            navigator = navigator,
+                            showNewFilterDialog = {
+                                NewFilterDialog.newFilterDialog().show(
+                                    supportFragmentManager,
+                                    SubheaderClickHandler.FRAG_TAG_NEW_FILTER
+                                )
+                            },
+                        )
+                    }
+                }
+            }
+        }
+        logIntent("onCreate")
+        handleIntent()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        logIntent("onNewIntent")
+        handleIntent()
+    }
+
+    private suspend fun getTaskToLoad(filter: Filter?): Task? = when {
+        intent.isFromHistory -> null
+        intent.hasExtra(CREATE_TASK) -> {
+            val source = intent.getStringExtra(CREATE_SOURCE)
+            firebase.addTask(source ?: "unknown")
+            intent.removeExtra(CREATE_TASK)
+            intent.removeExtra(CREATE_SOURCE)
+            taskCreator.createWithValues(filter ?: defaultFilterProvider.getDefaultList(), "")
+        }
+
+        intent.hasExtra(OPEN_TASK) -> {
+            val task = getParcelableExtra(intent, OPEN_TASK, Task::class.java)
+            intent.removeExtra(OPEN_TASK)
+            task
+        }
+
+        else -> null
+    }
+
+    private fun logIntent(caller: String) {
+        if (BuildConfig.DEBUG) {
+            Timber.d("""
+                |$caller
+                |**********
+                |broughtToFront: ${intent.broughtToFront}
+                |isFromHistory: ${intent.isFromHistory}
+                |flags: ${intent.flagsToString}
+                ${intent?.extras?.keySet()?.joinToString("\n") { "|$it: ${intent.extras?.get(it)}" } ?: "|NO EXTRAS"}
+                |**********""".trimMargin()
+            )
+        }
+    }
+
+    private fun handleIntent() {
+        lifecycleScope.launch {
+            val filter = intent.getFilter
+                ?: intent.getFilterString?.let { defaultFilterProvider.getFilterFromPreference(it) }
+            val task = getTaskToLoad(filter)
+            viewModel.setFilter(
+                filter = filter ?: viewModel.state.value.filter,
+                task = task
+            )
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Timber.d("onResume")
+        if (currentNightMode != nightMode || currentPro != inventory.hasPro) {
+            restartActivity()
+            return
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.d("onPause")
+    }
+
+    override fun onSupportActionModeStarted(mode: ActionMode) {
+        super.onSupportActionModeStarted(mode)
+        actionMode = mode
+    }
+
+    fun restartActivity() {
+        finish()
+        startActivity(
+            Intent(this, MainActivity::class.java),
+            ActivityOptions.makeCustomAnimation(
+                this@MainActivity,
+                android.R.anim.fade_in, android.R.anim.fade_out
+            ).toBundle()
+        )
+    }
+
+    companion object {
+        /** For indicating the new list screen should be launched at fragment setup time  */
+        const val OPEN_FILTER = "open_filter" // $NON-NLS-1$
+        const val LOAD_FILTER = "load_filter"
+        const val CREATE_TASK = "open_task" // $NON-NLS-1$
+        const val CREATE_SOURCE = "create_source"
+        const val OPEN_TASK = "open_new_task" // $NON-NLS-1$
+        const val REMOVE_TASK = "remove_task"
+        const val FINISH_AFFINITY = "finish_affinity"
+        const val OPEN_ADD_ACCOUNT = "open_add_account"
+
+        val Intent.getFilter: Filter?
+            get() = if (isFromHistory) {
+                null
+            } else {
+                getParcelableExtra(this, OPEN_FILTER, Filter::class.java)?.let {
+                    removeExtra(OPEN_FILTER)
+                    it
+                }
+            }
+
+        val Intent.getFilterString: String?
+            get() = if (isFromHistory) {
+                null
+            } else {
+                getStringExtra(LOAD_FILTER)?.let {
+                    removeExtra(LOAD_FILTER)
+                    it
+                }
+            }
+
+        val Intent.removeTask: Boolean
+            get() = try {
+                getBooleanExtra(REMOVE_TASK, false) && !isFromHistory && !broughtToFront
+            } finally {
+                removeExtra(REMOVE_TASK)
+            }
+
+        val Intent.finishAffinity: Boolean
+            get() = try {
+                getBooleanExtra(FINISH_AFFINITY, false) && !isFromHistory && !broughtToFront
+            } finally {
+                removeExtra(FINISH_AFFINITY)
+            }
+    }
+}

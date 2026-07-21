@@ -1,0 +1,11 @@
+package org.tasks.filters
+
+import org.tasks.CommonParcelize
+
+@CommonParcelize
+data class EmptyFilter(
+    override val sql: String? = "WHERE 0",
+    override val title: String = ""
+) : Filter() {
+    override fun areItemsTheSame(other: FilterListItem): Boolean = false
+}

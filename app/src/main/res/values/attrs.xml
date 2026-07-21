@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+** Copyright (c) 2012 Todoroo Inc
+**
+** See the file "LICENSE" for the full license governing this code. 
+-->
+<resources>
+
+  <!-- theme attributes -->
+  <attr format="integer" name="horizontal_divider_visibility"/>
+
+  <declare-styleable name="TimePreference">
+    <attr format="string" name="time_summary"/>
+  </declare-styleable>
+
+</resources>

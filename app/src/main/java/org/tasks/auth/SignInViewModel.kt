@@ -1,0 +1,161 @@
+package org.tasks.auth
+
+import android.content.Context
+import android.content.Intent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationResponse
+import net.openid.appauth.ClientAuthentication.UnsupportedAuthenticationMethod
+import net.openid.appauth.GrantTypeValues
+import net.openid.appauth.TokenRequest
+import org.tasks.caldav.CaldavClientProvider
+import org.tasks.caldav.PurchaseTokenInUseException
+import org.tasks.data.UUIDHelper
+import org.tasks.data.dao.CaldavDao
+import org.tasks.data.entity.CaldavAccount
+import org.tasks.security.KeyStoreEncryption
+import timber.log.Timber
+import javax.inject.Inject
+
+@HiltViewModel
+class SignInViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val provider: CaldavClientProvider,
+    private val caldavDao: CaldavDao,
+    private val encryption: KeyStoreEncryption,
+    private val debugConnectionBuilder: DebugConnectionBuilder,
+    private val environment: TasksServerEnvironment,
+) : ViewModel() {
+    var showSubscriptionRequiredDialog by mutableStateOf<Boolean?>(null)
+        private set
+    var showWrongAccountEmail by mutableStateOf<String?>(null)
+        private set
+    val error = MutableLiveData<Throwable>()
+
+    var authService: AuthorizationService? = null
+
+    fun handleError(e: Throwable) {
+        if (e is PurchaseTokenInUseException) {
+            showWrongAccountEmail = e.existingAccount
+        } else {
+            error.postValue(e)
+        }
+    }
+
+    fun showSubscriptionRequired(isGitHub: Boolean) {
+        showSubscriptionRequiredDialog = isGitHub
+    }
+
+    fun initializeAuthService(iss: String) {
+        authService?.dispose()
+        authService = AuthorizationService(iss, context, debugConnectionBuilder, environment.caldavUrl)
+    }
+
+    suspend fun handleResult(authService: AuthorizationService, intent: Intent) {
+        val response = AuthorizationResponse.fromIntent(intent)
+        val ex = AuthorizationException.fromIntent(intent)
+        val authStateManager = authService.authStateManager
+
+        if (response != null || ex != null) {
+            authStateManager.updateAfterAuthorization(response, ex)
+        }
+
+        if (response?.authorizationCode != null) {
+            authStateManager.updateAfterAuthorization(response, ex)
+            exchangeAuthorizationCode(authService, response)
+        }
+
+        ex?.let {
+            handleError(it)
+        }
+    }
+
+    suspend fun setupAccount(authService: AuthorizationService): CaldavAccount? {
+        val auth = authService.authStateManager.current
+        val tokenString = auth.accessToken ?: return null
+        val idToken = auth.idToken?.let { IdToken(it) } ?: return null
+        val username = "${authService.iss}_${idToken.sub}"
+        return try {
+            val homeSet = provider
+                    .forUrl(
+                            environment.caldavUrl,
+                            username,
+                            tokenString
+                    )
+                    .homeSet(username, tokenString)
+            val password = encryption.encrypt(tokenString)
+            caldavDao.getAccount(CaldavAccount.TYPE_TASKS, username)
+                    ?.let {
+                        it.copy(error = null, password = password)
+                            .also { caldavDao.update(it) }
+                    }
+                    ?: CaldavAccount(
+                        accountType = CaldavAccount.TYPE_TASKS,
+                        uuid = UUIDHelper.newUUID(),
+                        username = username,
+                        password = password,
+                        url = homeSet,
+                        name = idToken.email ?: idToken.login,
+                        serverType = CaldavAccount.SERVER_TASKS,
+                    ).let {
+                        it.copy(id = caldavDao.insert(it))
+                    }
+        } catch (e: Exception) {
+            Timber.d("setupAccount: caught ${e.javaClass.simpleName} - ${e.message}")
+            handleError(e)
+            null
+        }
+    }
+
+    private suspend fun exchangeAuthorizationCode(
+            authService: AuthorizationService,
+            authorizationResponse: AuthorizationResponse
+    ) {
+        val authStateManager = authService.authStateManager
+        val request = if (authService.isGitHub) {
+            authorizationResponse.createGithubTokenRequest()
+        } else {
+            authorizationResponse.createTokenExchangeRequest()
+        }
+        val clientAuthentication = try {
+            authStateManager.current.clientAuthentication
+        } catch (ex: UnsupportedAuthenticationMethod) {
+            throw ex
+        }
+        try {
+            authService.performTokenRequest(request, clientAuthentication)?.let {
+                authStateManager.updateAfterTokenResponse(it, null)
+                if (authStateManager.current.isAuthorized) {
+                    Timber.d("Authorization successful")
+                }
+            }
+        } catch (e: AuthorizationException) {
+            Timber.e(e)
+            authStateManager.updateAfterTokenResponse(null, e)
+        }
+    }
+
+    override fun onCleared() {
+        authService?.dispose()
+    }
+
+    companion object {
+        fun AuthorizationResponse.createGithubTokenRequest(): TokenRequest {
+            checkNotNull(authorizationCode) { "authorizationCode not available for exchange request" }
+            return TokenRequest
+                    .Builder(request.configuration, request.clientId)
+                    .setGrantType(GrantTypeValues.AUTHORIZATION_CODE)
+                    .setRedirectUri(request.redirectUri)
+                    .setCodeVerifier(request.codeVerifier)
+                    .setAuthorizationCode(authorizationCode)
+                    .setAdditionalParameters(emptyMap())
+                    .build()
+        }
+    }
+}
