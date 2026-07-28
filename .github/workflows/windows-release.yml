@@ -2,8 +2,6 @@ name: Windows build and release
 
 on:
   push:
-    branches:
-      - main
     tags:
       - "windows-v*"
   workflow_dispatch:
