@@ -86,6 +86,12 @@ import org.tasks.viewmodel.TaskEditViewModel
 import org.tasks.viewmodel.TaskListViewModel
 import org.tasks.viewmodel.TasksAccountViewModel
 
+internal fun hasProAccess(
+    isLibre: Boolean,
+    hasTasksAccount: Boolean,
+    hasSubscription: Boolean,
+): Boolean = isLibre || hasTasksAccount || hasSubscription
+
 val commonModule = module {
     single { CoroutineScope(SupervisorJob() + Dispatchers.Default) }
     single { Json { ignoreUnknownKeys = true } }
@@ -202,7 +208,11 @@ val commonModule = module {
         object : org.tasks.billing.PurchaseState {
             override val hasTasksAccount: Boolean get() = _hasTasksAccount.value
             override val hasPro: Boolean
-                get() = platformConfiguration.isLibre || hasTasksAccount || _hasSubscription.value
+                get() = hasProAccess(
+                    isLibre = platformConfiguration.isLibre,
+                    hasTasksAccount = hasTasksAccount,
+                    hasSubscription = _hasSubscription.value,
+                )
             override val hasTasksSubscription: Boolean
                 get() = _hasTasksSubscription.value || hasTasksAccount
         }
