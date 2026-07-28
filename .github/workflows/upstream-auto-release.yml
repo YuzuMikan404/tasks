@@ -134,12 +134,17 @@ jobs:
 
           jq -r '.assets[] | select(.name | endswith(".sha256")) | .name' <<< "$release" |
             while IFS= read -r old_checksum; do
-              gh release delete-asset "$tag" "$old_checksum" --yes
+              gh release delete-asset "$tag" "$old_checksum" \
+                --repo "$GITHUB_REPOSITORY" \
+                --yes
             done
 
           printf '%s  %s\n' "${msi_digest#sha256:}" "$msi_name" > "$checksum_name"
-          gh release upload "$tag" "$checksum_name" --clobber
+          gh release upload "$tag" "$checksum_name" \
+            --repo "$GITHUB_REPOSITORY" \
+            --clobber
           gh release edit "$tag" \
+            --repo "$GITHUB_REPOSITORY" \
             --title "Tasks.org Windows $version" \
             --prerelease=false \
             --latest
