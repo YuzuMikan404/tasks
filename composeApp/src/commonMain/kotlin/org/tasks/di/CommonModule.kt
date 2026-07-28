@@ -183,6 +183,7 @@ val commonModule = module {
     single<org.tasks.billing.PurchaseState> {
         val caldavDao = get<org.tasks.data.dao.CaldavDao>()
         val subscriptionProvider = get<org.tasks.billing.SubscriptionProvider>()
+        val platformConfiguration = get<org.tasks.PlatformConfiguration>()
         val _hasTasksAccount = MutableStateFlow(false)
         val _hasSubscription = MutableStateFlow(false)
         val _hasTasksSubscription = MutableStateFlow(false)
@@ -200,7 +201,8 @@ val commonModule = module {
         }
         object : org.tasks.billing.PurchaseState {
             override val hasTasksAccount: Boolean get() = _hasTasksAccount.value
-            override val hasPro: Boolean get() = hasTasksAccount || _hasSubscription.value
+            override val hasPro: Boolean
+                get() = platformConfiguration.isLibre || hasTasksAccount || _hasSubscription.value
             override val hasTasksSubscription: Boolean
                 get() = _hasTasksSubscription.value || hasTasksAccount
         }
