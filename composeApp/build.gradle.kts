@@ -154,6 +154,9 @@ compose.desktop {
                 if (it.count { c -> c == '.' } < 2) "$it.0" else it
             }
             includeAllModules = true
+            windows {
+                iconFile.set(project.file("../graphics/icon.ico"))
+            }
         }
     }
 }
