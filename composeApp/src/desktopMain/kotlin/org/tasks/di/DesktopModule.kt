@@ -54,6 +54,10 @@ import java.io.File
 private val appName: String =
     if (JvmBuildConfig.DEBUG) "Tasks.org.debug" else "Tasks.org"
 
+// Match the F-Droid entitlement policy for this independently distributed
+// desktop fork: self-hosted synchronization does not require a subscription.
+private const val IS_GENERIC = true
+
 private enum class Platform { MAC, WINDOWS, LINUX }
 
 private fun platform(): Platform {
@@ -227,6 +231,12 @@ actual fun platformModule(): Module = module {
             override val subscription: Flow<SubscriptionProvider.SubscriptionInfo?> =
                 combine(entitlement.hasPro, entitlement.sku, entitlement.provider, debugPro) { hasPro, sku, provider, debug ->
                     when {
+                        IS_GENERIC -> SubscriptionProvider.SubscriptionInfo(
+                            sku = "desktop_generic",
+                            isMonthly = false,
+                            isTasksSubscription = false,
+                            isGitHubSponsor = false,
+                        )
                         hasPro -> {
                             val isMonthly = sku?.startsWith("monthly") == true
                             SubscriptionProvider.SubscriptionInfo(
