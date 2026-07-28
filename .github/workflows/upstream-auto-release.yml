@@ -100,6 +100,50 @@ jobs:
           echo "updated=true" >> "$GITHUB_OUTPUT"
           echo "sha=$new_sha" >> "$GITHUB_OUTPUT"
 
+      - name: Normalize latest Windows release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          release="$(
+            gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+              --jq 'map(select(.tag_name | startswith("windows-v")))[0]'
+          )"
+          if [ -z "$release" ] || [ "$release" = "null" ]; then
+            echo "No Windows release exists yet."
+            exit 0
+          fi
+
+          tag="$(jq -r '.tag_name' <<< "$release")"
+          version="${tag#windows-v}"
+          msi_name="tasks-org-windows-x64-$version.msi"
+          checksum_name="tasks-org-windows-x64-$version.sha256"
+          msi_id="$(jq -r '.assets[] | select(.name | endswith(".msi")) | .id' <<< "$release" | head -n 1)"
+          msi_digest="$(jq -r '.assets[] | select(.name | endswith(".msi")) | .digest' <<< "$release" | head -n 1)"
+
+          if [ -z "$msi_id" ] || [ "$msi_digest" = "null" ]; then
+            echo "The latest Windows release does not contain an MSI."
+            exit 1
+          fi
+
+          gh api --method PATCH \
+            "repos/$GITHUB_REPOSITORY/releases/assets/$msi_id" \
+            -f "name=$msi_name" >/dev/null
+
+          jq -r '.assets[] | select(.name | endswith(".sha256")) | .name' <<< "$release" |
+            while IFS= read -r old_checksum; do
+              gh release delete-asset "$tag" "$old_checksum" --yes
+            done
+
+          printf '%s  %s\n' "${msi_digest#sha256:}" "$msi_name" > "$checksum_name"
+          gh release upload "$tag" "$checksum_name" --clobber
+          gh release edit "$tag" \
+            --title "Tasks.org Windows $version" \
+            --prerelease=false \
+            --latest
+
   windows:
     name: Build and publish Windows release
     needs: update
@@ -181,14 +225,20 @@ jobs:
           gh release view $tag 2>$null
           if ($LASTEXITCODE -eq 0) {
             gh release upload $tag $env:MSI $env:SHA256_FILE --clobber
+            if ($LASTEXITCODE -ne 0) {
+              throw "Failed to update the GitHub Release assets."
+            }
+            gh release edit $tag `
+              --title "Tasks.org Windows $env:VERSION" `
+              --prerelease=false `
+              --latest
             exit $LASTEXITCODE
           }
 
           gh release create $tag $env:MSI $env:SHA256_FILE `
             --target $env:TARGET_SHA `
             --title "Tasks.org Windows $env:VERSION" `
-            --notes "Windows-only libre build based on the official Tasks.org $env:VERSION release. EteSync and self-hosted CalDAV synchronization do not require a Tasks.org subscription." `
-            --prerelease
+            --notes "Windows-only libre build based on the official Tasks.org $env:VERSION release. EteSync and self-hosted CalDAV synchronization do not require a Tasks.org subscription."
           if ($LASTEXITCODE -ne 0) {
             throw "Failed to create the GitHub Release."
           }
