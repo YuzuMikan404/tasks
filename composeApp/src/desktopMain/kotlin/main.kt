@@ -14,6 +14,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.platformLogWriter
+import org.jetbrains.compose.resources.painterResource
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
@@ -55,6 +56,8 @@ import java.net.ServerSocket
 import java.net.Socket
 import java.nio.channels.FileChannel
 import org.tasks.extensions.openInBrowser
+import tasks.kmp.generated.resources.Res
+import tasks.kmp.generated.resources.ic_round_icon
 
 private val portFile = File(dataDir, ".ipc_port")
 private val lockFile = File(dataDir, ".lock")
@@ -202,6 +205,7 @@ fun main() {
         Window(
             onCloseRequest = ::exitApplication,
             title = "Tasks",
+            icon = painterResource(Res.drawable.ic_round_icon),
             state = windowState,
             visible = windowReady,
         ) {
