@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - "windows-v*"
   workflow_dispatch:
     inputs:
       release_tag:
@@ -54,7 +56,7 @@ jobs:
         id: files
         shell: pwsh
         env:
-          RELEASE_TAG: ${{ inputs.release_tag }}
+          RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || inputs.release_tag }}
         run: |
           $msi = Get-ChildItem "composeApp/build/compose/binaries/main/msi/*.msi" |
             Sort-Object LastWriteTime -Descending |
@@ -96,12 +98,12 @@ jobs:
           if-no-files-found: warn
 
       - name: Create Windows-only GitHub Release
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag != '' }}
+        if: ${{ github.ref_type == 'tag' || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '') }}
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ inputs.release_tag }}
-          PRERELEASE: ${{ inputs.prerelease }}
+          RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || inputs.release_tag }}
+          PRERELEASE: ${{ github.ref_type == 'tag' || inputs.prerelease }}
           MSI: ${{ steps.files.outputs.msi }}
           SHA256_FILE: ${{ steps.files.outputs.sha256 }}
         run: |
