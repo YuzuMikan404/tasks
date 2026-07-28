@@ -372,12 +372,13 @@ fun App(
                                     AnalyticsEvents.PARAM_SOURCE to "onboarding",
                                     AnalyticsEvents.PARAM_SELECTION to platform.name,
                                 )
-                                // On desktop, gate CalDAV/EteSync/Google Tasks behind pro
+                                // Google Tasks remains a paid desktop feature. CalDAV and EteSync
+                                // are available in this fork without an entitlement.
                                 if (configuration.billingProvider == org.tasks.billing.BillingProvider.PADDLE
                                     && !addAccountViewModel.hasPro
                                 ) {
                                     when (platform) {
-                                        Platform.CALDAV, Platform.ETEBASE, Platform.GOOGLE_TASKS -> {
+                                        Platform.GOOGLE_TASKS -> {
                                             backStack.add(PricingDestination(mode = PricingMode.NYP_ONLY, source = platform.name))
                                             return@AddAccountScreen
                                         }
@@ -2484,4 +2485,3 @@ private fun <T> MutableList<T>.replaceAllWith(item: T) {
         add(item)
     }
 }
-

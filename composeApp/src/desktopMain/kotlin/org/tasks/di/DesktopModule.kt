@@ -54,6 +54,10 @@ import java.io.File
 private val appName: String =
     if (JvmBuildConfig.DEBUG) "Tasks.org.debug" else "Tasks.org"
 
+// Match the F-Droid entitlement policy for this independently distributed
+// desktop fork: self-hosted synchronization does not require a subscription.
+private const val IS_GENERIC = true
+
 private enum class Platform { MAC, WINDOWS, LINUX }
 
 private fun platform(): Platform {
@@ -65,34 +69,52 @@ private fun platform(): Platform {
     }
 }
 
+
+private fun ensureDirectory(dir: File): File? = try {
+    if ((dir.exists() || dir.mkdirs()) && dir.isDirectory) dir else null
+} catch (_: Exception) {
+    null
+}
+
+private fun firstWritableDirectory(vararg candidates: File): File? {
+    for (candidate in candidates) {
+        ensureDirectory(candidate)?.let { return it }
+    }
+    return null
+}
+
+
 private val overrideDir: File? by lazy {
     val path = System.getProperty("tasks.dataDir")?.takeIf { it.isNotBlank() }
         ?: System.getenv("TASKS_DATA_DIR")?.takeIf { it.isNotBlank() }
-    path?.let { File(it) }?.also {
-        require(it.exists() || it.mkdirs()) { "Failed to create data directory: $it" }
-        require(it.isDirectory) { "Data directory path is not a directory: $it" }
-    }
+    path?.let { firstWritableDirectory(File(it)) }
 }
 
 val dataDir: File by lazy {
     overrideDir?.let { return@lazy it }
     val home = System.getProperty("user.home")
     val legacyDir = File(home, ".tasks.org")
-    if (legacyDir.exists()) return@lazy legacyDir
+    if (legacyDir.isDirectory) return@lazy legacyDir
     val dir = when (platform()) {
         Platform.MAC -> File(home, "Library/Application Support/$appName")
         Platform.WINDOWS ->
-            File(System.getenv("LOCALAPPDATA") ?: "$home/AppData/Local", appName)
+            File(
+                System.getenv("LOCALAPPDATA")
+                    ?: System.getenv("APPDATA")
+                    ?: "$home/AppData/Local",
+                appName,
+            )
         Platform.LINUX -> {
             val xdgData = System.getenv("XDG_DATA_HOME") ?: "$home/.local/share"
             File(xdgData, appName.lowercase())
         }
     }
-    dir.also { it.mkdirs() }
+    firstWritableDirectory(dir, legacyDir, File(System.getProperty("java.io.tmpdir"), appName.lowercase()))
+        ?: dir
 }
 
 val logDir: File by lazy {
-    overrideDir?.let { return@lazy File(it, "logs").also { d -> d.mkdirs() } }
+    overrideDir?.let { return@lazy firstWritableDirectory(File(it, "logs")) ?: File(it, "logs") }
     val home = System.getProperty("user.home")
     val dir = when (platform()) {
         Platform.MAC -> File(home, "Library/Logs/$appName")
@@ -102,7 +124,7 @@ val logDir: File by lazy {
             File(xdgState, "${appName.lowercase()}/logs")
         }
     }
-    dir.also { it.mkdirs() }
+    firstWritableDirectory(dir) ?: dir
 }
 
 actual fun platformModule(): Module = module {
@@ -209,6 +231,12 @@ actual fun platformModule(): Module = module {
             override val subscription: Flow<SubscriptionProvider.SubscriptionInfo?> =
                 combine(entitlement.hasPro, entitlement.sku, entitlement.provider, debugPro) { hasPro, sku, provider, debug ->
                     when {
+                        IS_GENERIC -> SubscriptionProvider.SubscriptionInfo(
+                            sku = "desktop_generic",
+                            isMonthly = false,
+                            isTasksSubscription = false,
+                            isGitHubSponsor = false,
+                        )
                         hasPro -> {
                             val isMonthly = sku?.startsWith("monthly") == true
                             SubscriptionProvider.SubscriptionInfo(

@@ -52,7 +52,7 @@ class DesktopOAuthFlow(
                 state = state,
             )
             val defaultParams = if (extraAuthParams.containsKey("prompt")) emptyMap()
-                else mapOf("prompt" to "select_account")
+            else mapOf("prompt" to "select_account")
             val authUrl = oauthClient.buildAuthUrl(
                 config, codeChallenge, state, defaultParams + extraAuthParams
             )
@@ -69,7 +69,12 @@ class DesktopOAuthFlow(
         expectedState: String,
         onReady: (port: Int) -> OAuthConfig,
     ): Pair<OAuthConfig, String> = suspendCancellableCoroutine { cont ->
-        val server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0)
+        val server = try {
+            HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0)
+        } catch (e: Exception) {
+            cont.resumeWithException(e)
+            return@suspendCancellableCoroutine
+        }
         val port = server.address.port
         val config = AtomicReference<OAuthConfig?>(null)
 
@@ -125,13 +130,25 @@ class DesktopOAuthFlow(
             }
         }
 
-        server.start()
+        try {
+            server.start()
+        } catch (e: Exception) {
+            cont.resumeWithException(e)
+            return@suspendCancellableCoroutine
+        }
         Logger.d(TAG) { "Listening on port $port" }
 
         cont.invokeOnCancellation {
             server.stop(0)
         }
 
-        config.set(onReady(port))
+        val readyConfig = try {
+            onReady(port)
+        } catch (e: Exception) {
+            server.stop(0)
+            cont.resumeWithException(e)
+            return@suspendCancellableCoroutine
+        }
+        config.set(readyConfig)
     }
 }

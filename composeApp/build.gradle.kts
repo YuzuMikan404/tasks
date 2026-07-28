@@ -153,6 +153,7 @@ compose.desktop {
             packageVersion = libs.versions.versionName.get().let {
                 if (it.count { c -> c == '.' } < 2) "$it.0" else it
             }
+            includeAllModules = true
         }
     }
 }

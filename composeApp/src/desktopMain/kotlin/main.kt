@@ -62,11 +62,20 @@ private var lockChannel: FileChannel? = null
 private var ipcServer: ServerSocket? = null
 
 private fun acquireLock(): Boolean {
+    var channel: FileChannel? = null
     return try {
         lockFile.parentFile?.mkdirs()
-        lockChannel = RandomAccessFile(lockFile, "rw").channel
-        lockChannel?.tryLock() != null
+        channel = RandomAccessFile(lockFile, "rw").channel
+        val lock = channel.tryLock()
+        if (lock != null) {
+            lockChannel = channel
+            true
+        } else {
+            channel.close()
+            false
+        }
     } catch (e: Exception) {
+        channel?.close()
         Logger.e(e) { "Failed to acquire lock" }
         false
     }
@@ -120,11 +129,13 @@ private val DEFAULT_HEIGHT = 600.dp
 
 @OptIn(FlowPreview::class)
 fun main() {
-    if (!acquireLock()) {
-        signalExistingInstance()
-        return
+    val gotLock = acquireLock()
+    if (!gotLock) {
+        if (signalExistingInstance()) return
+        Logger.w { "Lock failed, but no existing instance was found. Continuing startup." }
+    } else {
+        startIpcServer()
     }
-    startIpcServer()
     org.tasks.caldav.CaldavSynchronizer.registerFactories()
     Logger.setLogWriters(
         buildList {
@@ -137,9 +148,13 @@ fun main() {
         modules(commonModule, platformModule())
     }
     val koin = KoinPlatform.getKoin()
-    runBlocking {
-        koin.get<AppPreferences>()
-            .recordInstallIfNeeded(koin.get<PlatformConfiguration>().versionCode)
+    runCatching {
+        runBlocking {
+            koin.get<AppPreferences>()
+                .recordInstallIfNeeded(koin.get<PlatformConfiguration>().versionCode)
+        }
+    }.onFailure { e ->
+        Logger.w(e) { "Failed to record install metadata" }
     }
     Runtime.getRuntime().addShutdownHook(Thread {
         (koin.get<Reporting>() as? PostHogReporting)?.close()

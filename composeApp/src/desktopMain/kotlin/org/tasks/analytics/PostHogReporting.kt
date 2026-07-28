@@ -17,12 +17,17 @@ class PostHogReporting(
     private val logger = Logger.withTag("PostHogReporting")
 
     private val collectStatistics: Boolean =
-        kotlinx.coroutines.runBlocking {
-            tasksPreferences.get(TasksPreferences.collectStatistics, true)
+        runCatching {
+            kotlinx.coroutines.runBlocking {
+                tasksPreferences.get(TasksPreferences.collectStatistics, true)
+            }
+        }.getOrElse {
+            logger.w(it) { "Failed to read analytics preference" }
+            false
         }
 
-    private val enabled: Boolean = (apiKey.isNotBlank() && collectStatistics).also { enabled ->
-        if (enabled) {
+    private val enabled: Boolean =
+        apiKey.isNotBlank() && collectStatistics && runCatching {
             val config = PostHogConfig(
                 apiKey = apiKey,
                 host = "https://us.i.posthog.com",
@@ -52,8 +57,11 @@ class PostHogReporting(
                 PostHog.register("\$locale", "$language-$country")
             }
             PostHog.register("\$timezone", TimeZone.getDefault().id)
+            true
+        }.getOrElse { e ->
+            logger.w(e) { "PostHog initialization failed" }
+            false
         }
-    }
 
     override fun logEvent(event: String, vararg params: Pair<String, Any>) {
         val properties = params.toMap()
@@ -96,7 +104,8 @@ class PostHogReporting(
 
     fun close() {
         if (enabled) {
-            PostHog.close()
+            runCatching { PostHog.close() }
+                .onFailure { e -> logger.w(e) { "Failed to close PostHog" } }
         }
     }
 }
