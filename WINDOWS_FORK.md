@@ -27,3 +27,17 @@ discarding work. Resolve the conflict and run `git rebase --continue`, or return
 to the previous version with `git rebase --abort`.
 
 The MSI is generated under `composeApp\build\compose\binaries\main\msi`.
+
+## Automatic official releases
+
+`.github/workflows/upstream-auto-release.yml` checks the official
+`tasks/tasks` release tags once per day. A lightweight Ubuntu job exits without
+starting a Windows runner when there is no new release.
+
+For a new numeric release tag, the workflow merges that official tag, verifies
+the libre entitlement and icon patches, tests and builds the Windows MSI, and
+publishes a prerelease named `windows-v<official version>`. Merge conflicts or
+missing patches stop the workflow before publishing.
+
+Upstream workflow files are never imported, so automatic updates remain
+Windows-only.
