@@ -44,8 +44,12 @@ import org.tasks.http.OkHttpClientFactory
 import org.tasks.kmp.JvmBuildConfig
 import org.tasks.kmp.createDataStore
 import org.tasks.kmp.dataStoreFileName
+import org.tasks.data.TaskCreator
 import org.tasks.preferences.TasksPreferences
 import org.tasks.security.DesktopKeyProvider
+import org.tasks.sync.microsoft.DesktopMicrosoftClientProvider
+import org.tasks.sync.microsoft.MicrosoftClientProvider
+import org.tasks.sync.microsoft.MicrosoftSynchronizer
 import org.tasks.security.KeyStoreEncryption
 import org.tasks.sse.SseClient
 import org.tasks.sse.SseTokenProvider
@@ -109,6 +113,8 @@ val dataDir: File by lazy {
         ?: dir
 }
 
+val cookieDir: File by lazy { File(dataDir, "cookies") }
+
 val logDir: File by lazy {
     overrideDir?.let { return@lazy firstWritableDirectory(File(it, "logs")) ?: File(it, "logs") }
     val home = System.getProperty("user.home")
@@ -132,8 +138,8 @@ actual fun platformModule(): Module = module {
             supportsCaldav = true,
             supportsEteSync = true,
             supportsGoogleTasks = true,
-            isLibre = true,
-        )
+            supportsMicrosoft = true,
+        ).asForkLibreBuild()
     }
     single<Reporting> {
         PostHogReporting(
@@ -144,7 +150,13 @@ actual fun platformModule(): Module = module {
     }
     single { DesktopUserDecisionRegistry() }
     single<CertStore> { DesktopCertStore(dataDir = dataDir, userDecisionRegistry = get()) }
-    factory<OkHttpClientFactory> { DesktopOkHttpClientFactory(certStore = get()) }
+    factory<OkHttpClientFactory> {
+        DesktopOkHttpClientFactory(
+            certStore = get(),
+            encryption = get(),
+            cookieDir = cookieDir,
+        )
+    }
     factory {
         val httpClient = kotlinx.coroutines.runBlocking {
             get<OkHttpClientFactory>().newClient(foreground = true)
@@ -155,6 +167,33 @@ actual fun platformModule(): Module = module {
         )
     }
     factoryOf(::DesktopSignInHandler) bind SignInHandler::class
+    single<MicrosoftClientProvider> {
+        DesktopMicrosoftClientProvider(
+            encryption = get(),
+            caldavDao = get(),
+            okHttpClientFactory = get(),
+            cookieDir = cookieDir,
+        )
+    }
+    factory {
+        val taskCreator = TaskCreator()
+        MicrosoftSynchronizer(
+            caldavDao = get(),
+            taskDao = get(),
+            dirtyDao = get(),
+            taskSaver = get(),
+            refreshBroadcaster = get(),
+            taskDeleter = get(),
+            reporting = get(),
+            clientProvider = get(),
+            tagDao = get(),
+            tagDataDao = get(),
+            appPreferences = get(),
+            vtodoCache = get(),
+            createTask = { taskCreator.createBlankTask() },
+            setDefaultList = { },
+        )
+    }
     factory {
         org.tasks.googleapis.ProxyAuthProvider(
             caldavDao = get(),
