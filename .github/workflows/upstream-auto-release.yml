@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: upstream-windows-release
@@ -69,7 +70,27 @@ jobs:
           git fetch upstream "refs/tags/$latest:refs/tags/upstream-$latest"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git merge --no-ff --no-edit "refs/tags/upstream-$latest"
+          # Lets an identical conflict (e.g. a same-shaped hotfix release) auto-resolve using a
+          # resolution recorded on a previous run's local clone; harmless no-op otherwise.
+          git config rerere.enabled true
+
+          # This fork never imports upstream Actions definitions, so a conflict confined to
+          # .github/workflows is not a real conflict: that whole path gets overwritten with the
+          # fork's own copy below regardless of what the merge produced. Only fail the build on
+          # conflicts outside .github/workflows, which need a human to resolve.
+          if ! git merge --no-ff --no-edit "refs/tags/upstream-$latest"; then
+            conflicts="$(git diff --name-only --diff-filter=U)"
+            other_conflicts="$(grep -v '^\.github/workflows/' <<< "$conflicts" || true)"
+            if [ -n "$other_conflicts" ]; then
+              echo "Merge conflicts outside .github/workflows need manual resolution:"
+              echo "$other_conflicts"
+              printf 'Merging upstream %s into main hit a real conflict (not just .github/workflows) in:\n\n%s\n\nThis needs a manual look; see WINDOWS_FORK.md for the update-upstream.ps1 workflow.\n' \
+                "$latest" "$other_conflicts" > conflict-report.txt
+              git merge --abort
+              exit 1
+            fi
+            echo "Merge conflicts confined to .github/workflows; these paths are always overwritten below."
+          fi
 
           # Never import upstream Actions definitions. This fork publishes Windows only.
           git checkout "$fork_head" -- .github/workflows
@@ -77,6 +98,7 @@ jobs:
             .github/workflows/bundle.yml \
             .github/workflows/release.yml \
             .github/workflows/deploy.yml
+          git add .github/workflows
 
           # Fail safely if an upstream merge removed any required fork patch.
           grep -Fq 'isLibre = true' \
@@ -99,6 +121,24 @@ jobs:
           new_sha="$(git rev-parse HEAD)"
           echo "updated=true" >> "$GITHUB_OUTPUT"
           echo "sha=$new_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Report merge conflict
+        if: failure() && steps.update.outcome == 'failure'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          summary="$( [ -f conflict-report.txt ] && cat conflict-report.txt || echo "The upstream-merge step failed. See the workflow run log for details." )"
+          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          body="$(printf '%s\n\nRun: %s\n' "$summary" "$run_url")"
+          title="Upstream merge conflict needs manual resolution"
+          existing="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title \"$title\"" --json number --jq '.[0].number' || true)"
+          if [ -n "$existing" ] && [ "$existing" != "null" ]; then
+            gh issue comment "$existing" --repo "$GITHUB_REPOSITORY" --body "$body"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "$body"
+          fi
 
       - name: Normalize latest Windows release
         shell: bash
