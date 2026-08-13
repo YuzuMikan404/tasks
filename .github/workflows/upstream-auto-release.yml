@@ -6,8 +6,15 @@ on:
       - main
     paths:
       - ".github/workflows/upstream-auto-release.yml"
+      - "scripts/prepare_upstream_release.sh"
+      - "scripts/promote_windows_release.sh"
+      - "scripts/report_upstream_failure.sh"
+      - "scripts/resolve_upstream_conflicts.py"
+      - "scripts/test_resolve_upstream_conflicts.py"
+      - "scripts/test_release_workflow.py"
+      - "scripts/verify_windows_fork_patches.py"
   schedule:
-    # 12:17 JST every day. The Windows runner starts only for a new release.
+    # 12:17 JST every day. Windows starts only for a missing release.
     - cron: "17 3 * * *"
   workflow_dispatch:
 
@@ -20,208 +27,89 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  update:
-    name: Check official Tasks.org release
+  prepare:
+    name: Prepare isolated upstream candidate
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     outputs:
-      updated: ${{ steps.update.outputs.updated }}
-      version: ${{ steps.update.outputs.version }}
-      sha: ${{ steps.update.outputs.sha }}
+      needs_update: ${{ steps.candidate.outputs.needs_update }}
+      version: ${{ steps.candidate.outputs.version }}
+      candidate_sha: ${{ steps.candidate.outputs.candidate_sha }}
+      candidate_branch: ${{ steps.candidate.outputs.candidate_branch }}
+      base_sha: ${{ steps.candidate.outputs.base_sha }}
 
     steps:
-      - name: Check out fork
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: Merge latest official release
-        id: update
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          git remote add upstream https://github.com/tasks/tasks.git
-          latest="$(
-            git ls-remote --tags --refs upstream |
-              sed 's#.*refs/tags/##' |
-              grep -E '^[0-9]+\.[0-9]+(\.[0-9]+)?$' |
-              sort -V |
-              tail -n 1
-          )"
-          current="$(tr -d '[:space:]' < .github/upstream-version)"
-
-          if [ -z "$latest" ]; then
-            echo "No official numeric release tag was found."
-            exit 1
-          fi
-
-          echo "Latest official release: $latest"
-          echo "Current fork release: $current"
-          echo "version=$latest" >> "$GITHUB_OUTPUT"
-
-          if [ "$latest" = "$current" ]; then
-            echo "updated=false" >> "$GITHUB_OUTPUT"
-            echo "sha=$GITHUB_SHA" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          fork_head="$(git rev-parse HEAD)"
-          git fetch upstream "refs/tags/$latest:refs/tags/upstream-$latest"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # Lets an identical conflict (e.g. a same-shaped hotfix release) auto-resolve using a
-          # resolution recorded on a previous run's local clone; harmless no-op otherwise.
-          git config rerere.enabled true
-
-          # This fork never imports upstream Actions definitions, so a conflict confined to
-          # .github/workflows is not a real conflict: that whole path gets overwritten with the
-          # fork's own copy below regardless of what the merge produced. Only fail the build on
-          # conflicts outside .github/workflows, which need a human to resolve.
-          if ! git merge --no-ff --no-edit "refs/tags/upstream-$latest"; then
-            conflicts="$(git diff --name-only --diff-filter=U)"
-            other_conflicts="$(grep -v '^\.github/workflows/' <<< "$conflicts" || true)"
-            if [ -n "$other_conflicts" ]; then
-              echo "Merge conflicts outside .github/workflows need manual resolution:"
-              echo "$other_conflicts"
-              printf 'Merging upstream %s into main hit a real conflict (not just .github/workflows) in:\n\n%s\n\nThis needs a manual look; see WINDOWS_FORK.md for the update-upstream.ps1 workflow.\n' \
-                "$latest" "$other_conflicts" > conflict-report.txt
-              git merge --abort
-              exit 1
-            fi
-            echo "Merge conflicts confined to .github/workflows; these paths are always overwritten below."
-          fi
-
-          # Never import upstream Actions definitions. This fork publishes Windows only.
-          git checkout "$fork_head" -- .github/workflows
-          git rm -f --ignore-unmatch \
-            .github/workflows/bundle.yml \
-            .github/workflows/release.yml \
-            .github/workflows/deploy.yml
-          git add .github/workflows
-
-          # Fail safely if an upstream merge removed any required fork patch.
-          grep -Fq ').asForkLibreBuild()' \
-            composeApp/src/desktopMain/kotlin/org/tasks/di/DesktopModule.kt
-          grep -Fq 'copy(isLibre = true)' \
-            composeApp/src/desktopMain/kotlin/org/tasks/di/ForkDesktopPatches.kt
-          grep -Fq 'isForkEntitlementExempt()' \
-            composeApp/src/commonMain/kotlin/org/tasks/App.kt
-          grep -Fq 'Platform.CALDAV, Platform.ETEBASE' \
-            composeApp/src/commonMain/kotlin/org/tasks/ForkPatches.kt
-          grep -Fq 'platformConfiguration.isLibre' \
-            composeApp/src/commonMain/kotlin/org/tasks/di/CommonModule.kt
-          grep -Fq 'createLoopbackServerOrNull' \
-            composeApp/src/desktopMain/kotlin/org/tasks/auth/DesktopOAuthFlow.kt
-          grep -Fq 'runOnReadyOrNull' \
-            composeApp/src/desktopMain/kotlin/org/tasks/auth/DesktopOAuthFlow.kt
-          grep -Fq 'icon = painterResource(Res.drawable.ic_round_icon)' \
-            composeApp/src/desktopMain/kotlin/main.kt
-          grep -Fq 'iconFile.set(project.file("../graphics/icon.ico"))' \
-            composeApp/build.gradle.kts
-          test -f graphics/icon.ico
-
-          printf '%s\n' "$latest" > .github/upstream-version
-          git add .github/upstream-version
-          if ! git diff --cached --quiet; then
-            git commit -m "Track upstream Tasks.org $latest"
-          fi
-
-          git push origin HEAD:main
-          new_sha="$(git rev-parse HEAD)"
-          echo "updated=true" >> "$GITHUB_OUTPUT"
-          echo "sha=$new_sha" >> "$GITHUB_OUTPUT"
-
-      - name: Report merge conflict
-        if: failure() && steps.update.outcome == 'failure'
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          summary="$( [ -f conflict-report.txt ] && cat conflict-report.txt || echo "The upstream-merge step failed. See the workflow run log for details." )"
-          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          body="$(printf '%s\n\nRun: %s\n' "$summary" "$run_url")"
-          title="Upstream merge conflict needs manual resolution"
-          existing="$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title \"$title\"" --json number --jq '.[0].number' || true)"
-          if [ -n "$existing" ] && [ "$existing" != "null" ]; then
-            gh issue comment "$existing" --repo "$GITHUB_REPOSITORY" --body "$body"
-          else
-            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "$body"
-          fi
-
-      - name: Normalize latest Windows release
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-
-          release="$(
-            gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
-              --jq 'map(select(.tag_name | startswith("windows-v")))[0]'
-          )"
-          if [ -z "$release" ] || [ "$release" = "null" ]; then
-            echo "No Windows release exists yet."
-            exit 0
-          fi
-
-          tag="$(jq -r '.tag_name' <<< "$release")"
-          version="${tag#windows-v}"
-          msi_name="tasks-org-windows-x64-$version.msi"
-          checksum_name="tasks-org-windows-x64-$version.sha256"
-          msi_id="$(jq -r '.assets[] | select(.name | endswith(".msi")) | .id' <<< "$release" | head -n 1)"
-          msi_digest="$(jq -r '.assets[] | select(.name | endswith(".msi")) | .digest' <<< "$release" | head -n 1)"
-
-          if [ -z "$msi_id" ] || [ "$msi_digest" = "null" ]; then
-            echo "The latest Windows release does not contain an MSI."
-            exit 1
-          fi
-
-          gh api --method PATCH \
-            "repos/$GITHUB_REPOSITORY/releases/assets/$msi_id" \
-            -f "name=$msi_name" >/dev/null
-
-          jq -r '.assets[] | select(.name | endswith(".sha256")) | .name' <<< "$release" |
-            while IFS= read -r old_checksum; do
-              gh release delete-asset "$tag" "$old_checksum" \
-                --repo "$GITHUB_REPOSITORY" \
-                --yes
-            done
-
-          printf '%s  %s\n' "${msi_digest#sha256:}" "$msi_name" > "$checksum_name"
-          gh release upload "$tag" "$checksum_name" \
-            --repo "$GITHUB_REPOSITORY" \
-            --clobber
-          gh release edit "$tag" \
-            --repo "$GITHUB_REPOSITORY" \
-            --title "Tasks.org Windows $version" \
-            --prerelease=false \
-            --latest
-
-  windows:
-    name: Build and publish Windows release
-    needs: update
-    if: ${{ needs.update.outputs.updated == 'true' }}
-    runs-on: windows-latest
-    timeout-minutes: 45
-
-    steps:
-      - name: Check out updated fork
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ needs.update.outputs.sha }}
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "21"
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v5
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
 
-      - name: Test desktop entitlement policy
+      - uses: gradle/actions/setup-gradle@v5
+
+      - name: Build release candidate
+        id: candidate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/prepare_upstream_release.sh
+
+  maintenance:
+    name: Normalize existing Windows release
+    needs: prepare
+    if: ${{ needs.prepare.outputs.needs_update == 'false' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Normalize release assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: bash scripts/promote_windows_release.sh --normalize-only
+
+  windows:
+    name: Test and build isolated Windows candidate
+    needs: prepare
+    if: ${{ needs.prepare.outputs.needs_update == 'true' }}
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.prepare.outputs.candidate_branch }}
+
+      - name: Verify candidate SHA
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ needs.prepare.outputs.candidate_sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - uses: gradle/actions/setup-gradle@v5
+
+      - name: Verify Windows-fork patches
+        run: python scripts/verify_windows_fork_patches.py
+
+      - name: Test desktop
         run: .\gradlew.bat :composeApp:desktopTest --console=plain
 
       - name: Build Windows MSI
@@ -229,11 +117,10 @@ jobs:
           POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
         run: .\gradlew.bat :composeApp:packageMsi -Prelease --console=plain
 
-      - name: Prepare Windows release files
-        id: files
+      - name: Prepare release files
         shell: pwsh
         env:
-          VERSION: ${{ needs.update.outputs.version }}
+          VERSION: ${{ needs.prepare.outputs.version }}
         run: |
           $msi = Get-ChildItem "composeApp/build/compose/binaries/main/msi/*.msi" |
             Sort-Object LastWriteTime -Descending |
@@ -241,7 +128,6 @@ jobs:
           if (-not $msi) {
             throw "The Windows MSI was not generated."
           }
-
           New-Item -ItemType Directory -Force "release-files" | Out-Null
           $releaseMsi = "release-files/tasks-org-windows-x64-$env:VERSION.msi"
           Copy-Item $msi.FullName $releaseMsi
@@ -249,13 +135,10 @@ jobs:
           "$hash  $([System.IO.Path]::GetFileName($releaseMsi))" |
             Set-Content "release-files/tasks-org-windows-x64-$env:VERSION.sha256"
 
-          "msi=$releaseMsi" >> $env:GITHUB_OUTPUT
-          "sha256=release-files/tasks-org-windows-x64-$env:VERSION.sha256" >> $env:GITHUB_OUTPUT
-
-      - name: Upload Windows build artifact
+      - name: Upload validated release candidate
         uses: actions/upload-artifact@v7
         with:
-          name: tasks-org-windows-${{ needs.update.outputs.version }}
+          name: tasks-org-windows-${{ needs.prepare.outputs.version }}
           path: release-files/*
           if-no-files-found: error
 
@@ -263,37 +146,60 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: windows-test-report-${{ needs.update.outputs.version }}
+          name: windows-test-report-${{ needs.prepare.outputs.version }}
           path: composeApp/build/reports/tests/desktopTest/
           if-no-files-found: warn
 
-      - name: Create Windows-only GitHub Release
-        shell: pwsh
+  publish:
+    name: Atomically promote and publish candidate
+    needs:
+      - prepare
+      - windows
+    if: ${{ needs.windows.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.prepare.outputs.candidate_branch }}
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: tasks-org-windows-${{ needs.prepare.outputs.version }}
+          path: release-files
+
+      - name: Promote and publish validated candidate
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ needs.update.outputs.version }}
-          TARGET_SHA: ${{ needs.update.outputs.sha }}
-          MSI: ${{ steps.files.outputs.msi }}
-          SHA256_FILE: ${{ steps.files.outputs.sha256 }}
-        run: |
-          $tag = "windows-v$env:VERSION"
-          gh release view $tag 2>$null
-          if ($LASTEXITCODE -eq 0) {
-            gh release upload $tag $env:MSI $env:SHA256_FILE --clobber
-            if ($LASTEXITCODE -ne 0) {
-              throw "Failed to update the GitHub Release assets."
-            }
-            gh release edit $tag `
-              --title "Tasks.org Windows $env:VERSION" `
-              --prerelease=false `
-              --latest
-            exit $LASTEXITCODE
-          }
+          VERSION: ${{ needs.prepare.outputs.version }}
+          EXPECTED_BASE: ${{ needs.prepare.outputs.base_sha }}
+          EXPECTED_CANDIDATE: ${{ needs.prepare.outputs.candidate_sha }}
+          CANDIDATE_BRANCH: ${{ needs.prepare.outputs.candidate_branch }}
+        run: bash scripts/promote_windows_release.sh
 
-          gh release create $tag $env:MSI $env:SHA256_FILE `
-            --target $env:TARGET_SHA `
-            --title "Tasks.org Windows $env:VERSION" `
-            --notes "Windows-only libre build based on the official Tasks.org $env:VERSION release. EteSync and self-hosted CalDAV synchronization do not require a Tasks.org subscription."
-          if ($LASTEXITCODE -ne 0) {
-            throw "Failed to create the GitHub Release."
-          }
+  report:
+    name: Report automatic update failure
+    needs:
+      - prepare
+      - maintenance
+      - windows
+      - publish
+    if: ${{ always() && (needs.prepare.result == 'failure' || needs.maintenance.result == 'failure' || needs.windows.result == 'failure' || needs.publish.result == 'failure') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Create or update failure issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+          PREPARE_RESULT: ${{ needs.prepare.result }}
+          MAINTENANCE_RESULT: ${{ needs.maintenance.result }}
+          WINDOWS_RESULT: ${{ needs.windows.result }}
+          PUBLISH_RESULT: ${{ needs.publish.result }}
+        run: bash scripts/report_upstream_failure.sh
