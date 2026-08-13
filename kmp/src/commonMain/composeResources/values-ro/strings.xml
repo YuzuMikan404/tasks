@@ -296,4 +296,119 @@
         <item quantity="other">repetări</item>
     </plurals>
     <string name="repeat_monthly_every_day_of_nth_week">în fiecare %1$s %2$s</string>
+    <string name="repeats_single">Se repetă %1$s</string>
+    <string name="repeats_single_on">Repetă %1$s pe %2$s</string>
+    <string name="repeats_single_until">Repetă %1$s până la %2$s</string>
+    <string name="repeats_single_number_of_times">Se repetă %1$s, apare %2$d %3$s</string>
+    <string name="repeats_single_on_until">Repetă %1$s în %2$s până la %3$s</string>
+    <string name="repeats_single_on_number_of_times">Se repetă %1$s pe %2$s, apare %3$d %4$s</string>
+    <string name="repeats_plural">Se repetă la fiecare %1$s</string>
+    <string name="repeats_plural_on">Se repetă la fiecare %1$s pe %2$s</string>
+    <string name="repeats_plural_until">Se repetă la fiecare %1$s până la %2$s</string>
+    <string name="repeats_plural_number_of_times">Se repetă la fiecare %1$s, apare %2$d %3$s</string>
+    <string name="repeats_plural_on_until">Se repetă la fiecare %1$s în %2$s până la %3$s</string>
+    <string name="repeats_plural_on_number_of_times">Se repetă la fiecare %1$s pe %2$s, apare %3$d %4$s</string>
+    <string name="repeats_minutely">fiecare minut</string>
+    <string name="repeats_hourly">fiecare oră</string>
+    <string name="repeats_daily">zilnic</string>
+    <string name="repeats_weekly">săptămânal</string>
+    <string name="repeats_monthly">lunar</string>
+    <string name="repeats_yearly">anual</string>
+    <string name="list_separator_with_space">, </string>
+    <string name="repeats_from">Se repetă de la</string>
+    <string name="repeat_type_due">data scadentă</string>
+    <string name="repeat_type_completion">data finalizării</string>
+    <string name="TEA_control_repeat">Repetare</string>
+    <plurals name="repeat_times">
+        <item quantity="one">dată</item>
+        <item quantity="few">ori</item>
+        <item quantity="other">ori</item>
+    </plurals>
+    <plurals name="repeat_n_minutes">
+        <item quantity="one">%1$d minut</item>
+        <item quantity="few">%1$d minute</item>
+        <item quantity="other">%1$d minute</item>
+    </plurals>
+    <plurals name="repeat_n_hours">
+        <item quantity="one">%1$d oră</item>
+        <item quantity="few">%1$d ore</item>
+        <item quantity="other">%1$d ore</item>
+    </plurals>
+    <plurals name="repeat_n_days">
+        <item quantity="one">%1$d zi</item>
+        <item quantity="few">%1$d zile</item>
+        <item quantity="other">%1$d zile</item>
+    </plurals>
+    <plurals name="repeat_n_weeks">
+        <item quantity="one">%1$d săptămână</item>
+        <item quantity="few">%1$d săptămâni</item>
+        <item quantity="other">%1$d săptămâni</item>
+    </plurals>
+    <plurals name="repeat_n_months">
+        <item quantity="one">%1$d lună</item>
+        <item quantity="few">%1$d luni</item>
+        <item quantity="other">%1$d luni</item>
+    </plurals>
+    <plurals name="repeat_n_years">
+        <item quantity="one">%1$d an</item>
+        <item quantity="few">%1$d ani</item>
+        <item quantity="other">%1$d ani</item>
+    </plurals>
+    <string name="repeat_type_completion_capitalized">Data de finalizare</string>
+    <string name="no_title">(Fără titlu)</string>
+    <string name="when_started">Când a început</string>
+    <string name="when_due">La scadență</string>
+    <string name="when_overdue">În caz de întârziere</string>
+    <string name="randomly">Aleatoriu</string>
+    <string name="randomly_every">Aleatoriu la fiecare %1$s</string>
+    <string name="pick_a_date_and_time">Alege o dată și o oră</string>
+    <string name="add_reminder">Adaugă un memento</string>
+    <string name="custom_notification">Notificare personalizată</string>
+    <string name="alarm_before">înainte</string>
+    <string name="alarm_after">după</string>
+    <string name="alarm_start">pornește</string>
+    <string name="alarm_due">scadență</string>
+    <string name="alarm_before_start">%1$s înainte de start</string>
+    <string name="alarm_after_start">%1$s după pornire</string>
+    <string name="alarm_before_due">%1$s înainte de scadență</string>
+    <string name="alarm_after_due">%1$s după scadență</string>
+    <string name="snoozed_until">Amânat până la %1$s</string>
+    <string name="ring_once">Sună o dată</string>
+    <string name="ring_five_times">Sună de cinci ori</string>
+    <string name="ring_nonstop">Sună non-stop</string>
+    <string name="enable_reminders">Activează memento-uri</string>
+    <string name="enable_reminders_description">Reamintirile sunt dezactivate în Setări Android</string>
+    <plurals name="reminder_minutes">
+        <item quantity="one">Minut</item>
+        <item quantity="few">Minute</item>
+        <item quantity="other">Minute</item>
+    </plurals>
+    <plurals name="reminder_hours">
+        <item quantity="one">Oră</item>
+        <item quantity="few">Ore</item>
+        <item quantity="other">Ore</item>
+    </plurals>
+    <plurals name="reminder_days">
+        <item quantity="one">Zi</item>
+        <item quantity="few">Zile</item>
+        <item quantity="other">Zile</item>
+    </plurals>
+    <plurals name="reminder_week">
+        <item quantity="one">Săptămână</item>
+        <item quantity="few">Săptămâni</item>
+        <item quantity="other">Săptămâni</item>
+    </plurals>
+    <string name="delete_task">Șterge sarcina</string>
+    <string name="menu_discard_changes">Renunță la modificări</string>
+    <string name="more_options">Mai multe opțiuni</string>
+    <string name="rmd_NoA_snooze">Amână</string>
+    <string name="date_shortcut_hour">Pentru o oră</string>
+    <string name="date_shortcut_morning">Dimineața</string>
+    <string name="date_shortcut_afternoon">După-amiază</string>
+    <string name="date_shortcut_evening">Seara</string>
+    <string name="date_shortcut_night">Noaptea</string>
+    <string name="date_shortcut_tomorrow_morning">Mâine dimineață</string>
+    <string name="date_shortcut_tomorrow_afternoon">Mâine după-amiază</string>
+    <string name="date_shortcut_tomorrow_evening">Mâine seara</string>
+    <string name="date_shortcut_tomorrow_night">Mâine noaptea</string>
 </resources>

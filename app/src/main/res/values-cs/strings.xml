@@ -107,7 +107,6 @@
     <string name="voice_create_prompt">Mluvte pro vytvoření úkolu</string>
     <string name="EPr_voiceInputEnabled_title">Hlasový vstup</string>
     <string name="EPr_voiceRemindersEnabled_title">Hlasové upomínky</string>
-    <string name="delete_task">Smazat úkol</string>
     <string name="voice_command_added_task">Přidán úkol</string>
     <plurals name="Ntasks">
         <item quantity="one">1 úkol</item>
@@ -128,21 +127,17 @@
     <string name="translations">Přispějte k překladu</string>
     <string name="quiet_hours_summary">Žádné připomínky v období nerušení</string>
     <string name="remove">Odstranit</string>
-    <string name="randomly">Náhodně</string>
     <string name="tags">Štítky</string>
     <string name="filters">Filtry</string>
     <string name="date_shortcut_morning">Ráno</string>
     <string name="date_shortcut_afternoon">Odpoledne</string>
     <string name="date_shortcut_evening">Večer</string>
     <string name="date_shortcut_night">Noc</string>
-    <string name="date_shortcut_tomorrow_morning">Zítra ráno</string>
-    <string name="date_shortcut_tomorrow_afternoon">Zítra odpoledne</string>
     <string name="discard_changes">Zahodit změny\?</string>
     <string name="tag_settings">Nastavení štítku</string>
     <string name="delete">Smazat</string>
     <string name="filter_settings">Nastavení filtru</string>
     <string name="add_attachment">Přidat přílohu</string>
-    <string name="no_title">(Bez názvu)</string>
     <string name="back_button_saves_task">Tlačítko zpět uloží úkol</string>
     <string name="default_list">Výchozí seznam</string>
     <string name="filter">Filtr</string>
@@ -213,18 +208,6 @@
         <item quantity="few">%d týdny</item>
         <item quantity="other">%d týdnů</item>
     </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="one">%d měsíc</item>
-        <item quantity="few">%d měsíce</item>
-        <item quantity="other">%d měsíců</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d rok</item>
-        <item quantity="few">%d roky</item>
-        <item quantity="other">%d let</item>
-    </plurals>
-    <string name="repeat_type_due">termínu úkolu</string>
-    <string name="repeat_type_completion">okamžiku dokončení</string>
     <string name="repeat_snackbar">Úkol %1$s byl znovu naplánován na %2$s</string>
     <string name="new_list">Vytvořit nový seznam</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">Tasks bude při upomínce nahlas číst název úkolu</string>
@@ -232,10 +215,7 @@
     <string name="google_drive_backup">Záloha na Disk Google</string>
     <string name="row_spacing">Řádkování</string>
     <string name="customize_edit_screen">Přizpůsobit obrazovku úprav</string>
-    <string name="add_reminder">Přidat upomínku</string>
     <string name="add_location">Přidat místo</string>
-    <string name="pick_a_date_and_time">Vybrat datum a čas</string>
-    <string name="when_due">S termínem</string>
     <string name="geofence_radius">Poloměr geofence</string>
     <string name="location_radius_meters">%s m</string>
     <string name="date_shortcut_must_come_before">%1$s musí být před %2$s</string>
@@ -261,23 +241,7 @@
     <string name="badges">Odznaky</string>
     <string name="list">Seznam</string>
     <string name="repeats_from">Opakuje se od</string>
-    <string name="repeats_single">Opakuje se %s</string>
-    <string name="repeats_single_on">Opakuje se %1$s v %2$s</string>
-    <string name="repeats_single_until">Opakuje se %1$s, až do %2$s</string>
-    <string name="repeats_single_number_of_times">Opakuje se %1$s, ještě %2$d %3$s</string>
-    <string name="repeats_single_on_until">Opakuje se %1$s v %2$s až do %3$s</string>
-    <string name="repeats_single_on_number_of_times">Opakuje se %1$s v %2$s, ještě %3$d %4$s</string>
-    <string name="repeats_minutely">každou minutu</string>
-    <string name="repeats_hourly">každou hodinu</string>
-    <string name="repeats_daily">denně</string>
-    <string name="repeats_weekly">týdně</string>
-    <string name="repeats_monthly">měsíčně</string>
-    <string name="repeats_yearly">každý rok</string>
-    <string name="repeats_plural">Opakuje se každý %s</string>
-    <string name="repeats_plural_on">Opakuje se každý %1$s v %2$s</string>
-    <string name="repeats_plural_until">Opakuje se každý %1$s až do %2$s</string>
     <string name="repeats_plural_number_of_times">Opakuje se každý %1$s, ještě %2$d %3$s</string>
-    <string name="repeats_plural_on_until">Opakuje se každý %1$s v %2$s až do %3$s</string>
     <string name="dont_add_to_calendar">Nepřidávat do kalendáře</string>
     <string name="default_calendar">Výchozí kalendář</string>
     <string name="badges_description">Zobrazit počet úkolů u ikony Tasks. Některé spouštěče tuto funkci nepodporují.</string>
@@ -294,7 +258,6 @@
     <string name="requires_pro_subscription">Vyžaduje předplatné Pro</string>
     <string name="logout">Odhlásit se</string>
     <string name="this_feature_requires_a_subscription">Tato funkce vyžaduje předplatné</string>
-    <string name="when_overdue">Po termínu</string>
     <string name="action_create_new_task">Vytvořit nový úkol</string>
     <string name="show_description">Zobrazit popis</string>
     <string name="show_full_description">Zobrazit celý popis</string>
@@ -302,9 +265,7 @@
     <string name="linkify_description">Na webové odkazy, adresy a telefonní čísla bude možné kliknout</string>
     <string name="subtasks">Podúkoly</string>
     <string name="display_name">Zobrazované jméno</string>
-    <string name="date_shortcut_hour">Na hodinu</string>
     <string name="list_settings">Nastavení seznamu</string>
-    <string name="repeats_plural_on_number_of_times">Opakuje se každý %1$s v %2$s, ještě %3$d %4$s</string>
     <string name="theme_system_default">Podle systému</string>
     <string name="or_choose_a_location">Nebo vyberte místo</string>
     <string name="missing_permissions">Chybí oprávnění</string>
@@ -330,7 +291,6 @@
     <string name="disable_battery_optimizations">Vypnout snižování spotřeby energie z akumulátoru</string>
     <string name="more_settings">Další nastavení</string>
     <string name="more_notification_settings_summary">Zvuk upozornění, vibrace, atd.</string>
-    <string name="menu_discard_changes">Zrušit změny</string>
     <string name="widget_show_menu">Zobrazit nabídku</string>
     <string name="sort_created">Podle času vytvoření</string>
     <string name="delete_multiple_tasks_confirmation">%s smazáno</string>
@@ -368,8 +328,6 @@
     <string name="visit_website">Navštívit webovou stránku</string>
     <string name="location_remind_departure">Připomenout při odchodu</string>
     <string name="location_remind_arrival">Připomenout při příchodu</string>
-    <string name="date_shortcut_tomorrow_night">Zítra v noci</string>
-    <string name="date_shortcut_tomorrow_evening">Zítra večer</string>
     <string name="CFC_list_name">V seznamu…</string>
     <string name="astrid_sort_order_summary">Zapněte ruční řazení Astrid pro „Moje úkoly“, „Dnes“ a štítky. Tento režim řazení bude v budoucnu nahrazen režimem „Vlastní řazení“</string>
     <string name="astrid_sort_order">Ruční řazení Astrid</string>
@@ -476,7 +434,6 @@
     <string name="ok">OK</string>
     <string name="markdown_description">Zapnout Markdown v nadpisu a popisu</string>
     <string name="markdown">Značkovací jazyk</string>
-    <string name="more_options">Další volby</string>
     <string name="upgrade_open_source_description">Vaše předplatné podporuje pokračování vývoje</string>
     <string name="upgrade_tasks_org_account_description">Synchronizujte s Tasks.org a spolupracujte s ostatními uživateli</string>
     <string name="upgrade_more_customization_description">Odemknout všechny vzhledy, barvy a ikony</string>
@@ -484,35 +441,7 @@
     <string name="pro_free_trial">Noví předplatitelé dostanou 7 dnů na vyzkoušení zdarma. Předplatné je možné kdykoli zrušit</string>
     <string name="now">Nyní</string>
     <string name="customize_edit_screen_summary">Přeuspořádejte nebo odstraňte pole</string>
-    <string name="randomly_every">Náhodně každých %s</string>
-    <plurals name="reminder_minutes">
-        <item quantity="one">Minuta</item>
-        <item quantity="few">Minuty</item>
-        <item quantity="other">Minut</item>
-    </plurals>
-    <plurals name="reminder_hours">
-        <item quantity="one">Hodina</item>
-        <item quantity="few">Hodiny</item>
-        <item quantity="other">Hodin</item>
-    </plurals>
-    <plurals name="reminder_days">
-        <item quantity="one">Den</item>
-        <item quantity="few">Dny</item>
-        <item quantity="other">Dní</item>
-    </plurals>
-    <plurals name="reminder_week">
-        <item quantity="one">Týden</item>
-        <item quantity="few">Týdny</item>
-        <item quantity="other">Týdnů</item>
-    </plurals>
-    <string name="when_started">Když začne</string>
     <string name="custom_filter_has_reminder">Má upomínku</string>
-    <string name="snoozed_until">Odloženo do %s</string>
-    <string name="alarm_after_start">%s po začátku</string>
-    <string name="alarm_before_start">%s před začátkem</string>
-    <string name="alarm_before_due">%s před termínem</string>
-    <string name="alarm_after_due">%s po termínu</string>
-    <string name="custom_notification">Vlastní oznámení</string>
     <string name="completion_sound">Přehrát zvuk dokončení</string>
     <string name="snackbar_task_completed">Úkol splněn</string>
     <string name="completed">Splněný</string>
@@ -522,8 +451,6 @@
     <string name="hint_customize_edit_body">Tuto obrazovku si můžete přizpůsobit přeskupením nebo odebráním polí</string>
     <string name="TEA_creation_date">Datum vytvoření</string>
     <string name="sort_completion_group">Dokončeno %s</string>
-    <string name="enable_reminders">Povolit připomínky</string>
-    <string name="enable_reminders_description">Připomínky jsou zakázány v nastavení Android</string>
     <string name="sort_list">Podle seznamu</string>
     <string name="change_priority">Změnit prioritu</string>
     <string name="theme_dynamic">Dynamické</string>
@@ -577,10 +504,6 @@
     <string name="import_failed_message">Nepodařilo se přečíst soubor zálohy</string>
     <string name="banner_subscription_required_title">Vyžadováno předplatné</string>
     <string name="banner_subscription_required_body">Zaplaťte, kolik chcete, pro odemknutí synchronizace %s</string>
-    <string name="alarm_before">před</string>
-    <string name="alarm_after">po</string>
-    <string name="alarm_start">začátek</string>
-    <string name="alarm_due">konec</string>
     <string name="email_to_task">E-mail na úkol</string>
     <string name="email_to_task_address">Vaše e-mailová adresa</string>
     <string name="rmd_EPr_rmd_time_desc">Oznámení o celodenních úkolech se zobrazí v %1$s</string>

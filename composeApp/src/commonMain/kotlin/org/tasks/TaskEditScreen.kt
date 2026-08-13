@@ -1,5 +1,6 @@
 package org.tasks
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
@@ -42,87 +43,80 @@ import kotlinx.coroutines.flow.collect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.tasks.compose.PlatformBackHandler
+import org.tasks.compose.edit.AlarmsSection
 import org.tasks.compose.edit.DescriptionRow
 import org.tasks.compose.edit.DueDateRow
 import org.tasks.compose.edit.ListPickerDialog
 import org.tasks.compose.edit.MarkdownEditField
 import org.tasks.compose.edit.PrioritySection
+import org.tasks.compose.edit.RecurrencePickerDialog
+import org.tasks.compose.edit.RepeatRow
 import org.tasks.compose.edit.StartDateRow
 import org.tasks.compose.edit.TagPickerDialog
 import org.tasks.compose.edit.TagsSection
+import org.tasks.compose.edit.TaskEditActionBar
+import org.tasks.compose.edit.TaskEditActionBarHeight
 import org.tasks.compose.edit.TaskEditCardRow
 import org.tasks.compose.pickers.DueDatePickerSheet
 import org.tasks.compose.pickers.StartDatePickerSheet
+import org.tasks.compose.pickers.alarmFromSelection
+import org.tasks.compose.pickers.alarmToSelection
 import org.tasks.compose.pickers.dueDateFromSelection
 import org.tasks.compose.pickers.dueDateToSelection
 import org.tasks.time.is24HourFormat
-import org.tasks.compose.settings.Toaster
+import org.tasks.data.entity.Alarm
 import org.tasks.data.entity.TagData
 import org.tasks.filters.CaldavFilter
-import org.tasks.filters.Filter
 import org.tasks.filters.NavigationDrawerSubheader
+import org.tasks.reminders.ReminderControlSetViewModel
 import org.tasks.tags.TagPickerViewModel
+import org.tasks.time.DateTimeUtils2.currentTimeMillis
+import org.tasks.time.noon
 import org.tasks.themes.TasksIcons
 import org.tasks.viewmodel.FilterPickerViewModel
 import org.tasks.viewmodel.TaskEditViewModel
 import tasks.kmp.generated.resources.Res
 import tasks.kmp.generated.resources.back
-import tasks.kmp.generated.resources.edit_task
 import tasks.kmp.generated.resources.failed_to_load_task
-import tasks.kmp.generated.resources.failed_to_save_task
-import tasks.kmp.generated.resources.new_task
 import tasks.kmp.generated.resources.no_list_available
 import tasks.kmp.generated.resources.sort_list
 import tasks.kmp.generated.resources.task_title
+
+val TaskEditIslandInset = 16.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskEditScreen(
     viewModel: TaskEditViewModel,
     filterPickerViewModel: FilterPickerViewModel,
-    taskId: Long?,
-    remoteId: String,
-    currentFilter: Filter? = null,
     onCreateList: (accountId: Long) -> Unit = {},
     onSignIn: () -> Unit = {},
+    backHandlerEnabled: Boolean = true,
     onClose: () -> Unit,
 ) {
-    LaunchedEffect(taskId, remoteId) {
-        viewModel.initialize(taskId, currentFilter)
-    }
     val state by viewModel.state.collectAsState()
     val currentOnClose by rememberUpdatedState(onClose)
     LaunchedEffect(viewModel) {
         viewModel.closeEvents.collect { currentOnClose() }
     }
-    val snackbarHostState = remember { SnackbarHostState() }
     val loadError by viewModel.loadError.collectAsState()
-    val saveError by viewModel.saveError.collectAsState()
-    val saveErrorMessage = stringResource(Res.string.failed_to_save_task)
-    LaunchedEffect(saveError) {
-        if (saveError) {
-            snackbarHostState.showSnackbar(saveErrorMessage)
-            viewModel.clearSaveError()
-        }
-    }
+    val saving by viewModel.saving.collectAsState()
 
     val saveAndClose = { viewModel.save() }
 
-    PlatformBackHandler(enabled = !state.isLoading) { saveAndClose() }
+    // Armed unless the caller says something is on top of this screen. In a list-detail scene
+    // neither NavDisplay nor the task list chrome has a back handler enabled, so leaving this one
+    // off while the row loads would let back exit the app instead of closing the editor. save() is
+    // a no-op while loading and still emits the close.
+    PlatformBackHandler(enabled = backHandlerEnabled) { saveAndClose() }
 
     Scaffold(
-        snackbarHost = { Toaster(state = snackbarHostState) },
         containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(if (state.isNew) Res.string.new_task else Res.string.edit_task),
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                },
+                title = {},
                 navigationIcon = {
-                    IconButton(onClick = saveAndClose) {
+                    IconButton(onClick = saveAndClose, enabled = !saving) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(Res.string.back),
@@ -183,7 +177,11 @@ fun TaskEditScreen(
                     var showTagPicker by remember { mutableStateOf(false) }
                     var showDueDatePicker by remember { mutableStateOf(false) }
                     var showStartDatePicker by remember { mutableStateOf(false) }
+                    var showRecurrencePicker by remember { mutableStateOf(false) }
+                    var showAlarmDateTimePicker by remember { mutableStateOf(false) }
+                    var alarmToReplace by remember { mutableStateOf<Alarm?>(null) }
                     var pickerToken by remember { mutableStateOf(0) }
+                    val reminderViewModel = koinViewModel<ReminderControlSetViewModel>()
                     val is24Hour = is24HourFormat()
                     val keyboardController = LocalSoftwareKeyboardController.current
                     LaunchedEffect(list) { showListPicker = false }
@@ -191,7 +189,7 @@ fun TaskEditScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
-                            .padding(16.dp),
+                            .padding(TaskEditIslandInset),
                     ) {
                         TitleField(
                             title = state.task.title.orEmpty(),
@@ -213,6 +211,9 @@ fun TaskEditScreen(
                             selectedDay = state.startDay,
                             selectedTime = state.startTime,
                             hasDueDate = state.task.dueDate > 0,
+                            hasStartAlarm = remember(state.alarms) {
+                                state.alarms.any { it.type == Alarm.TYPE_REL_START }
+                            },
                             is24Hour = is24Hour,
                             alwaysDisplayFullDate = state.datePickerPreferences.alwaysDisplayFullDate,
                             onClick = {
@@ -223,12 +224,41 @@ fun TaskEditScreen(
                         Spacer(modifier = Modifier.height(16.dp))
                         DueDateRow(
                             dueDate = state.task.dueDate,
+                            hasDueDateAlarm = remember(state.alarms) {
+                                state.alarms.any { it.type == Alarm.TYPE_REL_END }
+                            },
                             is24Hour = is24Hour,
                             alwaysDisplayFullDate = state.datePickerPreferences.alwaysDisplayFullDate,
                             onClick = {
                                 keyboardController?.hide()
                                 showDueDatePicker = true
                             },
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        AlarmsSection(
+                            vm = reminderViewModel,
+                            alarms = state.alarms,
+                            isNew = state.isNew,
+                            hasStartDate = state.task.hasStartDate(),
+                            hasDueDate = state.task.hasDueDate(),
+                            is24HourFormat = is24Hour,
+                            addAlarm = viewModel::addAlarm,
+                            deleteAlarm = viewModel::removeAlarm,
+                            pickDateAndTime = { replace ->
+                                alarmToReplace = replace
+                                keyboardController?.hide()
+                                showAlarmDateTimePicker = true
+                            },
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        RepeatRow(
+                            recurrence = state.task.recurrence,
+                            repeatFrom = state.task.repeatFrom,
+                            onClick = {
+                                keyboardController?.hide()
+                                showRecurrencePicker = true
+                            },
+                            onRepeatFromChanged = viewModel::setRepeatFrom,
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         TagsSection(
@@ -250,7 +280,27 @@ fun TaskEditScreen(
                             description = state.task.notes.orEmpty(),
                             onDescriptionChange = viewModel::setDescription,
                         )
+                        Spacer(
+                            modifier = Modifier.height(
+                                TaskEditActionBarHeight + FloatingToolbarBottomMargin
+                            )
+                        )
                     }
+                    TaskEditActionBar(
+                        onMarkCompleted = {
+                            keyboardController?.hide()
+                            viewModel.markComplete()
+                        },
+                        onDiscardChanges = viewModel::discardChanges,
+                        onDeleteTask = viewModel::delete,
+                        enabled = !saving,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(
+                                horizontal = TaskEditIslandInset,
+                                vertical = FloatingToolbarBottomMargin,
+                            ),
+                    )
                     if (showDueDatePicker) {
                         val (initialDay, initialTime) = dueDateToSelection(state.task.dueDate)
                         // TODO: both date pickers hard-code autoClose
@@ -288,6 +338,54 @@ fun TaskEditScreen(
                                 showStartDatePicker = false
                             },
                             onDismiss = { showStartDatePicker = false },
+                        )
+                    }
+                    if (showRecurrencePicker) {
+                        RecurrencePickerDialog(
+                            recurrence = state.task.recurrence,
+                            dueDate = state.task.dueDate,
+                            accountType = list.account.accountType,
+                            calendarInputMode = state.datePickerPreferences.datePickerInputMode,
+                            onCalendarInputModeChange = viewModel::setDatePickerInputMode,
+                            onSelected = { recurrence ->
+                                viewModel.setRecurrence(recurrence)
+                                showRecurrencePicker = false
+                            },
+                            onDismiss = { showRecurrencePicker = false },
+                        )
+                    }
+                    if (showAlarmDateTimePicker) {
+                        val existing = alarmToReplace
+                            ?.takeIf { it.type == Alarm.TYPE_DATE_TIME }
+                            ?.time
+                            ?.takeIf { it > 0 }
+                        val (initialDay, initialTime) = alarmToSelection(existing ?: currentTimeMillis().noon())
+                        DueDatePickerSheet(
+                            initialDay = initialDay,
+                            initialTime = initialTime,
+                            is24Hour = is24Hour,
+                            showNoDate = false,
+                            showNoTime = false,
+                            times = state.datePickerPreferences.quickPickTimes,
+                            initialDateInputMode = state.datePickerPreferences.datePickerInputMode,
+                            onDateInputModeChange = viewModel::setDatePickerInputMode,
+                            initialTimeInputMode = state.datePickerPreferences.timePickerInputMode,
+                            onTimeInputModeChange = viewModel::setTimePickerInputMode,
+                            onSelected = { day, time ->
+                                val timestamp = alarmFromSelection(day, time)
+                                if (timestamp > 0) {
+                                    alarmToReplace?.let(viewModel::removeAlarm)
+                                    viewModel.addAlarm(
+                                        Alarm(time = timestamp, type = Alarm.TYPE_DATE_TIME)
+                                    )
+                                }
+                                alarmToReplace = null
+                                showAlarmDateTimePicker = false
+                            },
+                            onDismiss = {
+                                alarmToReplace = null
+                                showAlarmDateTimePicker = false
+                            },
                         )
                     }
                     if (showTagPicker) {
@@ -345,6 +443,24 @@ fun TaskEditScreen(
                             },
                         )
                     }
+                }
+            }
+            // Saving and closing can wait: a save already in flight for this task holds its lock for
+            // as long as the calendar provider and sync adapters take, and the wait is
+            // uncancellable. Without something on screen, back and escape were consumed and the
+            // editor just sat there looking untouched. Takes the pointer input with it, because a
+            // screen that is on its way out should not still look editable.
+            if (saving) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.2f))
+                        .pointerInput(Unit) {
+                            awaitPointerEventScope { while (true) awaitPointerEvent() }
+                        },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
                 }
             }
         }

@@ -142,16 +142,6 @@
         <item quantity="one">%d Woche</item>
         <item quantity="other">%d Wochen</item>
     </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="one">%d Monat</item>
-        <item quantity="other">%d Monate</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d Jahr</item>
-        <item quantity="other">%d Jahre</item>
-    </plurals>
-    <string name="repeat_type_due">Fälligkeitsdatum</string>
-    <string name="repeat_type_completion">Erledigung</string>
     <string name="repeat_snackbar">%1$s neu geplant für %2$s</string>
     <string name="new_tag">Neues Schlagwort erstellen</string>
     <string name="new_list">Neue Liste erstellen</string>
@@ -164,7 +154,6 @@
     <string name="EPr_voiceInputEnabled_title">Spracheingabe aktivieren</string>
     <string name="EPr_voiceRemindersEnabled_title">Gesprochene Erinnerungen</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">Tasks wird Aufgabennamen bei der Erinnerung aussprechen</string>
-    <string name="delete_task">Aufgabe löschen</string>
     <string name="voice_command_added_task">Hinzugefügte Aufgabe</string>
     <plurals name="Ntasks">
         <item quantity="one">1 Aufgabe</item>
@@ -187,23 +176,15 @@
     <string name="customize_edit_screen">Bearbeitungsbildschirm anpassen</string>
     <string name="translations">Zur Übersetzung beitragen</string>
     <string name="quiet_hours_summary">Keine Erinnerungen während der Ruhezeit</string>
-    <string name="add_reminder">Erinnerung hinzufügen</string>
     <string name="add_location">Ort hinzufügen</string>
     <string name="remove">Entfernen</string>
-    <string name="randomly">Zufällig</string>
-    <string name="pick_a_date_and_time">Tag und Uhrzeit auswählen</string>
-    <string name="when_overdue">Wenn überfällig</string>
-    <string name="when_due">Wenn fällig</string>
     <string name="tags">Schlagwörter</string>
     <string name="change_priority">Priorität ändern</string>
     <string name="filters">Filter</string>
-    <string name="date_shortcut_hour">Für eine Stunde</string>
     <string name="date_shortcut_morning">Vormittag</string>
     <string name="date_shortcut_afternoon">Nachmittag</string>
     <string name="date_shortcut_evening">Abend</string>
     <string name="date_shortcut_night">Nacht</string>
-    <string name="date_shortcut_tomorrow_morning">Morgen Früh</string>
-    <string name="date_shortcut_tomorrow_afternoon">Morgen Nachmittag</string>
     <string name="date_shortcut_must_come_before">%1$s muss vor %2$s kommen</string>
     <string name="date_shortcut_must_come_after">%1$s muss nach %2$s kommen</string>
     <string name="discard_changes">Änderungen verwerfen?</string>
@@ -219,7 +200,6 @@
     <string name="pick_from_gallery">Aus Galerie wählen</string>
     <string name="pick_from_storage">Von Speicher auswählen</string>
     <string name="name_cannot_be_empty">Name darf nicht leer sein</string>
-    <string name="no_title">(kein Titel)</string>
     <string name="back_button_saves_task">„Zurück“ speichert Aufgabe</string>
     <string name="default_list">Standardliste</string>
     <string name="opacity">Deckkraft</string>
@@ -250,24 +230,7 @@
     <string name="badges">Benachrichtigungspunkte</string>
     <string name="list">Liste</string>
     <string name="repeats_from">Wiederholt sich ab</string>
-    <string name="repeats_single">Wiederholt sich %s</string>
-    <string name="repeats_single_on">Wiederholt sich %1$s %2$s</string>
-    <string name="repeats_single_until">Wiederholt sich %1$s, endet am %2$s</string>
-    <string name="repeats_single_number_of_times">Wiederholt sich %1$s, genau %2$d %3$s</string>
-    <string name="repeats_single_on_until">Wiederholt sich %1$s am %2$s, endet am %3$s</string>
-    <string name="repeats_single_on_number_of_times">Wiederholt sich %1$s %2$s, genau %3$d %4$s</string>
-    <string name="repeats_minutely">minütlich</string>
-    <string name="repeats_hourly">stündlich</string>
-    <string name="repeats_daily">täglich</string>
-    <string name="repeats_weekly">wöchentlich</string>
-    <string name="repeats_monthly">monatlich</string>
-    <string name="repeats_yearly">jährlich</string>
-    <string name="repeats_plural">Wiederholt sich alle %s</string>
-    <string name="repeats_plural_on">Wiederholt sich alle %1$s am %2$s</string>
-    <string name="repeats_plural_until">Wiederholt sich alle %1$s bis %2$s</string>
     <string name="repeats_plural_number_of_times">Wiederholt sich alle %1$s, genau %2$d %3$s</string>
-    <string name="repeats_plural_on_until">Wiederholt sich alle %1$s am %2$s, bis %3$s</string>
-    <string name="repeats_plural_on_number_of_times">Wiederholt sich alle %1$s am %2$s, genau %3$d %4$s</string>
     <string name="dont_add_to_calendar">Nicht im Kalender eintragen</string>
     <string name="default_calendar">Standardkalender</string>
     <string name="badges_description">Anzeige eines Aufgabenzählers am Tasks Launcher Icon. Nicht alle Launcher unterstützen Badges.</string>
@@ -345,7 +308,6 @@
     <string name="place_settings">Ortseinstellungen</string>
     <string name="hide_unused_tags">Ungenutzte Schlagwörter ausblenden</string>
     <string name="hide_unused_places">Ungenutzte Orte ausblenden</string>
-    <string name="menu_discard_changes">Änderungen verwerfen</string>
     <string name="chip_appearance_text_and_icon">Text und Symbol</string>
     <string name="chip_appearance_text_only">Nur Text</string>
     <string name="chip_appearance_icon_only">Nur Symbol</string>
@@ -404,8 +366,6 @@
     <string name="astrid_sort_order">Manuelle Sortierung nach Astrid</string>
     <string name="sort_modified_group">%s bearbeitet</string>
     <string name="sort_created_group">%s erstellt</string>
-    <string name="date_shortcut_tomorrow_night">Morgen Nacht</string>
-    <string name="date_shortcut_tomorrow_evening">Morgen Abend</string>
     <string name="reset_sort_order">Sortierung zurücksetzen</string>
     <string name="permission_read_tasks">Vollzugriff auf die Tasks-Datenbank</string>
     <string name="davx5_selection_description">Aufgaben mit der DAVx⁵-App synchronisieren</string>
@@ -466,7 +426,6 @@
     <string name="support">Support</string>
     <string name="tasks_org_account_required">Tasks.org-Konto erforderlich</string>
     <string name="privacy">Datenschutz</string>
-    <string name="more_options">Weitere Optionen</string>
     <string name="upgrade_open_source_description">Dein Abonnement unterstützt die Weiterentwicklung</string>
     <string name="upgrade_tasks_org_account_description">Mit Tasks.org synchronisieren und mit anderen zusammenarbeiten</string>
     <string name="upgrade_more_customization_description">Schalte alle Themen, Farben und Symbole frei</string>
@@ -475,43 +434,17 @@
     <string name="markdown_description">Markdown in Titel und Beschreibung aktivieren</string>
     <string name="markdown">Markdown</string>
     <string name="now">Jetzt</string>
-    <string name="when_started">Wenn begonnen</string>
     <string name="completion_sound">Ton bei Erledigung abspielen</string>
     <string name="completed">Abgeschlossen</string>
     <string name="snackbar_task_completed">Aufgabe abgeschlossen</string>
     <string name="snackbar_tasks_completed">%d Aufgaben erledigt</string>
-    <string name="alarm_before_start">%s vor dem Start</string>
-    <string name="alarm_after_start">%s nach dem Start</string>
-    <string name="alarm_before_due">%s vor Fälligkeit</string>
-    <string name="alarm_after_due">%s nach Fälligkeit</string>
     <string name="custom_filter_has_reminder">Hat Erinnerung</string>
-    <string name="snoozed_until">Pausiert bis %s</string>
-    <string name="custom_notification">Benutzerdefinierte Erinnerung</string>
-    <plurals name="reminder_minutes">
-        <item quantity="one">Minute</item>
-        <item quantity="other">Minuten</item>
-    </plurals>
-    <plurals name="reminder_hours">
-        <item quantity="one">Stunde</item>
-        <item quantity="other">Stunden</item>
-    </plurals>
-    <plurals name="reminder_days">
-        <item quantity="one">Tag</item>
-        <item quantity="other">Tage</item>
-    </plurals>
-    <plurals name="reminder_week">
-        <item quantity="one">Woche</item>
-        <item quantity="other">Wochen</item>
-    </plurals>
-    <string name="randomly_every">Zufällig alle %s</string>
     <string name="customize_edit_screen_summary">Felder neu anordnen oder entfernen</string>
     <string name="dismiss">Schließen</string>
     <string name="hint_customize_edit_title">Zu viele Informationen\?</string>
     <string name="hint_customize_edit_body">Du kannst diese Ansicht anpassen, indem du Felder neu anordnest oder verschiebst</string>
     <string name="sort_completion_group">Vervollständigung %s</string>
     <string name="TEA_creation_date">Erstellungsdatum</string>
-    <string name="enable_reminders">Erinnerungen aktivieren</string>
-    <string name="enable_reminders_description">Erinnerungen sind in den Android-Einstellungen deaktiviert</string>
     <string name="sort_list">Nach Listen</string>
     <string name="theme_dynamic">Dynamisch</string>
     <string name="swipe_to_snooze_time_immediately">sofort</string>
@@ -564,10 +497,6 @@
     <string name="sponsorship_required_fdroid">Ein GitHub-Sponsoring ist erforderlich, um die Tasks.org-Synchronisierung zu nutzen. Klicke unten, um Sponsor:in zu werden.</string>
     <string name="banner_subscription_required_body">Bezahle, was du möchtest, um die Synchronisierung von %s freizuschalten</string>
     <string name="banner_subscription_required_title">Abo erforderlich</string>
-    <string name="alarm_after">nach</string>
-    <string name="alarm_start">Start</string>
-    <string name="alarm_due">fällig</string>
-    <string name="alarm_before">vor</string>
     <string name="email_to_task_address">Deine E-Mail-Adresse</string>
     <string name="email_to_task">E-Mail Aufgabenerstellung</string>
     <string name="rmd_EPr_rmd_time_desc">Benachrichtigungen für Aufgaben ohne Uhrzeit werden um %1$s angezeigt</string>
@@ -591,7 +520,8 @@
     <string name="location_update_interval_30_minutes">Alle 30 Minuten</string>
     <string name="location_update_interval_1_hour">Jede Stunde</string>
     <string name="location_update_interval_2_hours">Alle 2 Stunden</string>
-    <string name="upgrade_desktop_app">Tasks.org für den PC</string>
+    <string name="upgrade_desktop_app">Tasks.org für Desktop</string>
     <string name="upgrade_desktop_app_description">Vorabzugang zur neuen Desktop-App</string>
     <string name="p_per_list_sort">sortierung_nach_liste</string>
+    <string name="sort_options">Sortieroptionen</string>
 </resources>

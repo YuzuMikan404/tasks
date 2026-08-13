@@ -151,16 +151,6 @@
     <string name="start_date">تاریخ آغاز</string>
     <string name="SSD_sort_start">بلحاظ تاریخ آغاز</string>
     <string name="repeat_type_completion_capitalized">تاریخ تکمیل</string>
-    <string name="repeat_type_completion">تاریخ تکمیل</string>
-    <string name="repeat_type_due">مقررہ تاریخ</string>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d سال</item>
-        <item quantity="other">%d سال</item>
-    </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="one">%d مہینہ</item>
-        <item quantity="other">%d مہینے</item>
-    </plurals>
     <plurals name="repeat_n_weeks">
         <item quantity="one">%d ہفتہ</item>
         <item quantity="other">%d ہفتے</item>
@@ -192,7 +182,6 @@
         <item quantity="other">%d ٹاسکس</item>
     </plurals>
     <string name="voice_command_added_task">ٹاسک جمع کر دیا گیا</string>
-    <string name="delete_task">ٹاسک ڈیلیٹ کریں</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">ٹاسکس یاد دہانیوں کے دوران ٹاسکس کے نام بولیں گے</string>
     <string name="EPr_voiceRemindersEnabled_title">صوتی یاد دہانیاں</string>
     <string name="EPr_voiceInputEnabled_title">وائس ان پٹ</string>
@@ -202,26 +191,16 @@
     <string name="TEA_timer_comment_started">یہ ٹاسک شروع کیا:</string>
     <string name="TEA_timer_controls">ٹائمر</string>
     <string name="TPl_notification">%s کیلئے ٹائمرز فعال ہو گئے!</string>
-    <string name="date_shortcut_tomorrow_night">کل رات</string>
-    <string name="date_shortcut_tomorrow_evening">کل شام</string>
-    <string name="date_shortcut_tomorrow_afternoon">کل سہ پہر</string>
-    <string name="date_shortcut_tomorrow_morning">کل صبح</string>
     <string name="date_shortcut_night">رات</string>
     <string name="date_shortcut_evening">شام</string>
     <string name="date_shortcut_afternoon">سہ پہر</string>
     <string name="date_shortcut_morning">صبح</string>
-    <string name="date_shortcut_hour">ایک گھنٹے کیلئے</string>
     <string name="filters">فلٹرز</string>
     <string name="tags">ٹیگز</string>
     <string name="location_radius_meters">%s م</string>
     <string name="geofence_radius">رداس</string>
-    <string name="when_due">جب واجب ہو</string>
-    <string name="when_overdue">جب واجب الادا ہو</string>
-    <string name="pick_a_date_and_time">تاریخ اور وقت مقرر کریں</string>
-    <string name="randomly">بے ترتیب</string>
     <string name="remove">ختم کریں</string>
     <string name="add_location">لوکیشن لگائیں</string>
-    <string name="add_reminder">ہاد دہانی لگائیں</string>
     <string name="quiet_hours_summary">خاموش گھنٹوں کے دوران کوئی یاد دہانی نہیں</string>
     <string name="translations">ترجمہ کریں</string>
     <string name="customize_edit_screen">ایڈٹ سکرین کسٹمائز کریں</string>
@@ -255,7 +234,6 @@
     <string name="list_settings">لسٹ سیٹنگ</string>
     <string name="tag_settings">ٹیگ سیٹنگ</string>
     <string name="discard">مسترد کریں</string>
-    <string name="menu_discard_changes">تبدیلیاں مسترد کریں</string>
     <string name="discard_changes">تبدیلیاں مسترد کریں؟</string>
     <string name="date_shortcut_must_come_after">%1$s کو %2$sسے پہلے آنا چاہیے</string>
     <string name="date_shortcut_must_come_before">%1$s کو %2$s سے پہلے آنا چایئے</string>
@@ -286,7 +264,6 @@
     <string name="default_tags">ڈیفالٹ ٹیگز</string>
     <string name="default_list">ڈیفالٹ فہرست</string>
     <string name="back_button_saves_task">بیک کے بٹن سے ٹاسک محفوظ کرنا</string>
-    <string name="no_title">(کوئی عنوان نہیں)</string>
     <string name="name_cannot_be_empty">نام خالی نہیں ہو سکتا</string>
     <string name="bundle_notifications">بنڈل نوٹٰیفیکیشنز</string>
     <string name="notification_disable_battery_optimizations_description">بیٹری کی بچت نوٹیفیکیشنز کو ملتوی کر سکتی ہے</string>
@@ -307,21 +284,7 @@
     <string name="badges_description">ٹاسکس ایپ کے آئیکن پر ٹاسک کی تعداد ظاہر کریں۔ تمام لانچرز نشانات کو سپوڑٹ نہیں کرتے۔</string>
     <string name="default_calendar">ڈیفالٹ کیلںنڈر</string>
     <string name="dont_add_to_calendar">کیلنڈر میں داخل نہ کریں</string>
-    <string name="repeats_plural_on_until">ہر %1$s کو %2$s پر دہراتا ہے %3$s تک</string>
     <string name="repeats_plural_number_of_times">ہر %1$s کو دہراتا ہے، %2$d%3$s واقع ہوتا ہے</string>
-    <string name="repeats_plural_until">ہر %1$s کو دہراتا ہے %2$sتک</string>
-    <string name="repeats_plural_on">ہر %1$s کو %2$s پر دہراتا ہے</string>
-    <string name="repeats_plural">ہر %s کو دہراتا ہے</string>
-    <string name="repeats_yearly">سالانہ</string>
-    <string name="repeats_monthly">ماہانہ</string>
-    <string name="repeats_weekly">‘ہفتہ وار</string>
-    <string name="repeats_daily">روزانہ</string>
-    <string name="repeats_hourly">گھنٹہ وار</string>
-    <string name="repeats_minutely">منٹ وار</string>
-    <string name="repeats_single_number_of_times">%1$s کو دہراتا ہے، %2$d%3$s واقع ہوتا ہے</string>
-    <string name="repeats_single_until">%1$s کو %2$s تک دہراتا ہے</string>
-    <string name="repeats_single_on">%1$s کو %2$s پر دہراتا ہے</string>
-    <string name="repeats_single">%s دہراتا ہے</string>
     <string name="repeats_from">سے دہراتا ہے</string>
     <string name="list">فہرست</string>
     <string name="badges">نشانات</string>
@@ -333,7 +296,6 @@
     <string name="help">مدد</string>
     <string name="tasker_list_notification">لسٹ نوٹیفیکیشنز</string>
     <string name="list_separator_with_space">"، "</string>
-    <string name="repeats_plural_on_number_of_times">ہر %1$sکو %2$s پر دہراتا ہے، %3$d%4$sپر واقع ہوتا ہے</string>
     <string name="pick_this_location">یہ جگہ منتخب کریں</string>
     <string name="choose_a_location">جگہ منتخب کریں</string>
     <string name="building_notifications">نوٹیفیکیشنز بنائیں</string>

@@ -223,4 +223,71 @@
         <item quantity="other">ปี</item>
     </plurals>
     <string name="repeat_monthly_every_day_of_nth_week">ทุกๆ %1$s %2$s</string>
+    <string name="repeats_single">ทําซ้ํา %1$s</string>
+    <string name="repeats_single_on">ทําซ้ํา %1$s บน %2$s</string>
+    <string name="repeats_single_until">ทําซ้ํา %1$s จนถึง %2$s</string>
+    <string name="repeats_single_number_of_times">ซ้ํา %1$s เกิดขึ้น %2$d %3$s</string>
+    <string name="repeats_single_on_until">ทําซ้ํา %1$s บน %2$s จนถึง %3$s</string>
+    <string name="repeats_single_on_number_of_times">ซ้ํา %1$s บน %2$s เกิดขึ้น %3$d %4$s</string>
+    <string name="repeats_plural">ทําซ้ําทุกๆ %1$s</string>
+    <string name="repeats_plural_on">ทําซ้ําทุกๆ %1$s บน %2$s</string>
+    <string name="repeats_plural_until">ทําซ้ําทุกๆ %1$s จนถึง %2$s</string>
+    <string name="repeats_plural_number_of_times">ซ้ำทุก ๆ %1$s เกิดขึ้น %2$d %3$s</string>
+    <string name="repeats_plural_on_until">ทําซ้ําทุกๆ %1$s บน %2$s จนถึง %3$s</string>
+    <string name="repeats_plural_on_number_of_times">ทําซ้ําทุกๆ %1$s บน %2$s เกิดขึ้น %3$d %4$s</string>
+    <string name="repeats_minutely">นาที</string>
+    <string name="repeats_hourly">รายชั่วโมง</string>
+    <string name="repeats_daily">ทุกวัน</string>
+    <string name="repeats_weekly">รายสัปดาห์</string>
+    <string name="repeats_monthly">รายเดือน</string>
+    <string name="repeats_yearly">รายปี</string>
+    <string name="list_separator_with_space">, </string>
+    <string name="repeats_from">ซ้ำจาก</string>
+    <string name="repeat_type_due">วันที่ครบกําหนด</string>
+    <string name="repeat_type_completion">วันที่เสร็จสมบูรณ์</string>
+    <string name="TEA_control_repeat">ทำซ้ำ</string>
+    <plurals name="repeat_times">
+        <item quantity="other">เวลา</item>
+    </plurals>
+    <plurals name="repeat_n_minutes">
+        <item quantity="other">%1$d นาที</item>
+    </plurals>
+    <plurals name="repeat_n_hours">
+        <item quantity="other">%1$d ชั่วโมง</item>
+    </plurals>
+    <plurals name="repeat_n_days">
+        <item quantity="other">%1$d วัน</item>
+    </plurals>
+    <plurals name="repeat_n_weeks">
+        <item quantity="other">%1$d สัปดาห์</item>
+    </plurals>
+    <plurals name="repeat_n_months">
+        <item quantity="other">%1$d เดือน</item>
+    </plurals>
+    <plurals name="repeat_n_years">
+        <item quantity="other">%1$d ปี</item>
+    </plurals>
+    <string name="repeat_type_completion_capitalized">วันที่เสร็จสมบูรณ์</string>
+    <string name="no_title">(ไม่มีชื่อเรื่อง)</string>
+    <string name="when_due">เมื่อครบกําหนด</string>
+    <string name="when_overdue">เมื่อพ้นกําหนด</string>
+    <string name="randomly">คว้าง</string>
+    <string name="pick_a_date_and_time">เลือกวันที่และเวลา</string>
+    <string name="add_reminder">เพิ่มตัวเตือน</string>
+    <string name="ring_once">เรียกหนึ่งครั้ง</string>
+    <string name="ring_five_times">แหวนห้าครั้ง</string>
+    <string name="ring_nonstop">แหวนไม่หยุดนิ่ง</string>
+    <string name="delete_task">ลบงาน</string>
+    <string name="menu_discard_changes">ละทิ้งการเปลี่ยนแปลง</string>
+    <string name="more_options">ตัวเลือกเพิ่มเติม</string>
+    <string name="rmd_NoA_snooze">หลับ..</string>
+    <string name="date_shortcut_hour">เป็นเวลาหนึ่งชั่วโมง</string>
+    <string name="date_shortcut_morning">เช้า</string>
+    <string name="date_shortcut_afternoon">บ่าย</string>
+    <string name="date_shortcut_evening">ตอนเย็น</string>
+    <string name="date_shortcut_night">กลางคืน</string>
+    <string name="date_shortcut_tomorrow_morning">พรุ่งนี้เช้า</string>
+    <string name="date_shortcut_tomorrow_afternoon">พรุ่งนี้บ่าย</string>
+    <string name="date_shortcut_tomorrow_evening">พรุ่งนี้เย็น</string>
+    <string name="date_shortcut_tomorrow_night">คืนพรุ่งนี้</string>
 </resources>

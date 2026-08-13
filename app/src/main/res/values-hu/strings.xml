@@ -142,16 +142,6 @@
         <item quantity="one">%d hét</item>
         <item quantity="other">%d hét</item>
     </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="one">%d hónap</item>
-        <item quantity="other">%d hónap</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d év</item>
-        <item quantity="other">%d év</item>
-    </plurals>
-    <string name="repeat_type_due">határidő</string>
-    <string name="repeat_type_completion">befejezés dátuma</string>
     <string name="repeat_snackbar">%1$s újraütemezve ekkorra: %2$s</string>
     <string name="new_tag">Új címke létrehozása</string>
     <string name="new_list">Új lista létrehozása</string>
@@ -165,7 +155,6 @@
     <string name="EPr_voiceInputEnabled_title">Hang bemenet</string>
     <string name="EPr_voiceRemindersEnabled_title">Kimondott emlékeztetők</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">A Tasks kimondja a feladatcímeket emlékeztetőkor</string>
-    <string name="delete_task">Feladat törlése</string>
     <string name="voice_command_added_task">Hozzáadott feladat</string>
     <plurals name="Ntasks">
         <item quantity="one">1 feladat</item>
@@ -188,23 +177,15 @@
     <string name="customize_edit_screen">Szerkesztő képernyő testreszabása</string>
     <string name="translations">Részvétel a fordításban</string>
     <string name="quiet_hours_summary">Emlékeztetők mellőzése csendes órák alatt</string>
-    <string name="add_reminder">Emlékeztető hozzáadása</string>
     <string name="add_location">Hely hozzáadása</string>
     <string name="remove">Eltávolítás</string>
-    <string name="randomly">Véletlenszerűen</string>
-    <string name="pick_a_date_and_time">Válasszon dátumot és időpontot</string>
-    <string name="when_overdue">Határidő lejárta után</string>
-    <string name="when_due">Határidő elérésekor</string>
     <string name="geofence_radius">Távolság</string>
     <string name="tags">Címkék</string>
     <string name="filters">Szűrők</string>
-    <string name="date_shortcut_hour">Egy órára</string>
     <string name="date_shortcut_morning">Reggel</string>
     <string name="date_shortcut_afternoon">Délután</string>
     <string name="date_shortcut_evening">Este</string>
     <string name="date_shortcut_night">Éjszaka</string>
-    <string name="date_shortcut_tomorrow_morning">Holnap reggel</string>
-    <string name="date_shortcut_tomorrow_afternoon">Holnap délután</string>
     <string name="date_shortcut_must_come_before">%1$s-nek %2$s előtt kell jönnie</string>
     <string name="date_shortcut_must_come_after">	%1$s-nek %2$s után kell jönnie</string>
     <string name="discard_changes">Változások elvetése?</string>
@@ -220,7 +201,6 @@
     <string name="pick_from_gallery">Kiválasztás a galériából</string>
     <string name="pick_from_storage">Kiválasztás a tárhelyről</string>
     <string name="name_cannot_be_empty">A cím nem lehet üres</string>
-    <string name="no_title">(Név nélkül)</string>
     <string name="back_button_saves_task">A vissza gomb elmenti a feladatot</string>
     <string name="default_list">Alapértelmezett lista</string>
     <string name="filter">Szűrő</string>
@@ -254,24 +234,7 @@
     <string name="badges">Szimbólumok</string>
     <string name="list">Lista</string>
     <string name="repeats_from">Ismétlés ettől:</string>
-    <string name="repeats_single">Ismétlés: %s</string>
-    <string name="repeats_single_on">Ismétlés %1$s ekkor: %2$s</string>
-    <string name="repeats_single_until">Ismétlés %1$s, befejeződik ekkor: %2$s</string>
-    <string name="repeats_single_number_of_times">Ismétlés %1$s, előfordul %2$d %3$s</string>
-    <string name="repeats_single_on_until">Ismétlés %1$s ekkor: %2$s, befejeződik ekkor: %3$s</string>
-    <string name="repeats_single_on_number_of_times">Ismétlés %1$s ekkor: %2$s, előfordul %3$d %4$s</string>
-    <string name="repeats_minutely">percenként</string>
-    <string name="repeats_hourly">óránként</string>
-    <string name="repeats_daily">naponta</string>
-    <string name="repeats_weekly">hetente</string>
-    <string name="repeats_monthly">havonta</string>
-    <string name="repeats_yearly">évente</string>
-    <string name="repeats_plural">Ismétlés minden: %s</string>
-    <string name="repeats_plural_on">Ismétlés minden %1$s ekkor: %2$s</string>
-    <string name="repeats_plural_until">Ismétlés minden %1$s, befejeződik ekkor: %2$s</string>
     <string name="repeats_plural_number_of_times">Ismétlés minden %1$s, előfordul %2$d %3$s</string>
-    <string name="repeats_plural_on_until">Ismétlés minden %1$s ekkor: %2$s, befejezősik ekkor: %3$s</string>
-    <string name="repeats_plural_on_number_of_times">Ismétlés minden %1$s ekkor: %2$s, előfordul %3$d %4$s</string>
     <string name="dont_add_to_calendar">Ne adja hozzá a naptárhoz</string>
     <string name="default_calendar">Alapértelmezett naptár</string>
     <string name="badges_description">Feladatok számának megjelenítése a Tasks ikonon. Nem minden launcher által támogatott funkció.</string>
@@ -343,7 +306,6 @@
     <string name="place_settings">Hely beállítások</string>
     <string name="hide_unused_tags">Használaton kívüli címkék elrejtése</string>
     <string name="hide_unused_places">Használaton kívüli helyek elrejtése</string>
-    <string name="menu_discard_changes">Módosítások elvetése</string>
     <string name="chip_appearance_text_and_icon">Szöveg és ikon</string>
     <string name="chip_appearance_text_only">Csak szöveg</string>
     <string name="chip_appearance_icon_only">Csak ikon</string>
@@ -402,8 +364,6 @@
     <string name="astrid_sort_order_summary">Astrid egyéni sorbarendezés engedélyezése a \"Saját Feladatok\" és a \"Ma\" listákra illetve a címkékre. Ezt a sorbarendezési módot egy jövőbeni frissítésben fel fogja váltani a \"Saját sorrend\"</string>
     <string name="astrid_sort_order">Astrid egyéni sorbarendezés</string>
     <string name="CFC_list_name">Ebben a listában…</string>
-    <string name="date_shortcut_tomorrow_night">Holnap éjszaka</string>
-    <string name="date_shortcut_tomorrow_evening">Holnap este</string>
     <string name="reset_sort_order">Sorbarendezés visszaállítása</string>
     <string name="permission_read_tasks">Teljes hozzáférés a Tasks adatbázishoz</string>
     <string name="davx5_selection_description">Feladatok szinkronizálása DAVx⁵ alkalmazással</string>
@@ -465,7 +425,6 @@
     <string name="privacy">Adatvédelem</string>
     <string name="open_source">Nyílt forráskódú</string>
     <string name="support">Támogatás</string>
-    <string name="more_options">Több opció</string>
     <string name="upgrade_open_source_description">Az előfizetéseddel a folyamatos fejlesztést támogatod</string>
     <string name="upgrade_tasks_org_account_description">Tasks.org szinkronizáció és együttműködés más felhasználókkal</string>
     <string name="upgrade_more_customization_description">Az összes téma, szín és ikon feloldása</string>
@@ -474,43 +433,17 @@
     <string name="markdown_description">Markdown engedélyezése címben és leírásban</string>
     <string name="markdown">Markdown</string>
     <string name="now">Most</string>
-    <string name="when_started">A kezdetekor</string>
     <string name="completion_sound">Hang lejátszása készre állításkor</string>
     <string name="completed">Elvégzett</string>
     <string name="snackbar_task_completed">Feladat elvégezve</string>
     <string name="snackbar_tasks_completed">%d feladat elvégezve</string>
-    <string name="alarm_before_start">%s kezdés előtt</string>
-    <string name="alarm_after_start">%s kezdés után</string>
-    <string name="alarm_before_due">%s határidő előtt</string>
-    <string name="alarm_after_due">%s határidő után</string>
     <string name="custom_filter_has_reminder">Emlékeztetővel rendelkezik</string>
-    <string name="custom_notification">Egyedi értesítés</string>
-    <plurals name="reminder_days">
-        <item quantity="one">Nap</item>
-        <item quantity="other">Nap</item>
-    </plurals>
-    <string name="snoozed_until">Elhalasztva eddig: %s</string>
-    <plurals name="reminder_minutes">
-        <item quantity="one">Perc</item>
-        <item quantity="other">Perc</item>
-    </plurals>
-    <plurals name="reminder_hours">
-        <item quantity="one">Óra</item>
-        <item quantity="other">Óra</item>
-    </plurals>
-    <plurals name="reminder_week">
-        <item quantity="one">Hét</item>
-        <item quantity="other">Hét</item>
-    </plurals>
-    <string name="randomly_every">Véletlenszerűen minden %s</string>
     <string name="dismiss">Nyugtáz</string>
     <string name="customize_edit_screen_summary">Mezők átrendezése vagy törlése</string>
     <string name="hint_customize_edit_title">Túl sok információ\?</string>
     <string name="hint_customize_edit_body">Ez a képernyő a mezők átrendezésével vagy eltávolításával testre szabható</string>
     <string name="TEA_creation_date">Létrehozás dátuma</string>
     <string name="sort_completion_group">Elkészültség %s</string>
-    <string name="enable_reminders_description">Az emlékeztetők az Android beállításaiban ki vannak kapcsolva</string>
-    <string name="enable_reminders">Emlékeztetők engedélyezése</string>
     <string name="sort_list">Lista szerint</string>
     <string name="change_priority">Sürgősség módosítása</string>
     <string name="donate_today">Adományozzon ma</string>
@@ -564,10 +497,6 @@
     <string name="import_failed">Sikertelen importálás</string>
     <string name="banner_subscription_required_title">Előfizetés szükséges</string>
     <string name="banner_subscription_required_body">A %s szinkronizáció tetszőleges összeg fizetésével feloldható</string>
-    <string name="alarm_before">előtte</string>
-    <string name="alarm_after">utána</string>
-    <string name="alarm_start">kezdet</string>
-    <string name="alarm_due">esedékes</string>
     <string name="email_to_task">Feladat e-mailből</string>
     <string name="email_to_task_address">E-mail cím</string>
     <string name="rmd_EPr_rmd_time_desc">Az egész napos feladatok emlékeztetője %1$s jelenik meg</string>

@@ -298,4 +298,104 @@
         <item quantity="other">gebeurtenissen</item>
     </plurals>
     <string name="repeat_monthly_every_day_of_nth_week">elke %1$s %2$s</string>
+    <string name="repeats_single">Herhaalt %1$s</string>
+    <string name="repeats_single_on">Herhaalt %1$s op %2$s</string>
+    <string name="repeats_single_until">Herhaalt %1$s, eindigt op %2$s</string>
+    <string name="repeats_single_number_of_times">Herhaalt %1$s, gebeurt %2$d %3$s</string>
+    <string name="repeats_single_on_until">Herhaalt %1$s op %2$s, eindigt op %3$s</string>
+    <string name="repeats_single_on_number_of_times">Herhaalt %1$s op %2$s, gebeurt %3$d %4$s</string>
+    <string name="repeats_plural">Herhaalt elke %1$s</string>
+    <string name="repeats_plural_on">Herhaalt elke %1$s op %2$s</string>
+    <string name="repeats_plural_until">Herhaalt elke %1$s, eindigt op %2$s</string>
+    <string name="repeats_plural_number_of_times">Herhaalt elke %1$s , gebeurt %2$d %3$s</string>
+    <string name="repeats_plural_on_until">Herhaalt elke %1$s op %2$s, eindigt op %3$s</string>
+    <string name="repeats_plural_on_number_of_times">Herhaalt elke %1$s op %2$s, gebeurt %3$d %4$s</string>
+    <string name="repeats_minutely">elke minuut</string>
+    <string name="repeats_hourly">elk uur</string>
+    <string name="repeats_daily">dagelijks</string>
+    <string name="repeats_weekly">wekelijks</string>
+    <string name="repeats_monthly">maandelijks</string>
+    <string name="repeats_yearly">jaarlijks</string>
+    <string name="list_separator_with_space">, </string>
+    <string name="repeats_from">Herhaalt vanaf</string>
+    <string name="repeat_type_due">vervaldatum</string>
+    <string name="repeat_type_completion">voltooiingsdatum</string>
+    <string name="TEA_control_repeat">Herhalen</string>
+    <plurals name="repeat_times">
+        <item quantity="one">maal</item>
+        <item quantity="other">maal</item>
+    </plurals>
+    <plurals name="repeat_n_minutes">
+        <item quantity="one">%1$d minuut</item>
+        <item quantity="other">%1$d minuten</item>
+    </plurals>
+    <plurals name="repeat_n_hours">
+        <item quantity="one">%1$d uur</item>
+        <item quantity="other">%1$d uren</item>
+    </plurals>
+    <plurals name="repeat_n_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dagen</item>
+    </plurals>
+    <plurals name="repeat_n_weeks">
+        <item quantity="one">%1$d week</item>
+        <item quantity="other">%1$d weken</item>
+    </plurals>
+    <plurals name="repeat_n_months">
+        <item quantity="one">%1$d maand</item>
+        <item quantity="other">%1$d maanden</item>
+    </plurals>
+    <plurals name="repeat_n_years">
+        <item quantity="one">%1$d jaar</item>
+        <item quantity="other">%1$d jaren</item>
+    </plurals>
+    <string name="repeat_type_completion_capitalized">Voltooiingsdatum</string>
+    <string name="no_title">(geen titel)</string>
+    <string name="when_started">Bij beginnen</string>
+    <string name="when_due">Bij vervallen</string>
+    <string name="when_overdue">Bij overtijd</string>
+    <string name="randomly">Willekeurig</string>
+    <string name="randomly_every">Willekeurig elke %1$s</string>
+    <string name="pick_a_date_and_time">Datum en tijd kiezen</string>
+    <string name="add_reminder">Herinnering toevoegen</string>
+    <string name="custom_notification">Aangepaste melding</string>
+    <string name="alarm_before_start">%1$s voor begin</string>
+    <string name="alarm_after_start">%1$s na begin</string>
+    <string name="alarm_before_due">%1$s voor vervallen</string>
+    <string name="alarm_after_due">%1$s na vervallen</string>
+    <string name="snoozed_until">Pauzeren tot: %1$s</string>
+    <string name="ring_once">Een keer bellen</string>
+    <string name="ring_five_times">Vijf keer bellen</string>
+    <string name="ring_nonstop">Non-stop bellen</string>
+    <string name="enable_reminders">Herinneringen aanzetten</string>
+    <string name="enable_reminders_description">Herinneringen staan uit in Android Instellingen</string>
+    <plurals name="reminder_minutes">
+        <item quantity="one">Minuut</item>
+        <item quantity="other">Minuten</item>
+    </plurals>
+    <plurals name="reminder_hours">
+        <item quantity="one">Uur</item>
+        <item quantity="other">Uren</item>
+    </plurals>
+    <plurals name="reminder_days">
+        <item quantity="one">Dag</item>
+        <item quantity="other">Dagen</item>
+    </plurals>
+    <plurals name="reminder_week">
+        <item quantity="one">Week</item>
+        <item quantity="other">Weken</item>
+    </plurals>
+    <string name="delete_task">Taak wissen</string>
+    <string name="menu_discard_changes">Veranderingen negeren</string>
+    <string name="more_options">Meer opties</string>
+    <string name="rmd_NoA_snooze">Snoozen</string>
+    <string name="date_shortcut_hour">Voor een uur</string>
+    <string name="date_shortcut_morning">Ochtend</string>
+    <string name="date_shortcut_afternoon">Middag</string>
+    <string name="date_shortcut_evening">Namiddag</string>
+    <string name="date_shortcut_night">Nacht</string>
+    <string name="date_shortcut_tomorrow_morning">Morgenochtend</string>
+    <string name="date_shortcut_tomorrow_afternoon">Morgenmiddag</string>
+    <string name="date_shortcut_tomorrow_evening">Morgenavond</string>
+    <string name="date_shortcut_tomorrow_night">Morgennacht</string>
 </resources>

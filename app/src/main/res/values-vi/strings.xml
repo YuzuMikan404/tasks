@@ -57,7 +57,6 @@
     <string name="TVA_add_comment">Thêm bình luận…</string>
     <string name="actfm_picture_clear">Xoá ảnh</string>
     <string name="markdown">Markdown</string>
-    <string name="more_options">Nhiều tuỳ chọn hơn</string>
     <string name="upgrade_open_source_description">Việc đăng ký của bạn hỗ trợ cho sự phát triển được tiếp tục</string>
     <string name="upgrade_tasks_org_account_description">Đồng bộ bằng Tasks.org và hợp tác với những người dùng khác</string>
     <string name="upgrade_more_customization_description">Mở khoá tất cả chủ đề, màu sắc, và biểu tượng</string>
@@ -215,24 +214,7 @@
     <string name="default_calendar">Lịch mặc định</string>
     <string name="dont_add_to_calendar">Không thêm vào lịch</string>
     <string name="list_separator_with_space">", "</string>
-    <string name="repeats_plural_on_number_of_times">Lặp lại mỗi %1$s vào %2$s, xảy ra %3$d %4$s</string>
-    <string name="repeats_plural_on_until">Lặp lại mỗi %1$s vào %2$s đến %3$s</string>
     <string name="repeats_plural_number_of_times">Lặp lại mỗi %1$s, xảy ra %2$d %3$s</string>
-    <string name="repeats_plural_until">Lặp lại mỗi %1$s đến %2$s</string>
-    <string name="repeats_plural_on">Lặp lại mỗi %1$s vào %2$s</string>
-    <string name="repeats_plural">Lặp lại mỗi %s</string>
-    <string name="repeats_yearly">hàng năm</string>
-    <string name="repeats_monthly">hàng tháng</string>
-    <string name="repeats_weekly">hàng tuần</string>
-    <string name="repeats_daily">hàng ngày</string>
-    <string name="repeats_hourly">hàng tiếng</string>
-    <string name="repeats_minutely">hàng phút</string>
-    <string name="repeats_single_on_number_of_times">Lặp lại %1$s vào %2$s, xảy ra %3$d %4$s</string>
-    <string name="repeats_single_on_until">Lặp lại %1$s vào %2$s đến %3$s</string>
-    <string name="repeats_single_number_of_times">Lặp lại %1$s, xảy ra %2$d %3$s</string>
-    <string name="repeats_single_until">Lặp lại %1$s đến %2$s</string>
-    <string name="repeats_single_on">Lặp lại %1$s vào %2$s</string>
-    <string name="repeats_single">Lặp lại %s</string>
     <string name="repeats_from">Lặp lại từ</string>
     <string name="list">Danh sách</string>
     <string name="badges">Huy hiệu</string>
@@ -277,7 +259,6 @@
     <string name="default_tags">Thẻ mặc định</string>
     <string name="default_list">Danh sách mặc định</string>
     <string name="back_button_saves_task">Nút Quay lại sẽ lưu công việc</string>
-    <string name="no_title">(Không có tiêu đề)</string>
     <string name="name_cannot_be_empty">Tên không thể trống</string>
     <string name="pick_from_storage">Chọn từ bộ nhớ</string>
     <string name="pick_from_gallery">Chọn từ thư viện</string>
@@ -292,30 +273,19 @@
     <string name="list_settings">Cài đặt danh sách</string>
     <string name="tag_settings">Cài đặt thẻ</string>
     <string name="discard">Bỏ</string>
-    <string name="menu_discard_changes">Bỏ các thay đổi</string>
     <string name="discard_changes">Bỏ các thay đổi\?</string>
     <string name="date_shortcut_must_come_after">%1$s phải đến sau %2$s</string>
     <string name="date_shortcut_must_come_before">%1$s phải đến trước %2$s</string>
-    <string name="date_shortcut_tomorrow_night">Đêm mai</string>
-    <string name="date_shortcut_tomorrow_evening">Tối mai</string>
-    <string name="date_shortcut_tomorrow_afternoon">Chiều mai</string>
-    <string name="date_shortcut_tomorrow_morning">Sáng mai</string>
     <string name="date_shortcut_night">Ban đêm</string>
     <string name="date_shortcut_evening">Buổi tối</string>
     <string name="date_shortcut_afternoon">Buổi chiều</string>
     <string name="date_shortcut_morning">Buổi sáng</string>
-    <string name="date_shortcut_hour">Một tiếng</string>
     <string name="filters">Bộ lọc</string>
     <string name="tags">Thẻ</string>
     <string name="location_radius_meters">%s m</string>
     <string name="geofence_radius">Bán kính</string>
-    <string name="when_due">Khi đến hạn</string>
-    <string name="when_overdue">Khi quá hạn</string>
-    <string name="pick_a_date_and_time">Chọn ngày và thời gian</string>
-    <string name="randomly">Ngẫu nhiên</string>
     <string name="remove">Xoá</string>
     <string name="add_location">Thêm vị trí</string>
-    <string name="add_reminder">Thêm lời nhắc</string>
     <string name="quiet_hours_summary">Không có lời nhắc trong giờ im lặng</string>
     <string name="translations">Đóng góp bản dịch</string>
     <string name="customize_edit_screen">Tuỳ biến màn hình chỉnh sửa</string>
@@ -342,7 +312,6 @@
         <item quantity="other">%d công việc</item>
     </plurals>
     <string name="voice_command_added_task">Đã thêm công việc</string>
-    <string name="delete_task">Xoá công việc</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">Tasks sẽ nói các tên công việc trong các lời nhắc công việc</string>
     <string name="EPr_voiceRemindersEnabled_title">Lời nhắc bằng giọng nói</string>
     <string name="EPr_voiceInputEnabled_title">Giọng nói đầu vào</string>
@@ -357,14 +326,6 @@
     <string name="new_tag">Tạo thẻ mới</string>
     <string name="repeat_snackbar">%1$s đã được lên lịch lại cho %2$s</string>
     <string name="repeat_type_completion_capitalized">Ngày hoàn thành</string>
-    <string name="repeat_type_completion">ngày hoàn thành</string>
-    <string name="repeat_type_due">ngày hạn</string>
-    <plurals name="repeat_n_years">
-        <item quantity="other">%d năm</item>
-    </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="other">%d tháng</item>
-    </plurals>
     <plurals name="repeat_n_weeks">
         <item quantity="other">%d tuần</item>
     </plurals>
@@ -470,38 +431,16 @@
     <string name="markdown_description">Bật Markdown trong tiêu đề và mô tả</string>
     <string name="import_summary_title">Tóm tắt khôi phục</string>
     <string name="now">Bây giờ</string>
-    <string name="when_started">Khi bắt đầu</string>
     <string name="completion_sound">Phát âm thanh hoàn tất</string>
     <string name="completed">Hoàn tất</string>
     <string name="custom_filter_has_reminder">Có lời nhắc</string>
-    <string name="snoozed_until">Đã đặt báo lại cho đến %s</string>
     <string name="snackbar_task_completed">Công việc đã hoàn tất</string>
     <string name="snackbar_tasks_completed">%d công việc đã hoàn tất</string>
-    <string name="alarm_before_start">%s trước bắt đầu</string>
-    <string name="alarm_after_start">%s sau bắt đầu</string>
-    <string name="alarm_before_due">%s trước hạn</string>
-    <string name="alarm_after_due">%s sau hạn</string>
-    <plurals name="reminder_days">
-        <item quantity="other">Ngày</item>
-    </plurals>
-    <string name="custom_notification">Thông báo tùy chỉnh</string>
-    <plurals name="reminder_minutes">
-        <item quantity="other">Phút</item>
-    </plurals>
-    <plurals name="reminder_hours">
-        <item quantity="other">Tiếng</item>
-    </plurals>
-    <plurals name="reminder_week">
-        <item quantity="other">Tuần</item>
-    </plurals>
-    <string name="randomly_every">Ngẫu nhiên mỗi %s</string>
     <string name="customize_edit_screen_summary">Sắp xếp lại hoặc xóa các trường</string>
     <string name="dismiss">Bỏ qua</string>
     <string name="hint_customize_edit_title">Quá nhiều thông tin\?</string>
     <string name="hint_customize_edit_body">Bạn có thể tùy biến màn hình này bằng cách sắp xếp lại hoặc xóa các trường</string>
     <string name="sort_completion_group">Hoàn thành %s</string>
-    <string name="enable_reminders_description">Lời nhắc bị tắt trong cài đặt Android</string>
-    <string name="enable_reminders">Bật lời nhắc</string>
     <string name="TEA_creation_date">Ngày tạo</string>
     <string name="sort_list">Theo danh sách</string>
     <string name="change_priority">Thay đổi mức độ ưu tiên</string>

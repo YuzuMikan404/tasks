@@ -147,18 +147,6 @@
         <item quantity="few">%d tygodnie</item>
         <item quantity="many">%d tygodni</item>
     </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="one">%d miesiąc</item>
-        <item quantity="few">%d miesiące</item>
-        <item quantity="many">%d miesięcy</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d rok</item>
-        <item quantity="few">%d lat</item>
-        <item quantity="many">%d lat</item>
-    </plurals>
-    <string name="repeat_type_due">w terminie</string>
-    <string name="repeat_type_completion">data zakończenia</string>
     <string name="repeat_snackbar">%1$s przełożone na %2$s</string>
     <string name="new_tag">Stwórz nowy tag</string>
     <string name="new_list">Utwórz nową listę</string>
@@ -172,7 +160,6 @@
     <string name="EPr_voiceInputEnabled_title">Polecenia głosowe</string>
     <string name="EPr_voiceRemindersEnabled_title">Przypomnienia głosowe</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">Tasks będzie mówił nazwę zadania podczas przypomnienia</string>
-    <string name="delete_task">Usuń zadanie</string>
     <string name="voice_command_added_task">Dodane zadanie</string>
     <plurals name="Ntasks">
         <item quantity="one">1 zadanie</item>
@@ -196,23 +183,15 @@
     <string name="customize_edit_screen">Dostosuj ekran edycji</string>
     <string name="translations">Wspomóż tłumaczenie</string>
     <string name="quiet_hours_summary">Brak przypomnień w czasie wyciszenia</string>
-    <string name="add_reminder">Dodaj przypomnienie</string>
     <string name="add_location">Dodaj lokalizację</string>
     <string name="remove">Usuń</string>
-    <string name="randomly">Losowo</string>
-    <string name="pick_a_date_and_time">Wybierz datę i czas</string>
-    <string name="when_overdue">Gdy zaległe</string>
-    <string name="when_due">Gdy w terminie</string>
     <string name="geofence_radius">Promień</string>
     <string name="tags">Tagi</string>
     <string name="filters">Filtry</string>
-    <string name="date_shortcut_hour">Na godzinę</string>
     <string name="date_shortcut_morning">Rano</string>
     <string name="date_shortcut_afternoon">Po południu</string>
     <string name="date_shortcut_evening">Wieczór</string>
     <string name="date_shortcut_night">Noc</string>
-    <string name="date_shortcut_tomorrow_morning">Jutro rano</string>
-    <string name="date_shortcut_tomorrow_afternoon">Jutro po południu</string>
     <string name="date_shortcut_must_come_before">%1$s musi być przed %2$s</string>
     <string name="date_shortcut_must_come_after">%1$s musi być po %2$s</string>
     <string name="discard_changes">Odrzuć zmiany\?</string>
@@ -228,7 +207,6 @@
     <string name="pick_from_gallery">Wybierz z galerii</string>
     <string name="pick_from_storage">Wybierz z pamięci</string>
     <string name="name_cannot_be_empty">Nazwa nie może być pusta</string>
-    <string name="no_title">(Bez tytułu)</string>
     <string name="back_button_saves_task">Przycisk Cofnij zapisuje zadanie</string>
     <string name="default_list">Domyślna lista</string>
     <string name="filter">Filtr</string>
@@ -261,24 +239,7 @@
     <string name="badges">Plakietki</string>
     <string name="list">Lista</string>
     <string name="repeats_from">Powtarzaj od</string>
-    <string name="repeats_single">Powtarza się %s</string>
-    <string name="repeats_single_on">Powtarza się %1$s w: %2$s</string>
-    <string name="repeats_single_until">Powtarza się %1$s do %2$s</string>
-    <string name="repeats_single_number_of_times">Powtarzane %1$s, występuje %2$d %3$s</string>
-    <string name="repeats_single_on_until">Powtarza się %1$s w %2$s do %3$s</string>
-    <string name="repeats_single_on_number_of_times">Powtarzane %1$s w %2$s, występuje %3$d %4$s</string>
-    <string name="repeats_minutely">co minutę</string>
-    <string name="repeats_hourly">co godzinę</string>
-    <string name="repeats_daily">raz dziennie</string>
-    <string name="repeats_weekly">raz w tygodniu</string>
-    <string name="repeats_monthly">raz w miesiącu</string>
-    <string name="repeats_yearly">raz w roku</string>
-    <string name="repeats_plural">Powtarzaj co %s</string>
-    <string name="repeats_plural_on">Powtarzane co każde %1$s w %2$s</string>
-    <string name="repeats_plural_until">Powtarzane co każde %1$s aż do %2$s</string>
     <string name="repeats_plural_number_of_times">Powtarzane co każde %1$s, występuje %2$d %3$s</string>
-    <string name="repeats_plural_on_until">Powtarzane co każde %1$s w %2$s aż do %3$s</string>
-    <string name="repeats_plural_on_number_of_times">Powtarzane co każde %1$s w %2$s, występuje %3$d %4$s</string>
     <string name="dont_add_to_calendar">Nie dodawaj do kalendarza</string>
     <string name="default_calendar">Domyślny kalendarz</string>
     <string name="badges_description">Wyświetl liczbę zadań na ikonie Tasks. Nie wszystkie launchery to wspierają.</string>
@@ -356,7 +317,6 @@
     <string name="hide_unused_tags">Ukryj nieużywane tagi</string>
     <string name="place_settings">Ustawienia miejsca</string>
     <string name="places">Miejsca</string>
-    <string name="menu_discard_changes">Odrzuć zmiany</string>
     <string name="compact">Kompaktowy</string>
     <string name="settings_default">Domyślny</string>
     <string name="widget_id">Identyfikator widżetu: %d</string>
@@ -410,8 +370,6 @@
     <string name="lists">Listy</string>
     <string name="open_last_viewed_list">Otwórz ostatnio przeglądaną listę</string>
     <string name="on_launch">Przy uruchomieniu</string>
-    <string name="date_shortcut_tomorrow_night">Jutro w nocy</string>
-    <string name="date_shortcut_tomorrow_evening">Jutro wieczorem</string>
     <string name="CFC_list_name">Na liście…</string>
     <string name="astrid_sort_order_summary">Aktywuje ręczny (jak w Astrid) tryb sortowania dla \'Moich zadań\', \'Dzisiaj\' oraz tagów. Ten tryb sortowania będzie zastąpiony przez \'Ręczne\' w kolejnych aktualizacjach</string>
     <string name="astrid_sort_order">Ręczne sortowanie (jak w Astrid)</string>
@@ -475,7 +433,6 @@
     <string name="support">Wsparcie</string>
     <string name="markdown_description">Włącz Markdown w tytule i opisie</string>
     <string name="markdown">Markdown</string>
-    <string name="more_options">Więcej opcji</string>
     <string name="upgrade_open_source_description">Twoja subskrypcja wspiera dalszy rozwój aplikacji</string>
     <string name="upgrade_tasks_org_account_description">Synchronizuj z Tasks.org oraz współpracuj z innymi użytkownikami</string>
     <string name="upgrade_more_customization_description">Odblokuj wszystkie motywy, kolory oraz ikony</string>
@@ -483,51 +440,17 @@
     <string name="pro_free_trial">Nowi subskrybenci otrzymują 7-dniowy, darmowy okres próbny. Można anulować w dowolnym momencie</string>
     <string name="open_source">Open source</string>
     <string name="completed">Zakończone</string>
-    <plurals name="reminder_week">
-        <item quantity="one">Tydzień</item>
-        <item quantity="few">Tygodnie</item>
-        <item quantity="many">Tygodni</item>
-        <item quantity="other">Tygodni</item>
-    </plurals>
-    <string name="when_started">Gdy rozpoczęte</string>
     <string name="completion_sound">Odtwórz dźwięk zakończenia</string>
-    <plurals name="reminder_days">
-        <item quantity="one">Dzień</item>
-        <item quantity="few">Dni</item>
-        <item quantity="many">Dni</item>
-        <item quantity="other">Dni</item>
-    </plurals>
-    <plurals name="reminder_minutes">
-        <item quantity="one">Minuta</item>
-        <item quantity="few">Minuty</item>
-        <item quantity="many">Minut</item>
-        <item quantity="other">Minut</item>
-    </plurals>
     <string name="now">Teraz</string>
     <string name="custom_filter_has_reminder">Ma przypomnienie</string>
-    <string name="snoozed_until">Uśpione do %s</string>
-    <plurals name="reminder_hours">
-        <item quantity="one">Godzina</item>
-        <item quantity="few">Godziny</item>
-        <item quantity="many">Godzin</item>
-        <item quantity="other">Godzin</item>
-    </plurals>
-    <string name="randomly_every">Losowo co %s</string>
-    <string name="custom_notification">Własne powiadomienie</string>
     <string name="snackbar_task_completed">Zadanie zakończone</string>
     <string name="snackbar_tasks_completed">%d zadań zakończonych</string>
-    <string name="alarm_before_start">%s przed startem</string>
-    <string name="alarm_after_start">%s po rozpoczęciu</string>
-    <string name="alarm_before_due">%s przed zakończeniem</string>
-    <string name="alarm_after_due">%s po zakończeniu</string>
     <string name="dismiss">Odrzuć</string>
     <string name="customize_edit_screen_summary">Zmień kolejność lub usuń pola</string>
     <string name="hint_customize_edit_title">Za dużo informacji\?</string>
     <string name="hint_customize_edit_body">Możesz dostosować ten ekran przez przesuwanie lub usuwanie pól</string>
-    <string name="enable_reminders">Włącz przypomnienia</string>
     <string name="TEA_creation_date">Data utworzenia</string>
     <string name="sort_completion_group">Ukończono %s</string>
-    <string name="enable_reminders_description">Przypomnienia są wyłączone w Ustawieniach Androida</string>
     <string name="sort_list">Wg listy</string>
     <string name="app_settings">Ustawienia aplikacji</string>
     <string name="swipe_to_snooze_title">Przesuń aby uśpić</string>
@@ -552,4 +475,14 @@
     <string name="location_update_interval_title">Aktualizacja lokalizacji w tle</string>
     <string name="location_update_interval_disabled">Wyłączona</string>
     <string name="customize_drawer_summary">Przeciągnij i upuść, aby zmienić kolejność elementów menu</string>
+    <string name="sort_options">Sortuj opcje</string>
+    <string name="customize_drawer">Dostosuj szufladę</string>
+    <string name="location_update_interval_summary">Okresowe aktualizacje lokalizacji poprawiają niezawodność geofencingu</string>
+    <string name="rmd_EPr_rmd_time_desc">Powiadomienia dla zadań całodniowych pojawia się o %1$s</string>
+    <string name="show_edit_screen_without_unlock">Pokaż ekran edycji bez odblokowywania</string>
+    <string name="default_reminder">Zadania całodniowe</string>
+    <string name="add_default_reminders">Dodaj domyślne powiadomienia</string>
+    <string name="rmd_time_enabled_on">Dodaj domyślne powiadomienia dla zadań całodniowych</string>
+    <string name="rmd_time_enabled_off">Nie dodawaj domyślnych powiadomień do zadań całodniowych</string>
+    <string name="delete_tasks_warning">%s zostanie usunięty. Nie można tego cofnąć.</string>
 </resources>

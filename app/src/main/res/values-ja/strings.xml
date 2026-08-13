@@ -145,15 +145,6 @@
         <item quantity="one">%d 週間</item>
         <item quantity="other">%d 週間</item>
     </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="other">%d か月</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d 年</item>
-        <item quantity="other">%d 年</item>
-    </plurals>
-    <string name="repeat_type_due">締切日時</string>
-    <string name="repeat_type_completion">完了日</string>
     <string name="repeat_snackbar">%1$s を %2$s にスケジュール変更しました</string>
     <string name="new_tag">新しいタグを作成</string>
     <string name="new_list">新しいリストを作成</string>
@@ -167,7 +158,6 @@
     <string name="EPr_voiceInputEnabled_title">音声入力</string>
     <string name="EPr_voiceRemindersEnabled_title">音声リマインダー</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">リマインダー時にタスク名を読み上げます</string>
-    <string name="delete_task">タスクを削除</string>
     <string name="voice_command_added_task">追加されたタスク</string>
     <plurals name="Ntasks">
         <item quantity="other">%d 件のタスク</item>
@@ -189,23 +179,15 @@
     <string name="customize_edit_screen">編集画面をカスタマイズ</string>
     <string name="translations">翻訳に貢献する</string>
     <string name="quiet_hours_summary">おやすみモードの間はリマインダーを停止します</string>
-    <string name="add_reminder">リマインダーを追加</string>
     <string name="add_location">場所を追加</string>
     <string name="remove">削除</string>
-    <string name="randomly">ランダム</string>
-    <string name="pick_a_date_and_time">日付と時間を選択</string>
-    <string name="when_overdue">締切を過ぎたとき</string>
-    <string name="when_due">締切時</string>
     <string name="geofence_radius">ジオフェンスの半径</string>
     <string name="tags">タグ</string>
     <string name="filters">フィルター</string>
-    <string name="date_shortcut_hour">1 時間</string>
     <string name="date_shortcut_morning">朝</string>
     <string name="date_shortcut_afternoon">昼</string>
     <string name="date_shortcut_evening">夕方</string>
     <string name="date_shortcut_night">夜</string>
-    <string name="date_shortcut_tomorrow_morning">明日の朝</string>
-    <string name="date_shortcut_tomorrow_afternoon">明日の昼</string>
     <string name="date_shortcut_must_come_before">%1$s は %2$s の前に来る必要があります</string>
     <string name="date_shortcut_must_come_after">%1$s は %2$s の後に来る必要があります</string>
     <string name="discard_changes">変更を破棄しますか？</string>
@@ -221,7 +203,6 @@
     <string name="pick_from_gallery">ギャラリーから選択</string>
     <string name="pick_from_storage">ストレージから選択</string>
     <string name="name_cannot_be_empty">名前は空にできません</string>
-    <string name="no_title">(タイトルなし)</string>
     <string name="back_button_saves_task">戻るボタンでタスクを保存</string>
     <string name="default_list">デフォルトリスト</string>
     <string name="filter">フィルター</string>
@@ -254,24 +235,7 @@
     <string name="badges">バッジ</string>
     <string name="list">リスト</string>
     <string name="repeats_from">繰り返し開始</string>
-    <string name="repeats_single">%s 繰り返し</string>
-    <string name="repeats_single_on">%1$s を %2$s に繰り返し</string>
-    <string name="repeats_single_until">%1$s を繰り返し、%2$s に終了</string>
-    <string name="repeats_single_number_of_times">%1$s を %2$d %3$s に繰り返し</string>
-    <string name="repeats_single_on_until">%2$s に %1$s を繰り返し、%3$s に終了</string>
-    <string name="repeats_single_on_number_of_times">%1$s を %2$s に %3$d %4$s 繰り返し</string>
-    <string name="repeats_minutely">…分ごとに</string>
-    <string name="repeats_hourly">…時間ごとに</string>
-    <string name="repeats_daily">…日ごとに</string>
-    <string name="repeats_weekly">…週ごとに</string>
-    <string name="repeats_monthly">…か月ごとに</string>
-    <string name="repeats_yearly">…年ごとに</string>
-    <string name="repeats_plural">%s ごとに繰り返し</string>
-    <string name="repeats_plural_on">%1$s ごとに %2$s に繰り返し</string>
-    <string name="repeats_plural_until">%1$s ごとに %2$s まで繰り返し</string>
     <string name="repeats_plural_number_of_times">%1$s ごとに %2$d %3$s 繰り返し</string>
-    <string name="repeats_plural_on_until">毎%1$sの%2$sに繰り返し、%3$sに終了</string>
-    <string name="repeats_plural_on_number_of_times">%1$s を %2$s に %3$d %4$s 繰り返し</string>
     <string name="dont_add_to_calendar">カレンダーに追加しない</string>
     <string name="default_calendar">デフォルトのカレンダー</string>
     <string name="badges_description">Tasksランチャーアイコンにタスク数を表示します。すべてのランチャーがバッジをサポートしているわけではありません。</string>
@@ -325,9 +289,6 @@
     <string name="opacity_footer">フッターの透明度</string>
     <string name="opacity_header">ヘッダーの透明度</string>
     <string name="default_tags">デフォルトのタグ</string>
-    <string name="menu_discard_changes">変更を破棄</string>
-    <string name="date_shortcut_tomorrow_night">明日の夜</string>
-    <string name="date_shortcut_tomorrow_evening">明日の夕方</string>
     <string name="widget_show_menu">メニューを表示</string>
     <string name="widget_show_title">タイトルを表示</string>
     <string name="repeat_type_completion_capitalized">完了日</string>
@@ -363,19 +324,7 @@
     <string name="always_display_full_date">完全な日付を表示</string>
     <string name="astrid_sort_order_summary">「マイタスク」「今日」そしてタグにおいて Astrid の手動並べ替えモードを有効にします。この並べ替えモードは将来のアップデートで「マイ設定」に置き換えられる予定です</string>
     <string name="CFC_startBefore_name">着手は…</string>
-    <plurals name="reminder_minutes">
-        <item quantity="other">分</item>
-    </plurals>
-    <plurals name="reminder_hours">
-        <item quantity="other">時間</item>
-    </plurals>
     <string name="TEA_creation_date">作成日時</string>
-    <plurals name="reminder_week">
-        <item quantity="other">週間</item>
-    </plurals>
-    <plurals name="reminder_days">
-        <item quantity="other">日</item>
-    </plurals>
     <string name="filter_criteria_unstarted">開始前</string>
     <string name="widget_due_date_hidden">非表示</string>
     <string name="no_app_found">使用できるアプリがありません</string>
@@ -409,12 +358,9 @@
     <string name="save_percent">%d%% オフ</string>
     <string name="github_sponsors">GitHub スポンサー</string>
     <string name="github_sponsor">スポンサー</string>
-    <string name="more_options">さらなるオプション</string>
     <string name="markdown_description">タイトル欄と説明欄でマークダウン記法を有効にします</string>
     <string name="completion_sound">完了時に音を鳴らす</string>
     <string name="snackbar_task_completed">タスク完了</string>
-    <string name="alarm_before_due">締切 %s 前</string>
-    <string name="snoozed_until">%s までスヌーズ</string>
     <string name="hint_customize_edit_title">情報量が多すぎる？</string>
     <string name="hint_customize_edit_body">この画面は、フィールドを並べ替えたり削除してカスタマイズすることができます</string>
     <string name="davx5_selection_description">DAVx⁵ でタスクを同期する</string>
@@ -440,7 +386,6 @@
     <string name="authorization_cancelled">認証が取り消されました</string>
     <string name="tasks_org_account_required">Tasks.org のアカウントが必要です</string>
     <string name="account_not_included">「価格はあなた次第」でのサブスクリプションには含まれていません</string>
-    <string name="enable_reminders">リマインダーを有効にする</string>
     <string name="decsync_selection_description">ファイルベースによる同期</string>
     <string name="filter_no_priority">優先度 なし</string>
     <string name="filter_eisenhower_box_3">重要ではないが緊急</string>
@@ -448,13 +393,9 @@
     <string name="android_auto_backup">Android バックアップサービス</string>
     <string name="backups_ignore_warnings_summary">バックアップが不要な場合、または独自のバックアップ方法を使用している場合に、バックアップの警告を無視します</string>
     <string name="completed">完了</string>
-    <string name="alarm_after_due">締切 %s 後</string>
-    <string name="custom_notification">カスタム通知</string>
     <string name="filter_eisenhower_box_2">重要だが緊急ではない</string>
     <string name="current_subscription">現在のサブスクリプション: %s</string>
     <string name="upgrade_more_customization_description">すべてのテーマ、カラー、アイコンが使用可能</string>
-    <string name="randomly_every">%s ごとにランダム</string>
-    <string name="when_started">着手時</string>
     <string name="default_recurrence">デフォルトの繰り返し</string>
     <string name="subtasks_multilevel_google_task">Google Tasks は多層式のサブタスクに対応していません</string>
     <string name="back">戻る</string>
@@ -466,8 +407,6 @@
     <string name="upgrade_tasks_org_account_description">Tasks.org と同期し、他のユーザーと共同作業が可能</string>
     <string name="upgrade_open_source_description">あなたの支援が継続的な開発を支えます</string>
     <string name="snackbar_tasks_completed">完了したタスク: %d</string>
-    <string name="alarm_before_start">着手 %s 前</string>
-    <string name="alarm_after_start">着手 %s 後</string>
     <string name="header_spacing">高さ</string>
     <string name="wearable_notifications">ウェアラブルデバイスの通知</string>
     <string name="troubleshooting">トラブルシューティング</string>
@@ -494,7 +433,6 @@
     <string name="custom_filter_criteria">フィルター条件</string>
     <string name="filter_after_today">今日以降</string>
     <string name="foreground_location">フォアグラウンド時の位置情報</string>
-    <string name="enable_reminders_description">Android の設定によりリマインダーは無効になっています</string>
     <string name="select_all">すべて選択</string>
     <string name="last_backup_never">なし</string>
     <string name="filter_today_only">今日のみ</string>
@@ -552,10 +490,6 @@
     <string name="banner_subscription_required_body">%sとの同期をするため、お好みの金額をお支払いください</string>
     <string name="sponsorship_required_fdroid">Tasks.orgと同期するには GitHubへの寄付が必要です。寄付をするには下をクリックしてください。</string>
     <string name="subscription_required_fdroid">Tasks.orgと同期するには定期購入が必要です。定期購入はGoogle Play版のTasksアプリからお申し込みください。</string>
-    <string name="alarm_before">前に</string>
-    <string name="alarm_after">後に</string>
-    <string name="alarm_start">着手時間に対して</string>
-    <string name="alarm_due">期限</string>
     <string name="email_to_task_address">あなたのメールアドレス</string>
     <string name="tos_updated_title">サービス規約を改定しました</string>
     <string name="accept">了承</string>

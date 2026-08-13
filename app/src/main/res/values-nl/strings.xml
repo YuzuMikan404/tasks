@@ -141,16 +141,6 @@
         <item quantity="one">%d week</item>
         <item quantity="other">%d weken</item>
     </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="one">%d maand</item>
-        <item quantity="other">%d maanden</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d jaar</item>
-        <item quantity="other">%d jaren</item>
-    </plurals>
-    <string name="repeat_type_due">vervaldatum</string>
-    <string name="repeat_type_completion">voltooiingsdatum</string>
     <string name="repeat_snackbar">%1$s verplaatst naar %2$s</string>
     <string name="new_tag">Nieuw label aanmaken</string>
     <string name="new_list">Nieuwe lijst maken</string>
@@ -163,7 +153,6 @@
     <string name="EPr_voiceInputEnabled_title">Spraakinvoer</string>
     <string name="EPr_voiceRemindersEnabled_title">Gesproken herinneringen</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">Tasks spreekt namen van taken uit bij de herinnering</string>
-    <string name="delete_task">Taak wissen</string>
     <string name="voice_command_added_task">Toegevoegde taak</string>
     <plurals name="Ntasks">
         <item quantity="one">1 taak</item>
@@ -185,22 +174,14 @@
     <string name="customize_edit_screen">Taakscherm aanpassen</string>
     <string name="translations">Vertalingen toevoegen</string>
     <string name="quiet_hours_summary">Geen herinneringen tijdens rusttijd</string>
-    <string name="add_reminder">Herinnering toevoegen</string>
     <string name="add_location">Locatie toevoegen</string>
     <string name="remove">Verwijderen</string>
-    <string name="randomly">Willekeurig</string>
-    <string name="pick_a_date_and_time">Datum en tijd kiezen</string>
-    <string name="when_overdue">Bij overtijd</string>
-    <string name="when_due">Bij vervallen</string>
     <string name="geofence_radius">Geofence-straal</string>
     <string name="tags">Labels</string>
-    <string name="date_shortcut_hour">Voor een uur</string>
     <string name="date_shortcut_morning">Ochtend</string>
     <string name="date_shortcut_afternoon">Middag</string>
     <string name="date_shortcut_evening">Namiddag</string>
     <string name="date_shortcut_night">Nacht</string>
-    <string name="date_shortcut_tomorrow_morning">Morgenochtend</string>
-    <string name="date_shortcut_tomorrow_afternoon">Morgenmiddag</string>
     <string name="date_shortcut_must_come_before">%1$s moet voor %2$s komen</string>
     <string name="date_shortcut_must_come_after">%1$s moet na %2$s komen</string>
     <string name="discard_changes">Veranderingen negeren\?</string>
@@ -216,7 +197,6 @@
     <string name="pick_from_gallery">Uit galerij kiezen</string>
     <string name="pick_from_storage">Uit opslag kiezen</string>
     <string name="name_cannot_be_empty">Naam mag niet leeg zijn</string>
-    <string name="no_title">(geen titel)</string>
     <string name="back_button_saves_task">Terug-knop slaat taak op</string>
     <string name="default_list">Standaardlijst</string>
     <string name="opacity">Transparantie</string>
@@ -247,24 +227,7 @@
     <string name="badges">Badges</string>
     <string name="list">Lijst</string>
     <string name="repeats_from">Herhaalt vanaf</string>
-    <string name="repeats_single">Herhaalt %s</string>
-    <string name="repeats_single_on">Herhaalt %1$s op %2$s</string>
-    <string name="repeats_single_until">Herhaalt %1$s, eindigt op %2$s</string>
-    <string name="repeats_single_number_of_times">Herhaalt %1$s, gebeurt %2$d %3$s</string>
-    <string name="repeats_single_on_until">Herhaalt %1$s op %2$s, eindigt op %3$s</string>
-    <string name="repeats_single_on_number_of_times">Herhaalt %1$s op %2$s, gebeurt %3$d %4$s</string>
-    <string name="repeats_minutely">elke minuut</string>
-    <string name="repeats_hourly">elk uur</string>
-    <string name="repeats_daily">dagelijks</string>
-    <string name="repeats_weekly">wekelijks</string>
-    <string name="repeats_monthly">maandelijks</string>
-    <string name="repeats_yearly">jaarlijks</string>
-    <string name="repeats_plural">Herhaalt elke %s</string>
-    <string name="repeats_plural_on">Herhaalt elke %1$s op %2$s</string>
-    <string name="repeats_plural_until">Herhaalt elke %1$s, eindigt op %2$s</string>
     <string name="repeats_plural_number_of_times">Herhaalt elke %1$s , gebeurt %2$d %3$s</string>
-    <string name="repeats_plural_on_until">Herhaalt elke %1$s op %2$s, eindigt op %3$s</string>
-    <string name="repeats_plural_on_number_of_times">Herhaalt elke %1$s op %2$s, gebeurt %3$d %4$s</string>
     <string name="dont_add_to_calendar">Niet aan kalender toevoegen</string>
     <string name="default_calendar">Standaardkalender</string>
     <string name="badges_description">Toon taken teller bij pictogram van Tasks. Niet alle launchers ondersteunen badges.</string>
@@ -343,7 +306,6 @@
     <string name="place_settings">Locatie instellen</string>
     <string name="hide_unused_tags">Ongebruikte labels verbergen</string>
     <string name="hide_unused_places">Ongebruikte locaties verbergen</string>
-    <string name="menu_discard_changes">Veranderingen negeren</string>
     <string name="chip_appearance_text_and_icon">Tekst en pictogram</string>
     <string name="chip_appearance_text_only">Alleen tekst</string>
     <string name="chip_appearance_icon_only">Alleen pictogram</string>
@@ -402,8 +364,6 @@
     <string name="lists">Lijsten</string>
     <string name="open_last_viewed_list">Laatst bekeken lijst openen</string>
     <string name="CFC_list_name">In de lijst…</string>
-    <string name="date_shortcut_tomorrow_night">Morgennacht</string>
-    <string name="date_shortcut_tomorrow_evening">Morgenavond</string>
     <string name="reset_sort_order">Sorteervolgorde terugzetten</string>
     <string name="permission_read_tasks">Toegang verlenen tot Tasks-database</string>
     <string name="davx5_selection_description">Synchroniseren met de DAVx⁵-app</string>
@@ -467,48 +427,21 @@
     <string name="open_source">Open source</string>
     <string name="upgrade_more_customization">Meer maatwerk</string>
     <string name="upgrade_more_customization_description">Alle thema\'s, kleuren en pictogrammen ontgrendelen</string>
-    <string name="more_options">Meer opties</string>
     <string name="upgrade_open_source_description">Jouw abonnement ondersteunt verdere ontwikkeling</string>
     <string name="upgrade_tasks_org_account_description">Synchroniseren met Tasks.org en samenwerken met andere gebruikers</string>
     <string name="pro_free_trial">Nieuwe abonnees krijgen een gratis proefperiode van 7 dagen. Annuleren kan op elk moment</string>
     <string name="markdown_description">Sta Markdown toe in titel en beschrijving</string>
     <string name="markdown">Markdown</string>
     <string name="now">Nu</string>
-    <string name="when_started">Bij beginnen</string>
     <string name="completion_sound">Geluid afspelen bij afronden</string>
     <string name="completed">Voltooid</string>
     <string name="snackbar_task_completed">Taak voltooid</string>
     <string name="snackbar_tasks_completed">%d taken voltooid</string>
-    <string name="alarm_before_due">%s voor vervallen</string>
-    <string name="alarm_after_due">%s na vervallen</string>
-    <string name="alarm_before_start">%s voor begin</string>
-    <string name="alarm_after_start">%s na begin</string>
     <string name="custom_filter_has_reminder">Bevat herinnering</string>
-    <string name="snoozed_until">Pauzeren tot: %s</string>
-    <plurals name="reminder_minutes">
-        <item quantity="one">Minuut</item>
-        <item quantity="other">Minuten</item>
-    </plurals>
-    <plurals name="reminder_hours">
-        <item quantity="one">Uur</item>
-        <item quantity="other">Uren</item>
-    </plurals>
-    <plurals name="reminder_days">
-        <item quantity="one">Dag</item>
-        <item quantity="other">Dagen</item>
-    </plurals>
-    <plurals name="reminder_week">
-        <item quantity="one">Week</item>
-        <item quantity="other">Weken</item>
-    </plurals>
-    <string name="custom_notification">Aangepaste melding</string>
-    <string name="randomly_every">Willekeurig elke %s</string>
     <string name="customize_edit_screen_summary">Velden herschikken of verwijderen</string>
     <string name="dismiss">Sluiten</string>
     <string name="hint_customize_edit_title">Teveel informatie\?</string>
     <string name="hint_customize_edit_body">Taakscherm aanpassen door velden te verschuiven of onderaan te verbergen</string>
-    <string name="enable_reminders">Herinneringen aanzetten</string>
-    <string name="enable_reminders_description">Herinneringen staan uit in Android Instellingen</string>
     <string name="TEA_creation_date">Aanmaakdatum</string>
     <string name="sort_completion_group">Voltooid %s</string>
     <string name="sort_list">Op lijstvolgorde</string>

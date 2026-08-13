@@ -134,15 +134,6 @@
         <item quantity="one">%d 周</item>
         <item quantity="other">%d 周</item>
     </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="other">%d 个月</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d 年</item>
-        <item quantity="other">%d 年</item>
-    </plurals>
-    <string name="repeat_type_due">截止日期</string>
-    <string name="repeat_type_completion">完成日期</string>
     <string name="repeat_snackbar">重新安排了 %2$s 的 %1$s</string>
     <string name="new_tag">新建标签</string>
     <string name="new_list">新建清单</string>
@@ -156,7 +147,6 @@
     <string name="EPr_voiceInputEnabled_title">语音输入</string>
     <string name="EPr_voiceRemindersEnabled_title">语音提醒</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">Tasks 会在任务提醒时读出任务名</string>
-    <string name="delete_task">删除任务</string>
     <string name="voice_command_added_task">已添加的任务</string>
     <plurals name="Ntasks">
         <item quantity="other">%d 个任务</item>
@@ -177,21 +167,13 @@
     <string name="customize_edit_screen">自定义编辑屏幕</string>
     <string name="translations">贡献翻译</string>
     <string name="quiet_hours_summary">静音期间不提醒</string>
-    <string name="add_reminder">添加提醒</string>
     <string name="remove">移除</string>
-    <string name="randomly">随机</string>
-    <string name="pick_a_date_and_time">选择日期和时间</string>
-    <string name="when_overdue">过期时</string>
-    <string name="when_due">到期时</string>
     <string name="tags">标签</string>
     <string name="filters">过滤器</string>
-    <string name="date_shortcut_hour">一个小时</string>
     <string name="date_shortcut_morning">上午</string>
     <string name="date_shortcut_afternoon">下午</string>
     <string name="date_shortcut_evening">傍晚</string>
     <string name="date_shortcut_night">晚上</string>
-    <string name="date_shortcut_tomorrow_morning">明天上午</string>
-    <string name="date_shortcut_tomorrow_afternoon">明天下午</string>
     <string name="date_shortcut_must_come_before">%1$s 必须在 %2$s 之前</string>
     <string name="date_shortcut_must_come_after">%1$s 必须在 %2$s 之后</string>
     <string name="discard_changes">是否放弃修改？</string>
@@ -207,7 +189,6 @@
     <string name="pick_from_gallery">从相册选一张</string>
     <string name="pick_from_storage">从存储中挑选</string>
     <string name="name_cannot_be_empty">名字不能为空</string>
-    <string name="no_title">（无标题）</string>
     <string name="back_button_saves_task">按返回键时保存任务</string>
     <string name="default_list">默认清单</string>
     <string name="filter">过滤器</string>
@@ -241,24 +222,7 @@
     <string name="badges">角标</string>
     <string name="list">清单</string>
     <string name="repeats_from">重复始于</string>
-    <string name="repeats_single">重复 %s</string>
-    <string name="repeats_single_on">重复 %1$s 于 %2$s</string>
-    <string name="repeats_single_until">重复 %1$s ，结束于 %2$s</string>
-    <string name="repeats_single_number_of_times">重复%1$s，发生 %2$d %3$s</string>
-    <string name="repeats_single_on_until">重复 %1$s 于 %2$s，结束于 %3$s</string>
-    <string name="repeats_single_on_number_of_times">重复 %1$s 于 %2$s，发生 %3$d %4$s</string>
-    <string name="repeats_minutely">每分钟</string>
-    <string name="repeats_hourly">每小时</string>
-    <string name="repeats_daily">每日</string>
-    <string name="repeats_weekly">每周</string>
-    <string name="repeats_monthly">每月</string>
-    <string name="repeats_yearly">每年</string>
-    <string name="repeats_plural">每%s重复</string>
-    <string name="repeats_plural_on">每 %1$s 于 %2$s 重复</string>
-    <string name="repeats_plural_until">每%1$s重复，结束于%2$s</string>
     <string name="repeats_plural_number_of_times">每%1$s重复，发生 %2$d %3$s</string>
-    <string name="repeats_plural_on_until">每 %1$s 于 %2$s 重复，结束于 %3$s</string>
-    <string name="repeats_plural_on_number_of_times">每 %1$s 于 %2$s 重复，发生 %3$d %4$s</string>
     <string name="dont_add_to_calendar">不添加到日历</string>
     <string name="default_calendar">默认日历</string>
     <string name="badges_description">在 Tasks 启动图标上显示任务计数。不是所有的启动器都支持角标。</string>
@@ -345,7 +309,6 @@
     <string name="chip_appearance_icon_only">仅图标</string>
     <string name="chip_appearance_text_only">仅文本</string>
     <string name="chip_appearance_text_and_icon">文本和图标</string>
-    <string name="menu_discard_changes">放弃修改</string>
     <string name="share">分享</string>
     <string name="select_all">全选</string>
     <string name="calendar_event_created">已为 %s 创建日历事件</string>
@@ -398,8 +361,6 @@
     <string name="astrid_sort_order_summary">为“我的任务”，“今天”和标签启用 Astrid 的手动排序模式。在以后的更新中，此排序模式将被“我的顺序”代替</string>
     <string name="astrid_sort_order">Astrid 手动排序</string>
     <string name="CFC_list_name">在某清单中…</string>
-    <string name="date_shortcut_tomorrow_night">明天晚上</string>
-    <string name="date_shortcut_tomorrow_evening">明天傍晚</string>
     <string name="reset_sort_order">重置排列顺序</string>
     <string name="permission_read_tasks">对 Tasks 数据库的完全访问</string>
     <string name="davx5_selection_description">使用 DAVx⁵ 应用同步您的任务</string>
@@ -461,7 +422,6 @@
     <string name="privacy">隐私</string>
     <string name="open_source">开源</string>
     <string name="support">支持</string>
-    <string name="more_options">更多选项</string>
     <string name="upgrade_open_source_description">你的订阅支持持续开发</string>
     <string name="upgrade_tasks_org_account_description">与 Tasks.org 同步并与其他用户协作</string>
     <string name="upgrade_more_customization_description">解锁所有主题、颜色和图标</string>
@@ -470,37 +430,15 @@
     <string name="markdown_description">在任务标题和描述中启用 Markdown</string>
     <string name="markdown">Markdown</string>
     <string name="now">现在</string>
-    <string name="when_started">开始后</string>
     <string name="completion_sound">播放完成声音</string>
     <string name="completed">已完成</string>
     <string name="snackbar_task_completed">任务已完成</string>
     <string name="snackbar_tasks_completed">完成了 %d 个任务</string>
-    <string name="alarm_after_start">开始后 %s</string>
-    <string name="alarm_before_start">开始前 %s</string>
-    <string name="alarm_before_due">到期前 %s</string>
-    <string name="alarm_after_due">到期后 %s</string>
     <string name="custom_filter_has_reminder">有提醒</string>
-    <string name="snoozed_until">在 %s 前不显示通知</string>
-    <string name="custom_notification">自定义通知</string>
-    <plurals name="reminder_days">
-        <item quantity="other">天</item>
-    </plurals>
-    <plurals name="reminder_minutes">
-        <item quantity="other">分钟</item>
-    </plurals>
-    <plurals name="reminder_hours">
-        <item quantity="other">小时</item>
-    </plurals>
-    <plurals name="reminder_week">
-        <item quantity="other">周</item>
-    </plurals>
-    <string name="randomly_every">每 %s 随机执行</string>
     <string name="dismiss">关闭</string>
     <string name="customize_edit_screen_summary">重新安排或删除字段</string>
     <string name="hint_customize_edit_title">信息太多？</string>
     <string name="hint_customize_edit_body">你可以重新安排或删除字段来定制此屏幕</string>
-    <string name="enable_reminders">启用提醒</string>
-    <string name="enable_reminders_description">提醒在 Android 设置中被禁用</string>
     <string name="TEA_creation_date">创建日期</string>
     <string name="sort_completion_group">完成时间 %s</string>
     <string name="sort_list">按清单</string>
@@ -556,10 +494,6 @@
     <string name="import_failed_message">无法读取备份文件</string>
     <string name="banner_subscription_required_title">需要订阅</string>
     <string name="banner_subscription_required_body">支付您想支付的金额解锁 %s 同步</string>
-    <string name="alarm_before">前</string>
-    <string name="alarm_after">后</string>
-    <string name="alarm_start">开始</string>
-    <string name="alarm_due">到期</string>
     <string name="email_to_task_address">您的电子邮件地址</string>
     <string name="email_to_task">邮件转任务</string>
     <string name="rmd_EPr_rmd_time_desc">全天任务的通知将显示在 %1$s</string>
@@ -587,5 +521,4 @@
     <string name="upgrade_desktop_app">Tasks.org 桌面版</string>
     <string name="upgrade_desktop_app_description">提前使用新的桌面版应用</string>
     <string name="sort_options">排序选项</string>
-    <string name="snoozed_reminder">已推迟的提醒</string>
 </resources>

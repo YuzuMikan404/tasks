@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
 import org.koin.mp.KoinPlatform
@@ -34,10 +35,14 @@ import org.tasks.PlatformConfiguration
 import org.tasks.preferences.AppPreferences
 import org.tasks.preferences.TasksPreferences
 import org.tasks.preferences.recordInstallIfNeeded
+import org.tasks.viewmodel.PendingTaskSaves
+import org.tasks.http.EncryptedCookieStore
 import at.bitfire.cert4android.DesktopUserDecisionRegistry
 import org.tasks.ssl.TrustCertificateDialog
 import org.tasks.sse.SseClient
 import org.tasks.sync.SyncSource
+import org.tasks.sync.microsoft.DesktopMicrosoftClientProvider
+import org.tasks.sync.microsoft.MicrosoftClientProvider
 import org.tasks.di.commonModule
 import org.tasks.di.dataDir
 import org.tasks.di.logDir
@@ -47,6 +52,7 @@ import java.awt.Desktop
 import java.awt.Dimension
 import java.awt.EventQueue
 import java.awt.Frame
+import java.awt.desktop.QuitStrategy
 import java.awt.event.WindowEvent
 import java.awt.event.WindowFocusListener
 import java.io.File
@@ -129,6 +135,9 @@ private val MIN_WIDTH = 400.dp
 private val MIN_HEIGHT = 300.dp
 private val DEFAULT_WIDTH = 800.dp
 private val DEFAULT_HEIGHT = 600.dp
+// Only a backstop against a save that never returns. Expiring it kills the JVM mid-write, so it has
+// to be longer than a save that reaches the calendar provider and sync adapters can plausibly take.
+private const val SHUTDOWN_SAVE_TIMEOUT_MS = 10_000L
 
 @OptIn(FlowPreview::class)
 fun main() {
@@ -159,7 +168,34 @@ fun main() {
     }.onFailure { e ->
         Logger.w(e) { "Failed to record install metadata" }
     }
+    // Cmd+Q on macOS goes through here rather than through the window: the JDK's default quit
+    // strategy calls System.exit directly, so no window ever sees a close request and none of the
+    // commit-and-wait below in onCloseRequest runs. Closing the windows instead routes it through
+    // exactly the same path as clicking the close button.
+    if (Desktop.isDesktopSupported()) {
+        val desktop = Desktop.getDesktop()
+        if (desktop.isSupported(Desktop.Action.APP_QUIT_STRATEGY)) {
+            try {
+                desktop.setQuitStrategy(QuitStrategy.CLOSE_ALL_WINDOWS)
+            } catch (e: Exception) {
+                Logger.w(e) { "Failed to set quit strategy" }
+            }
+        }
+    }
     Runtime.getRuntime().addShutdownHook(Thread {
+        try {
+            val pendingSaves = koin.get<PendingTaskSaves>()
+            pendingSaves.flushPending()
+            runBlocking {
+                if (withTimeoutOrNull(SHUTDOWN_SAVE_TIMEOUT_MS) { pendingSaves.awaitIdle() } == null) {
+                    Logger.w { "Timed out waiting for pending saves during shutdown" }
+                }
+            }
+        } catch (e: Exception) {
+            Logger.e(e) { "Failed to commit pending saves during shutdown" }
+        }
+        (koin.get<MicrosoftClientProvider>() as? DesktopMicrosoftClientProvider)?.close()
+        runBlocking { EncryptedCookieStore.flushAll() }
         (koin.get<Reporting>() as? PostHogReporting)?.close()
         ipcServer?.close()
         portFile.delete()
@@ -169,6 +205,9 @@ fun main() {
 
     application {
         val preferences = koinInject<TasksPreferences>()
+        val pendingSaves = koinInject<PendingTaskSaves>()
+        val shutdownScope = rememberCoroutineScope()
+        var closing by remember { mutableStateOf(false) }
         val windowState = rememberWindowState(size = DpSize(DEFAULT_WIDTH, DEFAULT_HEIGHT))
         var windowReady by remember { mutableStateOf(false) }
         // Restore saved window size and position before showing the window
@@ -203,11 +242,49 @@ fun main() {
                 }
         }
         Window(
-            onCloseRequest = ::exitApplication,
+            // This fires while the composition is still alive, so no editor has been cleared or
+            // stopped and nothing is enqueued yet: ask any open editor to commit first, then give
+            // that save a moment to land before tearing the JVM down.
+            onCloseRequest = {
+                if (!closing) {
+                    closing = true
+                    // The monotonic count, not the one the snackbar acknowledges: that one goes
+                    // down too, and App's snackbar loop is still running while this waits below - so
+                    // an acknowledgement landing in between made a real shutdown failure compare
+                    // equal to the snapshot, and the quit went ahead with the edit lost.
+                    val failuresBefore = pendingSaves.totalSaveFailures.value
+                    pendingSaves.flushPending()
+                    shutdownScope.launch {
+                        if (withTimeoutOrNull(SHUTDOWN_SAVE_TIMEOUT_MS) { pendingSaves.awaitIdle() } == null) {
+                            Logger.w { "Timed out waiting for pending saves, exiting anyway" }
+                        }
+                        // A failed save has nowhere to be reported once the process is gone: the
+                        // window is already hidden and the count it publishes only ever reaches a
+                        // snackbar. So the quit is abandoned instead, and the window comes back with
+                        // the edit still in it and the error on screen.
+                        if (pendingSaves.totalSaveFailures.value > failuresBefore) {
+                            Logger.w { "Save failed while closing, staying open to report it" }
+                            // The composition is still running behind the hidden window, so the
+                            // snackbar it owns can have shown and acknowledged this failure to an
+                            // empty screen while we waited. Re-report it if nothing is owed any
+                            // more, or the window comes back with no explanation on it.
+                            if (pendingSaves.saveFailures.value == 0) {
+                                pendingSaves.reportSaveFailure()
+                            }
+                            closing = false
+                            return@launch
+                        }
+                        exitApplication()
+                    }
+                }
+            },
             title = "Tasks",
             icon = painterResource(Res.drawable.ic_round_icon),
             state = windowState,
-            visible = windowReady,
+            // Hidden the moment the user asks to quit. The flush above has already read what the
+            // open editor was holding and there is no second one, so anything typed after it would
+            // be lost silently - and a save slow enough to notice would read as a hung window.
+            visible = windowReady && !closing,
         ) {
             window.minimumSize = Dimension(MIN_WIDTH.value.toInt(), MIN_HEIGHT.value.toInt())
             val reporting = koinInject<Reporting>()

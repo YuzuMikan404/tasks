@@ -123,7 +123,6 @@
     <string name="EPr_voiceInputEnabled_title">Röstindata</string>
     <string name="EPr_voiceRemindersEnabled_title">Röstpåminnelser</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">Tasks läser upp uppgifterna vid påminnelse</string>
-    <string name="delete_task">Ta bort uppgift</string>
     <string name="voice_command_added_task">Uppgift skapad</string>
     <plurals name="Ntasks">
         <item quantity="one">1 uppgift</item>
@@ -144,21 +143,13 @@
     <string name="customize_edit_screen">Anpassa redigeringsvyn</string>
     <string name="translations">Hjälp till att översätta</string>
     <string name="quiet_hours_summary">Inga påminnelser under tysta timmar</string>
-    <string name="add_reminder">Lägg till en påminnelse</string>
     <string name="remove">Ta bort</string>
-    <string name="randomly">Slumpmässigt</string>
-    <string name="pick_a_date_and_time">Ställ in datum och tid</string>
-    <string name="when_overdue">Efter förfallotid</string>
-    <string name="when_due">Vid förfallotid</string>
     <string name="tags">Etiketter</string>
     <string name="filters">Filter</string>
-    <string name="date_shortcut_hour">En timme</string>
     <string name="date_shortcut_morning">På morgonen</string>
     <string name="date_shortcut_afternoon">På eftermiddagen</string>
     <string name="date_shortcut_evening">Tidigt på kvällen</string>
     <string name="date_shortcut_night">På natten</string>
-    <string name="date_shortcut_tomorrow_morning">Imorgon på morgonen</string>
-    <string name="date_shortcut_tomorrow_afternoon">Imorgon på eftermiddagen</string>
     <string name="date_shortcut_must_come_before">%1$s måste komma före %2$s</string>
     <string name="date_shortcut_must_come_after">%1$s måste komma efter %2$s</string>
     <string name="discard_changes">Kassera ändringarna?</string>
@@ -172,7 +163,6 @@
     <string name="pick_from_gallery">Välj från galleriet</string>
     <string name="pick_from_storage">Välj från lagringsutrymmet</string>
     <string name="name_cannot_be_empty">Namn måste anges</string>
-    <string name="no_title">(Ingen titel)</string>
     <string name="back_button_saves_task">Bakåtknappen sparar uppgiften</string>
     <string name="default_list">Förvald lista</string>
     <string name="opacity">Opacitet</string>
@@ -224,16 +214,6 @@
         <item quantity="one">%d vecka</item>
         <item quantity="other">%d veckor</item>
     </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="one">%d månad</item>
-        <item quantity="other">%d månader</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d år</item>
-        <item quantity="other">%d år</item>
-    </plurals>
-    <string name="repeat_type_due">förfallodatumet</string>
-    <string name="repeat_type_completion">slutförandedatumet</string>
     <string name="TEA_timer_controls">Tidtagning</string>
     <string name="google_drive_backup">Google Drive-säkerhetskopia</string>
     <string name="row_spacing">Radavstånd</string>
@@ -258,24 +238,7 @@
     <string name="badges">Aviseringsmärken</string>
     <string name="list">Lista</string>
     <string name="repeats_from">Upprepas från</string>
-    <string name="repeats_single">Upprepas %s</string>
-    <string name="repeats_single_on">Upprepas %1$s på %2$s</string>
-    <string name="repeats_single_until">Upprepas %1$s till och med %2$s</string>
-    <string name="repeats_single_number_of_times">Upprepas %1$s, totalt %2$d %3$s</string>
-    <string name="repeats_single_on_until">Upprepas %1$s på %2$s till och med %3$s</string>
-    <string name="repeats_single_on_number_of_times">Upprepas %1$s på %2$s, totalt %3$d %4$s</string>
-    <string name="repeats_minutely">Varje minut</string>
-    <string name="repeats_hourly">Varje timme</string>
-    <string name="repeats_daily">Dagligen</string>
-    <string name="repeats_weekly">Veckovis</string>
-    <string name="repeats_monthly">Månadsvis</string>
-    <string name="repeats_yearly">Årligen</string>
-    <string name="repeats_plural">Upprepas varje %s</string>
-    <string name="repeats_plural_on">Upprepas var %1$s på %2$s</string>
-    <string name="repeats_plural_until">Upprepas var %1$s till och med %2$s</string>
     <string name="repeats_plural_number_of_times">Upprepas var %1$s, totalt %2$d %3$s</string>
-    <string name="repeats_plural_on_until">Upprepas var %1$s på %2$s till och med %3$s</string>
-    <string name="repeats_plural_on_number_of_times">Upprepas var %1$s på %2$s, totalt %3$d %4$s</string>
     <string name="list_separator_with_space">", "</string>
     <string name="dont_add_to_calendar">Lägg inte till i kalender</string>
     <string name="default_calendar">Förvald kalender</string>
@@ -344,16 +307,12 @@
     <string name="help_and_feedback">Hjälp och återkoppling</string>
     <string name="widget_due_date_hidden">Dold</string>
     <string name="widget_open_list">Öppna lista</string>
-    <string name="date_shortcut_tomorrow_night">Imorgon natt</string>
-    <string name="date_shortcut_tomorrow_evening">Imorgon kväll</string>
     <string name="widget_show_menu">Visa meny</string>
     <string name="CFC_list_name">I lista…</string>
     <string name="upgrade_blurb_2">Jag har ägnat tusentals timmar åt Tasks och publicerar all källkod fritt på nätet. Vissa funktioner kräver en prenumeration för att stödja mitt arbete.</string>
-    <string name="menu_discard_changes">Ignorera ändringar</string>
     <string name="astrid_sort_order_summary">Aktivera Astrids manuella sorteringsläge för ”Mina uppgifter”, ”Idag” och etiketter. Sorteringsläget ersätts av ”Min ordning” i en framtida uppdatering.</string>
     <string name="markdown_description">Aktivera Markdown i titel och beskrivning</string>
     <string name="markdown">Markdown</string>
-    <string name="more_options">Fler alternativ</string>
     <string name="upgrade_open_source_description">Din prenumeration stöder den fortsatta utvecklingen</string>
     <string name="upgrade_tasks_org_account_description">Synkronisera med Tasks.org och samarbeta med andra användare</string>
     <string name="upgrade_more_customization_description">Lås upp alla teman, färger och ikoner</string>
@@ -473,31 +432,7 @@
     <string name="display_name">Visningsnamn</string>
     <string name="now">Nu</string>
     <string name="completed">Slutförd</string>
-    <string name="when_started">Vid start</string>
     <string name="completion_sound">Spela färdigställande ljud</string>
-    <plurals name="reminder_minutes">
-        <item quantity="one">Minut</item>
-        <item quantity="other">Minuter</item>
-    </plurals>
-    <plurals name="reminder_hours">
-        <item quantity="one">Timme</item>
-        <item quantity="other">Timmar</item>
-    </plurals>
-    <plurals name="reminder_week">
-        <item quantity="one">Vecka</item>
-        <item quantity="other">Veckor</item>
-    </plurals>
-    <string name="randomly_every">Slumpmässigt varje %s</string>
-    <string name="alarm_before_start">%s före start</string>
-    <string name="alarm_after_start">%s efter start</string>
-    <string name="custom_notification">Anpassad avisering</string>
-    <string name="snoozed_until">Senarelagd till %s</string>
-    <string name="alarm_after_due">%s efter förfallodatum</string>
-    <string name="alarm_before_due">%s före förfallodatum</string>
-    <plurals name="reminder_days">
-        <item quantity="one">Dag</item>
-        <item quantity="other">Dagar</item>
-    </plurals>
     <string name="snackbar_task_completed">Uppgiften slutförd</string>
     <string name="snackbar_tasks_completed">%d uppgifter slutförda</string>
     <string name="custom_filter_has_reminder">Har påminnelse</string>
@@ -505,11 +440,9 @@
     <string name="customize_edit_screen_summary">Ordna om eller ta bort fält</string>
     <string name="hint_customize_edit_title">För mycket information\?</string>
     <string name="hint_customize_edit_body">Du kan anpassa den här skärmen genom att ordna om eller ta bort fält</string>
-    <string name="enable_reminders_description">Påminnelser är avstängda i Android-inställningarna</string>
     <string name="TEA_creation_date">Skapad</string>
     <string name="sort_completion_group">Slutfört %s</string>
     <string name="sort_list">Efter lista</string>
-    <string name="enable_reminders">Aktivera påminnelser</string>
     <string name="change_priority">Ändra prioritet</string>
     <string name="ok">OK</string>
     <string name="cancel">Avbryt</string>
@@ -588,10 +521,6 @@
     <string name="upgrade_email_to_task_description">Förvandla e-postmeddelanden till uppgifter genom att vidarebefordra dem till din privata inkorg</string>
     <string name="advanced_tools">Avancerade verktyg</string>
     <string name="advanced_tools_description">Google Places, CalDAV, EteSync med mera</string>
-    <string name="alarm_before">före</string>
-    <string name="alarm_after">efter</string>
-    <string name="alarm_start">start</string>
-    <string name="alarm_due">förfaller</string>
     <string name="read_more">Läs mer</string>
     <string name="per_list_sort_title">Sortering per lista</string>
 </resources>

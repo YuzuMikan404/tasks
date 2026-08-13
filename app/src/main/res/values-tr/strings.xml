@@ -142,16 +142,6 @@
         <item quantity="one">%d haftada</item>
         <item quantity="other">%d haftada</item>
     </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="one">%d ayda</item>
-        <item quantity="other">%d ayda</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d yılda</item>
-        <item quantity="other">%d yılda</item>
-    </plurals>
-    <string name="repeat_type_due">bitiş tarihi</string>
-    <string name="repeat_type_completion">tamamlanma tarihi</string>
     <string name="repeat_snackbar">%1$s, %2$s için yeniden zamanlandı</string>
     <string name="new_tag">Yeni etiket oluştur</string>
     <string name="new_list">Yeni liste oluştur</string>
@@ -165,7 +155,6 @@
     <string name="EPr_voiceInputEnabled_title">Ses Girişi</string>
     <string name="EPr_voiceRemindersEnabled_title">Sesli anımsatıcılar</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">Tasks, görevler anımsatılırken adlarını seslendirecek</string>
-    <string name="delete_task">Görevi sil</string>
     <string name="voice_command_added_task">Görev eklendi</string>
     <plurals name="Ntasks">
         <item quantity="one">1 görev</item>
@@ -188,23 +177,15 @@
     <string name="customize_edit_screen">Düzenleme ekranını özelleştir</string>
     <string name="translations">Çeviri katkıları</string>
     <string name="quiet_hours_summary">Sessiz saatlerde anımsatıcı yok</string>
-    <string name="add_reminder">Anımsatıcı ekle</string>
     <string name="add_location">Konum ekle</string>
     <string name="remove">Kaldır</string>
-    <string name="randomly">Gelişigüzel</string>
-    <string name="pick_a_date_and_time">Bir tarih ve zaman seç</string>
-    <string name="when_overdue">Geciktiğinde</string>
-    <string name="when_due">Zamanı geldiğinde</string>
     <string name="geofence_radius">Coğrafi sınır yarıçapı</string>
     <string name="tags">Etiketler</string>
     <string name="filters">Süzgeçler</string>
-    <string name="date_shortcut_hour">Bir saatliğine</string>
     <string name="date_shortcut_morning">Sabah</string>
     <string name="date_shortcut_afternoon">Öğle</string>
     <string name="date_shortcut_evening">Akşam</string>
     <string name="date_shortcut_night">Gece</string>
-    <string name="date_shortcut_tomorrow_morning">Yarın sabah</string>
-    <string name="date_shortcut_tomorrow_afternoon">Yarın öğle</string>
     <string name="date_shortcut_must_come_before">%1$s, %2$s öncesinden gelmelidir</string>
     <string name="date_shortcut_must_come_after">%1$s, %2$s ardından gelmelidir</string>
     <string name="discard_changes">Değişiklikleri gözden çıkar?</string>
@@ -220,7 +201,6 @@
     <string name="pick_from_gallery">Galeriden seç</string>
     <string name="pick_from_storage">Depolamadan seç</string>
     <string name="name_cannot_be_empty">Ad boş olamaz</string>
-    <string name="no_title">(Başlıksız)</string>
     <string name="back_button_saves_task">Geri düğmesi görevi kaydeder</string>
     <string name="default_list">Öntanımlı liste</string>
     <string name="filter">Süzgeç</string>
@@ -253,24 +233,7 @@
     <string name="badges">Rozetler</string>
     <string name="list">Liste</string>
     <string name="repeats_from">Şundan sonra yinele</string>
-    <string name="repeats_single">%s yineler</string>
-    <string name="repeats_single_on">%2$s gününde %1$s yineler</string>
-    <string name="repeats_single_until">%1$s yineler, %2$s biter</string>
-    <string name="repeats_single_number_of_times">%1$s yineler, %2$d %3$s gerçekleşir</string>
-    <string name="repeats_single_on_until">%2$s gününde %1$s yineler, %3$s biter</string>
-    <string name="repeats_single_on_number_of_times">%2$s gününde %1$s yineler, %3$d %4$s gerçekleşir</string>
-    <string name="repeats_minutely">Dakikalık</string>
-    <string name="repeats_hourly">Saatlik</string>
-    <string name="repeats_daily">Günlük</string>
-    <string name="repeats_weekly">Haftalık</string>
-    <string name="repeats_monthly">Aylık</string>
-    <string name="repeats_yearly">Yıllık</string>
-    <string name="repeats_plural">Her %s yineler</string>
-    <string name="repeats_plural_on">%2$s gününde her %1$s yineler</string>
-    <string name="repeats_plural_until">Her %1$s yineler, %2$s biter</string>
     <string name="repeats_plural_number_of_times">Her %1$s yineler, %2$d %3$s gerçekleşir</string>
-    <string name="repeats_plural_on_until">%2$s gününde her %1$s yineler, %3$s biter</string>
-    <string name="repeats_plural_on_number_of_times">%2$s gününde her %1$s yineler, %3$d %4$s gerçekleşir</string>
     <string name="dont_add_to_calendar">Takvime ekleme</string>
     <string name="default_calendar">Öntanımlı takvim</string>
     <string name="badges_description">Tasks başlatıcı simgesinde görev sayısı göster. Tüm başlatıcılar rozetleri desteklemez.</string>
@@ -350,7 +313,6 @@
     <string name="chip_appearance_icon_only">Yalnızca simge</string>
     <string name="chip_appearance_text_only">Yalnızca metin</string>
     <string name="chip_appearance_text_and_icon">Metin ve simge</string>
-    <string name="menu_discard_changes">Değişiklikleri göz ardı et</string>
     <string name="share">Paylaş</string>
     <string name="select_all">Tümünü seç</string>
     <string name="compact">Sıkı</string>
@@ -403,8 +365,6 @@
     <string name="astrid_sort_order_summary">\'Görevlerim\', \'Bugün\' ve etiketler için elle sıralama kipini etkinleştirir. Bu sıralama kipi, gelecek güncellemede \'Düzenim\' ile değiştirilecek</string>
     <string name="astrid_sort_order">Astrid elle sıralama</string>
     <string name="reset_sort_order">Sıra düzenini sıfırla</string>
-    <string name="date_shortcut_tomorrow_night">Yarın gece</string>
-    <string name="date_shortcut_tomorrow_evening">Yarın akşam</string>
     <string name="permission_read_tasks">Tasks veri tabanına tam erişim</string>
     <string name="davx5_selection_description">DAVx⁵ uygulamasıyla görevlerinizi eşzamanlayın</string>
     <string name="background_location">Ön plan konumu</string>
@@ -465,7 +425,6 @@
     <string name="privacy">Gizlilik</string>
     <string name="open_source">Açık kaynak</string>
     <string name="support">Destek</string>
-    <string name="more_options">Daha çok seçenek</string>
     <string name="upgrade_open_source_description">Aboneliğiniz geliştirmenin sürekliliğini destekler</string>
     <string name="upgrade_more_customization_description">Tüm gövdeler, renkler ve simgeler kullanılabilir</string>
     <string name="upgrade_tasks_org_account_description">Tasks.org ile eşzamanla ve diğer kullanıcılarla ortak çalış</string>
@@ -474,41 +433,15 @@
     <string name="markdown_description">Başlık ve açıklamada Markdown\'ı etkinleştir</string>
     <string name="markdown">Markdown</string>
     <string name="now">Şimdi</string>
-    <string name="when_started">Başladığında</string>
     <string name="completion_sound">Tamamlandığında ses çal</string>
     <string name="completed">Tamamlandı</string>
     <string name="snackbar_task_completed">Görev tamamlandı</string>
     <string name="snackbar_tasks_completed">%d görev tamamlandı</string>
     <string name="custom_filter_has_reminder">Anımsatıcılı</string>
-    <plurals name="reminder_hours">
-        <item quantity="one">Saat</item>
-        <item quantity="other">Saat</item>
-    </plurals>
-    <string name="custom_notification">Özel bildirim</string>
-    <string name="snoozed_until">Şuna dek ertelendi: %s</string>
-    <plurals name="reminder_minutes">
-        <item quantity="one">Dakika</item>
-        <item quantity="other">Dakika</item>
-    </plurals>
-    <plurals name="reminder_days">
-        <item quantity="one">Gün</item>
-        <item quantity="other">Gün</item>
-    </plurals>
-    <plurals name="reminder_week">
-        <item quantity="one">Hafta</item>
-        <item quantity="other">Hafta</item>
-    </plurals>
-    <string name="alarm_after_start">Başladıktan sonra %s</string>
-    <string name="alarm_before_due">Bitişten önce %s</string>
-    <string name="alarm_after_due">Bitişten sonra %s</string>
-    <string name="alarm_before_start">Başlamadan önce %s</string>
-    <string name="randomly_every">Rastgele her %s</string>
     <string name="customize_edit_screen_summary">Alanları yeniden düzenle veya kaldır</string>
     <string name="dismiss">Kapat</string>
     <string name="hint_customize_edit_title">Çok bilgi mi var\?</string>
     <string name="hint_customize_edit_body">Alanları yeniden düzenleyerek veya kaldırarak bu ekranı özelleştirebilirsiniz</string>
-    <string name="enable_reminders">Anımsatıcıları etkinleştir</string>
-    <string name="enable_reminders_description">Anımsatıcılar Android ayarlarında devre dışı bırakıldı</string>
     <string name="sort_completion_group">Tamamlanma %s</string>
     <string name="TEA_creation_date">Oluşturulma zamanı</string>
     <string name="sort_list">Listeye göre</string>
@@ -564,10 +497,6 @@
     <string name="import_failed_message">Yedek dosyası okunamadı</string>
     <string name="banner_subscription_required_title">Abonelik gereklidir</string>
     <string name="banner_subscription_required_body">%s eşzamanlama kilidini açmak için dilediğinizi ödeyin</string>
-    <string name="alarm_before">önce</string>
-    <string name="alarm_after">sonra</string>
-    <string name="alarm_start">başlangıç</string>
-    <string name="alarm_due">bitiş</string>
     <string name="add_default_reminders">Öntanımlı anımsatıcı ekle</string>
     <string name="default_reminder">Tüm gün görevleri</string>
     <string name="rmd_time_enabled_on">Tüm gün görevlerine öntanımlı anımsatıcı ekle</string>
@@ -595,5 +524,4 @@
     <string name="upgrade_desktop_app">Masaüstü için Tasks.org</string>
     <string name="upgrade_desktop_app_description">Yeni masaüstü uygulamasına erken erişim</string>
     <string name="sort_options">Sıralama seçenekleri</string>
-    <string name="snoozed_reminder">Anımsatıcı ertelendi</string>
 </resources>

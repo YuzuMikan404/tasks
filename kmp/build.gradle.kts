@@ -20,7 +20,11 @@ kotlin {
             freeCompilerArgs.addAll("-P", "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=org.tasks.CommonParcelize")
         }
     }
-    jvm()
+    jvm {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
+        }
+    }
     sourceSets {
         val jvmCommonMain by creating {
             dependsOn(commonMain.get())
@@ -70,6 +74,11 @@ kotlin {
                 exclude(group = "org.ogce", module = "xpp3")
             }
             api(libs.google.api.tasks)
+            api(libs.ktor.client.core)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.content.negotiation)
+            implementation(libs.ktor.serialization)
             compileOnly(libs.xpp3)
             compileOnly(files("../libs/client-jvm-2.3.2.jar"))
         }
@@ -100,6 +109,7 @@ val generateJvmBuildConfig by tasks.registering {
     val outputDir = layout.buildDirectory.dir("generated/jvmBuildConfig")
     val versionCode = libs.versions.versionCode.get()
     val versionName = libs.versions.versionName.get()
+    val applicationId = libs.versions.applicationId.get()
     val tasks_dev_url: String? by project
     val devUrl = tasks_dev_url ?: ""
     val posthogKey = providers.environmentVariable("POSTHOG_KEY")
@@ -110,6 +120,7 @@ val generateJvmBuildConfig by tasks.registering {
         .orElse(true)
     inputs.property("versionCode", versionCode)
     inputs.property("versionName", versionName)
+    inputs.property("applicationId", applicationId)
     inputs.property("devUrl", devUrl)
     inputs.property("posthogKey", posthogKey)
     inputs.property("debug", debug)
@@ -123,6 +134,7 @@ val generateJvmBuildConfig by tasks.registering {
                 |object JvmBuildConfig {
                 |    const val VERSION_CODE = $versionCode
                 |    const val VERSION_NAME = "$versionName"
+                |    const val APPLICATION_ID = "$applicationId"
                 |    const val DEV_URL = "$devUrl"
                 |    const val POSTHOG_KEY = "${posthogKey.get()}"
                 |    const val DEBUG = ${debug.get()}
@@ -153,6 +165,7 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         buildConfigField("int", "VERSION_CODE", libs.versions.versionCode.get())
         buildConfigField("String", "VERSION_NAME", "\"${libs.versions.versionName.get()}\"")
+        buildConfigField("String", "APPLICATION_ID", "\"${libs.versions.applicationId.get()}\"")
         val tasks_dev_url: String? by project
         buildConfigField("String", "DEV_URL", "\"${tasks_dev_url ?: ""}\"")
     }

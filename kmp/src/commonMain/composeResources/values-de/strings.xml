@@ -173,8 +173,8 @@
     <string name="about">Über</string>
     <string name="widget_settings">Widget-Einstellungen</string>
     <plurals name="task_count">
-        <item quantity="one">%1$d Aufgabe</item>
-        <item quantity="other">%1$d Aufgaben</item>
+        <item quantity="one">%1$d Eintrag</item>
+        <item quantity="other">%1$d Einträge</item>
     </plurals>
     <string name="delete_tasks_warning">%1$s wird/werden gelöscht. Dies kann nicht rückgängig gemacht werden!</string>
     <string name="name_cannot_be_empty">Name darf nicht leer sein</string>
@@ -274,9 +274,9 @@
     <string name="this_device_only">Nur dieses Gerät</string>
     <string name="logout_confirmation">Von %1$s abmelden?</string>
     <string name="wrong_account">Anmeldung fehlgeschlagen</string>
-    <string name="wrong_account_message">Dein Abo ist bereits mit %1$s verknüpft. Wenn du glaubst, dass das ein Fehler ist, kontaktiere bitte %2$s.</string>
+    <string name="wrong_account_message">Ihr Abonnement ist bereits mit %1$s. verknüpft. Wenn Sie glauben, dass es sich um einen Fehler handelt, wenden Sie sich bitte an %2$s</string>
     <string name="caldav_server_owncloud">ownCloud</string>
-    <string name="caldav_server_sabredav">sabre/dav</string>
+    <string name="caldav_server_sabredav">caldav_server_sabredav</string>
     <string name="caldav_server_openxchange">Open-Xchange</string>
     <string name="caldav_server_nextcloud">Nextcloud</string>
     <string name="link_desktop">Desktop-App verknüpfen</string>
@@ -330,8 +330,8 @@
         <item quantity="other">Minuten</item>
     </plurals>
     <plurals name="repeat_hours">
-        <item quantity="one">Stunde</item>
-        <item quantity="other">Stunden</item>
+        <item quantity="one">Wiederholungsstunde</item>
+        <item quantity="other">Wiederholungsstunden</item>
     </plurals>
     <plurals name="repeat_days">
         <item quantity="one">Tag</item>
@@ -354,4 +354,169 @@
         <item quantity="other">Wiederholungen</item>
     </plurals>
     <string name="repeat_monthly_every_day_of_nth_week">jeden %1$s %2$s</string>
+    <string name="caldav_server_mailbox_org">Mailbox.org</string>
+    <string name="metadata_move_message">Metadaten zu Tags sind derzeit auf %1$s gespeichert. In dieses Konto verschieben?</string>
+    <string name="metadata_stored_on_account">Derzeit gespeichert auf %1$s</string>
+    <string name="metadata_stored_on_tasks_org">Gespeichert in Ihrem Tasks.org-Konto</string>
+    <string name="metadata_not_supported">Dieser Server unterstützt die Synchronisierung von Tag-Metadaten nicht</string>
+    <string name="caldav_server_synology_calendar">Synology-Kalender</string>
+    <string name="delete_tag_warning">Aufgaben mit diesem Tag werden nicht gelöscht</string>
+    <string name="delete_list_warning">Alle Aufgaben in dieser Liste werden gelöscht. Dies kann nicht rückgängig gemacht werden!</string>
+    <string name="link_desktop_description">Schalten Sie die Desktop-App mit Ihrem Google Play-Abonnement frei</string>
+    <string name="link_desktop_instructions">Öffnen Sie die Tasks.org Desktop-App und gehen Sie auf „Konto hinzufügen“, um den QR-Code anzuzeigen. Tippen Sie anschließend auf die Schaltfläche unten, um ihn zu scannen.</string>
+    <string name="link_desktop_step_1">Öffnen Sie die Tasks.org Desktop-App</string>
+    <string name="link_desktop_step_2">Klicken Sie auf „%1$s“ und wählen Sie „%2$s</string>
+    <string name="link_desktop_step_3">Wählen Sie „%1$s</string>
+    <string name="scan_qr_code">QR-Code scannen</string>
+    <string name="link_desktop_success">Desktop erfolgreich verknüpft!</string>
+    <string name="link_desktop_error">Verknüpfung mit Desktop fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
+    <string name="unlock_pro_scan_heading">Scannen Sie den QR-Code in der Tasks.org Android-App</string>
+    <string name="unlock_pro_step_1">Öffnen Sie Tasks.org auf Ihrem Smartphone</string>
+    <string name="unlock_pro_step_2">Tippen Sie auf „%1$s“ und dann auf „%2$s</string>
+    <string name="unlock_pro_step_3">Tippen Sie auf „%1$s</string>
+    <string name="sync_metadata_summary">Speichern Sie Tag-Namen, -Farben, -Icons und die Anzeigereihenfolge in diesem Konto, damit sie auf all Ihren Geräten synchronisiert werden</string>
+    <string name="sync_metadata">Tag-Metadaten hier speichern</string>
+    <string name="failed_to_load_task">Aufgabe konnte nicht geladen werden</string>
+    <string name="not_signed_in">Nicht angemeldet</string>
+    <string name="done">Fertig</string>
+    <string name="retry">Erneut</string>
+    <string name="qr_code">QR-Code</string>
+    <string name="error_create_link_failed">Link konnte nicht erstellt werden. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>
+    <string name="error_confirmation_failed">Verknüpfung konnte nicht bestätigt werden. Der Code ist möglicherweise ungültig oder abgelaufen.</string>
+    <string name="error_network">Verbindung fehlgeschlagen. Bitte überprüfen Sie Ihre Internetverbindung.</string>
+    <string name="error_no_sponsorship">Kein Sponsoring gefunden</string>
+    <string name="error_sponsorship_delay">Neue Sponsorings sind möglicherweise nicht sofort verfügbar. Versuchen Sie es in wenigen Minuten erneut.</string>
+    <string name="error_contact_support">Wenn Sie weiterhin Probleme haben, wenden Sie sich bitte an %1$s</string>
+    <string name="sponsor_on_github">Auf GitHub sponsern</string>
+    <string name="unlock_pro_opening_browser">Browser wird geöffnet…</string>
+    <string name="google_play_subscription">Google Play-Abonnement</string>
+    <string name="github_sponsorship">GitHub-Sponsoring</string>
+    <string name="error_github_verification_failed">Verifizierung fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
+    <string name="pricing_subtitle">Kostenlos und Open Source. Abonnements unterstützen die Entwicklung und schalten zusätzliche Funktionen frei.</string>
+    <string name="pricing_cloud_description">Schalten Sie alle In-App-Funktionen frei und verbinden Sie sich mit der Tasks.org-Cloud-Synchronisierung.</string>
+    <string name="pricing_nyp_title">Zahlen Sie, was Sie wollen</string>
+    <string name="pricing_recommended">Empfohlen</string>
+    <string name="annual">Jährlich</string>
+    <string name="monthly">Monatlich</string>
+    <string name="pricing_sponsor">Oder sponsern Sie auf GitHub für %1$s</string>
+    <string name="pricing_subscribe_google_play">Auf Google Play abonnieren</string>
+    <string name="pricing_nyp_feature_3">Quelloffene-Anwendung unterstützen</string>
+    <string name="pricing_nyp_feature_2">Selbstgehostete Synchronisierung mit CalDAV und EteSync</string>
+    <string name="pricing_nyp_feature_1">Benutzerdefinierte Designs und Symbole</string>
+    <string name="pricing_cloud_feature_4">Mit Apple Erinnerungen auf iOS verbinden</string>
+    <string name="pricing_cloud_feature_3">E-Mail-zu-Aufgabe mit privatem Posteingang</string>
+    <string name="pricing_cloud_feature_2">Freigabe von Listen für Freunde &amp; Familie</string>
+    <string name="pricing_cloud_feature_1">Sofortige Synchronisierung zwischen Android und Desktop</string>
+    <string name="pricing_cloud_monthly_note">Monatliche Abrechnung</string>
+    <string name="pricing_cloud_annual_note">Jährliche Abrechnung (%1$s)</string>
+    <string name="restore_purchases">Käufe wiederherstellen</string>
+    <string name="pricing_nyp_description">Wählen Sie Ihren eigenen Abonnementpreis. Schaltet alle In-App-Funktionen frei.</string>
+    <string name="pricing_from">Von %1$s</string>
+    <string name="add_tag">Tag hinzufügen</string>
+    <string name="cloud_onboarding_faq_desktop_sync_answer">Laden Sie die Desktop-App unter tasks.org/download herunter und melden Sie sich dann mit demselben Google-Konto an.</string>
+    <string name="google_tasks_permission_not_granted">Die Berechtigung für Google Tasks wurde nicht erteilt. Bitte melden Sie sich erneut an und gewähren Sie auf dem Zustimmungsbildschirm Zugriff auf Google Tasks.</string>
+    <string name="repeats_single">Wiederholt sich %1$s</string>
+    <string name="repeats_single_on">Wiederholt sich %1$s %2$s</string>
+    <string name="repeats_single_until">Wiederholt sich %1$s, endet am %2$s</string>
+    <string name="repeats_single_number_of_times">Wiederholt sich %1$s, genau %2$d %3$s</string>
+    <string name="repeats_single_on_until">Wiederholt sich %1$s am %2$s, endet am %3$s</string>
+    <string name="repeats_single_on_number_of_times">Wiederholt sich %1$s %2$s, genau %3$d %4$s</string>
+    <string name="repeats_plural">Wiederholt sich alle %1$s</string>
+    <string name="repeats_plural_on">Wiederholt sich alle %1$s am %2$s</string>
+    <string name="repeats_plural_until">Wiederholt sich alle %1$s bis %2$s</string>
+    <string name="repeats_plural_number_of_times">Wiederholt sich alle %1$s, genau %2$d %3$s</string>
+    <string name="repeats_plural_on_until">Wiederholt sich alle %1$s am %2$s, bis %3$s</string>
+    <string name="repeats_plural_on_number_of_times">Wiederholt sich alle %1$s am %2$s, genau %3$d %4$s</string>
+    <string name="repeats_minutely">minütlich</string>
+    <string name="repeats_hourly">stündlich</string>
+    <string name="repeats_daily">täglich</string>
+    <string name="repeats_weekly">wöchentlich</string>
+    <string name="repeats_monthly">monatlich</string>
+    <string name="repeats_yearly">jährlich</string>
+    <string name="list_separator_with_space">, </string>
+    <string name="repeats_from">Wiederholt sich ab</string>
+    <string name="repeat_type_due">Fälligkeitsdatum</string>
+    <string name="repeat_type_completion">Erledigung</string>
+    <string name="TEA_control_repeat">Wiederholen</string>
+    <plurals name="repeat_times">
+        <item quantity="one">-mal</item>
+        <item quantity="other">-mal</item>
+    </plurals>
+    <plurals name="repeat_n_minutes">
+        <item quantity="one">%1$d Minute</item>
+        <item quantity="other">%1$d Minuten</item>
+    </plurals>
+    <plurals name="repeat_n_hours">
+        <item quantity="one">%1$d Stunde</item>
+        <item quantity="other">%1$d Stunden</item>
+    </plurals>
+    <plurals name="repeat_n_days">
+        <item quantity="one">%1$d Tag</item>
+        <item quantity="other">%1$d Tage</item>
+    </plurals>
+    <plurals name="repeat_n_weeks">
+        <item quantity="one">%1$d Woche</item>
+        <item quantity="other">%1$d Wochen</item>
+    </plurals>
+    <plurals name="repeat_n_months">
+        <item quantity="one">%1$d Monat</item>
+        <item quantity="other">%1$d Monate</item>
+    </plurals>
+    <plurals name="repeat_n_years">
+        <item quantity="one">%1$d Jahr</item>
+        <item quantity="other">%1$d Jahre</item>
+    </plurals>
+    <string name="repeat_type_completion_capitalized">Fertigstellungstermin</string>
+    <string name="no_title">(kein Titel)</string>
+    <string name="when_started">Wenn begonnen</string>
+    <string name="when_due">Wenn fällig</string>
+    <string name="when_overdue">Wenn überfällig</string>
+    <string name="randomly">Zufällig</string>
+    <string name="randomly_every">Zufällig alle %1$s</string>
+    <string name="pick_a_date_and_time">Tag und Uhrzeit auswählen</string>
+    <string name="add_reminder">Erinnerung hinzufügen</string>
+    <string name="custom_notification">Benutzerdefinierte Erinnerung</string>
+    <string name="alarm_before">vor</string>
+    <string name="alarm_after">nach</string>
+    <string name="alarm_start">Start</string>
+    <string name="alarm_due">fällig</string>
+    <string name="alarm_before_start">%1$s vor dem Start</string>
+    <string name="alarm_after_start">%1$s nach dem Start</string>
+    <string name="alarm_before_due">%1$s vor Fälligkeit</string>
+    <string name="alarm_after_due">%1$s nach Fälligkeit</string>
+    <string name="snoozed_until">Pausiert bis %1$s</string>
+    <string name="ring_once">Einmal klingeln</string>
+    <string name="ring_five_times">Fünfmal klingeln</string>
+    <string name="ring_nonstop">Ununterbrochen klingeln</string>
+    <string name="enable_reminders">Erinnerungen aktivieren</string>
+    <string name="enable_reminders_description">Erinnerungen sind in den Android-Einstellungen deaktiviert</string>
+    <plurals name="reminder_minutes">
+        <item quantity="one">Minute</item>
+        <item quantity="other">Minuten</item>
+    </plurals>
+    <plurals name="reminder_hours">
+        <item quantity="one">Stunde</item>
+        <item quantity="other">Stunden</item>
+    </plurals>
+    <plurals name="reminder_days">
+        <item quantity="one">Tag</item>
+        <item quantity="other">Tage</item>
+    </plurals>
+    <plurals name="reminder_week">
+        <item quantity="one">Woche</item>
+        <item quantity="other">Wochen</item>
+    </plurals>
+    <string name="delete_task">Aufgabe löschen</string>
+    <string name="menu_discard_changes">Änderungen verwerfen</string>
+    <string name="more_options">Weitere Optionen</string>
+    <string name="rmd_NoA_snooze">Schlummern</string>
+    <string name="date_shortcut_hour">Für eine Stunde</string>
+    <string name="date_shortcut_morning">Vormittag</string>
+    <string name="date_shortcut_afternoon">Nachmittag</string>
+    <string name="date_shortcut_evening">Abend</string>
+    <string name="date_shortcut_night">Nacht</string>
+    <string name="date_shortcut_tomorrow_morning">Morgen Früh</string>
+    <string name="date_shortcut_tomorrow_afternoon">Morgen Nachmittag</string>
+    <string name="date_shortcut_tomorrow_evening">Morgen Abend</string>
+    <string name="date_shortcut_tomorrow_night">Morgen Nacht</string>
 </resources>

@@ -415,4 +415,113 @@
     <item quantity="other">occurrences</item>
   </plurals>
     <string name="repeat_monthly_every_day_of_nth_week">every %1$s %2$s</string>
+    <string name="no_task_selected">No task selected</string>
+    <string name="resize_panes">Resize panes</string>
+    <string name="repeats_single">Repeats %1$s</string>
+    <string name="repeats_single_on">Repeats %1$s on %2$s</string>
+    <string name="repeats_single_until">Repeats %1$s, ends on %2$s</string>
+    <string name="repeats_single_number_of_times">Repeats %1$s, occurs %2$d %3$s</string>
+    <string name="repeats_single_on_until">Repeats %1$s on %2$s, ends on %3$s</string>
+    <string name="repeats_single_on_number_of_times">Repeats %1$s on %2$s, occurs %3$d %4$s</string>
+    <string name="repeats_plural">Repeats every %1$s</string>
+    <string name="repeats_plural_on">Repeats every %1$s on %2$s</string>
+    <string name="repeats_plural_until">Repeats every %1$s, ends on %2$s</string>
+    <string name="repeats_plural_number_of_times">Repeats every %1$s, occurs %2$d %3$s</string>
+    <string name="repeats_plural_on_until">Repeats every %1$s on %2$s, ends on %3$s</string>
+    <string name="repeats_plural_on_number_of_times">Repeats every %1$s on %2$s, occurs %3$d %4$s</string>
+    <string name="repeats_minutely">minutely</string>
+    <string name="repeats_hourly">hourly</string>
+    <string name="repeats_daily">daily</string>
+    <string name="repeats_weekly">weekly</string>
+    <string name="repeats_monthly">monthly</string>
+    <string name="repeats_yearly">yearly</string>
+    <string name="list_separator_with_space">, </string>
+    <string name="repeats_from">Repeats from</string>
+    <string name="repeat_type_due">due date</string>
+    <string name="repeat_type_completion">completion date</string>
+    <string name="TEA_control_repeat">Repeat</string>
+    <plurals name="repeat_times">
+        <item quantity="one">time</item>
+        <item quantity="other">times</item>
+    </plurals>
+    <plurals name="repeat_n_minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
+    <plurals name="repeat_n_hours">
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d hours</item>
+    </plurals>
+    <plurals name="repeat_n_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <plurals name="repeat_n_weeks">
+        <item quantity="one">%1$d week</item>
+        <item quantity="other">%1$d weeks</item>
+    </plurals>
+    <plurals name="repeat_n_months">
+        <item quantity="one">%1$d month</item>
+        <item quantity="other">%1$d months</item>
+    </plurals>
+    <plurals name="repeat_n_years">
+        <item quantity="one">%1$d year</item>
+        <item quantity="other">%1$d years</item>
+    </plurals>
+    <string name="repeat_type_completion_capitalized">Completion date</string>
+    <string name="repeat_type_due_description">The task repeats based on when it was supposed to be done</string>
+    <string name="repeat_type_completion_description">The task repeats based on when you actually finished it</string>
+    <string name="no_title">(No title)</string>
+    <string name="when_started">When started</string>
+    <string name="when_due">When due</string>
+    <string name="when_overdue">When overdue</string>
+    <string name="randomly">Randomly</string>
+    <string name="randomly_every">Randomly every %1$s</string>
+    <string name="pick_a_date_and_time">Pick a date and time</string>
+    <string name="add_reminder">Add reminder</string>
+    <string name="custom_notification">Custom notification</string>
+    <string name="alarm_before">before</string>
+    <string name="alarm_after">after</string>
+    <string name="alarm_start">start</string>
+    <string name="alarm_due">due</string>
+    <string name="alarm_before_start">%1$s before start</string>
+    <string name="alarm_after_start">%1$s after start</string>
+    <string name="alarm_before_due">%1$s before due</string>
+    <string name="alarm_after_due">%1$s after due</string>
+    <string name="snoozed_until">Snoozed until %1$s</string>
+    <string name="ring_once">Ring once</string>
+    <string name="ring_five_times">Ring five times</string>
+    <string name="ring_nonstop">Ring nonstop</string>
+    <string name="enable_reminders">Enable reminders</string>
+    <string name="enable_reminders_description">Reminders are disabled in Android Settings</string>
+    <plurals name="reminder_minutes">
+    <item quantity="one">Minute</item>
+    <item quantity="other">Minutes</item>
+  </plurals>
+    <plurals name="reminder_hours">
+    <item quantity="one">Hour</item>
+    <item quantity="other">Hours</item>
+  </plurals>
+    <plurals name="reminder_days">
+    <item quantity="one">Day</item>
+    <item quantity="other">Days</item>
+  </plurals>
+    <plurals name="reminder_week">
+    <item quantity="one">Week</item>
+    <item quantity="other">Weeks</item>
+  </plurals>
+    <string name="delete_task">Delete task</string>
+    <string name="menu_discard_changes">Discard changes</string>
+    <string name="more_options">More options</string>
+    <string name="mark_completed">Mark completed</string>
+    <string name="rmd_NoA_snooze">Snooze</string>
+    <string name="date_shortcut_hour">For an hour</string>
+    <string name="date_shortcut_morning">Morning</string>
+    <string name="date_shortcut_afternoon">Afternoon</string>
+    <string name="date_shortcut_evening">Evening</string>
+    <string name="date_shortcut_night">Night</string>
+    <string name="date_shortcut_tomorrow_morning">Tomorrow morning</string>
+    <string name="date_shortcut_tomorrow_afternoon">Tomorrow afternoon</string>
+    <string name="date_shortcut_tomorrow_evening">Tomorrow evening</string>
+    <string name="date_shortcut_tomorrow_night">Tomorrow night</string>
 </resources>

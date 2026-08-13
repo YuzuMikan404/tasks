@@ -287,4 +287,119 @@
         <item quantity="other">повторень</item>
     </plurals>
     <string name="repeat_monthly_every_day_of_nth_week">що %1$s %2$s</string>
+    <string name="repeats_single">Повторювати %1$s</string>
+    <string name="repeats_single_on">Повторювати %1$s по %2$s</string>
+    <string name="repeats_single_until">Повторювати %1$s, завершується %2$s</string>
+    <string name="repeats_single_number_of_times">Повторювати %1$s, стається %2$d %3$s</string>
+    <string name="repeats_single_on_until">Повторювати %1$s по %2$s, завершується %3$s</string>
+    <string name="repeats_single_on_number_of_times">Повторювати %1$s по %2$s, стається %3$d %4$s</string>
+    <string name="repeats_plural">Повторювати що %1$s</string>
+    <string name="repeats_plural_on">Повторювати що  %1$s по %2$s</string>
+    <string name="repeats_plural_until">Повторювати що %1$s, завершується %2$s</string>
+    <string name="repeats_plural_number_of_times">Повторювати що %1$s, стається %2$d %3$s</string>
+    <string name="repeats_plural_on_until">Повторювати що %1$s по %2$s, завершується %3$s</string>
+    <string name="repeats_plural_on_number_of_times">Повторювати що %1$s по %2$s, станеться %3$d %4$s</string>
+    <string name="repeats_minutely">щохвилини</string>
+    <string name="repeats_hourly">щогодинно</string>
+    <string name="repeats_daily">щодня</string>
+    <string name="repeats_weekly">щотижня</string>
+    <string name="repeats_monthly">щомісяця</string>
+    <string name="repeats_yearly">щороку</string>
+    <string name="list_separator_with_space">, </string>
+    <string name="repeats_from">Повторювати з</string>
+    <string name="repeat_type_due">призначеної дати</string>
+    <string name="repeat_type_completion">дати виконання</string>
+    <string name="TEA_control_repeat">Повтор</string>
+    <plurals name="repeat_times">
+        <item quantity="one">раз</item>
+        <item quantity="few">рази</item>
+        <item quantity="many">разів</item>
+    </plurals>
+    <plurals name="repeat_n_minutes">
+        <item quantity="one">%1$d хвилина</item>
+        <item quantity="few">%1$d хвилини</item>
+        <item quantity="many">%1$d хвилин</item>
+    </plurals>
+    <plurals name="repeat_n_hours">
+        <item quantity="one">%1$d година</item>
+        <item quantity="few">%1$d години</item>
+        <item quantity="many">%1$d годин</item>
+    </plurals>
+    <plurals name="repeat_n_days">
+        <item quantity="one">%1$d день</item>
+        <item quantity="few">%1$d дні</item>
+        <item quantity="many">%1$d днів</item>
+    </plurals>
+    <plurals name="repeat_n_weeks">
+        <item quantity="one">%1$d тиждень</item>
+        <item quantity="few">%1$d тижні</item>
+        <item quantity="many">%1$d тижнів</item>
+    </plurals>
+    <plurals name="repeat_n_months">
+        <item quantity="one">%1$d місяць</item>
+        <item quantity="few">%1$d місяці</item>
+        <item quantity="many">%1$d місяців</item>
+    </plurals>
+    <plurals name="repeat_n_years">
+        <item quantity="one">%1$d рік</item>
+        <item quantity="few">%1$d роки</item>
+        <item quantity="many">%1$d років</item>
+    </plurals>
+    <string name="repeat_type_completion_capitalized">Дата завершення</string>
+    <string name="no_title">(без назви)</string>
+    <string name="when_started">Після запуску</string>
+    <string name="when_due">У призначений час</string>
+    <string name="when_overdue">Коли прострочено</string>
+    <string name="randomly">Випадково</string>
+    <string name="randomly_every">Випадково кожні %1$s</string>
+    <string name="pick_a_date_and_time">Обрати дату й час</string>
+    <string name="add_reminder">Додати нагадування</string>
+    <string name="custom_notification">Користувацькі сповіщення</string>
+    <string name="alarm_before_start">%1$s до початку</string>
+    <string name="alarm_after_start">%1$s після початку</string>
+    <string name="alarm_before_due">%1$s до</string>
+    <string name="alarm_after_due">%1$s після</string>
+    <string name="snoozed_until">Відкладено до %1$s</string>
+    <string name="ring_once">Звучати один раз</string>
+    <string name="ring_five_times">Звучати п’ять разів</string>
+    <string name="ring_nonstop">Звучати безперервно</string>
+    <string name="enable_reminders">Увімкнути нагадування</string>
+    <string name="enable_reminders_description">Нагадування вимкнено в налаштуваннях Android</string>
+    <plurals name="reminder_minutes">
+        <item quantity="one">Хвилина</item>
+        <item quantity="few">Хвилини</item>
+        <item quantity="many">Хвилин</item>
+        <item quantity="other">Хвилин</item>
+    </plurals>
+    <plurals name="reminder_hours">
+        <item quantity="one">Година</item>
+        <item quantity="few">Години</item>
+        <item quantity="many">Годин</item>
+        <item quantity="other">Годин</item>
+    </plurals>
+    <plurals name="reminder_days">
+        <item quantity="one">День</item>
+        <item quantity="few">Дні</item>
+        <item quantity="many">Днів</item>
+        <item quantity="other">Днів</item>
+    </plurals>
+    <plurals name="reminder_week">
+        <item quantity="one">Тиждень</item>
+        <item quantity="few">Тижні</item>
+        <item quantity="many">Тижнів</item>
+        <item quantity="other">Тижнів</item>
+    </plurals>
+    <string name="delete_task">Видалити завдання</string>
+    <string name="menu_discard_changes">Скасувати зміни</string>
+    <string name="more_options">Додаткові параметри</string>
+    <string name="rmd_NoA_snooze">Відкласти</string>
+    <string name="date_shortcut_hour">На годину</string>
+    <string name="date_shortcut_morning">Зранку</string>
+    <string name="date_shortcut_afternoon">Вдень</string>
+    <string name="date_shortcut_evening">Ввечері</string>
+    <string name="date_shortcut_night">Вночі</string>
+    <string name="date_shortcut_tomorrow_morning">Завтра зранку</string>
+    <string name="date_shortcut_tomorrow_afternoon">Завтра вдень</string>
+    <string name="date_shortcut_tomorrow_evening">Завтра ввечері</string>
+    <string name="date_shortcut_tomorrow_night">Завтра вночі</string>
 </resources>

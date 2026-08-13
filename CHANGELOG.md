@@ -1,3 +1,40 @@
+### 15.9 (2026-08-05)
+
+* Fix modified and created timestamp sync
+* Fix language override not being applied
+
+Desktop:
+  * Add Microsoft To Do support
+  * New edit screen functionality
+    * Start dates
+    * Due dates
+    * Notifications
+    * Recurrence
+  * Make drawer, task list, and edit screens resizable
+  * Add bottom bar to edit screen with complete, discard, and delete actions
+  * Add encrypted cookie storage
+  * Fix tag picker automatically selecting tags
+
+Android:
+  * Disable swipe-to-snooze for location reminders
+  * Pagination improvements for Pebble watches
+  * 'Show checkboxes' widget option refreshes immediately [#4494](https://github.com/tasks/tasks/issues/4494)
+
+Update translations:
+  * Bulgarian - 109247019824
+  * Chinese (Simplified) - Sketch6580, hamburger2048
+  * Esperanto - Don Zouras
+  * Estonian - Priit Jõerüüt
+  * French - @FlorianLeChat
+  * German - @zhx000
+  * Italian - @ppasserini
+  * Japanese - Norara
+  * Polish - @pawerak
+  * Russian - @PONYATIN
+  * Serbian - @vale-decem
+  * Swedish - Jonatan Nyberg
+  * Turkish - @oersen
+
 ### 15.8 (2026-07-22)
 
 * Sync tag info

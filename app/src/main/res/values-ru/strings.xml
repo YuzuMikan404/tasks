@@ -148,18 +148,6 @@
         <item quantity="few">%d недели</item>
         <item quantity="many">%d недель</item>
     </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="one">%d месяц</item>
-        <item quantity="few">%d месяца</item>
-        <item quantity="many">%d месяцев</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d год</item>
-        <item quantity="few">%d года</item>
-        <item quantity="many">%d лет</item>
-    </plurals>
-    <string name="repeat_type_due">намеченной даты</string>
-    <string name="repeat_type_completion">даты завершения</string>
     <string name="repeat_snackbar">%1$s перенесено на %2$s</string>
     <string name="new_tag">Создать новую метку</string>
     <string name="new_list">Создать новый список</string>
@@ -173,7 +161,6 @@
     <string name="EPr_voiceInputEnabled_title">Голосовой ввод</string>
     <string name="EPr_voiceRemindersEnabled_title">Голосовые напоминания</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">Tasks будет произносить название задач во время напоминаний</string>
-    <string name="delete_task">Удалить задачу</string>
     <string name="voice_command_added_task">Добавленная задача</string>
     <plurals name="Ntasks">
         <item quantity="one">%d задача</item>
@@ -198,24 +185,16 @@
     <string name="customize_edit_screen">Настроить экран редактирования</string>
     <string name="translations">Участвовать в переводе программы</string>
     <string name="quiet_hours_summary">Отключить напоминания в тихие часы</string>
-    <string name="add_reminder">Добавить напоминание</string>
     <string name="add_location">Добавить место</string>
     <string name="remove">Удалить</string>
-    <string name="randomly">Случайно</string>
-    <string name="pick_a_date_and_time">Выберите дату и время</string>
-    <string name="when_overdue">Когда просрочено</string>
-    <string name="when_due">Когда закончится</string>
     <string name="geofence_radius">Радиус геозоны</string>
     <string name="location_radius_meters">%s м</string>
     <string name="tags">Теги</string>
     <string name="filters">Фильтры</string>
-    <string name="date_shortcut_hour">На час</string>
     <string name="date_shortcut_morning">Утро</string>
     <string name="date_shortcut_afternoon">Обед</string>
     <string name="date_shortcut_evening">Вечер</string>
     <string name="date_shortcut_night">Ночь</string>
-    <string name="date_shortcut_tomorrow_morning">Завтра утром</string>
-    <string name="date_shortcut_tomorrow_afternoon">Завтра в обед</string>
     <string name="date_shortcut_must_come_before">%1$s должно идти перед %2$s</string>
     <string name="date_shortcut_must_come_after">%1$s должно идти после %2$s</string>
     <string name="discard_changes">Отменить изменения\?</string>
@@ -231,7 +210,6 @@
     <string name="pick_from_gallery">Выбрать из галереи</string>
     <string name="pick_from_storage">Выбрать файл с диска</string>
     <string name="name_cannot_be_empty">Необходимо задать имя</string>
-    <string name="no_title">(Без заголовка)</string>
     <string name="back_button_saves_task">Кнопка «Назад» сохраняет задачу</string>
     <string name="default_list">Список по умолчанию</string>
     <string name="filter">Фильтр</string>
@@ -264,24 +242,7 @@
     <string name="badges">Ярлыки</string>
     <string name="list">Список</string>
     <string name="repeats_from">Повторять от</string>
-    <string name="repeats_single">Повторять %s</string>
-    <string name="repeats_single_on">Повторять %1$s в %2$s</string>
-    <string name="repeats_single_until">Повторять %1$s, завершение %2$s</string>
-    <string name="repeats_single_number_of_times">Повторять %1$s, %2$d %3$s</string>
-    <string name="repeats_single_on_until">Повторять %1$s в %2$s, завершение %3$s</string>
-    <string name="repeats_single_on_number_of_times">Повторять %1$s в %2$s, %3$d %4$s</string>
-    <string name="repeats_minutely">ежеминутно</string>
-    <string name="repeats_hourly">ежечасно</string>
-    <string name="repeats_daily">ежедневно</string>
-    <string name="repeats_weekly">еженедельно</string>
-    <string name="repeats_monthly">ежемесячно</string>
-    <string name="repeats_yearly">ежегодно</string>
-    <string name="repeats_plural">Повторять каждые %s</string>
-    <string name="repeats_plural_on">Повторять каждые %1$s в %2$s</string>
-    <string name="repeats_plural_until">Повторяется каждые %1$s до %2$s</string>
     <string name="repeats_plural_number_of_times">Повторять каждые %1$s, %2$d %3$s</string>
-    <string name="repeats_plural_on_until">Повторяется каждые %1$s в %2$s до %3$s</string>
-    <string name="repeats_plural_on_number_of_times">Повторяется каждые %1$s в %2$s, %3$d %4$s</string>
     <string name="dont_add_to_calendar">Не добавлять в календарь</string>
     <string name="default_calendar">Календарь по умолчанию</string>
     <string name="badges_description">Отображать количество задач на иконке приложения. Не все лаунчеры это поддерживают.</string>
@@ -357,7 +318,6 @@
     <string name="hide_unused_tags">Скрыть неиспользуемые метки</string>
     <string name="place_settings">Настройки места</string>
     <string name="places">Места</string>
-    <string name="menu_discard_changes">Отменить изменения</string>
     <string name="share">Поделиться</string>
     <string name="select_all">Выбрать всё</string>
     <string name="calendar_event_created">В календаре создано событие для %s</string>
@@ -411,8 +371,6 @@
     <string name="lists">Списки</string>
     <string name="open_last_viewed_list">Открыть последний просмотренный список</string>
     <string name="on_launch">При запуске</string>
-    <string name="date_shortcut_tomorrow_night">Завтра ночью</string>
-    <string name="date_shortcut_tomorrow_evening">Завтра вечером</string>
     <string name="CFC_list_name">В списке…</string>
     <string name="astrid_sort_order_summary">Включите режим ручной сортировки Astrid для «Моих задач», «Сегодня» и меток. Этот режим сортировки будет заменён на «Мой порядок» в будущем обновлении</string>
     <string name="astrid_sort_order">Ручная сортировка Astrid</string>
@@ -475,7 +433,6 @@
     <string name="privacy">Конфиденциальность</string>
     <string name="open_source">Открытый исходный код</string>
     <string name="support">Поддержка</string>
-    <string name="more_options">Дополнительные параметры</string>
     <string name="upgrade_open_source_description">Ваша подписка поддерживает продолжающуюся разработку</string>
     <string name="upgrade_tasks_org_account_description">Синхронизируйтесь с Tasks.org и сотрудничайте с другими пользователями</string>
     <string name="upgrade_more_customization_description">Разблокировать все темы, цвета и иконки</string>
@@ -484,49 +441,15 @@
     <string name="markdown_description">Включить Markdown в названии и описании</string>
     <string name="markdown">Markdown</string>
     <string name="now">Сейчас</string>
-    <string name="when_started">После начала</string>
     <string name="completion_sound">Воспроизводить звук завершения</string>
     <string name="completed">Завершено</string>
     <string name="snackbar_task_completed">Задача выполнена</string>
     <string name="snackbar_tasks_completed">%d задач выполнено</string>
     <string name="custom_filter_has_reminder">С напоминанием</string>
-    <string name="snoozed_until">Отложено до %s</string>
-    <plurals name="reminder_minutes">
-        <item quantity="one">Минута</item>
-        <item quantity="few">Минуты</item>
-        <item quantity="many">Минут</item>
-        <item quantity="other">Минут</item>
-    </plurals>
-    <plurals name="reminder_week">
-        <item quantity="one">Неделя</item>
-        <item quantity="few">Недели</item>
-        <item quantity="many">Недель</item>
-        <item quantity="other">Недель</item>
-    </plurals>
-    <string name="custom_notification">Пользовательское уведомление</string>
-    <plurals name="reminder_days">
-        <item quantity="one">День</item>
-        <item quantity="few">Дня</item>
-        <item quantity="many">Дней</item>
-        <item quantity="other">Дней</item>
-    </plurals>
-    <plurals name="reminder_hours">
-        <item quantity="one">Час</item>
-        <item quantity="few">Часа</item>
-        <item quantity="many">Часов</item>
-        <item quantity="other">Часов</item>
-    </plurals>
-    <string name="alarm_before_start">%s перед началом</string>
-    <string name="alarm_before_due">%s до</string>
-    <string name="alarm_after_due">%s после</string>
-    <string name="alarm_after_start">%s после начала</string>
-    <string name="randomly_every">Случайно каждые %s</string>
     <string name="customize_edit_screen_summary">Переупорядочить или удалить поля</string>
     <string name="dismiss">Отклонить</string>
     <string name="hint_customize_edit_title">Слишком много информации\?</string>
     <string name="hint_customize_edit_body">Вы можете настроить этот экран, переставляя или удаляя поля</string>
-    <string name="enable_reminders">Включить напоминания</string>
-    <string name="enable_reminders_description">Напоминания отключены в настройках Android</string>
     <string name="TEA_creation_date">Дата создания</string>
     <string name="sort_completion_group">Готовность %s</string>
     <string name="sort_list">Список</string>
@@ -581,10 +504,6 @@
     <string name="location_update_interval_2_hours">Каждые 2 часа</string>
     <string name="location_update_interval_disabled">Отключено</string>
     <string name="rmd_EPr_rmd_time_desc">Уведомления для задач на весь день появятся в %1$s</string>
-    <string name="alarm_before">до</string>
-    <string name="alarm_after">после</string>
-    <string name="alarm_start">начала</string>
-    <string name="alarm_due">завершения</string>
     <string name="default_reminder">Задачи на весь день</string>
     <string name="rmd_time_enabled_on">Добавить напоминания по умолчанию для задач на весь день</string>
     <string name="rmd_time_enabled_off">Не добавлять напоминания по умолчанию для задач на весь день</string>

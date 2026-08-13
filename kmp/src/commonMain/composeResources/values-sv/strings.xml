@@ -392,4 +392,108 @@
         <item quantity="other">förekomster</item>
     </plurals>
     <string name="repeat_monthly_every_day_of_nth_week">%1$s %2$s varje månad</string>
+    <string name="repeats_single">Upprepas %1$s</string>
+    <string name="repeats_single_on">Upprepas %1$s på %2$s</string>
+    <string name="repeats_single_until">Upprepas %1$s till och med %2$s</string>
+    <string name="repeats_single_number_of_times">Upprepas %1$s, totalt %2$d %3$s</string>
+    <string name="repeats_single_on_until">Upprepas %1$s på %2$s till och med %3$s</string>
+    <string name="repeats_single_on_number_of_times">Upprepas %1$s på %2$s, totalt %3$d %4$s</string>
+    <string name="repeats_plural">Upprepas varje %1$s</string>
+    <string name="repeats_plural_on">Upprepas var %1$s på %2$s</string>
+    <string name="repeats_plural_until">Upprepas var %1$s till och med %2$s</string>
+    <string name="repeats_plural_number_of_times">Upprepas var %1$s, totalt %2$d %3$s</string>
+    <string name="repeats_plural_on_until">Upprepas var %1$s på %2$s till och med %3$s</string>
+    <string name="repeats_plural_on_number_of_times">Upprepas var %1$s på %2$s, totalt %3$d %4$s</string>
+    <string name="repeats_minutely">Varje minut</string>
+    <string name="repeats_hourly">Varje timme</string>
+    <string name="repeats_daily">Dagligen</string>
+    <string name="repeats_weekly">Veckovis</string>
+    <string name="repeats_monthly">Månadsvis</string>
+    <string name="repeats_yearly">Årligen</string>
+    <string name="list_separator_with_space">, </string>
+    <string name="repeats_from">Upprepas från</string>
+    <string name="repeat_type_due">förfallodatumet</string>
+    <string name="repeat_type_completion">slutförandedatumet</string>
+    <string name="TEA_control_repeat">Upprepa</string>
+    <plurals name="repeat_times">
+        <item quantity="one">gång</item>
+        <item quantity="other">gånger</item>
+    </plurals>
+    <plurals name="repeat_n_minutes">
+        <item quantity="one">%1$d minut</item>
+        <item quantity="other">%1$d minuter</item>
+    </plurals>
+    <plurals name="repeat_n_hours">
+        <item quantity="one">%1$d timme</item>
+        <item quantity="other">%1$d timmar</item>
+    </plurals>
+    <plurals name="repeat_n_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dagar</item>
+    </plurals>
+    <plurals name="repeat_n_weeks">
+        <item quantity="one">%1$d vecka</item>
+        <item quantity="other">%1$d veckor</item>
+    </plurals>
+    <plurals name="repeat_n_months">
+        <item quantity="one">%1$d månad</item>
+        <item quantity="other">%1$d månader</item>
+    </plurals>
+    <plurals name="repeat_n_years">
+        <item quantity="one">%1$d år</item>
+        <item quantity="other">%1$d år</item>
+    </plurals>
+    <string name="repeat_type_completion_capitalized">Slutdatum</string>
+    <string name="no_title">(Ingen titel)</string>
+    <string name="when_started">Vid start</string>
+    <string name="when_due">Vid förfallotid</string>
+    <string name="when_overdue">Efter förfallotid</string>
+    <string name="randomly">Slumpmässigt</string>
+    <string name="randomly_every">Slumpmässigt varje %1$s</string>
+    <string name="pick_a_date_and_time">Ställ in datum och tid</string>
+    <string name="add_reminder">Lägg till en påminnelse</string>
+    <string name="custom_notification">Anpassad avisering</string>
+    <string name="alarm_before">före</string>
+    <string name="alarm_after">efter</string>
+    <string name="alarm_start">start</string>
+    <string name="alarm_due">förfaller</string>
+    <string name="alarm_before_start">%1$s före start</string>
+    <string name="alarm_after_start">%1$s efter start</string>
+    <string name="alarm_before_due">%1$s före förfallodatum</string>
+    <string name="alarm_after_due">%1$s efter förfallodatum</string>
+    <string name="snoozed_until">Senarelagd till %1$s</string>
+    <string name="ring_once">Ring en gång</string>
+    <string name="ring_five_times">Ring fem gånger</string>
+    <string name="ring_nonstop">Ring kontinuerligt</string>
+    <string name="enable_reminders">Aktivera påminnelser</string>
+    <string name="enable_reminders_description">Påminnelser är avstängda i Android-inställningarna</string>
+    <plurals name="reminder_minutes">
+        <item quantity="one">Minut</item>
+        <item quantity="other">Minuter</item>
+    </plurals>
+    <plurals name="reminder_hours">
+        <item quantity="one">Timme</item>
+        <item quantity="other">Timmar</item>
+    </plurals>
+    <plurals name="reminder_days">
+        <item quantity="one">Dag</item>
+        <item quantity="other">Dagar</item>
+    </plurals>
+    <plurals name="reminder_week">
+        <item quantity="one">Vecka</item>
+        <item quantity="other">Veckor</item>
+    </plurals>
+    <string name="delete_task">Ta bort uppgift</string>
+    <string name="menu_discard_changes">Ignorera ändringar</string>
+    <string name="more_options">Fler alternativ</string>
+    <string name="rmd_NoA_snooze">Skjut upp</string>
+    <string name="date_shortcut_hour">En timme</string>
+    <string name="date_shortcut_morning">På morgonen</string>
+    <string name="date_shortcut_afternoon">På eftermiddagen</string>
+    <string name="date_shortcut_evening">Tidigt på kvällen</string>
+    <string name="date_shortcut_night">På natten</string>
+    <string name="date_shortcut_tomorrow_morning">Imorgon på morgonen</string>
+    <string name="date_shortcut_tomorrow_afternoon">Imorgon på eftermiddagen</string>
+    <string name="date_shortcut_tomorrow_evening">Imorgon kväll</string>
+    <string name="date_shortcut_tomorrow_night">Imorgon natt</string>
 </resources>

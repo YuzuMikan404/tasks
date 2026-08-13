@@ -101,10 +101,20 @@ jobs:
           git add .github/workflows
 
           # Fail safely if an upstream merge removed any required fork patch.
-          grep -Fq 'isLibre = true' \
+          grep -Fq ').asForkLibreBuild()' \
             composeApp/src/desktopMain/kotlin/org/tasks/di/DesktopModule.kt
+          grep -Fq 'copy(isLibre = true)' \
+            composeApp/src/desktopMain/kotlin/org/tasks/di/ForkDesktopPatches.kt
+          grep -Fq 'isForkEntitlementExempt()' \
+            composeApp/src/commonMain/kotlin/org/tasks/App.kt
+          grep -Fq 'Platform.CALDAV, Platform.ETEBASE' \
+            composeApp/src/commonMain/kotlin/org/tasks/ForkPatches.kt
           grep -Fq 'platformConfiguration.isLibre' \
             composeApp/src/commonMain/kotlin/org/tasks/di/CommonModule.kt
+          grep -Fq 'createLoopbackServerOrNull' \
+            composeApp/src/desktopMain/kotlin/org/tasks/auth/DesktopOAuthFlow.kt
+          grep -Fq 'runOnReadyOrNull' \
+            composeApp/src/desktopMain/kotlin/org/tasks/auth/DesktopOAuthFlow.kt
           grep -Fq 'icon = painterResource(Res.drawable.ic_round_icon)' \
             composeApp/src/desktopMain/kotlin/main.kt
           grep -Fq 'iconFile.set(project.file("../graphics/icon.ico"))' \

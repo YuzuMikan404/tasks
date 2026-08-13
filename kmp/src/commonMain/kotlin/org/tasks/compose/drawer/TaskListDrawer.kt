@@ -69,6 +69,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
@@ -98,6 +99,12 @@ import tasks.kmp.generated.resources.not_signed_in
 import tasks.kmp.generated.resources.search
 import tasks.kmp.generated.resources.sign_in
 
+val DrawerItemInset = 8.dp
+
+val SearchButtonSize = 56.dp
+
+private val SearchButtonGap = 16.dp
+
 @Composable
 fun TaskListDrawer(
     drawerOpen: Boolean,
@@ -110,26 +117,40 @@ fun TaskListDrawer(
     expanded: Boolean = true,
     onExpandDrawer: () -> Unit = {},
     listState: LazyListState = rememberLazyListState(),
+    searchButtonInset: Dp = 16.dp,
 ) {
-    var searchExpanded by remember { mutableStateOf(false) }
-    var query by remember { mutableStateOf("") }
+    // The query lives in the view model, not here. Where the sidebar is pinned to a rail the modal
+    // sheet's copy of this drawer is composed alongside the sidebar's, and a local copy let the two
+    // disagree: closing the sheet cleared the shared query but only the sheet's own field, leaving
+    // the sidebar showing a query the view model had already thrown away - over results that never
+    // refreshed again, because a blank query is not searched for. Reading it from the one place it
+    // is written means clearing it clears every copy at once.
+    val query = drawerState.menuQuery
 
+    // Open because this copy was asked to open it, or because there is a query to show. Both copies
+    // filter by the same query, so a copy that mounts into a search already in progress has to show
+    // the field it is filtering by rather than results with nothing to explain them.
+    var searchRequested by remember { mutableStateOf(false) }
+    val searchExpanded = searchRequested || query.isNotBlank()
+
+    // Only on a close, never on mounting already closed: the sheet is composed while shut, and a
+    // copy that cleared on mount wiped the search the sidebar was showing every time a task was
+    // opened or closed in that width band.
+    var wasOpen by remember { mutableStateOf(drawerOpen) }
     LaunchedEffect(drawerOpen) {
-        if (!drawerOpen) {
-            searchExpanded = false
-            query = ""
+        if (wasOpen && !drawerOpen) {
+            searchRequested = false
             onQueryChange("")
         }
+        wasOpen = drawerOpen
     }
 
-    val arrangement = if (searchExpanded && query.isNotBlank()) {
-        Arrangement.Bottom
-    } else {
-        Arrangement.Top
-    }
+    val arrangement = if (query.isNotBlank()) Arrangement.Bottom else Arrangement.Top
     val displayedFilters = if (query.isNotBlank()) drawerState.searchItems else drawerState.drawerItems
     val systemBarPadding = WindowInsets.systemBars.asPaddingValues()
     val bottomNavPadding = systemBarPadding.calculateBottomPadding()
+    val topGutter = systemBarPadding.calculateTopPadding() + searchButtonInset
+    val bottomGutter = searchButtonInset + SearchButtonSize + SearchButtonGap + bottomNavPadding
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -140,8 +161,8 @@ fun TaskListDrawer(
             modifier = Modifier.fillMaxSize(),
             state = listState,
             contentPadding = PaddingValues(
-                top = maxOf(systemBarPadding.calculateTopPadding(), 8.dp),
-                bottom = 88.dp + bottomNavPadding,
+                top = topGutter,
+                bottom = bottomGutter,
             ),
             verticalArrangement = arrangement,
         ) {
@@ -162,8 +183,8 @@ fun TaskListDrawer(
                 Surface(
                     modifier = Modifier
                         .padding(
-                            start = 8.dp,
-                            end = 8.dp,
+                            start = DrawerItemInset,
+                            end = DrawerItemInset,
                             top = if (isFirst && index > 0) 8.dp else 0.dp,
                         ),
                     shape = shape,
@@ -201,14 +222,11 @@ fun TaskListDrawer(
         ) {
         SearchFab(
             expanded = searchExpanded,
-            onExpandedChange = { searchExpanded = it },
+            onExpandedChange = { searchRequested = it },
             query = query,
-            onQueryChange = { newQuery ->
-                query = newQuery
-                onQueryChange(newQuery)
-            },
+            onQueryChange = onQueryChange,
             modifier = Modifier
-                .padding(bottom = 16.dp + bottomNavPadding),
+                .padding(bottom = searchButtonInset + bottomNavPadding),
         )
         }
     }
@@ -280,7 +298,7 @@ private fun SearchFab(
                 )
             } else {
                 Box(
-                    modifier = Modifier.size(56.dp),
+                    modifier = Modifier.size(SearchButtonSize),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(

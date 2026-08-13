@@ -124,7 +124,6 @@
     <string name="EPr_voiceInputEnabled_title">Entrada de voz</string>
     <string name="EPr_voiceRemindersEnabled_title">Avisos de voz</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">Tasks diralle os nomes das tarefas durante os avisos</string>
-    <string name="delete_task">Borrar tarefa</string>
     <string name="voice_command_added_task">Tarefa engadida</string>
     <plurals name="Ntasks">
         <item quantity="one">1 tarefa</item>
@@ -146,21 +145,13 @@
     <string name="customize_edit_screen">Personalizar pantalla de edición</string>
     <string name="translations">Contribúe coa tradución</string>
     <string name="quiet_hours_summary">Sen avisos en horario silencioso</string>
-    <string name="add_reminder">Engadir recordatorio</string>
     <string name="remove">Borrar</string>
-    <string name="randomly">Ao chou</string>
-    <string name="pick_a_date_and_time">Elixir unha data e hora</string>
-    <string name="when_overdue">Si está atrasada</string>
-    <string name="when_due">Ao vencemento</string>
     <string name="tags">Etiquetas</string>
     <string name="filters">Filtros</string>
-    <string name="date_shortcut_hour">Por unha hora</string>
     <string name="date_shortcut_morning">Mañá</string>
     <string name="date_shortcut_afternoon">Tarde</string>
     <string name="date_shortcut_evening">Amencer</string>
     <string name="date_shortcut_night">Noite</string>
-    <string name="date_shortcut_tomorrow_morning">Mañá pola mañá</string>
-    <string name="date_shortcut_tomorrow_afternoon">Mañá á tarde</string>
     <string name="date_shortcut_must_come_before">%1$s debe vir antes de %2$s</string>
     <string name="date_shortcut_must_come_after">%1$s debe venir depois de %2$s</string>
     <string name="discard_changes">Descartar os cambios\?</string>
@@ -175,7 +166,6 @@
     <string name="pick_from_gallery">Elixir desde a galería</string>
     <string name="pick_from_storage">Elixir desde o almacenamento</string>
     <string name="name_cannot_be_empty">O nome non pode quedar valeiro</string>
-    <string name="no_title">(Sen título)</string>
     <string name="back_button_saves_task">Botón atrás garda a tarefa</string>
     <string name="default_list">Lista por defecto</string>
     <string name="filter">Filtro</string>
@@ -207,9 +197,7 @@
     <string name="documentation">Documentación</string>
     <string name="filter_medium_priority">Prioridade intermedia</string>
     <string name="filter_no_priority">Sen prioridade</string>
-    <string name="repeat_type_due">data de fin</string>
     <string name="geofence_radius">Radio da xeocerca</string>
-    <string name="repeats_yearly">por ano</string>
     <string name="button_subscribe">Suscribirse</string>
     <string name="pro_dashclock_extension">Engadido de reloxo</string>
     <string name="widget_show_dividers">Amosar divisores</string>
@@ -230,12 +218,6 @@
     <string name="badges">Contadores</string>
     <string name="list">Lista</string>
     <string name="repeats_from">Repetir desde</string>
-    <string name="repeats_single_on">Repetir %1$s o %2$s</string>
-    <string name="repeats_single_until">Repítese %1$s, remata o %2$s</string>
-    <string name="repeats_single_on_number_of_times">Repetir %1$s en %2$s, ocorre que %3$d %4$s</string>
-    <string name="repeats_monthly">por mes</string>
-    <string name="repeats_plural">Repetir cada %s</string>
-    <string name="repeats_plural_until">Repítese cada %1$s, remata o %2$s</string>
     <string name="repeats_plural_number_of_times">Repetir cada %1$s, ocorre que %2$d %3$s</string>
     <string name="list_separator_with_space">", "</string>
     <string name="tasker_create_task">Crear tarefa</string>
@@ -254,14 +236,11 @@
         <item quantity="other">tempos</item>
     </plurals>
     <string name="add_location">Engadir posición</string>
-    <string name="randomly_every">Ao chou cada %s</string>
-    <string name="when_started">Cando comece</string>
     <string name="location_radius_meters">%s m</string>
     <string name="filter_criteria_unstarted">Sen comezar</string>
     <string name="no_app_found">Ningunha app pode xestionar esta solicitude</string>
     <string name="action_create_new_task">Crear nova tarefa</string>
     <string name="show_description">Amosar descrición</string>
-    <string name="repeats_plural_on">Repetir cada %1$s en %2$s</string>
     <string name="location_remind_arrival">Recordatorio de chegada</string>
     <string name="location_remind_departure">Recordatorio de saída</string>
     <string name="visit_website">Visitar a páxina web</string>
@@ -283,27 +262,20 @@
     <string name="filter_eisenhower_box_4">Non importantes ou urxentes</string>
     <string name="calendar_event_created">Creouse o evento no calendario para %s</string>
     <string name="select_all">Escoller todo</string>
-    <string name="date_shortcut_tomorrow_night">Mañá á noite</string>
     <string name="help">Axuda</string>
     <string name="help_and_feedback">Axuda e soporte</string>
     <string name="refresh_purchases">Anovar as compras</string>
     <string name="sign_in_with_google">Acceso con Google</string>
     <string name="authentication_required">Precísase autenticación</string>
-    <string name="custom_notification">Notificación habitual</string>
     <string name="share">Compartir</string>
     <string name="settings_default">Predefinido</string>
     <string name="migrate_count">Mover %s a Tasks.org</string>
-    <string name="more_options">Máis opcións</string>
     <string name="snackbar_tasks_completed">%d tarefas finalizadas</string>
     <string name="now">Agora</string>
     <string name="header_spacing">Espazado</string>
     <string name="subtasks">Subtarefas</string>
-    <string name="menu_discard_changes">Descartar mudanzas</string>
     <string name="widget_open_list">Abrir lista</string>
     <string name="user">Usuario/a</string>
-    <string name="repeats_hourly">por hora</string>
-    <string name="repeats_plural_on_until">Repítese cada %1$s o %2$s, remata o %3$s</string>
-    <string name="repeats_plural_on_number_of_times">Repetir cada %1$s o %2$s, ocorre que %3$d %4$s</string>
     <string name="requires_pro_subscription">Precísase dunha subscrición pro</string>
     <string name="this_feature_requires_a_subscription">Esta característica necesita dunha suscrición</string>
     <string name="show_advanced_settings">Amosar configuración avanzada</string>
@@ -322,15 +294,12 @@
     <string name="lists">Listas</string>
     <string name="last_backup">Última copia de seguranza: %s</string>
     <string name="app_passwords_more_info">Sincroniza as tarefas e os calendarios en aplicativos de terceiros para escritorio ou dispositivos móbiles. Preme aquí para máis información</string>
-    <string name="repeats_weekly">por semana</string>
     <string name="TEA_timer_est">Est. %s</string>
     <string name="sort_created">Por data de creación</string>
     <string name="action_call">Chamar</string>
     <string name="display_name">Mostrar o nome</string>
     <string name="url">URL</string>
-    <string name="repeats_single">Repite %s</string>
     <string name="default_calendar">Calendario por defecto</string>
-    <string name="repeats_minutely">por minuto</string>
     <string name="bundle_notifications">Lote de notificacións</string>
     <string name="badges_description">Amosar un contador de tarefas na icona de Tasks no panel. Non todos os paneis aceptan os contadores.</string>
     <string name="bundle_notifications_summary">Xunguir varias notificacións nunha soa</string>
@@ -346,11 +315,9 @@
     <string name="multi_select_reschedule">Reprogramar</string>
     <string name="SSD_sort_my_order">O meu pedido</string>
     <string name="TEA_control_location">Posición</string>
-    <string name="date_shortcut_tomorrow_evening">Mañá ao amencer</string>
     <string name="move">Mocer</string>
     <string name="widget_due_date_hidden">Agochar</string>
     <string name="password">Contrasinal</string>
-    <string name="repeats_daily">por día</string>
     <string name="logout">Saír</string>
     <string name="reinitialize_account">Reiniciar</string>
     <string name="action_new_task">Nova tarefa</string>
@@ -372,8 +339,6 @@
     <string name="opacity_footer">Opacidade do rodapé</string>
     <string name="launcher_icon">Icona de escritorio</string>
     <string name="theme_system_default">Predefinido do sistema</string>
-    <string name="repeats_single_number_of_times">Repetir %1$s, ocorre que %2$d %3$s</string>
-    <string name="repeats_single_on_until">Repítese %1$s o %2$s, remata o %3$s</string>
     <string name="dont_add_to_calendar">Non engadir ao calendario</string>
     <string name="background_location_permission_required">Tasks recolle información de posicións para ser quen de amosar os recordatorios con información de posicións, incluído cando o aplicativo non estea aberto.</string>
     <string name="location_permission_required_location">Non se precisa de permisos de posición para facer a busca da posición actual</string>
@@ -416,20 +381,10 @@
     <string name="app_password">Contrasinal da app</string>
     <string name="copied_to_clipboard">%s copiadas ao portaretallos</string>
     <string name="completed">Finalizada</string>
-    <string name="snoozed_until">Posposta ata %s</string>
-    <plurals name="reminder_minutes">
-        <item quantity="one">Minuto</item>
-        <item quantity="other">Minutos</item>
-    </plurals>
     <string name="snackbar_task_completed">Tarefa finalizada</string>
-    <string name="alarm_before_start">%s antes do inicio</string>
-    <string name="alarm_after_start">%s despois do inicio</string>
-    <string name="alarm_before_due">%s antes do límite</string>
-    <string name="alarm_after_due">%s despois do límite</string>
     <string name="CFC_startBefore_text">Comeza con: \?</string>
     <string name="CFC_startBefore_name">Comezar por…</string>
     <string name="filter_any_start_date">Calquera data de inicio</string>
-    <string name="repeat_type_completion">data de finalización</string>
     <string name="repeat_type_completion_capitalized">Data de finalización</string>
     <string name="app_settings">Configuración da aplicación</string>
     <string name="customize_drawer">Personalizar caixón</string>
@@ -502,8 +457,6 @@
     <string name="dismiss">Descartar</string>
     <string name="hint_customize_edit_title">Demasiada información?</string>
     <string name="hint_customize_edit_body">Podes personalizar esta pantalla reorganizando ou eliminando campos</string>
-    <string name="enable_reminders">Activar recordatorios</string>
-    <string name="enable_reminders_description">Os recordatorios están desactivados na Configuración de Android</string>
     <string name="enable_alarms">Recibir notificacións no momento adecuado</string>
     <string name="enable_alarms_description">Para asegurarte de que recibes notificacións no momento adecuado, concede permiso para configurar alarmas e recordatorios na Configuración</string>
     <string name="cost_money">Custo: $</string>
@@ -521,36 +474,16 @@
         <item quantity="one">%d minuto</item>
         <item quantity="other">%d minutos</item>
     </plurals>
-    <plurals name="reminder_hours">
-        <item quantity="one">Hora</item>
-        <item quantity="other">Horas</item>
-    </plurals>
     <plurals name="repeat_n_hours">
         <item quantity="one">%d hora</item>
         <item quantity="other">%d horas</item>
-    </plurals>
-    <plurals name="reminder_days">
-        <item quantity="one">Día</item>
-        <item quantity="other">Días</item>
     </plurals>
     <plurals name="repeat_n_days">
         <item quantity="one">%d día</item>
         <item quantity="other">%d días</item>
     </plurals>
-    <plurals name="reminder_week">
-        <item quantity="one">Semana</item>
-        <item quantity="other">Semanas</item>
-    </plurals>
     <plurals name="repeat_n_weeks">
         <item quantity="one">%d semana</item>
         <item quantity="other">%d semanas</item>
-    </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="one">%d mes</item>
-        <item quantity="other">%d meses</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d ano</item>
-        <item quantity="other">%d anos</item>
     </plurals>
 </resources>

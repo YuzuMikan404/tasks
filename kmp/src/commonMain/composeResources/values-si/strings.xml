@@ -42,6 +42,8 @@
     <string name="google_tasks_selection_description">ඔබගේ Google ගිණුම සමඟ සමමුහුර්ත කරන මූලික සේවාව</string>
     <string name="name_your_price">මිලක් නියම කරන්න</string>
     <string name="upgrade_to_pro">Pro වෙත උත්ශ්‍රේණි කරන්න</string>
+    <string name="ok">හරි</string>
+    <string name="cancel">අවලංගු කරන්න</string>
     <string name="caldav_selection_description">විවෘත අන්තර්ජාල ප්‍රමිතීන් මත පදනම් වූ සමමුහුර්තකරණය</string>
     <string name="davx5_selection_description">DAVx⁵ යෙදුම සමඟ ඔබගේ කාර්යයන් සමමුහුර්ත කරන්න</string>
     <string name="etesync_selection_description">End-to-end encrypted සමමුහුර්තකරණය</string>
@@ -232,4 +234,98 @@
         <item quantity="other">වසර</item>
     </plurals>
     <string name="repeat_monthly_every_day_of_nth_week">සෑම %1$s %2$s</string>
+    <string name="repeats_single">පුනරාවර්තනය %1$s</string>
+    <string name="repeats_single_on">%1$s, %2$s පුනරාවර්තනය වේ</string>
+    <string name="repeats_single_until">%2$s දක්වා %1$s පුනරාවර්තනය වේ</string>
+    <string name="repeats_single_number_of_times">පුනරාවර්තනය %1$s, %2$d %3$s සිදු වේ</string>
+    <string name="repeats_single_on_until">පුනරාවර්තනය %1$s %2$s වනදා, %3$s වන තුරු</string>
+    <string name="repeats_single_on_number_of_times">පුනරාවර්තනය %1$s %2$s දින, %3$d %4$s</string>
+    <string name="repeats_plural">සෑම %1$s පුනරාවර්තනය වේ</string>
+    <string name="repeats_plural_on">පුනරාවර්තනය සෑම %1$s, %2$s</string>
+    <string name="repeats_plural_until">පුනරාවර්තනය සෑම %1$s, %2$s වන තෙක්</string>
+    <string name="repeats_plural_number_of_times">පුනරාවර්තනය සෑම %1$s, %2$d %3$s සිදු වේ</string>
+    <string name="repeats_plural_on_until">පුනරාවර්තනය සෑම %1$s %2$s, %3$s දක්වා</string>
+    <string name="repeats_plural_on_number_of_times">පුනරාවර්තනය සෑම %1$s %2$s, %3$d %4$s සිදු වේ</string>
+    <string name="repeats_minutely">මිනිත්තුවකට</string>
+    <string name="repeats_hourly">පැයට</string>
+    <string name="repeats_daily">දිනපතා</string>
+    <string name="repeats_weekly">සතිපතා</string>
+    <string name="repeats_monthly">මාසිකව</string>
+    <string name="repeats_yearly">වාර්ෂික</string>
+    <string name="list_separator_with_space">, </string>
+    <string name="repeats_from">පුනරාවර්තනය වනුයේ</string>
+    <string name="repeat_type_due">නියමිත දිනය</string>
+    <string name="repeat_type_completion">සම්පූර්ණ කරන දිනය</string>
+    <string name="TEA_control_repeat">පුනරාවර්තනය</string>
+    <plurals name="repeat_times">
+        <item quantity="one">වරක්</item>
+        <item quantity="other">වාර</item>
+    </plurals>
+    <plurals name="repeat_n_minutes">
+        <item quantity="one">විනාඩි %1$d</item>
+        <item quantity="other">විනාඩි %1$d</item>
+    </plurals>
+    <plurals name="repeat_n_hours">
+        <item quantity="one">පැය %1$d ක්</item>
+        <item quantity="other">පැය %1$d</item>
+    </plurals>
+    <plurals name="repeat_n_days">
+        <item quantity="one">දින %1$dක්</item>
+        <item quantity="other">දින %1$d</item>
+    </plurals>
+    <plurals name="repeat_n_weeks">
+        <item quantity="one">සති %1$dක්</item>
+        <item quantity="other">සති %1$d</item>
+    </plurals>
+    <plurals name="repeat_n_months">
+        <item quantity="one">මාස %1$dක්</item>
+        <item quantity="other">මාස %1$d</item>
+    </plurals>
+    <plurals name="repeat_n_years">
+        <item quantity="one">වසර %1$dක්</item>
+        <item quantity="other">වසර %1$d</item>
+    </plurals>
+    <string name="repeat_type_completion_capitalized">සම්පූර්ණ කරන දිනය</string>
+    <string name="no_title">(මාතෘකාවක් නැත)</string>
+    <string name="when_started">ආරම්භ කළ විට</string>
+    <string name="when_due">නියමිත විට</string>
+    <string name="when_overdue">කල් ඉකුත් වූ විට</string>
+    <string name="randomly">අහඹු ලෙස</string>
+    <string name="randomly_every">අහඹු ලෙස සෑම %1$s</string>
+    <string name="pick_a_date_and_time">දිනයක් සහ වේලාවක් තෝරන්න</string>
+    <string name="add_reminder">මතක් කිරීමක් එක් කරන්න</string>
+    <string name="alarm_before_start">%1$s ආරම්භයට පෙර</string>
+    <string name="alarm_after_start">%1$s ආරම්භයෙන් පසුව</string>
+    <string name="ring_once">එක් වරක් නාද කරන්න</string>
+    <string name="ring_five_times">පස් වතාවක් නාද කරන්න</string>
+    <string name="ring_nonstop">නොනවත්වාම නාද කරන්න</string>
+    <plurals name="reminder_minutes">
+        <item quantity="one">මිනිත්තුව</item>
+        <item quantity="other">මිනිත්තු</item>
+    </plurals>
+    <plurals name="reminder_hours">
+        <item quantity="one">පැය</item>
+        <item quantity="other">පැය</item>
+    </plurals>
+    <plurals name="reminder_days">
+        <item quantity="one">දිනය</item>
+        <item quantity="other">දින</item>
+    </plurals>
+    <plurals name="reminder_week">
+        <item quantity="one">සතිය</item>
+        <item quantity="other">සති</item>
+    </plurals>
+    <string name="delete_task">කාර්යය මකන්න</string>
+    <string name="menu_discard_changes">වෙනස්කම් අහෝසිකිරීම</string>
+    <string name="more_options">තවත් විකල්පයන්</string>
+    <string name="rmd_NoA_snooze">මඳකට මගහරින්න</string>
+    <string name="date_shortcut_hour">පැයකට</string>
+    <string name="date_shortcut_morning">උදෑසන</string>
+    <string name="date_shortcut_afternoon">දහවල්</string>
+    <string name="date_shortcut_evening">සවස</string>
+    <string name="date_shortcut_night">රාත්‍රී</string>
+    <string name="date_shortcut_tomorrow_morning">හෙට උදෑසන</string>
+    <string name="date_shortcut_tomorrow_afternoon">හෙට හවස</string>
+    <string name="date_shortcut_tomorrow_evening">හෙට හවස</string>
+    <string name="date_shortcut_tomorrow_night">හෙට රාත්‍රී</string>
 </resources>

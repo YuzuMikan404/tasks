@@ -140,18 +140,6 @@
         <item quantity="many">%d semaines</item>
         <item quantity="other">%d semaines</item>
     </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="one">%d mois</item>
-        <item quantity="many">%d mois</item>
-        <item quantity="other">%d mois</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d an</item>
-        <item quantity="many">%d ans</item>
-        <item quantity="other">%d ans</item>
-    </plurals>
-    <string name="repeat_type_due">la date d\'échéance</string>
-    <string name="repeat_type_completion">date d\'achèvement</string>
     <string name="repeat_snackbar">%1$s replanifiée à %2$s</string>
     <string name="new_tag">Créer une nouvelle étiquette</string>
     <string name="new_list">Créer une nouvelle liste</string>
@@ -165,7 +153,6 @@
     <string name="EPr_voiceInputEnabled_title">Saisie vocale</string>
     <string name="EPr_voiceRemindersEnabled_title">Rappels vocaux</string>
     <string name="EPr_voiceRemindersEnabled_desc_enabled">Tasks énoncera les noms des tâches lors des rappels de tâches</string>
-    <string name="delete_task">Supprimer la tâche</string>
     <string name="voice_command_added_task">Tâche ajoutée</string>
     <plurals name="Ntasks">
         <item quantity="one">%d tâche</item>
@@ -188,22 +175,14 @@
     <string name="customize_edit_screen">Personnaliser l\'écran d\'édition</string>
     <string name="translations">Contribuer aux traductions</string>
     <string name="quiet_hours_summary">Aucun rappel durant les heures de repos</string>
-    <string name="add_reminder">Ajouter un rappel</string>
     <string name="add_location">Ajouter un emplacement</string>
     <string name="remove">Retirer</string>
-    <string name="randomly">Aléatoirement</string>
-    <string name="pick_a_date_and_time">Choisir une date et une heure</string>
-    <string name="when_overdue">En cas de retard</string>
-    <string name="when_due">À l\'échéance</string>
     <string name="geofence_radius">Rayon de la barrière géographique</string>
     <string name="filters">Filtres</string>
-    <string name="date_shortcut_hour">Pendant une heure</string>
     <string name="date_shortcut_morning">Matin</string>
     <string name="date_shortcut_afternoon">Après-midi</string>
     <string name="date_shortcut_evening">Soir</string>
     <string name="date_shortcut_night">Nuit</string>
-    <string name="date_shortcut_tomorrow_morning">Demain matin</string>
-    <string name="date_shortcut_tomorrow_afternoon">Demain après-midi</string>
     <string name="date_shortcut_must_come_before">%1$s doit venir avant %2$s</string>
     <string name="date_shortcut_must_come_after">%1$s doit venir après %2$s</string>
     <string name="discard_changes">Ignorer les modifications \?</string>
@@ -219,7 +198,6 @@
     <string name="pick_from_gallery">Choisir depuis la galerie</string>
     <string name="pick_from_storage">Choisir depuis le stockage</string>
     <string name="name_cannot_be_empty">Le nom doit être renseigné</string>
-    <string name="no_title">(Sans titre)</string>
     <string name="back_button_saves_task">Le bouton « Retour » enregistre la tâche</string>
     <string name="default_list">Liste par défaut</string>
     <string name="filter">Filtre</string>
@@ -252,24 +230,7 @@
     <string name="bundle_notifications">Regrouper les notifications</string>
     <string name="list">Liste</string>
     <string name="repeats_from">Répéter depuis</string>
-    <string name="repeats_single">Répéter %s</string>
-    <string name="repeats_single_on">Répéter %1$s, le %2$s</string>
-    <string name="repeats_single_until">Répéter %1$s, jusqu\'au %2$s</string>
-    <string name="repeats_single_number_of_times">Répéter %1$s, %2$d %3$s</string>
-    <string name="repeats_single_on_until">Répéter %1$s, le %2$s, jusqu\'au %3$s</string>
-    <string name="repeats_single_on_number_of_times">Répéter %1$s, le %2$s, %3$d %4$s</string>
-    <string name="repeats_minutely">toutes les minutes</string>
-    <string name="repeats_hourly">toutes les heures</string>
-    <string name="repeats_daily">tous les jours</string>
-    <string name="repeats_weekly">toutes les semaines</string>
-    <string name="repeats_monthly">tous les mois</string>
-    <string name="repeats_yearly">tous les ans</string>
-    <string name="repeats_plural">Répéter par intervalle de %s</string>
-    <string name="repeats_plural_on">Répéter par intervalle de %1$s, le %2$s</string>
-    <string name="repeats_plural_until">Répéter par intervalle de %1$s, jusqu\'au %2$s</string>
     <string name="repeats_plural_number_of_times">Répéter par intervalle de %1$s, %2$d %3$s</string>
-    <string name="repeats_plural_on_until">Répéter par intervalle de %1$s, le %2$s, jusqu\'au %3$s</string>
-    <string name="repeats_plural_on_number_of_times">Répéter par intervalle de %1$s, le %2$s, %3$d %4$s</string>
     <string name="dont_add_to_calendar">Ne pas ajouter au calendrier</string>
     <string name="default_calendar">Calendrier par défaut</string>
     <string name="badges_description">Afficher un compteur de tâches sur l\'icône du lanceur de Tasks. Certains lanceurs ne supportent pas les badges.</string>
@@ -352,7 +313,6 @@
     <string name="place_settings">Paramètres de lieu</string>
     <string name="hide_unused_tags">Masquer les étiquettes inutilisées</string>
     <string name="hide_unused_places">Masquer les lieux inutilisés</string>
-    <string name="menu_discard_changes">Ignorer les modifications</string>
     <string name="chip_appearance_text_and_icon">Texte et icône</string>
     <string name="chip_appearance_text_only">Texte seul</string>
     <string name="chip_appearance_icon_only">Icône seule</string>
@@ -411,8 +371,6 @@
     <string name="astrid_sort_order_summary">Activez le mode de tri manuel d’Astrid pour « Mes tâches », « Aujourd\'hui », et les étiquettes. Ce mode de tri sera remplacé par « Mon tri » dans une future mise à jour</string>
     <string name="astrid_sort_order">Tri manuel Astrid</string>
     <string name="CFC_list_name">Dans la liste…</string>
-    <string name="date_shortcut_tomorrow_evening">Demain soir</string>
-    <string name="date_shortcut_tomorrow_night">La nuit prochaine</string>
     <string name="reset_sort_order">Réinitialiser l’ordre de tri</string>
     <string name="permission_read_tasks">Accès complet à la base de données de Tasks</string>
     <string name="davx5_selection_description">Synchroniser vos tâches avec l’application « DAVx⁵ »</string>
@@ -474,7 +432,6 @@
     <string name="privacy">Confidentialité</string>
     <string name="open_source">Code source ouvert</string>
     <string name="support">Aide</string>
-    <string name="more_options">Plus d’options</string>
     <string name="upgrade_open_source_description">Votre abonnement soutient le développement continu</string>
     <string name="upgrade_tasks_org_account_description">Synchronisez avec « Tasks.org » et collaborez avec les autres utilisateurs</string>
     <string name="upgrade_more_customization_description">Déverrouillez tous les thèmes, couleurs et icônes</string>
@@ -483,45 +440,15 @@
     <string name="markdown_description">Activer « Markdown » dans le titre et la description</string>
     <string name="markdown">« Markdown »</string>
     <string name="now">Maintenant</string>
-    <string name="when_started">Lorsqu\'il est démarré</string>
     <string name="completion_sound">Jouer le son d\'achèvement</string>
     <string name="completed">Terminé</string>
     <string name="snackbar_task_completed">Tâche terminée</string>
     <string name="snackbar_tasks_completed">%d tâches terminées</string>
-    <string name="alarm_before_start">%s avant le début</string>
-    <string name="alarm_after_start">%s après le début</string>
-    <string name="alarm_before_due">%s avant l\'échéance</string>
-    <string name="alarm_after_due">%s après l\'échéance</string>
     <string name="custom_filter_has_reminder">A un rappel</string>
-    <string name="snoozed_until">Reporter jusqu\'à %s</string>
-    <plurals name="reminder_days">
-        <item quantity="one">Jour</item>
-        <item quantity="many">Jours</item>
-        <item quantity="other">Jours</item>
-    </plurals>
-    <plurals name="reminder_week">
-        <item quantity="one">Semaine</item>
-        <item quantity="many">Semaines</item>
-        <item quantity="other">Semaines</item>
-    </plurals>
-    <plurals name="reminder_minutes">
-        <item quantity="one">Minute</item>
-        <item quantity="many">Minutes</item>
-        <item quantity="other">Minutes</item>
-    </plurals>
-    <plurals name="reminder_hours">
-        <item quantity="one">Heure</item>
-        <item quantity="many">Heures</item>
-        <item quantity="other">Heures</item>
-    </plurals>
-    <string name="custom_notification">Notification personnalisée</string>
-    <string name="randomly_every">Aléatoirement, par intervalle de %s</string>
     <string name="dismiss">Rejeter</string>
     <string name="customize_edit_screen_summary">Réorganiser ou supprimer des champs</string>
     <string name="hint_customize_edit_body">Vous pouvez personnaliser cet écran en réorganisant ou en supprimant des champs</string>
     <string name="hint_customize_edit_title">Trop d\'informations \?</string>
-    <string name="enable_reminders_description">Les rappels sont désactivés dans les paramètres Android</string>
-    <string name="enable_reminders">Activer les rappels</string>
     <string name="TEA_creation_date">Date de création</string>
     <string name="sort_completion_group">Achèvement %s</string>
     <string name="sort_list">Par liste</string>
@@ -577,10 +504,6 @@
     <string name="import_failed">Échec de l\'importation</string>
     <string name="banner_subscription_required_title">Abonnement requis</string>
     <string name="banner_subscription_required_body">Payez ce que vous voulez pour déverrouiller la synchronisation %s</string>
-    <string name="alarm_before">avant</string>
-    <string name="alarm_after">après</string>
-    <string name="alarm_start">début le</string>
-    <string name="alarm_due">échéance le</string>
     <string name="email_to_task">Courriel en tâche</string>
     <string name="email_to_task_address">Votre adresse électronique</string>
     <string name="rmd_EPr_rmd_time_desc">Les notifications pour toutes les tâches quotidiennes apparaîtront à %1$s</string>

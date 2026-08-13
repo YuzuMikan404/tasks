@@ -15,14 +15,6 @@
     <string name="TEA_control_gcal">କ୍ୟାଲେଣ୍ଡର</string>
     <string name="TEA_control_importance">ପ୍ରାଥମିକତା</string>
     <string name="TEA_control_notes">ଵର୍ଣ୍ଣନା</string>
-    <plurals name="reminder_minutes">
-        <item quantity="one">ମିନିଟ୍</item>
-        <item quantity="other">ମିନିଟ୍</item>
-    </plurals>
-    <plurals name="reminder_hours">
-        <item quantity="one">ଘଣ୍ଟା</item>
-        <item quantity="other">ଘଣ୍ଟା</item>
-    </plurals>
     <plurals name="repeat_n_minutes">
         <item quantity="one">%d ମିନିଟ୍</item>
         <item quantity="other">%d ମିନିଟ୍</item>
@@ -31,14 +23,6 @@
         <item quantity="one">%d ଦିନ</item>
         <item quantity="other">%d ଦିନ</item>
     </plurals>
-    <plurals name="reminder_days">
-        <item quantity="one">ଦିନ</item>
-        <item quantity="other">ଦିନ</item>
-    </plurals>
-    <plurals name="repeat_n_months">
-        <item quantity="one">%d ମାସ</item>
-        <item quantity="other">%d ମାସ</item>
-    </plurals>
     <string name="now">ଏବେ</string>
     <string name="today">ଆଜି</string>
     <string name="widget_show_dividers">ଵିଭାଜକ ଦେଖାଅ</string>
@@ -46,9 +30,6 @@
     <string name="date_shortcut_afternoon">ଅପରାହ୍ଣ</string>
     <string name="date_shortcut_evening">ସଞ୍ଜ</string>
     <string name="date_shortcut_night">ରାତି</string>
-    <string name="date_shortcut_tomorrow_evening">ଆସନ୍ତାକାଲି ସଞ୍ଜ</string>
-    <string name="date_shortcut_tomorrow_night">ଆସନ୍ତାକାଲି ରାତି</string>
-    <string name="date_shortcut_tomorrow_morning">ଆସନ୍ତାକାଲି ସକାଳ</string>
     <string name="filters">ଶୋଧକ</string>
     <string name="name_cannot_be_empty">ନାମ ଖାଲି ଛଡ଼ା ଯାଇପାରିବ ନାହିଁ</string>
     <string name="theme">ଥିମ୍</string>
@@ -58,7 +39,6 @@
     <string name="user">ଉପଭୋକ୍ତା</string>
     <string name="password">ପାସ୍‍ୱର୍ଡ଼</string>
     <string name="url">URL</string>
-    <string name="repeats_hourly">ପ୍ରତି ଘଣ୍ଟା</string>
     <string name="help">ସହାୟତା</string>
     <string name="help_and_feedback">ସାହାଯ୍ୟ ଓ ମତାମତ</string>
     <string name="preferences_advanced">ଵିକଶିତ</string>
@@ -78,14 +58,6 @@
         <item quantity="one">%d ଘଣ୍ଟା</item>
         <item quantity="other">%d ଘଣ୍ଟା</item>
     </plurals>
-    <plurals name="reminder_week">
-        <item quantity="one">ସପ୍ତାହ</item>
-        <item quantity="other">ସପ୍ତାହ</item>
-    </plurals>
-    <plurals name="repeat_n_years">
-        <item quantity="one">%d ଵର୍ଷ</item>
-        <item quantity="other">%d ଵର୍ଷ</item>
-    </plurals>
     <plurals name="repeat_n_weeks">
         <item quantity="one">%d ସପ୍ତାହ</item>
         <item quantity="other">%d ସପ୍ତାହ</item>
@@ -96,15 +68,12 @@
     </plurals>
     <string name="widget_show_menu">ମେନୁ ଦେଖାଅ</string>
     <string name="translations">ଅନୁଵାଦରେ ଯୋଗଦାନ କରନ୍ତୁ</string>
-    <string name="date_shortcut_hour">ଘଣ୍ଟାଏ ପାଇଁ</string>
-    <string name="date_shortcut_tomorrow_afternoon">ଆସନ୍ତାକାଲି ଅପରାହ୍ଣ</string>
     <string name="theme_black">କଳା</string>
     <string name="language">ଭାଷା</string>
     <string name="theme_system_default">ସିଷ୍ଟମ୍ ଡିଫଲ୍ଟ</string>
     <string name="restart_later">ପରେ</string>
     <string name="widget_due_date_after_title">ଆଖ୍ୟା ପରେ</string>
     <string name="widget_due_date_below_title">ଆଖ୍ୟା ତଳେ</string>
-    <string name="repeats_minutely">ପ୍ରତି ମିନିଟ୍</string>
     <string name="show_description">ଵର୍ଣ୍ଣନା ଦେଖାଅ</string>
     <string name="show_full_description">ସମ୍ପୂର୍ଣ୍ଣ ଵର୍ଣ୍ଣନା ଦେଖାଅ</string>
     <string name="color_wheel">ରଙ୍ଗ ଚକ୍ର</string>
@@ -113,7 +82,6 @@
     <string name="last_backup">ଗତ ବ୍ୟାକଅପ୍: %s</string>
     <string name="TVA_add_comment">ଏକ ମନ୍ତଵ୍ୟ ଯୋଡ଼ନ୍ତୁ…</string>
     <string name="github_sponsor">ପ୍ରାୟୋଜକ</string>
-    <string name="more_options">ଅଧିକ ଵିକଳ୍ପ</string>
     <string name="support">ସମର୍ଥନ</string>
     <string name="privacy">ଗୋପନୀୟତା</string>
     <string name="app_password">ଆପ୍ ପାସ୍‍ୱର୍ଡ଼</string>
