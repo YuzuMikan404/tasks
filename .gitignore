@@ -18,5 +18,8 @@ Thumbs.db
 .DS_Store
 __pycache__/
 
+# Local AI knowledge (must not be published)
+/.ai/
+
 # Local AI handoff notes (must not be published)
 /AI_HANDOFF_LOCAL.md
