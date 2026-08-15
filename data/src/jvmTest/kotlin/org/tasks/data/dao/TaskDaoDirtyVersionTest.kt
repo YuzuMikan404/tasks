@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
@@ -16,6 +17,8 @@ import org.tasks.data.entity.CaldavAccount.Companion.TYPE_GOOGLE_TASKS
 import org.tasks.data.entity.CaldavAccount.Companion.TYPE_LOCAL
 import org.tasks.data.entity.CaldavAccount.Companion.TYPE_MICROSOFT
 import org.tasks.data.entity.CaldavCalendar
+import org.tasks.data.entity.CaldavCalendar.Companion.ACCESS_OWNER
+import org.tasks.data.entity.CaldavCalendar.Companion.ACCESS_READ_ONLY
 import org.tasks.data.entity.CaldavTask
 import org.tasks.data.entity.Task
 
@@ -24,6 +27,7 @@ class TaskDaoDirtyVersionTest {
     private lateinit var taskDao: TaskDao
     private lateinit var caldavDao: CaldavDao
     private lateinit var dirtyDao: DirtyDao
+    private lateinit var googleTaskDao: GoogleTaskDao
 
     @Before
     fun setUp() {
@@ -34,6 +38,7 @@ class TaskDaoDirtyVersionTest {
         taskDao = db.taskDao()
         caldavDao = db.caldavDao()
         dirtyDao = db.dirtyDao()
+        googleTaskDao = db.googleTaskDao()
     }
 
     @After
@@ -73,10 +78,73 @@ class TaskDaoDirtyVersionTest {
     }
 
     @Test
-    fun hasDirtyTasksIgnoresLocalAccount() = runBlocking {
+    fun syncableDirtyVersionsIgnoreLocalAccount() = runBlocking {
         createTaskWithCaldavTask(accountType = TYPE_LOCAL)
 
-        assertEquals(false, dirtyDao.hasDirtyTasks().first())
+        assertEquals(emptyList<DirtyTaskVersion>(), dirtyDao.getSyncableDirtyVersions())
+    }
+
+    @Test
+    fun syncableDirtyVersionsReturnDirty() = runBlocking {
+        val (_, ctId) = createTaskWithCaldavTask()
+
+        assertEquals(
+            listOf(DirtyTaskVersion(ctId, dirtyVersion = 1)),
+            dirtyDao.getSyncableDirtyVersions()
+        )
+    }
+
+    @Test
+    fun syncableDirtyVersionsExcludeClean() = runBlocking {
+        val (_, ctId) = createTaskWithCaldavTask()
+        dirtyDao.markSynced(ctId)
+
+        assertEquals(emptyList<DirtyTaskVersion>(), dirtyDao.getSyncableDirtyVersions())
+    }
+
+    @Test
+    fun syncableDirtyVersionsIgnoreReadOnlyList() = runBlocking {
+        createTaskWithCaldavTask(access = ACCESS_READ_ONLY)
+
+        assertEquals(emptyList<DirtyTaskVersion>(), dirtyDao.getSyncableDirtyVersions())
+    }
+
+    @Test
+    fun syncableDirtyVersionsAreOrdered() = runBlocking {
+        val calUuid = setupCalendar(TYPE_CALDAV)
+        val (_, first) = createTaskWithCaldavTask(calendar = calUuid)
+        val (_, second) = createTaskWithCaldavTask(calendar = calUuid)
+
+        assertEquals(
+            listOf(first, second).sorted(),
+            dirtyDao.getSyncableDirtyVersions().map { it.caldavTaskId }
+        )
+    }
+
+    @Test
+    fun syncableDirtyVersionsChangeWhenRedirtied() = runBlocking {
+        val (taskId, ctId) = createTaskWithCaldavTask()
+        val before = dirtyDao.getSyncableDirtyVersions()
+
+        dirtyDao.setDirty(listOf(taskId))
+
+        val after = dirtyDao.getSyncableDirtyVersions()
+        assertEquals(listOf(ctId), after.map { it.caldavTaskId })
+        assertNotEquals(before, after)
+    }
+
+    @Test
+    fun syncableDirtyVersionsSurviveStalePush() = runBlocking {
+        val (taskId, ctId) = createTaskWithCaldavTask()
+        val staleVersion = dirtyVersion(ctId)!!
+        dirtyDao.setDirty(listOf(taskId))
+
+        dirtyDao.markPushed(ctId, staleVersion)
+
+        assertEquals(
+            listOf(DirtyTaskVersion(ctId, dirtyVersion = staleVersion + 1)),
+            dirtyDao.getSyncableDirtyVersions()
+        )
     }
 
     @Test
@@ -376,27 +444,59 @@ class TaskDaoDirtyVersionTest {
         assertNull(dirtyVersion(ctId))
     }
 
+    @Test
+    fun getByRemoteIdInAccountFindsTaskInAnotherList() = runBlocking {
+        val other = setupCalendar(TYPE_GOOGLE_TASKS)
+        val task = Task()
+        taskDao.createNew(task)
+        insertCaldavTask(task.id, calendar = other, remoteId = "moved-1")
+
+        val found = googleTaskDao.getByRemoteIdInAccount("moved-1", "account-$TYPE_GOOGLE_TASKS")
+
+        assertEquals(other, found?.calendar)
+    }
+
+    @Test
+    fun getByRemoteIdInAccountIgnoresOtherAccounts() = runBlocking {
+        val task = Task()
+        taskDao.createNew(task)
+        insertCaldavTask(task.id, calendar = setupCalendar(TYPE_CALDAV), remoteId = "moved-2")
+
+        assertNull(googleTaskDao.getByRemoteIdInAccount("moved-2", "account-$TYPE_GOOGLE_TASKS"))
+    }
+
+    @Test
+    fun getByRemoteIdInAccountIgnoresTombstones() = runBlocking {
+        val calendar = setupCalendar(TYPE_GOOGLE_TASKS)
+        val task = Task()
+        taskDao.createNew(task)
+        insertCaldavTask(task.id, calendar = calendar, deleted = true, remoteId = "moved-3")
+
+        assertNull(googleTaskDao.getByRemoteIdInAccount("moved-3", "account-$TYPE_GOOGLE_TASKS"))
+    }
+
     private suspend fun dirtyVersion(ctId: Long): Long? = dirtyDao.getDirtyState(ctId)?.dirtyVersion
 
     private suspend fun createTaskWithCaldavTask(
         accountType: Int = TYPE_CALDAV,
         calendar: String? = null,
         deleted: Boolean = false,
+        access: Int = ACCESS_OWNER,
     ): Pair<Long, Long> {
-        val calUuid = calendar ?: setupCalendar(accountType)
+        val calUuid = calendar ?: setupCalendar(accountType, access)
         val task = Task()
         taskDao.createNew(task)
         val ctId = insertCaldavTask(task.id, calUuid, deleted)
         return task.id to ctId
     }
 
-    private suspend fun setupCalendar(accountType: Int): String {
+    private suspend fun setupCalendar(accountType: Int, access: Int = ACCESS_OWNER): String {
         val accountUuid = "account-$accountType"
         if (caldavDao.getAccountByUuid(accountUuid) == null) {
             caldavDao.insert(CaldavAccount(accountType = accountType, uuid = accountUuid))
         }
         val calUuid = "calendar-${System.nanoTime()}"
-        caldavDao.insert(CaldavCalendar(account = accountUuid, uuid = calUuid))
+        caldavDao.insert(CaldavCalendar(account = accountUuid, uuid = calUuid, access = access))
         return calUuid
     }
 

@@ -63,6 +63,9 @@ class NotificationManager @Inject constructor(
 
     private val colorProvider = ColorProvider(context)
 
+    @Volatile
+    private var cachedLocaleContext: Pair<Locale, Context>? = null
+
     private val localeContext: Context
         get() {
             if (atLeastTiramisu()) {
@@ -73,9 +76,12 @@ class NotificationManager @Inject constructor(
             if (ConfigurationCompat.getLocales(configuration)[0] == locale) {
                 return context
             }
-            return context.createConfigurationContext(
-                Configuration(configuration).apply { setLocale(locale) }
-            )
+            cachedLocaleContext?.takeIf { it.first == locale }?.let { return it.second }
+            return context
+                .createConfigurationContext(
+                    Configuration(configuration).apply { setLocale(locale) }
+                )
+                .also { cachedLocaleContext = locale to it }
         }
     private val queue = NotificationLimiter(MAX_NOTIFICATIONS)
 
@@ -237,7 +243,7 @@ class NotificationManager @Inject constructor(
                         .setGroup(if (useGroupKey) GROUP_KEY else notification.taskId.toString())
                         .setGroupAlertBehavior(
                                 if (alert) NotificationCompat.GROUP_ALERT_CHILDREN else NotificationCompat.GROUP_ALERT_SUMMARY)
-                notify(notification.taskId, builder, alert, nonstop, fiveTimes)
+                notify(notification.taskId, builder, alert, nonstop, fiveTimes, notification.type)
                 val reminderTime = DateTime(notification.timestamp).endOfMinute().millis
                 taskDao.setLastNotified(notification.taskId, reminderTime)
                 alert = false
@@ -252,6 +258,7 @@ class NotificationManager @Inject constructor(
             alert: Boolean,
             nonstop: Boolean,
             fiveTimes: Boolean,
+            type: Int? = null,
     ) {
         if (!permissionChecker.canNotify()) {
             return
@@ -272,6 +279,7 @@ class NotificationManager @Inject constructor(
         }
         val deleteIntent = Intent(context, NotificationClearedReceiver::class.java)
         deleteIntent.putExtra(EXTRA_NOTIFICATION_ID, notificationId)
+        type?.let { deleteIntent.putExtra(EXTRA_NOTIFICATION_TYPE, it) }
         notification.deleteIntent = PendingIntent.getBroadcast(
             context,
             notificationId.toInt(),
@@ -522,6 +530,7 @@ class NotificationManager @Inject constructor(
         const val NOTIFICATION_CHANNEL_MISCELLANEOUS = "notifications_miscellaneous"
         const val MAX_NOTIFICATIONS = 21
         const val EXTRA_NOTIFICATION_ID = "extra_notification_id"
+        const val EXTRA_NOTIFICATION_TYPE = "extra_notification_type"
         const val SUMMARY_NOTIFICATION_ID = 0
         private const val GROUP_KEY = "tasks"
     }

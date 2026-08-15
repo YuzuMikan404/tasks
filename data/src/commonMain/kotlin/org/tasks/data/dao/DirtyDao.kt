@@ -28,6 +28,11 @@ data class TaskToPush(
     @ColumnInfo(name = "synced_version") val syncedVersion: Long,
 )
 
+data class DirtyTaskVersion(
+    @ColumnInfo(name = "caldav_task_id") val caldavTaskId: Long,
+    @ColumnInfo(name = "dirty_version") val dirtyVersion: Long,
+)
+
 @Dao
 abstract class DirtyDao {
 
@@ -43,6 +48,18 @@ abstract class DirtyDao {
         )
     """)
     abstract fun hasDirtyTasks(): Flow<Boolean>
+
+    @Query("""
+        SELECT caldav_task_id, dirty_version FROM task_dirty
+        INNER JOIN caldav_tasks ON cd_id = caldav_task_id
+        LEFT JOIN caldav_lists ON cdl_uuid = cd_calendar
+        LEFT JOIN caldav_accounts ON cda_uuid = cdl_account
+        WHERE dirty_version > synced_version
+          AND (cdl_access IS NULL OR cdl_access != $ACCESS_READ_ONLY)
+          AND (cda_account_type IS NULL OR cda_account_type != $TYPE_LOCAL)
+        ORDER BY caldav_task_id
+    """)
+    abstract suspend fun getSyncableDirtyVersions(): List<DirtyTaskVersion>
 
     @Query("""
         SELECT cd_task FROM task_dirty

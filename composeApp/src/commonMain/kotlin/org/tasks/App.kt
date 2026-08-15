@@ -182,6 +182,7 @@ import org.tasks.compose.settings.GoogleTasksAccountSettingsPane
 import org.tasks.compose.settings.MicrosoftAccountSettingsDetail
 import org.tasks.compose.settings.MicrosoftAccountSettingsPane
 import org.tasks.compose.settings.HelpAndFeedbackDetail
+import org.tasks.compose.settings.NotificationsDetail
 import org.tasks.compose.settings.LinkDesktopScreen
 import org.tasks.compose.settings.ListSettingsScreen
 import org.tasks.compose.settings.TagSettingsScreen
@@ -222,8 +223,8 @@ import org.tasks.filters.PlaceFilter
 import org.tasks.filters.TagFilter
 import org.tasks.kmp.formatTime
 import org.tasks.kmp.org.tasks.themes.ColorProvider
-import org.tasks.kmp.org.tasks.time.getRelativeDateTime
-import org.tasks.tasklist.HeaderFormatter
+import org.tasks.compose.rememberDateFormatter
+import org.tasks.kmp.org.tasks.time.DateFormatter
 import org.tasks.tasklist.SectionedDataSource
 import org.tasks.tasklist.TasksResults
 import org.tasks.themes.BLUE
@@ -1584,7 +1585,6 @@ private fun TaskListScreen(
     onMenuClick: () -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
-    val headerFormatter = koinInject<HeaderFormatter>()
     val chipDataProvider = koinInject<ChipDataProvider>()
     val reporting = koinInject<Reporting>()
     val sortViewModel = koinViewModel<SortSettingsViewModel>()
@@ -1610,7 +1610,6 @@ private fun TaskListScreen(
 
     TaskListPane(
         state = state,
-        headerFormatter = headerFormatter,
         chipDataProvider = chipDataProvider,
         reporting = reporting,
         viewModel = viewModel,
@@ -1935,7 +1934,6 @@ private fun resolvePersistedWidth(dragged: Dp, stored: Dp, maxWidth: Dp): Dp =
 @Composable
 private fun TaskListPane(
     state: TaskListViewModel.State,
-    headerFormatter: HeaderFormatter,
     chipDataProvider: ChipDataProvider,
     reporting: org.tasks.analytics.Reporting,
     viewModel: TaskListViewModel,
@@ -2042,7 +2040,6 @@ private fun TaskListPane(
             is TasksResults.Results -> TaskList(
                 tasks = results.tasks,
                 filter = state.filter,
-                headerFormatter = headerFormatter,
                 chipDataProvider = chipDataProvider,
                 listState = listState,
                 topPadding = topBarHeight,
@@ -2612,7 +2609,6 @@ private fun SortSheetHost(
 private fun TaskList(
     tasks: SectionedDataSource,
     filter: Filter,
-    headerFormatter: HeaderFormatter,
     chipDataProvider: ChipDataProvider,
     listState: LazyListState = rememberLazyListState(),
     topPadding: Dp = 0.dp,
@@ -2623,6 +2619,7 @@ private fun TaskList(
     onFilterClick: (Filter) -> Unit = {},
     is24Hour: Boolean = false,
 ) {
+    val dateFormatter = rememberDateFormatter(is24Hour)
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         state = listState,
@@ -2638,10 +2635,8 @@ private fun TaskList(
             if (tasks.isHeader(index)) {
                 val section = tasks.getSection(index)
                 SectionHeader(
-                    headerValue = section.value,
+                    header = if (filter.supportsSorting()) section.header else null,
                     collapsed = section.collapsed,
-                    groupMode = tasks.groupMode,
-                    headerFormatter = headerFormatter,
                     onToggle = { onToggleGroup(section.value) },
                 )
                 return@items
@@ -2653,6 +2648,7 @@ private fun TaskList(
                 groupMode = tasks.groupMode,
                 chipDataProvider = chipDataProvider,
                 is24Hour = is24Hour,
+                dateFormatter = dateFormatter,
                 onClick = { onTaskClick(task) },
                 onToggleComplete = { onCompleteTask(task, !task.isCompleted) },
                 onToggleSubtasks = { onToggleSubtasks(task.id, !task.isCollapsed) },
@@ -2664,14 +2660,12 @@ private fun TaskList(
 
 @Composable
 private fun SectionHeader(
-    headerValue: Long,
+    header: String?,
     collapsed: Boolean,
-    groupMode: Int,
-    headerFormatter: HeaderFormatter,
     onToggle: () -> Unit,
 ) {
-    val headerText by produceState("", headerValue, groupMode) {
-        value = headerFormatter.headerString(headerValue, groupMode)
+    if (header == null) {
+        return
     }
     val rotation by animateFloatAsState(
         targetValue = if (collapsed) -180f else 0f,
@@ -2685,7 +2679,7 @@ private fun SectionHeader(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = headerText,
+            text = header,
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.weight(1f),
@@ -2708,6 +2702,7 @@ private fun TaskRow(
     groupMode: Int,
     chipDataProvider: ChipDataProvider,
     is24Hour: Boolean,
+    dateFormatter: DateFormatter?,
     onClick: () -> Unit,
     onToggleComplete: () -> Unit,
     onToggleSubtasks: () -> Unit,
@@ -2744,15 +2739,15 @@ private fun TaskRow(
             )
         }
         Column(modifier = Modifier.weight(1f).padding(top = 12.dp, bottom = 12.dp)) {
-            val dueDateText by produceState<String?>(null, task.dueDate, groupMode, is24Hour) {
-                value = if (!task.hasDueDate()) {
+            val dueDateText = remember(task.dueDate, groupMode, is24Hour, dateFormatter) {
+                if (!task.hasDueDate()) {
                     null
                 } else if (groupMode == SortHelper.SORT_DUE
                     && (task.sortGroup ?: 0) >= currentTimeMillis().startOfDay()
                 ) {
                     if (task.hasDueTime()) formatTime(task.dueDate, is24Hour) else null
                 } else {
-                    getRelativeDateTime(task.dueDate, is24Hour)
+                    dateFormatter?.relativeDateTime(task.dueDate)
                 }
             }
             val isOverdue = !task.isCompleted && dueDateOverdue(task.dueDate)
@@ -2855,8 +2850,8 @@ private fun TaskRow(
                             startDate = startDate,
                             compact = true,
                             timeOnly = false,
-                            is24HourFormat = is24Hour,
                             chipColor = chipColor(0, isDark),
+                            dateFormatter = dateFormatter,
                         )
                     }
                     if (showPlace) {
@@ -3012,6 +3007,7 @@ private fun SettingsScreen(
                         environmentLabel = environmentLabel,
                         showBackupWarning = false,
                         showWidgets = viewModel.supportsWidgets,
+                        showNotifications = configuration.showNotificationSettings,
                         isDebug = viewModel.isDebug,
                         showDesktopLinking = configuration.supportsDesktopLinking
                                 && !purchaseState.hasTasksAccount,
@@ -3116,6 +3112,13 @@ private fun SettingsScreen(
                 when (selectedContent) {
                     is org.tasks.compose.settings.SettingsDestination.HelpAndFeedback -> {
                         HelpAndFeedbackDetail(
+                            onNavigateBack = {
+                                scope.launch { navigator.navigateBack() }
+                            },
+                        )
+                    }
+                    is org.tasks.compose.settings.SettingsDestination.Notifications -> {
+                        NotificationsDetail(
                             onNavigateBack = {
                                 scope.launch { navigator.navigateBack() }
                             },

@@ -2,6 +2,8 @@ package org.tasks.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +32,7 @@ import org.tasks.filters.FilterImpl
 import org.tasks.filters.MyTasksFilter
 import org.tasks.filters.SearchFilter
 import org.tasks.filters.key
+import org.tasks.kmp.org.tasks.time.DateFormatter
 import org.tasks.preferences.DefaultQueryPreferences
 import org.tasks.preferences.FilterPreferences
 import org.tasks.preferences.QueryPreferences
@@ -37,6 +40,7 @@ import org.tasks.preferences.TasksPreferences
 import org.tasks.service.TaskCompleter
 import org.tasks.service.TaskDeleter
 import org.tasks.sync.SyncSource
+import org.tasks.tasklist.HeaderFormatter
 import org.tasks.tasklist.SectionedDataSource
 import org.tasks.tasklist.TasksResults
 import org.tasks.time.DateTimeUtils2.currentTimeMillis
@@ -48,6 +52,7 @@ open class TaskListViewModel(
     private val taskSaver: TaskSaver,
     private val taskCompleter: TaskCompleter,
     private val tasksPreferences: TasksPreferences,
+    private val headerFormatter: HeaderFormatter,
     private val queryPreferences: QueryPreferences = DefaultQueryPreferences(),
     private val isPerListSortEnabled: Boolean = false,
     private val createSearchFilter: (String) -> Filter = { query ->
@@ -150,38 +155,61 @@ open class TaskListViewModel(
             .map { it.copy(tasks = TasksResults.Loading) }
             .distinctUntilChanged()
             .throttleLatest(333)
-            .map {
+            .map { queriedState ->
                 val filter = when {
-                    it.searchQuery == null -> it.filter
-                    it.searchQuery.isBlank() -> MyTasksFilter(title = "My Tasks")
-                    else -> createSearchFilter(it.searchQuery)
+                    queriedState.searchQuery == null -> queriedState.filter
+                    queriedState.searchQuery.isBlank() -> MyTasksFilter(title = "My Tasks")
+                    else -> createSearchFilter(queriedState.searchQuery)
                 }
                 val prefs = if (isPerListSortEnabled) {
                     FilterPreferences(queryPreferences, tasksPreferences, filter.key())
                 } else {
                     queryPreferences
                 }
-                Pair(taskDao.fetchTasks(getQuery(prefs, filter)), prefs)
+                Triple(taskDao.fetchTasks(getQuery(prefs, filter)), prefs, queriedState)
             }
-            .onEach { (tasks, prefs) ->
+            .onEach { (tasks, prefs, queriedState) ->
+                val dataSource = SectionedDataSource(
+                    tasks = tasks,
+                    disableHeaders = queriedState.filter.disableHeaders()
+                            || (queriedState.filter.supportsManualSort() && prefs.isManualSort)
+                            || (queriedState.filter is AstridOrderingFilter && prefs.isAstridSort),
+                    groupMode = prefs.groupMode,
+                    subtaskMode = prefs.subtaskMode,
+                    collapsed = queriedState.collapsed,
+                    completedAtBottom = prefs.completedTasksAtBottom,
+                )
+                if (queriedState.filter.supportsSorting()) {
+                    val dateFormatter = DateFormatter.create(is24HourFormat = false)
+                    dataSource.formatHeaders { value ->
+                        try {
+                            headerFormatter.headerString(value, prefs.groupMode, dateFormatter)
+                        } catch (e: CancellationException) {
+                            throw e
+                        } catch (e: Exception) {
+                            log.e(e) {
+                                "Failed to format header $value (groupMode=${prefs.groupMode})"
+                            }
+                            null
+                        }
+                    }
+                }
                 _state.update {
-                    it.copy(
-                        tasks = TasksResults.Results(
-                            SectionedDataSource(
-                                tasks = tasks,
-                                disableHeaders = it.filter.disableHeaders()
-                                        || (it.filter.supportsManualSort() && prefs.isManualSort)
-                                        || (it.filter is AstridOrderingFilter && prefs.isAstridSort),
-                                groupMode = prefs.groupMode,
-                                subtaskMode = prefs.subtaskMode,
-                                collapsed = it.collapsed,
-                                completedAtBottom = prefs.completedTasksAtBottom,
-                            )
-                        )
-                    )
+                    if (it.filter == queriedState.filter &&
+                        it.searchQuery == queriedState.searchQuery &&
+                        it.collapsed == queriedState.collapsed
+                    ) {
+                        it.copy(tasks = TasksResults.Results(dataSource))
+                    } else {
+                        it
+                    }
                 }
             }
             .flowOn(Dispatchers.Default)
             .launchIn(viewModelScope)
+    }
+
+    companion object {
+        private val log = Logger.withTag("TaskListViewModel")
     }
 }

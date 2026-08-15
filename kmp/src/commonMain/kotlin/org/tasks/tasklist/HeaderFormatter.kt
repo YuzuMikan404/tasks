@@ -1,11 +1,10 @@
 package org.tasks.tasklist
 
 import com.todoroo.astrid.core.SortHelper
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
-import org.tasks.data.dao.CaldavDao
+import org.tasks.filters.CaldavListCache
+import org.tasks.kmp.org.tasks.time.DateFormatter
 import org.tasks.kmp.org.tasks.time.DateStyle
-import org.tasks.kmp.org.tasks.time.getRelativeDay
 import tasks.kmp.generated.resources.Res
 import tasks.kmp.generated.resources.completed
 import tasks.kmp.generated.resources.filter_high_priority
@@ -22,23 +21,12 @@ import tasks.kmp.generated.resources.sort_modified_group
 import tasks.kmp.generated.resources.sort_start_group
 
 class HeaderFormatter(
-    private val caldavDao: CaldavDao,
+    private val caldavLists: CaldavListCache,
 ) {
-    private val listCache = HashMap<Long, String?>()
-
-    fun headerStringBlocking(
-        value: Long,
-        groupMode: Int,
-        alwaysDisplayFullDate: Boolean = false,
-        style: DateStyle = DateStyle.FULL,
-        compact: Boolean = false,
-    ) = runBlocking {
-        headerString(value, groupMode, alwaysDisplayFullDate, style, compact)
-    }
-
     suspend fun headerString(
         value: Long,
         groupMode: Int,
+        dateFormatter: DateFormatter,
         alwaysDisplayFullDate: Boolean = false,
         style: DateStyle = DateStyle.FULL,
         compact: Boolean = false,
@@ -49,9 +37,7 @@ class HeaderFormatter(
             groupMode == SortHelper.SORT_IMPORTANCE ->
                 getString(priorityToString(value))
             groupMode == SortHelper.SORT_LIST ->
-                listCache.getOrPut(value) {
-                    caldavDao.getCalendarById(value)?.name
-                } ?: "list: $value"
+                caldavLists.getListTitle(value) ?: "list: $value"
             value == SectionedDataSource.HEADER_OVERDUE ->
                 getString(Res.string.filter_overdue)
             value == 0L -> getString(
@@ -62,7 +48,7 @@ class HeaderFormatter(
                 }
             )
             else -> {
-                val dateString = getRelativeDay(
+                val dateString = dateFormatter.relativeDay(
                     value,
                     style,
                     alwaysDisplayFullDate = alwaysDisplayFullDate,

@@ -1,9 +1,12 @@
 package org.tasks.compose
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -12,9 +15,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.runBlocking
+import org.tasks.kmp.org.tasks.time.DateFormatter
 import org.tasks.kmp.org.tasks.time.DateStyle
-import org.tasks.kmp.org.tasks.time.getRelativeDateTime
+import org.tasks.kmp.org.tasks.time.currentLocaleTag
 import org.tasks.time.DateTimeUtils2.currentTimeMillis
 import org.tasks.time.plusDays
 import org.tasks.time.startOfDay
@@ -38,6 +41,20 @@ private val todayFlow: StateFlow<Long> =
         )
 
 @Composable
+fun rememberDateFormatter(is24Hour: Boolean): DateFormatter? {
+    val localeTag = currentLocaleTag()
+    var formatter by remember(is24Hour, localeTag) {
+        mutableStateOf(DateFormatter.cachedOrNull(is24Hour))
+    }
+    LaunchedEffect(is24Hour, localeTag) {
+        if (formatter == null) {
+            formatter = DateFormatter.create(is24Hour)
+        }
+    }
+    return formatter
+}
+
+@Composable
 fun rememberRelativeDateTime(
     timestamp: Long,
     is24Hour: Boolean,
@@ -45,9 +62,12 @@ fun rememberRelativeDateTime(
     alwaysDisplayFullDate: Boolean = false,
 ): String {
     val today by todayFlow.collectAsState()
-    return remember(timestamp, is24Hour, style, alwaysDisplayFullDate, today) {
-        runBlocking {
-            getRelativeDateTime(timestamp, is24Hour, style, alwaysDisplayFullDate = alwaysDisplayFullDate)
-        }
+    val formatter = rememberDateFormatter(is24Hour)
+    return remember(timestamp, is24Hour, style, alwaysDisplayFullDate, today, formatter) {
+        formatter?.relativeDateTime(
+            timestamp,
+            style,
+            alwaysDisplayFullDate = alwaysDisplayFullDate,
+        ) ?: ""
     }
 }

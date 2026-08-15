@@ -16,13 +16,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.runBlocking
 import org.tasks.LocalBroadcastManager
 import com.todoroo.astrid.gcal.GCalHelper
 import com.todoroo.astrid.repeats.RepeatTaskHelper
 import org.tasks.analytics.Firebase
 import org.tasks.audio.SoundPlayer
 import org.tasks.calendars.CalendarHelper
+import org.tasks.filters.CaldavListCache
 import org.tasks.service.TaskCompleter
 import org.tasks.billing.PurchaseState
 import org.tasks.viewmodel.DrawerViewModel
@@ -450,8 +450,8 @@ class ApplicationModule {
         preferences
 
     @Provides
-    fun providesAlarmCalculator(preferences: AppPreferences): AlarmCalculator =
-        AlarmCalculator(Random(), runBlocking { preferences.defaultDueTime() })
+    fun providesAlarmCalculator(): AlarmCalculator =
+        AlarmCalculator(Random())
 
     @Provides
     fun providesAlarmService(
@@ -603,7 +603,7 @@ class ApplicationModule {
         backgroundWork = backgroundWork,
         caldavDao = caldavDao,
         dirtyDao = dirtyDao,
-        openTaskSyncCheck = { openTaskDao.shouldSync() },
+        openTaskListsActive = { openTaskDao.hasActiveLists() },
         tasksPreferences = tasksPreferences,
         refreshBroadcaster = refreshBroadcaster,
         coroutineContext = Executors.newSingleThreadExecutor().asCoroutineDispatcher(),
@@ -666,15 +666,19 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun providesHeaderFormatter(caldavDao: CaldavDao) = HeaderFormatter(caldavDao)
+    fun providesCaldavListCache(caldavDao: CaldavDao) = CaldavListCache(caldavDao)
+
+    @Provides
+    @Singleton
+    fun providesHeaderFormatter(caldavLists: CaldavListCache) = HeaderFormatter(caldavLists)
 
     @Provides
     @Singleton
     fun providesChipDataProvider(
-        caldavDao: CaldavDao,
+        caldavLists: CaldavListCache,
         tagDataDao: TagDataDao,
         refreshBroadcaster: RefreshBroadcaster,
-    ) = ChipDataProvider(caldavDao, tagDataDao, refreshBroadcaster)
+    ) = ChipDataProvider(caldavLists, tagDataDao, refreshBroadcaster)
 
     @Provides
     fun providesWatchServiceLogic(
