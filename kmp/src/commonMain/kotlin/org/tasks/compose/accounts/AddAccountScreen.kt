@@ -258,7 +258,7 @@ fun AddAccountScreen(
                     if (configuration.supportsOpenTasks) add(Platform.DECSYNC_CC)
                 }
                 if (proAccounts.isNotEmpty()) {
-                    if (!hasPro && !isDesktop) {
+                    if (!hasPro) {
                         SectionHeader(
                             title = stringResource(Res.string.name_your_price),
                             onClick = {

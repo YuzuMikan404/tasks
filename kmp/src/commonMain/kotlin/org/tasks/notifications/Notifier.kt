@@ -1,5 +1,7 @@
 package org.tasks.notifications
 
+const val MAX_NOTIFICATIONS = 21
+
 enum class CancelReason {
     COMPLETE,
     CLEANUP,
@@ -13,12 +15,16 @@ enum class CancelReason {
     STALE,
     TIMER,
     EVICTED,
+
+    DISABLED,
 }
 
 interface Notifier {
     suspend fun cancel(id: Long, reason: CancelReason)
 
     suspend fun cancel(ids: List<Long>, reason: CancelReason)
+
+    suspend fun cancelAll(reason: CancelReason)
 
     fun triggerNotifications()
 

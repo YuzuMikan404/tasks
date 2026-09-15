@@ -23,7 +23,10 @@ data class PlatformConfiguration(
     val supportsDesktopLinking: Boolean = false,
     val supportsLogExport: Boolean = false,
 
-    val showNotificationSettings: Boolean = true,
+    val supportsNotifications: Boolean = true,
+
+    val showNotificationsEnabledSwitch: Boolean = false,
+
     val supportsNotificationTroubleshooting: Boolean = false,
     val supportsSystemNotificationSettings: Boolean = false,
     val supportsOngoingNotifications: Boolean = false,
@@ -31,4 +34,5 @@ data class PlatformConfiguration(
     val supportsVoiceReminders: Boolean = false,
     val supportsCompletionSound: Boolean = false,
     val supportsSwipeToSnooze: Boolean = false,
+    val supportsRingMode: Boolean = false,
 )

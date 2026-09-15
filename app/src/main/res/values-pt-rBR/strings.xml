@@ -9,9 +9,6 @@
     <string name="import_summary_message">O arquivo %1$s continha %2$s. \n \n %3$s importadas, \n %4$s já existiam, \n %5$s tinham erros</string>
     <string name="import_progress_read">Lendo tarefa %d…</string>
     <string name="read_permission_label">Permissões do Tasks</string>
-    <string name="discard_confirmation">Você tem certeza que deseja descartar suas mudanças?</string>
-    <string name="keep_editing">Continuar editando</string>
-    <string name="DLG_delete_this_task_question">Excluir esta tarefa?</string>
     <string name="DLG_hour_minutes">Horário (horas : minutos)</string>
     <string name="DLG_undo">Desfazer</string>
     <string name="WID_dateButtonUnset">Toque para definir</string>
@@ -21,7 +18,6 @@
     <string name="TLA_menu_settings">Configurações</string>
     <string name="TAd_actionEditTask">Editar</string>
     <string name="action_call">Chamar</string>
-    <string name="action_open">Abrir</string>
     <string name="SSD_sort_auto">Ordenação inteligente</string>
     <string name="SSD_sort_alpha">Por título</string>
     <string name="SSD_sort_due">Por data de vencimento</string>
@@ -65,16 +61,8 @@
     <string name="EPr_manage_delete_gcal_status">%d eventos do calendário excluídos!</string>
     <string name="EPr_manage_delete_all_gcal">Excluir todos os eventos de tarefas do calendário</string>
     <string name="EPr_manage_delete_all_gcal_message">Você realmente deseja excluir todos os seus eventos das tarefas?</string>
-    <string name="EPr_default_importance_title">Prioridade padrão</string>
-    <string name="EPr_default_reminders_title">Lembretes padrões</string>
-    <string name="EPr_default_location_reminder_title">Lembretes de localização padrão</string>
-    <string name="EPr_default_reminders_mode_title">Tipo de som/vibração padrão</string>
     <string name="day_after_tomorrow">Depois de amanhã</string>
     <string name="next_week">Próxima semana</string>
-    <string name="no_reminders">Sem lembretes</string>
-    <string name="default_location_reminder_on_arrival">Ao chegar</string>
-    <string name="default_location_reminder_on_departure">Ao sair</string>
-    <string name="default_location_reminder_on_arrival_or_departure">Ao chegar e ao sair</string>
     <string name="BFE_Active">Minhas tarefas</string>
     <string name="BFE_Recent">Modificadas recentemente</string>
     <string name="CFA_button_add">Adicionar critério</string>
@@ -101,15 +89,7 @@
     <string name="ring_once">Reproduzir uma vez</string>
     <string name="ring_five_times">Reproduzir cinco vezes</string>
     <string name="ring_nonstop">Reproduzir sem parar</string>
-    <string name="rmd_NoA_done">Concluída</string>
-    <string name="rmd_NoA_snooze">Adiar</string>
     <string name="snooze_all">Adiar todos</string>
-    <string name="rmd_EPr_defaultRemind_title">Lembretes aleatórios</string>
-    <string name="default_random_reminder_disabled">Desabilitado</string>
-    <string name="default_random_reminder_hourly">de hora em hora</string>
-    <string name="default_random_reminder_daily">Diariamente</string>
-    <string name="default_random_reminder_weekly">Semanalmente</string>
-    <string name="default_random_reminder_bi_weekly">A cada duas semanas</string>
     <string name="repeat_option_custom">Personalizado…</string>
     <plurals name="task_count">
         <item quantity="one">%d tarefa</item>
@@ -185,7 +165,6 @@
     <string name="date_shortcut_must_come_before">%1$s deve vir antes de %2$s</string>
     <string name="date_shortcut_must_come_after">%1$s deve vir depois de %2$s</string>
     <string name="discard_changes">Descartar alterações?</string>
-    <string name="discard">Descartar</string>
     <string name="tag_settings">Configurações de etiquetas</string>
     <string name="list_settings">Configurações da lista</string>
     <string name="delete">Excluir</string>
@@ -198,7 +177,6 @@
     <string name="pick_from_storage">Selecionar do armazenamento</string>
     <string name="name_cannot_be_empty">Nome não pode ser vazio</string>
     <string name="back_button_saves_task">Botão \'voltar\' salva a tarefa</string>
-    <string name="default_list">Lista padrão</string>
     <string name="filter">Filtrar</string>
     <string name="opacity">Opacidade</string>
     <string name="theme">Tema</string>
@@ -229,7 +207,6 @@
     <string name="repeats_from">Repetir a partir de</string>
     <string name="repeats_plural_number_of_times">Repetir a cada %1$s, ocorre %2$d %3$s</string>
     <string name="dont_add_to_calendar">Não inserir no calendário</string>
-    <string name="default_calendar">Calendário padrão</string>
     <string name="badges_description">Mostrar contagem de tarefas no ícone do iniciador do Tasks. Nem todos os lançadores suportam emblemas.</string>
     <string name="tasker_create_task">Criar tarefa</string>
     <string name="tasker_list_notification">Listar notificações</string>
@@ -289,11 +266,9 @@
     <string name="etesync_selection_description">Sincronização criptografada de ponta a ponta</string>
     <string name="caldav_selection_description">Sincronização usando protocolos padrões e livres da Internet</string>
     <string name="choose_synchronization_service">Escolha uma plataforma</string>
-    <string name="subtasks_multilevel_google_task">Subtarefas em vários níveis não são suportadas pelo Google Tarefas</string>
     <string name="collapse_subtasks">Recolher sub-tarefas</string>
     <string name="expand_subtasks">Expandir sub-tarefas</string>
     <string name="name_your_price">Dê o seu preço</string>
-    <string name="google_tasks_add_to_top">Novas tarefas no topo</string>
     <string name="invalid_backup_file">Arquivo de backup inválido</string>
     <string name="whats_new">Novidades</string>
     <string name="action_new_task">Nova tarefa</string>
@@ -317,7 +292,6 @@
     <string name="widget_show_menu">Mostrar menu</string>
     <string name="CFC_list_name">Na lista…</string>
     <string name="TEA_timer_est">Est. %s</string>
-    <string name="TEA_add_subtask">Adicionar sub-tarefa</string>
     <string name="sort_created">Por hora de criação</string>
     <string name="astrid_sort_order_summary">Ativar ordenação manual do Astrid para \'Minhas tarefas\', \'Hoje\', e etiquetas. Esse modo de ordenação será substituído por \'Minhas ordenações\' em uma atualização futura</string>
     <string name="astrid_sort_order">Ordenação manual do Astrid</string>
@@ -381,11 +355,8 @@
     <string name="decsync_selection_description">Sincronização baseada em arquivo</string>
     <string name="background_location_permission_required">Tasks coleta dados de localização para permitir lembretes baseados em localização, mesmo quando o aplicativo está fechado ou não estiver sendo usado.</string>
     <string name="subscription">Assinatura</string>
-    <string name="default_recurrence">Recorrência padrão</string>
-    <string name="default_tags">Etiquetas padrões</string>
     <string name="no_app_found">Nenhum aplicativo pode atender a esta solicitação</string>
     <string name="filter_criteria_unstarted">Não iniciadas</string>
-    <string name="default_start_date">Data de início padrão</string>
     <string name="always_display_full_date">Mostrar data completa</string>
     <string name="upgrade_open_source_description">Sua assinatura ajuda a continuar o desenvolvimento</string>
     <string name="upgrade_tasks_org_account_description">Sincronize com Tasks.org e colabore com outros usuários</string>
@@ -411,13 +382,10 @@
     <string name="support">Suporte</string>
     <string name="header_spacing">Espaçamento</string>
     <string name="widget_show_title">Mostrar título</string>
-    <string name="repeat_type_completion_capitalized">Data de conclusão</string>
     <string name="filter_any_start_date">Qualquer data de início</string>
     <string name="no_start_date">Sem data de início</string>
     <string name="CFC_startBefore_name">Iniciar por…</string>
     <string name="CFC_startBefore_text">Iniciar por: ?</string>
-    <string name="default_location">Localização padrão</string>
-    <string name="default_due_date">Data de vencimento padrão</string>
     <string name="markdown_description">Habilitar Markdown no título e descrição</string>
     <string name="markdown">Markdown</string>
     <string name="now">Agora</string>
@@ -445,7 +413,6 @@
     <string name="cost_money">Preço: $</string>
     <string name="app_settings">Configurações do aplicativo</string>
     <string name="cost_more_money">Preço: $$$</string>
-    <string name="subtasks_multilevel_microsoft">Subtarefas multinível não suportadas pelo Microsoft To Do</string>
     <string name="enable_alarms_description">Para garantir que você seja notificado no momento certo, conceda permissão para definir alarmes e lembretes em \'Configurações\'</string>
     <string name="multiline_title_on">Pressione a tecla \'Enter\' para adicionar quebras de linha</string>
     <string name="sync_warning_microsoft">Nem todos os detalhes das tarefas são sincronizados com o Microsoft To Do.</string>
@@ -467,13 +434,7 @@
     <string name="import_failed_message">Erro ao ler arquivo de backup</string>
     <string name="legal_disclosure_prefix_using">Usando Tasks.org</string>
     <string name="accept">Aceitar</string>
-    <string name="location_update_interval_title">Atualização de localização em segundo plano</string>
     <string name="location_update_interval_summary">Atualizações periódicas de localização melhoram a confiabilidade do geofencing</string>
-    <string name="location_update_interval_disabled">Desativado</string>
-    <string name="location_update_interval_15_minutes">A cada 15 minutos</string>
-    <string name="location_update_interval_30_minutes">A cada 30 minutos</string>
-    <string name="location_update_interval_1_hour">A cada hora</string>
-    <string name="location_update_interval_2_hours">A cada 2 horas</string>
     <string name="email_to_task">Email para tarefa</string>
     <string name="email_to_task_address">Seu email</string>
     <string name="rmd_EPr_rmd_time_desc">Notificações para tarefas de dia todo aparecerão as %1$s</string>
@@ -497,4 +458,5 @@
     <string name="returning_user">Usuário retornando?</string>
     <string name="widget_view_more_tasks">Ver mais tarefas</string>
     <string name="read_more">Ler mais</string>
+    <string name="sort_options">Opções de ordem</string>
 </resources>

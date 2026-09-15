@@ -9,9 +9,6 @@
     <string name="import_summary_message">%1$s dosyası %2$s içeriyor. \n \n %3$s içe aktarıldı,\n %4$s zaten var,\n %5$s hata var.</string>
     <string name="import_progress_read">%d görev okunuyor…</string>
     <string name="read_permission_label">Tasks İzni</string>
-    <string name="discard_confirmation">Değişikliklerinizi gözden çıkarmak istediğinize emin misiniz?</string>
-    <string name="keep_editing">Düzenlemeyi sürdür</string>
-    <string name="DLG_delete_this_task_question">Bu görev silinsin mi?</string>
     <string name="DLG_hour_minutes">Zaman (saat : dakika)</string>
     <string name="DLG_undo">Geri al</string>
     <string name="WID_dateButtonUnset">Ayar İçin Dokun</string>
@@ -21,7 +18,6 @@
     <string name="TLA_menu_settings">Ayarlar</string>
     <string name="TAd_actionEditTask">Düzenle</string>
     <string name="action_call">Ara</string>
-    <string name="action_open">Aç</string>
     <string name="SSD_sort_auto">Tasks akıllı sıralama</string>
     <string name="SSD_sort_alpha">Başlığa göre</string>
     <string name="SSD_sort_due">Bitiş tarihine göre</string>
@@ -66,16 +62,8 @@
     <string name="EPr_manage_delete_gcal_status">%d takvim olayı silindi!</string>
     <string name="EPr_manage_delete_all_gcal">Görevler için tüm takvim olaylarını sil</string>
     <string name="EPr_manage_delete_all_gcal_message">Görevlerdeki tüm olayları silmek istediğinize emin misiniz?</string>
-    <string name="EPr_default_importance_title">Öntanımlı öncelik</string>
-    <string name="EPr_default_reminders_title">Öntanımlı anımsatıcılar</string>
-    <string name="EPr_default_location_reminder_title">Öntanımlı konum anımsatıcılar</string>
-    <string name="EPr_default_reminders_mode_title">Öntanımlı zil/titreşim türü</string>
     <string name="day_after_tomorrow">Yarından Sonra</string>
     <string name="next_week">Gelecek Hafta</string>
-    <string name="no_reminders">Anımsatıcı yok</string>
-    <string name="default_location_reminder_on_arrival">Varışta</string>
-    <string name="default_location_reminder_on_departure">Kalkışta</string>
-    <string name="default_location_reminder_on_arrival_or_departure">Varışta ve kalkışta</string>
     <string name="BFE_Active">Görevlerim</string>
     <string name="BFE_Recent">Yakında değiştirilenler</string>
     <string name="CFA_button_add">Ölçüt Ekle</string>
@@ -103,15 +91,7 @@
     <string name="ring_once">Bir kez çal</string>
     <string name="ring_five_times">Beş kez çal</string>
     <string name="ring_nonstop">Durmadan çal</string>
-    <string name="rmd_NoA_done">Tamamlandı</string>
-    <string name="rmd_NoA_snooze">Ertele</string>
     <string name="snooze_all">Tümünü ertele</string>
-    <string name="rmd_EPr_defaultRemind_title">Rastgele anımsatıcılar</string>
-    <string name="default_random_reminder_disabled">devre dışı</string>
-    <string name="default_random_reminder_hourly">saat başı</string>
-    <string name="default_random_reminder_daily">her gün</string>
-    <string name="default_random_reminder_weekly">her hafta</string>
-    <string name="default_random_reminder_bi_weekly">haftada 2 kez</string>
     <string name="repeat_option_custom">Özel…</string>
     <plurals name="task_count">
         <item quantity="one">%d görev</item>
@@ -180,7 +160,6 @@
     <string name="date_shortcut_must_come_before">%1$s, %2$s öncesinden gelmelidir</string>
     <string name="date_shortcut_must_come_after">%1$s, %2$s ardından gelmelidir</string>
     <string name="discard_changes">Değişiklikleri gözden çıkar?</string>
-    <string name="discard">Gözden çıkar</string>
     <string name="tag_settings">Etiket ayarları</string>
     <string name="list_settings">Liste ayarları</string>
     <string name="delete">Sil</string>
@@ -193,7 +172,6 @@
     <string name="pick_from_storage">Depolamadan seç</string>
     <string name="name_cannot_be_empty">Ad boş olamaz</string>
     <string name="back_button_saves_task">Geri düğmesi görevi kaydeder</string>
-    <string name="default_list">Öntanımlı liste</string>
     <string name="filter">Süzgeç</string>
     <string name="opacity">Şeffaflık</string>
     <string name="theme">Gövde</string>
@@ -224,7 +202,6 @@
     <string name="repeats_from">Şundan sonra yinele</string>
     <string name="repeats_plural_number_of_times">Her %1$s yineler, %2$d %3$s gerçekleşir</string>
     <string name="dont_add_to_calendar">Takvime ekleme</string>
-    <string name="default_calendar">Öntanımlı takvim</string>
     <string name="badges_description">Tasks başlatıcı simgesinde görev sayısı göster. Tüm başlatıcılar rozetleri desteklemez.</string>
     <string name="tasker_create_task">Görev oluştur</string>
     <string name="tasker_list_notification">Bildirimi listele</string>
@@ -255,7 +232,6 @@
     <string name="open_map">Haritayı aç</string>
     <string name="choose_new_location">Yeni konum seç</string>
     <string name="invalid_backup_file">Geçersiz yedek dosyası</string>
-    <string name="google_tasks_add_to_top">Yeni görevler üstte</string>
     <string name="location_radius_meters">%s m</string>
     <string name="url">URL</string>
     <string name="list_separator_with_space">", "</string>
@@ -264,9 +240,7 @@
     <string name="SSD_sort_my_order">Düzenim</string>
     <string name="expand_subtasks">Alt görevleri genişlet</string>
     <string name="collapse_subtasks">Alt görevleri gizle</string>
-    <string name="TEA_add_subtask">Alt görev ekle</string>
     <string name="subtasks">Alt görevler</string>
-    <string name="subtasks_multilevel_google_task">Google Görevler, çok düzeyli alt görevleri desteklemez</string>
     <string name="display_name">Gösterim adı</string>
     <string name="this_feature_requires_a_subscription">Bu özellik abonelik gerektiriyor</string>
     <string name="choose_synchronization_service">Platform seç</string>
@@ -362,10 +336,6 @@
     <string name="backups_ignore_warnings_summary">Yedeklemeye gereksinmiyorsanız veya kendi yedekleme çözümünüz varsa yedekleme uyarılarını yok sayın</string>
     <string name="backup_location_warning">UYARI: Tasks kaldırılırsa %s içinde bulunan dosyalar silinecektir! Android\'in dosyalarınızı silmesini önlemek için lütfen özel konum seçin.</string>
     <string name="header_spacing">Aralık</string>
-    <string name="default_recurrence">Öntanımlı yineleme</string>
-    <string name="repeat_type_completion_capitalized">Tamamlanma tarihi</string>
-    <string name="default_tags">Öntanımlı etiketler</string>
-    <string name="default_location">Öntanımlı konum</string>
     <string name="multi_select_reschedule">Yeniden zamanla</string>
     <string name="cancel">İptal</string>
     <string name="ok">Tamam</string>
@@ -390,11 +360,9 @@
     <string name="app_passwords_more_info">Görevlerinizi ve takvimlerinizi üçüncü taraf masaüstü ve mobil uygulamalarla eşzamanlayın. Daha çok bilgi için dokun</string>
     <string name="app_password">Uygulama parolası</string>
     <string name="local_lists">Yerel listeler</string>
-    <string name="default_due_date">Öntanımlı bitiş tarihi</string>
     <string name="start_date">Başlangıç tarihi</string>
     <string name="filter_criteria_unstarted">Başlamadı</string>
     <string name="no_start_date">Başlangıç tarihi yok</string>
-    <string name="default_start_date">Öntanımlı başlangıç tarihi</string>
     <string name="SSD_sort_start">Başlangıç tarihine göre</string>
     <string name="CFC_startBefore_name">Başlangıç…</string>
     <string name="CFC_startBefore_text">Başlangıç: \?</string>
@@ -450,7 +418,6 @@
     <string name="cost_more_money">Ücret: $$$</string>
     <string name="multiline_title">Çok satırlı başlıklara izin ver</string>
     <string name="multiline_title_on">Satır eklemek için Enter tuşuna bas</string>
-    <string name="subtasks_multilevel_microsoft">Microsoft To Do, çok düzeyli alt görevleri desteklemez</string>
     <string name="app_settings">Uygulama ayarları</string>
     <string name="banner_app_updated_description">Tasks %s sürümüne güncellendi. Dağıtım notlarını görmek ister misiniz?</string>
     <string name="banner_app_updated_title">Uygulama güncellendi</string>
@@ -479,13 +446,7 @@
     <string name="upgrade_friends_and_family_description">Paylaşılan listelerde 5 ücretsiz konuk. Apple Anımsatıcılar ile çalışır</string>
     <string name="per_list_sort_title">Liste başına sıralama</string>
     <string name="per_list_sort_summary">Her liste için sıra ve küme ayarlarını ayrı ayrı anımsa</string>
-    <string name="location_update_interval_title">Arka plan konum güncellemeleri</string>
     <string name="location_update_interval_summary">Dönemsel konum güncellemeleri coğrafi sınır güvenirliğini iyileştirir</string>
-    <string name="location_update_interval_disabled">Devre dışı</string>
-    <string name="location_update_interval_15_minutes">Her 15 dakika</string>
-    <string name="location_update_interval_30_minutes">Her 30 dakika</string>
-    <string name="location_update_interval_1_hour">Her saat</string>
-    <string name="location_update_interval_2_hours">Her 2 saat</string>
     <string name="read_more">Daha çoğunu oku</string>
     <string name="p_per_list_sort">per_list_sort</string>
     <string name="upgrade_desktop_app">Masaüstü için Tasks.org</string>

@@ -22,10 +22,6 @@ kotlin {
     }
 }
 
-composeCompiler {
-    enableStrongSkippingMode = true
-}
-
 android {
     bundle {
         language {
@@ -55,6 +51,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
         testInstrumentationRunner = "org.tasks.TestRunner"
+        manifestPlaceholders["appAuthRedirectScheme"] = "org.tasks"
     }
 
     signingConfigs {
@@ -131,6 +128,15 @@ android {
                 }
             }
         }
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+
+    sourceSets {
+        // Shared test helpers replace Android-test symlinks, which are not portable to Windows.
+        getByName("test").java.directories.add("src/sharedTest/java")
+        getByName("androidTest").java.directories.add("src/sharedTest/java")
     }
 
     namespace = "org.tasks"
@@ -283,5 +289,7 @@ dependencies {
     testImplementation(libs.make.it.easy)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.robolectric)
     testImplementation(libs.xpp3)
 }

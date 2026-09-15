@@ -55,7 +55,6 @@
     <string name="tasker_list_notification">Listă de notificare</string>
     <string name="tasker_create_task">Crează o sarcină</string>
     <string name="badges_description">Afișarea numărului de sarcini pe pictograma de lansare a aplicației Tasks. Nu toate lansatoarele acceptă insigne.</string>
-    <string name="default_calendar">Calendar implicit</string>
     <string name="dont_add_to_calendar">Nu se adaugă la calendar</string>
     <string name="list_separator_with_space">", "</string>
     <string name="repeats_plural_number_of_times">Se repetă la fiecare %1$s, apare %2$d %3$s</string>
@@ -97,9 +96,6 @@
     <string name="opacity_header">Opacitatea antetului</string>
     <string name="opacity">Opacitate</string>
     <string name="filter">Filtru</string>
-    <string name="default_recurrence">Repetare implicită</string>
-    <string name="default_tags">Etichete implicite</string>
-    <string name="default_list">Listă implicită</string>
     <string name="back_button_saves_task">Butonul Înapoi salvează activitatea</string>
     <string name="name_cannot_be_empty">Numele nu poate fi gol</string>
     <string name="pick_from_storage">Alege de pe stocare</string>
@@ -114,7 +110,6 @@
     <string name="delete">Șterge</string>
     <string name="list_settings">Setări listă</string>
     <string name="tag_settings">Setări etichetă</string>
-    <string name="discard">Modificări</string>
     <string name="discard_changes">Renunți la modificări\?</string>
     <string name="date_shortcut_must_come_after">%1$s trebuie să vină după %2$s</string>
     <string name="date_shortcut_must_come_before">%1$s trebuie să vină înainte de %2$s</string>
@@ -190,15 +185,7 @@
         <item quantity="other">%d sarcini</item>
     </plurals>
     <string name="repeat_option_custom">Personalizat…</string>
-    <string name="default_random_reminder_bi_weekly">Bi-săptămânal</string>
-    <string name="default_random_reminder_weekly">Săptămânal</string>
-    <string name="default_random_reminder_daily">Zilnic</string>
-    <string name="default_random_reminder_hourly">Fiecare oră</string>
-    <string name="default_random_reminder_disabled">Dezactivat</string>
-    <string name="rmd_EPr_defaultRemind_title">Reamintiri aleatorii</string>
     <string name="snooze_all">Amână tot</string>
-    <string name="rmd_NoA_snooze">Amână</string>
-    <string name="rmd_NoA_done">Finalizat</string>
     <string name="ring_nonstop">Sună non-stop</string>
     <string name="ring_five_times">Sună de cinci ori</string>
     <string name="ring_once">Sună o dată</string>
@@ -231,17 +218,8 @@
     <string name="CFA_button_add">Adaugă criterii</string>
     <string name="BFE_Recent">Modificat recent</string>
     <string name="BFE_Active">Sarcinile mele</string>
-    <string name="default_location_reminder_on_arrival_or_departure">La sosire și la plecare</string>
-    <string name="no_reminders">Fără reamintiri</string>
     <string name="next_week">Săptămâna viitoare</string>
     <string name="day_after_tomorrow">Poimâine</string>
-    <string name="default_location">Locație implicită</string>
-    <string name="EPr_default_reminders_mode_title">Tipul implicit de alarmă/vibrație</string>
-    <string name="EPr_default_location_reminder_title">Reamintiri de locație implicită</string>
-    <string name="EPr_default_reminders_title">Reamintiri implicite</string>
-    <string name="default_due_date">Dată scadentă implicită</string>
-    <string name="default_start_date">Data de începere implicită</string>
-    <string name="EPr_default_importance_title">Prioritate implicită</string>
     <string name="EPr_manage_delete_all_gcal">Elimină toate evenimentele din calendar pentru aceste sarcini</string>
     <string name="EPr_cal_start_at_due_time">Începe evenimentele din calendar la timpul util</string>
     <string name="EPr_cal_end_at_due_time">Încheie evenimentele din calendar la timpul util</string>
@@ -267,7 +245,6 @@
     <string name="TEA_elapsedDuration_label">Timp deja alocat</string>
     <string name="TEA_estimatedDuration_label">Cât timp va dura\?</string>
     <string name="TEA_note_label">Descriere</string>
-    <string name="TEA_add_subtask">Adaugă o sarcină secundară</string>
     <string name="TEA_importance_label">Prioritate</string>
     <string name="FLA_new_filter">Crează filtru nou</string>
     <string name="FLA_search_filter">Potrivire \'%s\'</string>
@@ -280,7 +257,6 @@
     <string name="TLA_no_items">Nu există sarcini aici.</string>
     <string name="astrid_sort_order">Sortare manuală Astrid</string>
     <string name="SSD_sort_my_order">Sortarea mea</string>
-    <string name="action_open">Deschide</string>
     <string name="action_call">Sună</string>
     <string name="TAd_actionEditTask">Editare</string>
     <string name="TLA_menu_settings">Setări</string>
@@ -289,9 +265,6 @@
     <string name="WID_dateButtonUnset">Clic pentru setare</string>
     <string name="DLG_undo">Anulare</string>
     <string name="DLG_hour_minutes">Timp (oră : minute)</string>
-    <string name="DLG_delete_this_task_question">Ștergi sarcina\?</string>
-    <string name="keep_editing">Continuă editarea</string>
-    <string name="discard_confirmation">Ești siguri că vrei să renunți la modificările făcute\?</string>
     <string name="read_permission_label">Permisiune sarcini</string>
     <string name="import_progress_read">Citirea sarcinii %d…</string>
     <string name="import_summary_message">Fișierul %1$s conținea %2$s.
@@ -374,11 +347,9 @@
     <string name="etesync_selection_description">Sincronizare criptată end-to-end</string>
     <string name="caldav_selection_description">Sincronizare bazată pe standarde deschise de internet</string>
     <string name="choose_synchronization_service">Selectează o platformă</string>
-    <string name="subtasks_multilevel_google_task">Sub-sarcinile pe mai multe niveluri nu sunt acceptate de Google Tasks</string>
     <string name="collapse_subtasks">Restrânge sub-sarcinile</string>
     <string name="expand_subtasks">Extinde sub-sarcinile</string>
     <string name="name_your_price">Spune prețul</string>
-    <string name="google_tasks_add_to_top">Sarcini noi în partea de sus</string>
     <string name="invalid_backup_file">Fișier de backup invalid</string>
     <string name="whats_new">Ce este nou</string>
     <string name="choose_new_location">Alege o nouă locație</string>
@@ -411,9 +382,6 @@
     <string name="new_list">Crează o nouă listă</string>
     <string name="new_tag">Crează o nouă etichetă</string>
     <string name="repeat_snackbar">%1$s reprogramat pentru %2$s</string>
-    <string name="repeat_type_completion_capitalized">Data de finalizare</string>
-    <string name="default_location_reminder_on_departure">La plecare</string>
-    <string name="default_location_reminder_on_arrival">La sosire</string>
     <string name="EPr_manage_delete_all_gcal_message">Dorești cu adevărat să ștergi toate evenimentele pentru sarcini\?</string>
     <string name="EPr_manage_delete_gcal_status">Ai eliminat %d evenimente din calendar!</string>
     <string name="EPr_manage_delete_completed_gcal_message">Dorești cu adevărat să ștergi toate evenimentele pentru sarcinile finalizate\?</string>
@@ -455,7 +423,6 @@
     <string name="sync_warning_microsoft">Nu toate detaliile sarcinii se sincronizează cu Microsoft To Do.</string>
     <string name="donate_today">Donează astăzi</string>
     <string name="donate_nag">Exprimă-ți sprijinul cu ajutorul unei donații!</string>
-    <string name="subtasks_multilevel_microsoft">Subsarcini pe mai multe niveluri nu sunt acceptate de Microsoft To Do</string>
     <string name="donate_maybe_later">Poate mai târziu</string>
     <string name="cost_money">Preț: $</string>
     <string name="sync_warning_microsoft_title">Despre sincronizarea Microsoft To Do</string>
@@ -471,13 +438,7 @@
     <string name="widget_view_more_tasks">Vezi mai multe sarcini</string>
     <string name="import_failed">Importul a eșuat</string>
     <string name="import_failed_message">Nu s-a putut citi fișierul copiei de rezervă</string>
-    <string name="location_update_interval_title">Actualizări ale locației de fundal</string>
     <string name="location_update_interval_summary">Actualizările periodice ale locației îmbunătățesc fiabilitatea geofence-ului</string>
-    <string name="location_update_interval_disabled">Dezactivat</string>
-    <string name="location_update_interval_15_minutes">La fiecare 15 minute</string>
-    <string name="location_update_interval_30_minutes">La fiecare 30 de minute</string>
-    <string name="location_update_interval_1_hour">În fiecare oră</string>
-    <string name="location_update_interval_2_hours">La fiecare 2 ore</string>
     <string name="rmd_EPr_rmd_time_desc">Notificările pentru sarcinile pentru tot parcursul zilei vor apărea la %1$s</string>
     <string name="banner_subscription_required_title">Este necesar un abonament</string>
     <string name="banner_subscription_required_body">Plătește oricât dorești pentru a debloca sincronizarea %s</string>
@@ -501,4 +462,5 @@
     <string name="returning_user">Utilizator care revine?</string>
     <string name="read_more">Citeşte mai mult</string>
     <string name="email_to_task">E-mail către sarcină</string>
+    <string name="sort_options">Opțiuni de sortare</string>
 </resources>

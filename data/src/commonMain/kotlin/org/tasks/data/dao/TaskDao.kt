@@ -27,7 +27,6 @@ private val WHITESPACE = Regex("\\s+")
 
 @Dao
 abstract class TaskDao(private val database: Database) {
-
     @Query("""
 SELECT COALESCE(MIN(min_value), $MAX_TIME)
 FROM (
@@ -195,7 +194,19 @@ FROM recursive_tasks
     abstract suspend fun insert(task: Task): Long
 
     @Transaction
-    open suspend fun update(task: Task, original: Task? = null, updateTimestamp: Boolean = true, markDirty: Boolean = false): Boolean {
+    open suspend fun update(
+        task: Task,
+        original: Task? = null,
+        updateTimestamp: Boolean = true,
+        markDirty: Boolean = false,
+        preserveHierarchy: Boolean = false,
+    ): Boolean {
+        if (preserveHierarchy) {
+            fetch(task.id)?.let {
+                task.parent = it.parent
+                task.order = it.order
+            }
+        }
         if (updateTimestamp && !task.insignificantChange(original)) {
             task.modificationDate = DateTimeUtils2.currentTimeMillis()
         }
@@ -241,7 +252,10 @@ WHERE cd_id IS NULL
         fun activeAndVisible(): Criterion = Criterion.and(
             Task.COMPLETION_DATE.lte(0),
             Task.DELETION_DATE.lte(0),
-            Task.HIDE_UNTIL.lte(Functions.now())
+            Criterion.or(
+                Task.HIDE_UNTIL.lte(Functions.now()),
+                Task.COMPLETION_DATE.gt(0),
+            )
         )
     }
 }

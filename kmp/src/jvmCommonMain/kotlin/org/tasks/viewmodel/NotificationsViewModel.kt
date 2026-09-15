@@ -19,10 +19,19 @@ import org.tasks.time.DateTimeUtils2.currentTimeMillis
 import org.tasks.time.plusDays
 import org.tasks.time.withMillisOfDay
 
+enum class ReminderChange {
+    PENDING,
+
+    ON_SCREEN,
+
+    OFF,
+}
+
 open class NotificationsViewModel(
     private val appPreferences: AppPreferences,
     platformConfiguration: PlatformConfiguration,
     private val persistenceScope: CoroutineScope,
+    private val rescheduleNotifications: suspend (ReminderChange) -> Unit,
 ) : ViewModel() {
 
     enum class TimePickerTarget {
@@ -39,6 +48,7 @@ open class NotificationsViewModel(
     val showVoiceReminders: Boolean = platformConfiguration.supportsVoiceReminders
     val showCompletionSound: Boolean = platformConfiguration.supportsCompletionSound
     val showSwipeToSnooze: Boolean = platformConfiguration.supportsSwipeToSnooze
+    val showNotificationsEnabled: Boolean = platformConfiguration.showNotificationsEnabledSwitch
 
     var settings by mutableStateOf(NotificationSettings())
         private set
@@ -66,12 +76,16 @@ open class NotificationsViewModel(
 
     private var quietHoursRefreshJob: Job? = null
 
-    private var pendingWrite: Job? = null
+    private val writes = PreferenceWriteQueue(
+        viewModelScope = viewModelScope,
+        persistenceScope = persistenceScope,
+        tag = TAG,
+        reload = { reloadSafely() },
+    )
 
     init {
         viewModelScope.launch {
-            reload()
-            scheduleQuietHoursRefresh()
+            reloadSafely()
         }
     }
 
@@ -80,42 +94,30 @@ open class NotificationsViewModel(
         timePickerInputMode = appPreferences.datePickerPreferences().timePickerInputMode
         isCurrentlyQuietHours = settings.isCurrentlyQuietHours()
         loaded = true
+        scheduleQuietHoursRefresh()
     }
 
-    open fun refreshState() {
-        viewModelScope.launch {
-            while (true) {
-                val write = pendingWrite ?: break
-                write.join()
-                if (pendingWrite === write) {
-                    break
-                }
-            }
+    private suspend fun reloadSafely() {
+        try {
             reload()
-            scheduleQuietHoursRefresh()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Logger.e(e, tag = TAG) { "Failed to reload notification settings" }
         }
     }
 
-    private fun persist(block: suspend () -> Unit) {
-        val previous = pendingWrite
-        pendingWrite = persistenceScope.launch {
-            previous?.join()
-            try {
-                block()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                Logger.e(e, tag = TAG) { "Failed to save notification settings" }
-                try {
-                    reload()
-                } catch (reloadError: Exception) {
-                    Logger.e(reloadError, tag = TAG) { "Failed to reload notification settings" }
-                }
-            }
+    open fun refreshState() = writes.refresh()
+
+    private fun persist(block: suspend () -> Unit) = writes.write(block)
+
+    fun updateNotificationsEnabled(enabled: Boolean) {
+        settings = settings.copy(notificationsEnabled = enabled)
+        persist {
+            appPreferences.setNotificationsEnabled(enabled)
+            rescheduleNotifications(if (enabled) ReminderChange.PENDING else ReminderChange.OFF)
         }
     }
-
-    protected open fun rescheduleNotifications(cancelExisting: Boolean) {}
 
     fun updatePersistent(enabled: Boolean) {
         settings = settings.copy(
@@ -127,7 +129,7 @@ open class NotificationsViewModel(
             if (enabled) {
                 appPreferences.setWearableNotifications(false)
             }
-            rescheduleNotifications(false)
+            rescheduleNotifications(ReminderChange.PENDING)
         }
     }
 
@@ -141,7 +143,7 @@ open class NotificationsViewModel(
             if (enabled) {
                 appPreferences.setPersistentNotifications(false)
             }
-            rescheduleNotifications(false)
+            rescheduleNotifications(ReminderChange.PENDING)
         }
     }
 
@@ -149,7 +151,7 @@ open class NotificationsViewModel(
         settings = settings.copy(bundleNotifications = enabled)
         persist {
             appPreferences.setBundleNotifications(enabled)
-            rescheduleNotifications(true)
+            rescheduleNotifications(ReminderChange.ON_SCREEN)
         }
     }
 
@@ -187,7 +189,7 @@ open class NotificationsViewModel(
         isCurrentlyQuietHours = settings.isCurrentlyQuietHours()
         persist {
             appPreferences.setQuietHoursEnabled(enabled)
-            rescheduleNotifications(false)
+            rescheduleNotifications(ReminderChange.PENDING)
         }
         scheduleQuietHoursRefresh()
     }
@@ -212,21 +214,21 @@ open class NotificationsViewModel(
                 settings = settings.copy(defaultReminderTime = millisOfDay)
                 persist {
                     appPreferences.setDefaultReminderTime(millisOfDay)
-                    rescheduleNotifications(false)
+                    rescheduleNotifications(ReminderChange.PENDING)
                 }
             }
             TimePickerTarget.QUIET_HOURS_START -> {
                 settings = settings.copy(quietHoursStart = millisOfDay)
                 persist {
                     appPreferences.setQuietHoursStart(millisOfDay)
-                    rescheduleNotifications(false)
+                    rescheduleNotifications(ReminderChange.PENDING)
                 }
             }
             TimePickerTarget.QUIET_HOURS_END -> {
                 settings = settings.copy(quietHoursEnd = millisOfDay)
                 persist {
                     appPreferences.setQuietHoursEnd(millisOfDay)
-                    rescheduleNotifications(false)
+                    rescheduleNotifications(ReminderChange.PENDING)
                 }
             }
         }

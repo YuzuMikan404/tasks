@@ -7,21 +7,42 @@ import sys
 from resolve_upstream_conflicts import PATCH_MARKERS
 
 
-EXTRA_MARKERS = {
-    "composeApp/src/commonMain/kotlin/org/tasks/ForkPatches.kt": (
-        "Platform.CALDAV, Platform.ETEBASE",
+REQUIRED_FILES = (
+    "graphics/icon.ico",
+    "composeApp/src/desktopMain/kotlin/org/tasks/auth/ForkOAuthPatches.kt",
+    "composeApp/src/desktopMain/kotlin/org/tasks/update/WindowsAutoUpdater.kt",
+)
+
+REQUIRED_ABSENT_PATHS = (
+    "kmp/src/commonMain/composeResources/values-in",
+    "kmp/src/commonMain/composeResources/values-iw",
+)
+
+REQUIRED_MARKERS = {
+    "composeApp/build.gradle.kts": (
+        'upgradeUuid = "8f7f9a7e-4f73-4cb6-9f3d-37c2b3952f39"',
     ),
-    "composeApp/src/desktopMain/kotlin/org/tasks/di/ForkDesktopPatches.kt": (
-        "copy(isLibre = true)",
+    "composeApp/src/desktopMain/kotlin/org/tasks/update/WindowsAutoUpdater.kt": (
+        "YuzuMikan404/tasks/releases/latest",
+        '"msiexec.exe"',
+        "downloadVerified(installerUrl, installer, expectedHash)",
     ),
 }
-REQUIRED_FILES = ("graphics/icon.ico",)
 
 
 def verify(repo: Path) -> list[str]:
     errors: list[str] = []
-    all_markers = {**PATCH_MARKERS, **EXTRA_MARKERS}
-    for relative_path, markers in all_markers.items():
+    for relative_path, markers in PATCH_MARKERS.items():
+        path = repo / relative_path
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as error:
+            errors.append(f"cannot read {relative_path}: {error}")
+            continue
+        for marker in markers:
+            if marker not in text:
+                errors.append(f"missing marker in {relative_path}: {marker}")
+    for relative_path, markers in REQUIRED_MARKERS.items():
         path = repo / relative_path
         try:
             text = path.read_text(encoding="utf-8")
@@ -34,6 +55,9 @@ def verify(repo: Path) -> list[str]:
     for relative_path in REQUIRED_FILES:
         if not (repo / relative_path).is_file():
             errors.append(f"missing required file: {relative_path}")
+    for relative_path in REQUIRED_ABSENT_PATHS:
+        if (repo / relative_path).exists() or (repo / relative_path).is_symlink():
+            errors.append(f"Windows-incompatible resource alias must be absent: {relative_path}")
     return errors
 
 

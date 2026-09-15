@@ -45,29 +45,44 @@ else
   git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
   python3 -m unittest discover -s scripts -p 'test_*.py'
 
-  if ! git merge --no-ff --no-edit "refs/tags/upstream-$latest"; then
-    conflicts="$(git diff --name-only --diff-filter=U)"
-    patch_conflicts=()
-    while IFS= read -r conflict; do
-      [ -z "$conflict" ] && continue
-      case "$conflict" in
-        .github/workflows/*) ;;
-        *) patch_conflicts+=("$conflict") ;;
-      esac
-    done <<< "$conflicts"
+  git merge --no-ff --no-edit "refs/tags/upstream-$latest" || true
 
-    if [ "${#patch_conflicts[@]}" -gt 0 ]; then
-      echo "Checking conflicts against the Windows-fork patch allowlist:"
-      printf '  %s\n' "${patch_conflicts[@]}"
-      python3 scripts/resolve_upstream_conflicts.py "${patch_conflicts[@]}"
-      git add -- "${patch_conflicts[@]}"
-    fi
+  conflicts="$(git diff --name-only --diff-filter=U)"
+  unknown_conflicts=()
+  while IFS= read -r conflict; do
+    [ -z "$conflict" ] && continue
+    case "$conflict" in
+      .github/workflows/*) ;;
+      composeApp/build.gradle.kts) ;;
+      composeApp/src/desktopMain/kotlin/main.kt) ;;
+      composeApp/src/desktopMain/kotlin/org/tasks/analytics/PostHogReporting.kt) ;;
+      composeApp/src/desktopMain/kotlin/org/tasks/auth/DesktopOAuthFlow.kt) ;;
+      composeApp/src/desktopMain/kotlin/org/tasks/di/DesktopModule.kt) ;;
+      kmp/src/commonMain/composeResources/values-in) ;;
+      kmp/src/commonMain/composeResources/values-iw) ;;
+      *) unknown_conflicts+=("$conflict") ;;
+    esac
+  done <<< "$conflicts"
+
+  if [ "${#unknown_conflicts[@]}" -gt 0 ]; then
+    echo "Upstream introduced conflicts outside the guarded Windows-fork patch:"
+    printf '  %s\n' "${unknown_conflicts[@]}"
+    git merge --abort
+    exit 1
   fi
 
   # Upstream Actions are never imported; this fork publishes Windows only.
   git checkout "$fork_head" -- .github/workflows
   git rm -f --ignore-unmatch .github/workflows/bundle.yml .github/workflows/release.yml .github/workflows/deploy.yml
   git add .github/workflows
+
+  python3 scripts/resolve_upstream_conflicts.py --upstream-ref "refs/tags/upstream-$latest"
+
+  # These upstream aliases are symlinks. On Windows checkouts with core.symlinks=false
+  # they become plain files, which Compose rejects as invalid resource directories.
+  git rm -f --ignore-unmatch \
+    kmp/src/commonMain/composeResources/values-in \
+    kmp/src/commonMain/composeResources/values-iw
 
   remaining="$(git diff --name-only --diff-filter=U)"
   if [ -n "$remaining" ]; then

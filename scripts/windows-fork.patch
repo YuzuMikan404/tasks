@@ -1,0 +1,280 @@
+diff --git a/composeApp/build.gradle.kts b/composeApp/build.gradle.kts
+index fa3e9cbdb6..5702faa6d0 100644
+--- a/composeApp/build.gradle.kts
++++ b/composeApp/build.gradle.kts
+@@ -180,6 +180,11 @@ compose.desktop {
+                 "jdk.unsupported",
+                 "jdk.zipfs",
+             )
++            windows {
++                iconFile.set(project.file("../graphics/icon.ico"))
++                // Keep this stable so a downloaded MSI upgrades the existing installation.
++                upgradeUuid = "8f7f9a7e-4f73-4cb6-9f3d-37c2b3952f39"
++            }
+         }
+     }
+ }
+diff --git a/composeApp/src/desktopMain/kotlin/main.kt b/composeApp/src/desktopMain/kotlin/main.kt
+index a99eaa6b35..960b43a0c9 100644
+--- a/composeApp/src/desktopMain/kotlin/main.kt
++++ b/composeApp/src/desktopMain/kotlin/main.kt
+@@ -15,6 +15,7 @@ import androidx.compose.ui.window.rememberWindowState
+ import co.touchlab.kermit.Logger
+ import co.touchlab.kermit.Severity
+ import co.touchlab.kermit.platformLogWriter
++import org.jetbrains.compose.resources.painterResource
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.FlowPreview
+ import kotlinx.coroutines.flow.debounce
+@@ -56,9 +57,14 @@ import org.tasks.sync.microsoft.MicrosoftClientProvider
+ import org.tasks.di.commonModule
+ import org.tasks.di.dataDir
+ import org.tasks.di.logDir
++import org.tasks.di.Platform
++import org.tasks.di.platform
+ import org.tasks.di.platformModule
+ import org.tasks.logging.FileLogWriter
+ import org.tasks.logging.logStartup
++import org.tasks.update.WindowsUpdate
++import org.tasks.update.launchWindowsUpdate
++import org.tasks.update.prepareWindowsUpdate
+ import java.awt.Desktop
+ import java.awt.Dimension
+ import java.awt.desktop.QuitStrategy
+@@ -70,7 +76,10 @@ import java.net.InetAddress
+ import java.net.ServerSocket
+ import java.net.Socket
+ import java.nio.channels.FileChannel
++import javax.swing.JOptionPane
+ import org.tasks.extensions.openInBrowser
++import tasks.kmp.generated.resources.Res
++import tasks.kmp.generated.resources.ic_round_icon
+ import org.tasks.extensions.step
+ 
+ private const val TAG = "main"
+@@ -81,11 +90,20 @@ private var lockChannel: FileChannel? = null
+ private var ipcServer: ServerSocket? = null
+ 
+ private fun acquireLock(): Boolean {
++    var channel: FileChannel? = null
+     return try {
+         lockFile.parentFile?.mkdirs()
+-        lockChannel = RandomAccessFile(lockFile, "rw").channel
+-        lockChannel?.tryLock() != null
++        channel = RandomAccessFile(lockFile, "rw").channel
++        val lock = channel.tryLock()
++        if (lock != null) {
++            lockChannel = channel
++            true
++        } else {
++            channel.close()
++            false
++        }
+     } catch (e: Exception) {
++        channel?.close()
+         Logger.e(e) { "Failed to acquire lock" }
+         false
+     }
+@@ -134,11 +152,13 @@ private const val SHUTDOWN_SAVE_TIMEOUT_MS = 10_000L
+ 
+ @OptIn(FlowPreview::class)
+ fun main() {
+-    if (!acquireLock()) {
+-        signalExistingInstance()
+-        return
++    val gotLock = acquireLock()
++    if (!gotLock) {
++        if (signalExistingInstance()) return
++        Logger.w { "Lock failed, but no existing instance was found. Continuing startup." }
++    } else {
++        startIpcServer()
+     }
+-    startIpcServer()
+     org.tasks.caldav.CaldavSynchronizer.registerFactories()
+     Logger.setMinSeverity(if (TasksBuildConfig.DEBUG) Severity.Verbose else Severity.Debug)
+     val fileLogWriter = FileLogWriter(logDir)
+@@ -156,7 +176,11 @@ fun main() {
+     val koin = KoinPlatform.getKoin()
+     runBlocking {
+         val versionCode = koin.get<PlatformConfiguration>().versionCode
+-        koin.get<AppPreferences>().recordInstallIfNeeded(versionCode)
++        runCatching {
++            koin.get<AppPreferences>().recordInstallIfNeeded(versionCode)
++        }.onFailure { e ->
++            Logger.w(e) { "Failed to record install metadata" }
++        }
+         koin.get<Upgrader>().upgrade(versionCode)
+     }
+     // Cmd+Q on macOS goes through here rather than through the window: the JDK's default quit
+@@ -211,6 +235,7 @@ fun main() {
+         val taskRequests = koinInject<TaskRequests>()
+         val shutdownScope = rememberCoroutineScope()
+         var closing by remember { mutableStateOf(false) }
++        var pendingUpdate by remember { mutableStateOf<WindowsUpdate?>(null) }
+         val windowState = rememberWindowState(size = DpSize(DEFAULT_WIDTH, DEFAULT_HEIGHT))
+         var windowReady by remember { mutableStateOf(false) }
+         // Restore saved window size and position before showing the window
+@@ -281,11 +306,20 @@ fun main() {
+                             taskRequests.acceptOpenRequests(true)
+                             return@launch
+                         }
++                        pendingUpdate?.let { update ->
++                            if (!launchWindowsUpdate(update)) {
++                                closing = false
++                                setQuitting(false)
++                                taskRequests.acceptOpenRequests(true)
++                                return@launch
++                            }
++                        }
+                         exitApplication()
+                     }
+                 }
+             },
+             title = "Tasks",
++            icon = painterResource(Res.drawable.ic_round_icon),
+             state = windowState,
+             // Hidden the moment the user asks to quit. The flush above has already read what the
+             // open editor was holding and there is no second one, so anything typed after it would
+@@ -301,6 +335,21 @@ fun main() {
+             val notifier = koinInject<DesktopNotifier>()
+             val refreshBroadcaster = koinInject<ComposeRefreshBroadcaster>()
+             val lifecycleScope = rememberCoroutineScope()
++            LaunchedEffect(Unit) {
++                if (platform() != Platform.WINDOWS) return@LaunchedEffect
++                val update = prepareWindowsUpdate(dataDir) ?: return@LaunchedEffect
++                val install = JOptionPane.showConfirmDialog(
++                    window,
++                    "Tasks.org ${update.version} is ready. Install it now?",
++                    "Tasks.org update",
++                    JOptionPane.YES_NO_OPTION,
++                    JOptionPane.INFORMATION_MESSAGE,
++                )
++                if (install == JOptionPane.YES_OPTION) {
++                    pendingUpdate = update
++                    window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING))
++                }
++            }
+             LaunchedEffect(Unit) {
+                 Thread.setDefaultUncaughtExceptionHandler { _, throwable ->
+                     reporting.reportException(throwable, fatal = true)
+diff --git a/composeApp/src/desktopMain/kotlin/org/tasks/analytics/PostHogReporting.kt b/composeApp/src/desktopMain/kotlin/org/tasks/analytics/PostHogReporting.kt
+index 57edec9dff..df40503895 100644
+--- a/composeApp/src/desktopMain/kotlin/org/tasks/analytics/PostHogReporting.kt
++++ b/composeApp/src/desktopMain/kotlin/org/tasks/analytics/PostHogReporting.kt
+@@ -17,12 +17,17 @@ class PostHogReporting(
+     private val logger = Logger.withTag("PostHogReporting")
+ 
+     private val collectStatistics: Boolean =
+-        kotlinx.coroutines.runBlocking {
+-            tasksPreferences.get(TasksPreferences.collectStatistics, true)
++        runCatching {
++            kotlinx.coroutines.runBlocking {
++                tasksPreferences.get(TasksPreferences.collectStatistics, true)
++            }
++        }.getOrElse {
++            logger.w(it) { "Failed to read analytics preference" }
++            false
+         }
+ 
+-    private val enabled: Boolean = (apiKey.isNotBlank() && collectStatistics).also { enabled ->
+-        if (enabled) {
++    private val enabled: Boolean =
++        apiKey.isNotBlank() && collectStatistics && runCatching {
+             val config = PostHogConfig(
+                 apiKey = apiKey,
+                 host = "https://us.i.posthog.com",
+@@ -52,8 +57,11 @@ class PostHogReporting(
+                 PostHog.register("\$locale", "$language-$country")
+             }
+             PostHog.register("\$timezone", TimeZone.getDefault().id)
++            true
++        }.getOrElse { e ->
++            logger.w(e) { "PostHog initialization failed" }
++            false
+         }
+-    }
+ 
+     override fun logEvent(event: String, vararg params: Pair<String, Any>) {
+         val properties = params.toMap()
+@@ -96,7 +104,8 @@ class PostHogReporting(
+ 
+     fun close() {
+         if (enabled) {
+-            PostHog.close()
++            runCatching { PostHog.close() }
++                .onFailure { e -> logger.w(e) { "Failed to close PostHog" } }
+         }
+     }
+ }
+diff --git a/composeApp/src/desktopMain/kotlin/org/tasks/auth/DesktopOAuthFlow.kt b/composeApp/src/desktopMain/kotlin/org/tasks/auth/DesktopOAuthFlow.kt
+index dc337ccbfb..8ee35c08df 100644
+--- a/composeApp/src/desktopMain/kotlin/org/tasks/auth/DesktopOAuthFlow.kt
++++ b/composeApp/src/desktopMain/kotlin/org/tasks/auth/DesktopOAuthFlow.kt
+@@ -76,7 +76,8 @@ class DesktopOAuthFlow(
+         loopbackHost: String,
+         onReady: (port: Int) -> OAuthConfig,
+     ): Pair<OAuthConfig, String> = suspendCancellableCoroutine { cont ->
+-        val server = HttpServer.create(InetSocketAddress(loopbackHost, 0), 0)
++        val server = createLoopbackServerOrNull(cont, loopbackHost)
++            ?: return@suspendCancellableCoroutine
+         val port = server.address.port
+         val config = AtomicReference<OAuthConfig?>(null)
+ 
+@@ -134,20 +135,20 @@ class DesktopOAuthFlow(
+             }
+         }
+ 
+-        server.start()
++        try {
++            server.start()
++        } catch (e: Exception) {
++            cont.resumeWithException(e)
++            return@suspendCancellableCoroutine
++        }
+         Logger.d(TAG) { "Listening on port $port" }
+ 
+         cont.invokeOnCancellation {
+             server.stop(0)
+         }
+ 
+-        try {
+-            config.set(onReady(port))
+-        } catch (e: Throwable) {
+-            server.stop(0)
+-            if (cont.isActive) {
+-                cont.resumeWithException(e)
+-            }
+-        }
++        val readyConfig = runOnReadyOrNull(cont, server) { onReady(port) }
++            ?: return@suspendCancellableCoroutine
++        config.set(readyConfig)
+     }
+ }
+diff --git a/composeApp/src/desktopMain/kotlin/org/tasks/di/DesktopModule.kt b/composeApp/src/desktopMain/kotlin/org/tasks/di/DesktopModule.kt
+index 881ba7bdde..52f0c7316d 100644
+--- a/composeApp/src/desktopMain/kotlin/org/tasks/di/DesktopModule.kt
++++ b/composeApp/src/desktopMain/kotlin/org/tasks/di/DesktopModule.kt
+@@ -72,6 +72,10 @@ import java.io.File
+ internal val appName: String =
+     if (JvmBuildConfig.DEBUG) "Tasks.org.debug" else "Tasks.org"
+ 
++// This independently distributed desktop fork unlocks premium features without
++// creating or impersonating a Tasks.org Cloud subscription.
++private const val IS_GENERIC = true
++
+ internal enum class Platform { MAC, WINDOWS, LINUX }
+ 
+ internal fun platform(): Platform {
+@@ -308,6 +312,12 @@ actual fun platformModule(): Module = module {
+             override val subscription: Flow<SubscriptionProvider.SubscriptionInfo?> =
+                 combine(entitlement.hasPro, entitlement.sku, entitlement.provider, debugPro) { hasPro, sku, provider, debug ->
+                     when {
++                        IS_GENERIC -> SubscriptionProvider.SubscriptionInfo(
++                            sku = "desktop_generic",
++                            isMonthly = false,
++                            isTasksSubscription = false,
++                            isGitHubSponsor = false,
++                        )
+                         hasPro -> {
+                             val isMonthly = sku?.startsWith("monthly") == true
+                             SubscriptionProvider.SubscriptionInfo(

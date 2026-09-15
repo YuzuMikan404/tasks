@@ -1,84 +1,38 @@
-from contextlib import redirect_stderr
-from io import StringIO
-import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
 
-from resolve_upstream_conflicts import ConflictFormatError, main, resolve_ours
+from resolve_upstream_conflicts import MANAGED_PATHS, patch_paths, reapply, validate_patch
 
 
-class ResolveOursTest(unittest.TestCase):
-    def test_keeps_ours_and_non_conflicting_lines(self):
-        merged = (
-            "upstream change before\n"
-            "<<<<<<< HEAD\n"
-            "fork patch\n"
-            "=======\n"
-            "new upstream implementation\n"
-            ">>>>>>> upstream-16.0\n"
-            "upstream change after\n"
+class ReapplyWindowsForkPatchTest(unittest.TestCase):
+    def test_parses_patch_paths(self):
+        text = (
+            "diff --git a/one.kt b/one.kt\n"
+            "index 1111111..2222222 100644\n"
+            "diff --git a/two.kt b/two.kt\n"
         )
-        resolved, count = resolve_ours(merged)
-        self.assertEqual(
-            resolved,
-            "upstream change before\nfork patch\nupstream change after\n",
-        )
-        self.assertEqual(count, 1)
+        self.assertEqual(patch_paths(text), {"one.kt", "two.kt"})
 
-    def test_resolves_multiple_hunks(self):
-        merged = (
-            "<<<<<<< HEAD\na\n=======\nx\n>>>>>>> upstream\n"
-            "middle\n"
-            "<<<<<<< HEAD\nb\n=======\ny\n>>>>>>> upstream\n"
-        )
-        self.assertEqual(resolve_ours(merged), ("a\nmiddle\nb\n", 2))
-
-    def test_rejects_unterminated_hunk(self):
-        with self.assertRaises(ConflictFormatError):
-            resolve_ours("<<<<<<< HEAD\nfork\n=======\nupstream\n")
-
-    def test_rejects_text_without_conflicts(self):
-        with self.assertRaises(ConflictFormatError):
-            resolve_ours("ordinary file\n")
-
-    def test_rejects_conflict_without_fork_marker(self):
-        conflict = "<<<<<<< HEAD\nunrelated\n=======\nupstream\n>>>>>>> tag\n"
-        with self.assertRaises(ConflictFormatError):
-            resolve_ours(conflict, ("required fork marker",))
-
-    def test_accepts_conflict_with_fork_marker(self):
-        conflict = "<<<<<<< HEAD\nfork marker\n=======\nupstream\n>>>>>>> tag\n"
-        self.assertEqual(resolve_ours(conflict, ("fork marker",)), ("fork marker\n", 1))
-
-    def test_accepts_whitespace_only_conflict(self):
-        conflict = "<<<<<<< HEAD\n=======\n\n>>>>>>> tag\n"
-        self.assertEqual(resolve_ours(conflict, ("fork marker",)), ("", 1))
-
-    def test_cli_rejects_non_allowlisted_path(self):
-        with redirect_stderr(StringIO()), self.assertRaises(SystemExit):
-            main(["unknown/file.kt"])
-
-    def test_cli_does_not_partially_write_on_later_failure(self):
-        valid = "<<<<<<< HEAD\nfork\n=======\nupstream\n>>>>>>> tag\n"
-        malformed = "<<<<<<< HEAD\nfork\n=======\nupstream\n"
+    def test_rejects_patch_with_wrong_path_set(self):
         with TemporaryDirectory() as directory:
-            original_cwd = Path.cwd()
-            try:
-                os.chdir(directory)
-                Path("first.kt").write_text(valid, encoding="utf-8")
-                Path("second.kt").write_text(malformed, encoding="utf-8")
-                markers = {"first.kt": ("fork",), "second.kt": ("fork",)}
-                with (
-                    patch("resolve_upstream_conflicts.PATCH_MARKERS", markers),
-                    patch("resolve_upstream_conflicts.ALLOWED_PATHS", frozenset(markers)),
-                    redirect_stderr(StringIO()),
-                ):
-                    self.assertEqual(main(["first.kt", "second.kt"]), 1)
-                self.assertEqual(Path("first.kt").read_text(encoding="utf-8"), valid)
-            finally:
-                os.chdir(original_cwd)
+            patch_file = Path(directory, "fork.patch")
+            patch_file.write_text("diff --git a/only.kt b/only.kt\n", encoding="utf-8")
+            with self.assertRaises(ValueError):
+                validate_patch(patch_file)
+
+    @patch("resolve_upstream_conflicts.validate_patch")
+    @patch("resolve_upstream_conflicts.run_git")
+    def test_reapply_starts_from_upstream_then_applies_patch(self, run_git, validate_patch_mock):
+        reapply("refs/tags/upstream-16.0")
+        validate_patch_mock.assert_called_once_with()
+        self.assertEqual(run_git.call_count, 2)
+        self.assertEqual(
+            run_git.call_args_list[0].args,
+            ("checkout", "refs/tags/upstream-16.0", "--", *MANAGED_PATHS),
+        )
+        self.assertEqual(run_git.call_args_list[1].args[:3], ("apply", "--3way", "--index"))
 
 
 if __name__ == "__main__":

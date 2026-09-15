@@ -34,6 +34,7 @@ import org.tasks.data.dao.TaskAttachmentDao
 import org.tasks.data.dao.TaskDao
 import org.tasks.data.dao.UpgraderDao
 import org.tasks.data.dao.UserActivityDao
+import org.tasks.data.db.Database
 import org.tasks.data.entity.CaldavTask
 import org.tasks.data.entity.Filter
 import org.tasks.data.entity.Tag
@@ -67,6 +68,7 @@ class Upgrader @Inject constructor(
     private val widgetManager: AppWidgetManager,
     private val taskMover: TaskMover,
     private val upgraderDao: UpgraderDao,
+    private val database: Database,
     private val vtodoCache: VtodoCache,
     private val upgrade_11_3: Lazy<Upgrade_11_3>,
     private val upgrade_11_12_3: Lazy<Upgrade_11_12_3>,
@@ -75,6 +77,7 @@ class Upgrader @Inject constructor(
     private val upgrade_13_11: Lazy<Upgrade_13_11>,
     private val upgrade_14_11: Lazy<Upgrade_14_11>,
     private val upgrade_14_13: Lazy<Upgrade_14_13>,
+    private val upgrade_15_10: Lazy<Upgrade_15_10>,
 ) {
 
     fun upgrade(from: Int, to: Int) {
@@ -168,6 +171,12 @@ class Upgrader @Inject constructor(
             }
             run(from, Upgrade_14_13.VERSION) {
                 upgrade_14_13.get().deleteAlarmsForAllDayTasks()
+            }
+            run(from, Upgrade_15_10.VERSION) {
+                upgrade_15_10.get().migrateRandomReminder()
+            }
+            CommonUpgrades.all(database).forEach { step ->
+                run(from, step.version) { step.upgrade().run() }
             }
             preferences.setBoolean(R.string.p_just_updated, true)
         } else {

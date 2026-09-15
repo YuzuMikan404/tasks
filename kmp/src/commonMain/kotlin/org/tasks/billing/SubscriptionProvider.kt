@@ -13,4 +13,8 @@ interface SubscriptionProvider {
 
     val subscription: Flow<SubscriptionInfo?>
     suspend fun getFormattedPrice(sku: String): String?
+
+    suspend fun awaitVerification(): Boolean = true
+
+    val googleAndMicrosoftRequirePro: Boolean get() = false
 }

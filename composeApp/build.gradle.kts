@@ -50,6 +50,11 @@ kotlin {
             implementation(libs.junit)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.mockito.kotlin)
+            implementation(libs.okhttp.mockwebserver)
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+            implementation(compose.desktop.currentOs)
+            implementation(project(path = ":kmp", configuration = "jvmTestOutput"))
         }
 
         commonMain.dependencies {
@@ -75,6 +80,7 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.markdown.renderer.m3)
+            implementation(libs.reorderable)
             implementation(libs.jetbrains.adaptive)
             implementation(libs.jetbrains.adaptive.layout)
             implementation(libs.jetbrains.adaptive.navigation)
@@ -91,13 +97,16 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.java.keyring)
             implementation(libs.posthog)
+            implementation(libs.nucleus.notification.linux)
+            implementation(libs.nucleus.notification.macos)
+            implementation(libs.nucleus.notification.windows)
         }
     }
 }
 
 android {
     namespace = "org.tasks"
-    compileSdk = libs.versions.composeapp.compileSdk.get().toInt()
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
@@ -156,9 +165,25 @@ compose.desktop {
             packageVersion = libs.versions.versionName.get().let {
                 if (it.count { c -> c == '.' } < 2) "$it.0" else it
             }
-            includeAllModules = true
+
+            modules(
+                "java.compiler",
+                "java.management",
+                "java.naming",
+                "java.security.jgss",
+                "java.sql",
+                "jdk.accessibility",
+                "jdk.httpserver",
+                "jdk.localedata",
+                "jdk.net",
+                "jdk.security.auth",
+                "jdk.unsupported",
+                "jdk.zipfs",
+            )
             windows {
                 iconFile.set(project.file("../graphics/icon.ico"))
+                // Keep this stable so a downloaded MSI upgrades the existing installation.
+                upgradeUuid = "8f7f9a7e-4f73-4cb6-9f3d-37c2b3952f39"
             }
         }
     }
@@ -167,7 +192,9 @@ compose.desktop {
 // Conveyor platform-specific Compose runtime dependencies
 dependencies {
     "linuxAmd64"(compose.desktop.linux_x64)
+    "linuxAarch64"(compose.desktop.linux_arm64)
     "macAmd64"(compose.desktop.macos_x64)
     "macAarch64"(compose.desktop.macos_arm64)
     "windowsAmd64"(compose.desktop.windows_x64)
+    "windowsAarch64"(compose.desktop.windows_arm64)
 }

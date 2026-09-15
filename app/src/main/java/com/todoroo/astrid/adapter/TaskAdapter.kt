@@ -18,16 +18,19 @@ import org.tasks.broadcast.RefreshBroadcaster
 import org.tasks.data.TaskContainer
 import org.tasks.data.createDueDate
 import org.tasks.data.createHideUntil
+import org.tasks.data.deepestNestingUnder
+import org.tasks.data.findParentIndex
 import org.tasks.data.dao.CaldavDao
 import org.tasks.data.dao.CaldavDao.Companion.toAppleEpoch
 import org.tasks.data.dao.DirtyDao
 import org.tasks.data.dao.GoogleTaskDao
-import org.tasks.data.entity.CaldavAccount.Companion.TYPE_MICROSOFT
+import org.tasks.data.entity.CaldavAccount
 import org.tasks.data.entity.CaldavTask
 import org.tasks.data.entity.Task
 import org.tasks.data.entity.Task.Companion.HIDE_UNTIL_SPECIFIC_DAY
 import org.tasks.date.DateTimeUtils.toDateTime
 import org.tasks.time.millisOfDay
+import kotlin.math.min
 
 open class TaskAdapter(
     private val newTasksOnTop: Boolean,
@@ -87,11 +90,17 @@ open class TaskAdapter(
 
     open fun maxIndent(previousPosition: Int, task: TaskContainer): Int {
         val previous = getTask(previousPosition)
-        return if (previous.isSingleLevelSubtask) {
+        var indent = if (previous.isSingleLevelSubtask) {
             if (task.hasChildren()) 0 else 1
         } else {
-            previous.indent + 1
+            deepestNestingUnder(previous.indent)
         }
+        while (!task.isCompleted && indent > 0 &&
+            findParent(indent, previousPosition + 1)?.isCompleted == true
+        ) {
+            indent--
+        }
+        return indent
     }
 
     fun minIndent(nextPosition: Int, task: TaskContainer): Int {
@@ -109,6 +118,9 @@ open class TaskAdapter(
         }
         return 0
     }
+
+    fun minIndent(nextPosition: Int, task: TaskContainer, maxIndent: Int): Int =
+        min(minIndent(nextPosition, task), maxIndent)
 
     fun isSelected(task: TaskContainer): Boolean = selected.contains(task.id)
 
@@ -180,18 +192,8 @@ open class TaskAdapter(
         return false
     }
 
-    private fun findParent(indent: Int, to: Int): TaskContainer? {
-        if (indent == 0 || to == 0) {
-            return null
-        }
-        for (i in to - 1 downTo 0) {
-            val previous = getTask(i)
-            if (indent > previous.indent) {
-                return previous
-            }
-        }
-        return null
-    }
+    private fun findParent(indent: Int, to: Int): TaskContainer? =
+        findParentIndex(indent, to) { getTask(it).indent }?.let { getTask(it) }
 
     private suspend fun changeSortGroup(task: TaskContainer, pos: Int) {
         when(dataSource.sortMode) {
@@ -271,10 +273,7 @@ open class TaskAdapter(
             calendar = list,
         )
         val newParentId = newParent?.id ?: 0
-        // Don't update remoteParent for Microsoft tasks — the sync code
-        // compares task.parent with remoteParent to detect hierarchy changes
-        // between Task and ChecklistItem API objects
-        if (task.accountType != TYPE_MICROSOFT) {
+        if (CaldavAccount.pushesRemoteParent(task.accountType)) {
             if (newParentId == 0L) {
                 caldavTask.remoteParent = ""
             } else {
@@ -429,9 +428,7 @@ open class TaskAdapter(
 
     private suspend fun changeCaldavParent(task: TaskContainer, newParent: Long) {
         val caldavTask = task.caldavTask ?: return
-        // Don't update remoteParent for Microsoft tasks — the sync code
-        // compares task.parent with remoteParent to detect hierarchy changes
-        val skipRemoteParentUpdate = task.accountType == TYPE_MICROSOFT
+        val skipRemoteParentUpdate = !CaldavAccount.pushesRemoteParent(task.accountType)
         if (newParent == 0L) {
             if (!skipRemoteParentUpdate) {
                 caldavTask.remoteParent = ""

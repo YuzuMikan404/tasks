@@ -1,5 +1,6 @@
 package org.tasks.di
 
+import co.touchlab.kermit.Logger
 import com.todoroo.astrid.alarms.AlarmCalculator
 import com.todoroo.astrid.alarms.AlarmService
 import com.todoroo.astrid.repeats.RepeatTaskHelper
@@ -9,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
@@ -30,6 +32,8 @@ import org.tasks.compose.accounts.AddAccountViewModel
 import org.tasks.compose.chips.ChipDataProvider
 import org.tasks.data.MergedGeofence
 import org.tasks.data.TaskCreator
+import org.tasks.data.SubtaskTreeWriter
+import org.tasks.data.SubtaskTreeRegistry
 import org.tasks.data.TaskMover
 import org.tasks.data.TaskSaver
 import org.tasks.data.db.Database
@@ -42,8 +46,9 @@ import org.tasks.data.entity.CaldavAccount.Companion.TYPE_MICROSOFT
 import org.tasks.data.entity.CaldavAccount.Companion.TYPE_TASKS
 import org.tasks.data.entity.Place
 import org.tasks.data.entity.Task
-import org.tasks.data.getLocalList
+import org.tasks.data.getOrCreateDefaultListFilter
 import org.tasks.etebase.EtebaseSynchronizer
+import org.tasks.extensions.guarded
 import org.tasks.filters.CaldavListCache
 import org.tasks.filters.FilterProvider
 import org.tasks.googleapis.DefaultListProvider
@@ -57,19 +62,22 @@ import org.tasks.notifications.CancelReason
 import org.tasks.notifications.Notifier
 import org.tasks.opentasks.OpenTasksSyncer
 import org.tasks.preferences.AppPreferences
+import org.tasks.preferences.DEFAULT_ALARMS_JSON
 import org.tasks.preferences.DataStoreQueryPreferences
 import org.tasks.preferences.DatePickerPreferences
 import org.tasks.preferences.NotificationSettings
 import org.tasks.preferences.PreferencesSnapshot
 import org.tasks.preferences.QueryPreferences
+import org.tasks.preferences.TaskDefaultSettings
 import org.tasks.preferences.TasksPreferences
 import org.tasks.preferences.adjustForQuietHours
 import org.tasks.preferences.isCurrentlyQuietHours
+import org.tasks.preferences.toAlarmJson
+import org.tasks.preferences.toAlarms
 import org.tasks.reminders.Random
 import org.tasks.reminders.ReminderControlSetViewModel
 import org.tasks.repeats.CustomRecurrenceViewModel
 import org.tasks.repeats.RepeatRuleToString
-import org.tasks.service.TaskCleanup
 import org.tasks.service.TaskCompleter
 import org.tasks.service.TaskDeleter
 import org.tasks.service.TaskMigrator
@@ -92,10 +100,12 @@ import org.tasks.viewmodel.LocalListSettingsViewModel
 import org.tasks.viewmodel.MicrosoftListSettingsViewModel
 import org.tasks.viewmodel.MainSettingsViewModel
 import org.tasks.viewmodel.NotificationsViewModel
+import org.tasks.viewmodel.ReminderChange
 import org.tasks.viewmodel.OpenTaskAccountViewModel
 import org.tasks.viewmodel.ProCardViewModel
 import org.tasks.viewmodel.SortSettingsViewModel
 import org.tasks.viewmodel.TagSettingsViewModel
+import org.tasks.viewmodel.TaskDefaultsViewModel
 import org.tasks.TaskEditDestination
 import org.tasks.viewmodel.PendingTaskSaves
 import org.tasks.viewmodel.TaskEditViewModel
@@ -103,15 +113,12 @@ import org.tasks.viewmodel.TaskListViewModel
 import org.tasks.viewmodel.TasksAccountViewModel
 import java.util.Locale
 
-internal fun hasProAccess(
-    isLibre: Boolean,
-    hasTasksAccount: Boolean,
-    hasSubscription: Boolean,
-): Boolean = isLibre || hasTasksAccount || hasSubscription
+private const val SYNC_TAG = "BackgroundWork"
 
 val commonModule = module {
     single { CoroutineScope(SupervisorJob() + Dispatchers.Default) }
     single { PendingTaskSaves(get()) }
+    single { org.tasks.TaskRequests() }
     single { Json { ignoreUnknownKeys = true } }
 
     // DAOs - singletons (from Database singleton)
@@ -137,14 +144,6 @@ val commonModule = module {
     // No-op implementations
     single { ComposeRefreshBroadcaster() }
     factory<RefreshBroadcaster> { get<ComposeRefreshBroadcaster>() }
-    factory<Notifier> {
-        object : Notifier {
-            override suspend fun cancel(id: Long, reason: CancelReason) {}
-            override suspend fun cancel(ids: List<Long>, reason: CancelReason) {}
-            override fun triggerNotifications() {}
-            override suspend fun updateTimerNotification() {}
-        }
-    }
     factory<LocationService> {
         object : LocationService {
             override val locationDao = get<org.tasks.data.dao.LocationDao>()
@@ -179,22 +178,118 @@ val commonModule = module {
                     TasksPreferences.defaultRemindersEnabled,
                     notificationDefaults.defaultRemindersEnabled
                 )
-            override suspend fun defaultLocationReminder() = 0
-            override suspend fun defaultAlarms() = emptyList<Alarm>()
-            override suspend fun defaultRandomHours() = 0
-            override suspend fun defaultRingMode() = 0
+            override suspend fun defaultLocationReminder() =
+                tasksPreferences.get(
+                    TasksPreferences.defaultLocationReminder,
+                    taskSettingDefaults.defaultLocationReminder
+                )
+            override suspend fun defaultAlarms() =
+                tasksPreferences
+                    .get(TasksPreferences.defaultAlarms, DEFAULT_ALARMS_JSON)
+                    .toAlarms()
+            override suspend fun defaultRingMode() =
+                tasksPreferences.get(TasksPreferences.defaultRingMode, taskSettingDefaults.defaultRingMode)
             override suspend fun defaultDueTime() =
                 tasksPreferences.get(
                     TasksPreferences.defaultReminderTime,
                     notificationDefaults.defaultReminderTime
                 )
-            override suspend fun defaultPriority() = 0
+            override suspend fun defaultPriority() =
+                tasksPreferences.get(
+                    TasksPreferences.defaultPriority,
+                    taskSettingDefaults.defaultPriority
+                )
+            override suspend fun locationUpdateIntervalMinutes() =
+                tasksPreferences.get(
+                    TasksPreferences.locationUpdateInterval,
+                    taskSettingDefaults.locationUpdateIntervalMinutes
+                )
+            override suspend fun addTasksToTop() =
+                tasksPreferences.get(TasksPreferences.addTasksToTop, taskSettingDefaults.addTasksToTop)
+            override suspend fun taskDefaults(): TaskDefaultSettings {
+                val prefs = tasksPreferences.snapshot()
+                return TaskDefaultSettings(
+                    addTasksToTop = prefs.get(
+                        TasksPreferences.addTasksToTop,
+                        taskSettingDefaults.addTasksToTop
+                    ),
+                    defaultList = prefs.get(TasksPreferences.defaultList, "").orNull(),
+                    defaultTags = prefs
+                        .get(TasksPreferences.defaultTags, "")
+                        .split(",")
+                        .filter { it.isNotBlank() },
+                    defaultPriority = prefs.get(
+                        TasksPreferences.defaultPriority,
+                        taskSettingDefaults.defaultPriority
+                    ),
+                    defaultHideUntil = prefs.get(
+                        TasksPreferences.defaultHideUntil,
+                        taskSettingDefaults.defaultHideUntil
+                    ),
+                    defaultDueDate = prefs.get(
+                        TasksPreferences.defaultDueDate,
+                        taskSettingDefaults.defaultDueDate
+                    ),
+                    defaultCalendar = prefs.get(TasksPreferences.defaultCalendar, "").orNull(),
+                    defaultRecurrence = prefs.get(TasksPreferences.defaultRecurrence, "").orNull(),
+                    defaultRecurrenceFrom = prefs.get(
+                        TasksPreferences.defaultRecurrenceFrom,
+                        taskSettingDefaults.defaultRecurrenceFrom
+                    ),
+                    defaultAlarms = prefs
+                        .get(TasksPreferences.defaultAlarms, DEFAULT_ALARMS_JSON)
+                        .toAlarms(),
+                    defaultRingMode = prefs.get(
+                        TasksPreferences.defaultRingMode,
+                        taskSettingDefaults.defaultRingMode
+                    ),
+                    defaultLocation = prefs.get(TasksPreferences.defaultLocation, "").orNull(),
+                    defaultLocationReminder = prefs.get(
+                        TasksPreferences.defaultLocationReminder,
+                        taskSettingDefaults.defaultLocationReminder
+                    ),
+                    locationUpdateIntervalMinutes = prefs.get(
+                        TasksPreferences.locationUpdateInterval,
+                        taskSettingDefaults.locationUpdateIntervalMinutes
+                    ),
+                )
+            }
+            override suspend fun setAddTasksToTop(value: Boolean) =
+                tasksPreferences.set(TasksPreferences.addTasksToTop, value)
+            override suspend fun setDefaultList(value: String?) =
+                tasksPreferences.set(TasksPreferences.defaultList, value.orEmpty())
+            override suspend fun setDefaultTags(value: List<String>) =
+                tasksPreferences.set(TasksPreferences.defaultTags, value.joinToString(","))
+            override suspend fun setDefaultPriority(value: Int) =
+                tasksPreferences.set(TasksPreferences.defaultPriority, value)
+            override suspend fun setDefaultHideUntil(value: Int) =
+                tasksPreferences.set(TasksPreferences.defaultHideUntil, value)
+            override suspend fun setDefaultDueDate(value: Int) =
+                tasksPreferences.set(TasksPreferences.defaultDueDate, value)
+            override suspend fun setDefaultCalendar(value: String?) =
+                tasksPreferences.set(TasksPreferences.defaultCalendar, value.orEmpty())
+            override suspend fun setDefaultRecurrence(value: String?) =
+                tasksPreferences.set(TasksPreferences.defaultRecurrence, value.orEmpty())
+            override suspend fun setDefaultRecurrenceFrom(value: Int) =
+                tasksPreferences.set(TasksPreferences.defaultRecurrenceFrom, value)
+            override suspend fun setDefaultAlarms(value: List<Alarm>) =
+                tasksPreferences.set(TasksPreferences.defaultAlarms, value.toAlarmJson())
+            override suspend fun setDefaultRingMode(value: Int) =
+                tasksPreferences.set(TasksPreferences.defaultRingMode, value)
+            override suspend fun setDefaultLocation(value: String?) =
+                tasksPreferences.set(TasksPreferences.defaultLocation, value.orEmpty())
+            override suspend fun setDefaultLocationReminder(value: Int) =
+                tasksPreferences.set(TasksPreferences.defaultLocationReminder, value)
+            override suspend fun setLocationUpdateIntervalMinutes(value: Int) =
+                tasksPreferences.set(TasksPreferences.locationUpdateInterval, value)
             override suspend fun isCurrentlyQuietHours() =
                 tasksPreferences.snapshot().notificationSettings().isCurrentlyQuietHours()
             override suspend fun adjustForQuietHours(time: Long) =
                 tasksPreferences.snapshot().notificationSettings().adjustForQuietHours(time)
             override suspend fun notificationSettings() =
                 tasksPreferences.snapshot().notificationSettings()
+            override suspend fun setNotificationsEnabled(value: Boolean) =
+                tasksPreferences.set(TasksPreferences.notificationsEnabled, value)
             override suspend fun setPersistentNotifications(value: Boolean) =
                 tasksPreferences.set(TasksPreferences.persistentNotifications, value)
             override suspend fun setWearableNotifications(value: Boolean) =
@@ -228,7 +323,6 @@ val commonModule = module {
                 tasksPreferences.set(TasksPreferences.timePickerInputMode, value)
         }
     }
-    factory<TaskCleanup> { object : TaskCleanup {} }
     factory<CalendarHelper> { object : CalendarHelper {} }
     factory<SoundPlayer> { object : SoundPlayer {} }
     factory<org.tasks.compose.drawer.DrawerConfiguration> {
@@ -241,7 +335,6 @@ val commonModule = module {
     single<org.tasks.billing.PurchaseState> {
         val caldavDao = get<org.tasks.data.dao.CaldavDao>()
         val subscriptionProvider = get<org.tasks.billing.SubscriptionProvider>()
-        val platformConfiguration = get<org.tasks.PlatformConfiguration>()
         val _hasTasksAccount = MutableStateFlow(false)
         val _hasSubscription = MutableStateFlow(false)
         val _hasTasksSubscription = MutableStateFlow(false)
@@ -259,12 +352,7 @@ val commonModule = module {
         }
         object : org.tasks.billing.PurchaseState {
             override val hasTasksAccount: Boolean get() = _hasTasksAccount.value
-            override val hasPro: Boolean
-                get() = hasProAccess(
-                    isLibre = platformConfiguration.isLibre,
-                    hasTasksAccount = hasTasksAccount,
-                    hasSubscription = _hasSubscription.value,
-                )
+            override val hasPro: Boolean get() = hasTasksAccount || _hasSubscription.value
             override val hasTasksSubscription: Boolean
                 get() = _hasTasksSubscription.value || hasTasksAccount
         }
@@ -299,22 +387,37 @@ val commonModule = module {
                             val caldavSynchronizer = get<CaldavSynchronizer>()
                             val etebaseSynchronizer = get<EtebaseSynchronizer>()
                             val caldavDao = get<org.tasks.data.dao.CaldavDao>()
-                            val hasPro = get<org.tasks.billing.PurchaseState>().hasPro
-                            caldavDao.getAccounts(TYPE_CALDAV, TYPE_TASKS).forEach { account ->
+                            val subscriptionProvider = get<org.tasks.billing.SubscriptionProvider>()
+                            val caldavAccounts = caldavDao.getAccounts(TYPE_CALDAV, TYPE_TASKS)
+                            val hasTasksOrg = caldavAccounts.any { it.isTasksOrg }
+                            if (!hasTasksOrg && !subscriptionProvider.awaitVerification()) {
+                                Logger.e(tag = SYNC_TAG) {
+                                    "Could not confirm subscription, syncing without pro"
+                                }
+                            }
+                            val hasPro = hasTasksOrg ||
+                                    subscriptionProvider.subscription.first() != null
+                            val googleAndMicrosoftPro =
+                                hasPro || !subscriptionProvider.googleAndMicrosoftRequirePro
+                            caldavAccounts.forEach { account ->
                                 caldavSynchronizer.sync(account, hasPro = hasPro)
                             }
                             caldavDao.getAccounts(TYPE_ETEBASE).forEach { account ->
                                 etebaseSynchronizer.sync(account, hasPro = hasPro)
                             }
                             caldavDao.getAccounts(TYPE_GOOGLE_TASKS).forEach { account ->
-                                get<DesktopGoogleTasksSynchronizer>().sync(account)
+                                get<DesktopGoogleTasksSynchronizer>()
+                                    .sync(account, hasPro = googleAndMicrosoftPro)
                             }
                             val microsoftAccounts = caldavDao.getAccounts(TYPE_MICROSOFT)
                             if (microsoftAccounts.isNotEmpty()) {
                                 val microsoftSynchronizer = get<MicrosoftSynchronizer>()
                                 coroutineScope {
                                     microsoftAccounts.forEach { account ->
-                                        launch { microsoftSynchronizer.sync(account) }
+                                        launch {
+                                            microsoftSynchronizer
+                                                .sync(account, hasPro = googleAndMicrosoftPro)
+                                        }
                                     }
                                 }
                             }
@@ -349,6 +452,8 @@ val commonModule = module {
     factoryOf(::TaskMigrator)
     factoryOf(::TaskSaver)
     factoryOf(::TaskMover)
+    factoryOf(::SubtaskTreeWriter)
+    single { SubtaskTreeRegistry() }
     factoryOf(::iCalendar)
     factoryOf(::CaldavSynchronizer)
     single {
@@ -383,27 +488,16 @@ val commonModule = module {
     }
     factory<DefaultListProvider> {
         val caldavDao = get<org.tasks.data.dao.CaldavDao>()
+        val tasksPreferences = get<TasksPreferences>()
         object : DefaultListProvider {
-            override suspend fun getDefaultList(): org.tasks.filters.CaldavFilter {
-                val calendar = caldavDao.getCalendars()
-                    .filterNot { it.readOnly() }
-                    .firstOrNull()
-                    ?.let { list ->
-                        list.account
-                            ?.let { caldavDao.getAccountByUuid(it) }
-                            ?.let { account ->
-                                org.tasks.filters.CaldavFilter(calendar = list, account = account)
-                            }
-                    }
-                if (calendar != null) return calendar
-                val localList = caldavDao.getLocalList()
-                val localAccount = caldavDao.getAccountByUuid(localList.account!!)!!
-                return org.tasks.filters.CaldavFilter(
-                    calendar = localList,
-                    account = localAccount,
+            override suspend fun getDefaultList(): org.tasks.filters.CaldavFilter =
+                caldavDao.getOrCreateDefaultListFilter(
+                    tasksPreferences.get(TasksPreferences.defaultList, "").orNull()
                 )
+
+            override suspend fun clearDefaultList() {
+                tasksPreferences.set(TasksPreferences.defaultList, "")
             }
-            override suspend fun clearDefaultList() {}
         }
     }
     factory { FilterProvider(get(), get(), get(), get(), get(), get(), get(), get()) }
@@ -458,6 +552,7 @@ val commonModule = module {
             remoteId = destination.remoteId,
             listId = destination.listId,
             tagUuid = destination.tagUuid,
+            isSubtaskDraft = destination.isSubtaskDraft,
             taskDao = get(),
             taskSaver = get(),
             caldavDao = get(),
@@ -471,6 +566,9 @@ val commonModule = module {
             pendingSaves = get(),
             taskCompleter = get(),
             taskDeleter = get(),
+            treeRegistry = get(),
+            subtaskWriter = get(),
+            refreshFlow = get<ComposeRefreshBroadcaster>().refreshes,
         )
     }
     viewModel { ReminderControlSetViewModel() }
@@ -509,10 +607,30 @@ val commonModule = module {
         )
     }
     viewModel {
+        val notifier = get<Notifier>()
         NotificationsViewModel(
             appPreferences = get(),
             platformConfiguration = get(),
             persistenceScope = get(),
+            rescheduleNotifications = { change ->
+                if (change == ReminderChange.OFF) {
+                    guarded("CommonModule", "Failed to take down notifications", Unit) {
+                        notifier.cancelAll(CancelReason.DISABLED)
+                    }
+                }
+                notifier.triggerNotifications()
+            },
+        )
+    }
+    viewModel {
+        TaskDefaultsViewModel(
+            appPreferences = get(),
+            platformConfiguration = get(),
+            persistenceScope = get(),
+            caldavDao = get(),
+            tagDataDao = get(),
+            locationDao = get(),
+            repeatRuleToString = get(),
         )
     }
     viewModel {
@@ -665,7 +783,13 @@ val commonModule = module {
 
 private val notificationDefaults = NotificationSettings()
 
+private val taskSettingDefaults = TaskDefaultSettings()
+
 private fun PreferencesSnapshot.notificationSettings() = NotificationSettings(
+    notificationsEnabled = get(
+        TasksPreferences.notificationsEnabled,
+        notificationDefaults.notificationsEnabled
+    ),
     persistentNotifications = get(
         TasksPreferences.persistentNotifications,
         notificationDefaults.persistentNotifications
@@ -702,5 +826,7 @@ private fun PreferencesSnapshot.notificationSettings() = NotificationSettings(
     quietHoursStart = get(TasksPreferences.quietHoursStart, notificationDefaults.quietHoursStart),
     quietHoursEnd = get(TasksPreferences.quietHoursEnd, notificationDefaults.quietHoursEnd),
 )
+
+private fun String.orNull(): String? = takeIf { it.isNotBlank() }
 
 expect fun platformModule(): Module

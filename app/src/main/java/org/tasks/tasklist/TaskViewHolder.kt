@@ -24,6 +24,7 @@ import org.tasks.compose.chips.ChipGroup
 import org.tasks.compose.chips.FilterChip
 import org.tasks.compose.StartDateChip
 import org.tasks.compose.chips.SubtaskChip
+import org.tasks.data.INDENT_STEP_DP
 import org.tasks.data.TaskContainer
 import org.tasks.data.hasNotes
 import org.tasks.data.isHidden
@@ -146,7 +147,7 @@ class TaskViewHolder internal constructor(
     }
 
     val shiftSize: Float
-        get() = 20 * metrics.density
+        get() = INDENT_STEP_DP * metrics.density
 
     private fun getIndentSize(indent: Int) = (indent * shiftSize).roundToInt()
 
@@ -247,6 +248,7 @@ class TaskViewHolder internal constructor(
     private fun setupChips(filter: Filter, sortByStartDate: Boolean, sortByList: Boolean) {
         val id = task.id
         val children = task.children
+        val chipCount = task.chipCount
         val collapsed = task.isCollapsed
         val isHidden = task.task.isHidden
         val sortGroup = task.sortGroup
@@ -273,7 +275,7 @@ class TaskViewHolder internal constructor(
                     if (children > 0 && remember { preferences.showSubtaskChip }) {
                         SubtaskChip(
                             collapsed = collapsed,
-                            children = children,
+                            children = chipCount,
                             onClick = { toggleSubtasks(id, !collapsed) }
                         )
                     }

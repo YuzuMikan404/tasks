@@ -2,25 +2,23 @@ package org.tasks.viewmodel
 
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -28,32 +26,23 @@ import org.mockito.kotlin.check
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.isNull
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.reset
 import org.mockito.kotlin.stub
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.tasks.data.TaskMover
+import java.lang.reflect.Modifier
 import org.tasks.data.TaskSaver
-import com.todoroo.astrid.alarms.AlarmService
-import org.tasks.data.dao.AlarmDao
-import org.tasks.data.dao.CaldavDao
-import org.tasks.data.dao.TagDao
-import org.tasks.data.dao.TagDataDao
-import org.tasks.data.dao.TaskDao
 import org.tasks.data.entity.Alarm
 import org.tasks.data.entity.CaldavAccount
+import org.tasks.data.entity.CaldavAccount.Companion.TYPE_GOOGLE_TASKS
 import org.tasks.data.entity.CaldavCalendar
 import org.tasks.data.entity.SYNC_TAGS
 import org.tasks.data.entity.TagData
 import org.tasks.data.entity.CaldavTask
 import org.tasks.data.entity.Task
-import org.tasks.preferences.AppPreferences
-import org.tasks.preferences.DatePickerPreferences
-import org.tasks.service.TaskCompleter
-import org.tasks.service.TaskDeleter
+import org.tasks.preferences.TaskDefaultSettings
 import org.tasks.compose.pickers.DAY_BEFORE_DUE
 import org.tasks.compose.pickers.DUE_DATE
 import org.tasks.compose.pickers.DUE_TIME
@@ -61,8 +50,6 @@ import org.tasks.compose.pickers.NO_DAY
 import org.tasks.compose.pickers.NO_TIME
 import org.tasks.compose.pickers.WEEK_BEFORE_DUE
 import org.tasks.filters.CaldavFilter
-import org.tasks.filters.Filter
-import org.tasks.filters.TagFilter
 import org.tasks.time.DateTimeUtils2.currentTimeMillis
 import org.tasks.time.ONE_HOUR
 import org.tasks.time.minusDays
@@ -72,13 +59,7 @@ import org.tasks.time.startOfDay
 import org.tasks.time.withMillisOfDay
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TaskEditViewModelTest {
-
-    private val NINE_AM_WITH_TIME = 9 * 60 * 60 * 1000 + 1000
-
-    /** The row id the fake [TaskDao.createNew] stamps onto a newly created task. */
-    private val NEW_TASK_ID = 55L
-
+class TaskEditViewModelTest : TaskEditViewModelFixture() {
     private val mergedFields = setOf(
         "title", "priority", "dueDate", "hideUntil", "completionDate", "deletionDate", "notes",
         "estimatedSeconds", "elapsedSeconds", "timerStart", "ringFlags", "recurrence", "repeatFrom",
@@ -90,144 +71,6 @@ class TaskEditViewModelTest {
 
     private fun Task.fieldValue(name: String): Any? =
         Task::class.java.getDeclaredField(name).apply { isAccessible = true }.get(this)
-
-    private val testDispatcher = StandardTestDispatcher()
-    private val taskDao: TaskDao = mock()
-    private val taskSaver: TaskSaver = mock()
-    private val caldavDao: CaldavDao = mock()
-    private val taskMover: TaskMover = mock()
-    private val tagDao: TagDao = mock()
-    private val tagDataDao: TagDataDao = mock()
-    private val alarmDao: AlarmDao = mock()
-    private val alarmService: AlarmService = mock()
-    private val appPreferences: AppPreferences = mock()
-    private val taskCompleter: TaskCompleter = mock()
-    private val taskDeleter: TaskDeleter = mock()
-
-    private lateinit var viewModel: TaskEditViewModel
-    private lateinit var pendingSaves: PendingTaskSaves
-
-    /** Rows created through [TaskDao.createNew], so that a later fetch finds them. */
-    private val createdRows = mutableMapOf<Long, Task>()
-
-    private val testCalendar = CaldavCalendar(account = "acct-1", uuid = "cal-1", name = "Test")
-    private val seedCalendar = CaldavCalendar(id = 7, account = "acct-1", uuid = "cal-7", name = "Seed")
-    private val testAccount = CaldavAccount(uuid = "acct-1")
-
-    @Before
-    fun setUp() = runTest(testDispatcher) {
-        Dispatchers.setMain(testDispatcher)
-        pendingSaves = PendingTaskSaves(CoroutineScope(testDispatcher))
-        whenever(caldavDao.getCalendars()).thenReturn(listOf(testCalendar))
-        whenever(caldavDao.getAccountByUuid("acct-1")).thenReturn(testAccount)
-        whenever(caldavDao.getCalendarById(seedCalendar.id)).thenReturn(seedCalendar)
-        whenever(taskDao.watch(any())).thenReturn(MutableSharedFlow())
-        whenever(tagDataDao.getTagDataForTask(any())).thenReturn(emptyList())
-        whenever(appPreferences.datePickerPreferences()).thenReturn(DatePickerPreferences())
-        whenever(tagDataDao.getByUuid("tag-work")).thenReturn(workTag)
-        whenever(appPreferences.defaultAlarms()).thenReturn(emptyList())
-        whenever(appPreferences.isDefaultDueTimeEnabled()).thenReturn(false)
-        whenever(appPreferences.defaultRandomHours()).thenReturn(0)
-        whenever(appPreferences.defaultRingMode()).thenReturn(0)
-        whenever(alarmDao.getAlarms(any<Long>())).thenReturn(emptyList())
-        whenever(alarmDao.watchAlarms(any())).thenReturn(MutableSharedFlow())
-        // inTransaction exists only to wrap its block, and a mock would swallow it - taking the
-        // row creation the editor does inside it along with it.
-        taskDao.stub {
-            onBlocking { inTransaction<Any?>(any()) } doSuspendableAnswer { invocation ->
-                @Suppress("UNCHECKED_CAST")
-                (invocation.arguments[0] as suspend () -> Any?).invoke()
-            }
-            // createNew stamps the row id onto the task it is handed, and the row exists once it
-            // returns. The editor depends on both - isNew flips false, and every later save
-            // re-reads the row - so a mock that quietly did neither let tests pass that production
-            // could not: a retry after a failed save was still treated as a creation.
-            onBlocking { createNew(any()) } doSuspendableAnswer { invocation ->
-                val task = invocation.arguments[0] as Task
-                task.id = NEW_TASK_ID
-                createdRows[NEW_TASK_ID] = task.copy()
-                NEW_TASK_ID
-            }
-            // The default for any id nothing else has stubbed. Specific stubbings registered later
-            // take precedence, so `whenever(taskDao.fetch(42L))` still wins for 42.
-            onBlocking { fetch(any<Long>()) } doSuspendableAnswer { invocation ->
-                createdRows[invocation.arguments[0] as Long]
-            }
-        }
-    }
-
-    private fun buildViewModel(
-        taskId: Long = 0L,
-        remoteId: String = "",
-        listId: Long? = null,
-        tagUuid: String? = null,
-    ) = TaskEditViewModel(
-        taskId = taskId,
-        remoteId = remoteId,
-        listId = listId,
-        tagUuid = tagUuid,
-        taskDao = taskDao,
-        taskSaver = taskSaver,
-        caldavDao = caldavDao,
-        taskMover = taskMover,
-        tagDao = tagDao,
-        tagDataDao = tagDataDao,
-        alarmDao = alarmDao,
-        alarmService = alarmService,
-        appPreferences = appPreferences,
-        externalScope = CoroutineScope(testDispatcher),
-        pendingSaves = pendingSaves,
-        taskCompleter = taskCompleter,
-        taskDeleter = taskDeleter,
-    ).also { viewModel = it }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
-
-    // region helpers
-
-    private fun TestScope.initializeNew() {
-        buildViewModel()
-        advanceUntilIdle()
-    }
-
-    private suspend fun TestScope.initializeExisting(
-        id: Long = 42,
-        title: String = "Existing",
-    ) {
-        whenever(taskDao.fetch(id)).thenReturn(Task(id = id, title = title))
-        whenever(caldavDao.getTask(id)).thenReturn(null)
-        buildViewModel(taskId = id)
-        advanceUntilIdle()
-    }
-
-    /**
-     * Reads the count of failures still waiting to be shown. Nothing has to subscribe up front:
-     * failures are held until acknowledged precisely because the editor that started the save - and
-     * on Android the composition that would have reported it - is usually gone by the time it
-     * fails.
-     */
-    private fun collectSaveFailures(): () -> Int = { pendingSaves.saveFailures.value }
-
-    private fun TestScope.awaitClose(): () -> Boolean {
-        var received = false
-        val job = CoroutineScope(testDispatcher).launch {
-            viewModel.closeEvents.first()
-            received = true
-        }
-        coroutineContext.job.invokeOnCompletion { job.cancel() }
-        return { received }
-    }
-
-    private suspend fun TestScope.initializeNewWithFailingSave() {
-        initializeNew()
-        whenever(taskDao.createNew(any())).thenThrow(RuntimeException("db error"))
-        viewModel.setTitle("Will fail")
-    }
-
-    // endregion
 
     // region initialize
 
@@ -255,8 +98,6 @@ class TaskEditViewModelTest {
     }
 
     // endregion
-
-    private val workTag = TagData(name = "Work", remoteId = "tag-work")
 
     private fun TestScope.initializeNewWith(listId: Long? = null, tagUuid: String? = null) {
         buildViewModel(listId = listId, tagUuid = tagUuid)
@@ -294,6 +135,112 @@ class TaskEditViewModelTest {
     }
 
     @Test
+    fun newTaskWithoutASeedListUsesTheDefaultList() = runTest(testDispatcher) {
+        stubTaskDefaults(defaultList = seedCalendar.uuid)
+        whenever(caldavDao.getCalendarByUuid(seedCalendar.uuid!!)).thenReturn(seedCalendar)
+
+        initializeNewWith()
+
+        assertEquals(
+            CaldavFilter(calendar = seedCalendar, account = testAccount),
+            viewModel.state.value.list,
+        )
+    }
+
+    @Test
+    fun newTaskSkipsAReadOnlyDefaultList() = runTest(testDispatcher) {
+        val readOnly = seedCalendar.copy(access = CaldavCalendar.ACCESS_READ_ONLY)
+        stubTaskDefaults(defaultList = readOnly.uuid)
+        whenever(caldavDao.getCalendarByUuid(readOnly.uuid!!)).thenReturn(readOnly)
+
+        initializeNewWith()
+
+        assertEquals(
+            CaldavFilter(calendar = testCalendar, account = testAccount),
+            viewModel.state.value.list,
+        )
+    }
+
+    @Test
+    fun newTaskWithoutADestinationTagUsesTheDefaultTags() = runTest(testDispatcher) {
+        whenever(appPreferences.taskDefaults()).thenReturn(
+            TaskDefaultSettings(defaultAlarms = emptyList(), defaultTags = listOf(workTag.remoteId!!))
+        )
+        whenever(tagDataDao.getByUuid(listOf(workTag.remoteId!!))).thenReturn(listOf(workTag))
+
+        initializeNew()
+
+        assertEquals(listOf(workTag), viewModel.state.value.tags)
+    }
+
+    @Test
+    fun aDestinationTagBeatsTheDefaultTags() = runTest(testDispatcher) {
+        whenever(appPreferences.taskDefaults()).thenReturn(
+            TaskDefaultSettings(defaultAlarms = emptyList(), defaultTags = listOf("tag-other"))
+        )
+
+        initializeNewWith(tagUuid = workTag.remoteId)
+
+        assertEquals(listOf(workTag), viewModel.state.value.tags)
+    }
+
+    @Test
+    fun newTaskSeedsPriorityDueDateAndRecurrenceFromDefaults() = runTest(testDispatcher) {
+        whenever(appPreferences.taskDefaults()).thenReturn(
+            TaskDefaultSettings(
+                defaultAlarms = emptyList(),
+                defaultPriority = Task.Priority.HIGH,
+                defaultDueDate = Task.URGENCY_TODAY,
+                defaultRecurrence = "FREQ=DAILY",
+                defaultRecurrenceFrom = Task.RepeatFrom.COMPLETION_DATE,
+            )
+        )
+
+        initializeNew()
+
+        val task = viewModel.state.value.task
+        assertEquals(Task.Priority.HIGH, task.priority)
+        assertEquals(currentTimeMillis().startOfDay(), task.dueDate.startOfDay())
+        assertEquals("FREQ=DAILY", task.recurrence)
+        assertEquals(Task.RepeatFrom.COMPLETION_DATE, task.repeatFrom)
+    }
+
+    @Test
+    fun aDefaultRecurrenceGivesANewTaskADueDateToRecurFrom() = runTest(testDispatcher) {
+        whenever(appPreferences.taskDefaults()).thenReturn(
+            TaskDefaultSettings(
+                defaultAlarms = emptyList(),
+                defaultDueDate = Task.URGENCY_NONE,
+                defaultRecurrence = "FREQ=DAILY",
+            )
+        )
+
+        initializeNew()
+
+        val task = viewModel.state.value.task
+        assertEquals("FREQ=DAILY", task.recurrence)
+        assertEquals(currentTimeMillis().startOfDay(), task.dueDate.startOfDay())
+    }
+
+    @Test
+    fun aDefaultRecurrenceLeavesAConfiguredDefaultDueDateAlone() = runTest(testDispatcher) {
+        whenever(appPreferences.taskDefaults()).thenReturn(
+            TaskDefaultSettings(
+                defaultAlarms = emptyList(),
+                defaultDueDate = Task.URGENCY_TOMORROW,
+                defaultRecurrence = "FREQ=DAILY",
+            )
+        )
+
+        initializeNew()
+
+        assertEquals(
+            currentTimeMillis().plusDays(1).startOfDay(),
+            viewModel.state.value.task.dueDate.startOfDay(),
+        )
+    }
+
+    @Test
     fun saveAppliesPreFilledTag() = runTest(testDispatcher) {
         initializeNewWith(tagUuid = workTag.remoteId)
 
@@ -309,6 +256,7 @@ class TaskEditViewModelTest {
         verify(taskSaver).save(
             check { assertTrue(it.checkTransitory(SYNC_TAGS)) },
             anyOrNull(),
+            any(),
             any(),
         )
     }
@@ -383,6 +331,7 @@ class TaskEditViewModelTest {
             check { assertEquals(Task.Priority.MEDIUM, it.priority) },
             any(),
             any(),
+            any(),
         )
     }
 
@@ -399,8 +348,36 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
 
         verify(taskDao).createNew(check { assertEquals("New Task", it.title) })
-        verify(caldavDao).insert(task = any(), caldavTask = any(), addToTop = any())
-        verify(taskSaver).save(check { assertEquals("New Task", it.title) }, anyOrNull(), any())
+        verify(caldavDao).insert(
+            task = check { assertEquals("New Task", it.title) },
+            caldavTask = check { assertEquals(testCalendar.uuid, it.calendar) },
+            addToTop = eq(true),
+        )
+        verify(taskSaver).save(check { assertEquals("New Task", it.title) }, anyOrNull(), any(), any())
+    }
+
+    @Test
+    fun newTaskGoesToTheBottomWhenTheDefaultSaysSo() = runTest(testDispatcher) {
+        stubTaskDefaults(addTasksToTop = false)
+        initializeNew()
+
+        viewModel.setTitle("New Task")
+        viewModel.save()
+        advanceUntilIdle()
+
+        verify(caldavDao).insert(task = any(), caldavTask = any(), addToTop = eq(false))
+    }
+
+    @Test
+    fun theOrderStampedByTheInsertIsKept() = runTest(testDispatcher) {
+        initializeNew()
+
+        viewModel.setTitle("New Task")
+        viewModel.save()
+        advanceUntilIdle()
+
+        assertEquals(NEW_TASK_ORDER, viewModel.state.value.task.order)
+        assertFalse(viewModel.state.value.hasChanges)
     }
 
     @Test
@@ -412,7 +389,7 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
 
         verify(taskDao, never()).createNew(any())
-        verify(taskSaver).save(check { assertEquals("Updated", it.title) }, any(), any())
+        verify(taskSaver).save(check { assertEquals("Updated", it.title) }, any(), any(), any())
     }
 
     @Test
@@ -424,7 +401,7 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
 
         assertTrue(closed())
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -499,7 +476,7 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
 
         assertTrue(closed())
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
         verify(taskDao, never()).createNew(any())
 
         gate.complete(Unit)
@@ -588,7 +565,7 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
 
         verify(taskDao).createNew(check { assertEquals("Unsaved work", it.title) })
-        verify(taskSaver).save(check { assertEquals("Unsaved work", it.title) }, anyOrNull(), any())
+        verify(taskSaver).save(check { assertEquals("Unsaved work", it.title) }, anyOrNull(), any(), any())
     }
 
     @Test
@@ -598,7 +575,7 @@ class TaskEditViewModelTest {
         viewModel.saveCurrentTask()
         advanceUntilIdle()
 
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -635,7 +612,7 @@ class TaskEditViewModelTest {
         departing.setTitle("Modified")
         // Park the save mid-flight so the replacement's load has something to race.
         val saveGate = CompletableDeferred<Unit>()
-        whenever(taskSaver.save(any(), anyOrNull(), any())).doSuspendableAnswer { invocation ->
+        whenever(taskSaver.save(any(), anyOrNull(), any(), any())).doSuspendableAnswer { invocation ->
             saveGate.await()
             val saved = invocation.arguments[0] as Task
             whenever(taskDao.fetch(42L)).thenReturn(Task(id = 42, title = saved.title))
@@ -667,7 +644,7 @@ class TaskEditViewModelTest {
         initializeExisting(id = 42, title = "Original")
         val departing = viewModel
         val firstSaveGate = CompletableDeferred<Unit>()
-        whenever(taskSaver.save(any(), anyOrNull(), any())).doSuspendableAnswer { invocation ->
+        whenever(taskSaver.save(any(), anyOrNull(), any(), any())).doSuspendableAnswer { invocation ->
             val saved = invocation.arguments[0] as Task
             if (saved.title == "First") {
                 firstSaveGate.await()
@@ -703,7 +680,7 @@ class TaskEditViewModelTest {
         val slow = viewModel
         slow.setTitle("Slow edit")
         val saveGate = CompletableDeferred<Unit>()
-        whenever(taskSaver.save(any(), anyOrNull(), any())).doSuspendableAnswer { saveGate.await() }
+        whenever(taskSaver.save(any(), anyOrNull(), any(), any())).doSuspendableAnswer { saveGate.await() }
 
         slow.persistCurrentTask()
         advanceUntilIdle()
@@ -720,6 +697,21 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
     }
 
+    @Test
+    fun aNewTaskDestinationCarryingThePlaceholderUuidIsGivenAUuidOfItsOwn() =
+        runTest(testDispatcher) {
+            buildViewModel(remoteId = Task.NO_UUID)
+            advanceUntilIdle()
+            viewModel.setTitle("First")
+
+            viewModel.save()
+            advanceUntilIdle()
+
+            val created = createdRows.values.single()
+            assertNotEquals(Task.NO_UUID, created.remoteId)
+            assertFalse(created.remoteId.isNullOrBlank())
+        }
+
     /**
      * The key shape production actually uses. [Task.uuid] returns [Task.NO_UUID] for any row whose
      * remoteId is null or empty, and the task list puts that straight into the destination - so
@@ -733,7 +725,7 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
         slow.setTitle("Slow edit")
         val saveGate = CompletableDeferred<Unit>()
-        whenever(taskSaver.save(any(), anyOrNull(), any())).doSuspendableAnswer { saveGate.await() }
+        whenever(taskSaver.save(any(), anyOrNull(), any(), any())).doSuspendableAnswer { saveGate.await() }
 
         slow.persistCurrentTask()
         advanceUntilIdle()
@@ -781,7 +773,7 @@ class TaskEditViewModelTest {
         initializeExisting(id = 42, title = "Original")
         val departing = viewModel
         departing.setTitle("Modified")
-        whenever(taskSaver.save(any(), anyOrNull(), any())).doSuspendableAnswer { invocation ->
+        whenever(taskSaver.save(any(), anyOrNull(), any(), any())).doSuspendableAnswer { invocation ->
             val saved = invocation.arguments[0] as Task
             whenever(taskDao.fetch(42L)).thenReturn(Task(id = 42, title = saved.title))
             Unit
@@ -814,7 +806,7 @@ class TaskEditViewModelTest {
         viewModel.onCleared()
         advanceUntilIdle()
 
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     /** Hard deletes leave no tombstone to find, so the missing row is the only signal. */
@@ -827,7 +819,7 @@ class TaskEditViewModelTest {
         viewModel.onCleared()
         advanceUntilIdle()
 
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
         assertTrue(viewModel.state.value.deleted)
     }
 
@@ -842,7 +834,7 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
 
         assertTrue(closed())
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     /** The same, for a delete that left a tombstone the re-read can see. */
@@ -858,7 +850,7 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
 
         assertTrue(closed())
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     /**
@@ -875,7 +867,7 @@ class TaskEditViewModelTest {
         viewModel.persistCurrentTask()
         advanceUntilIdle()
 
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
         assertEquals(1, failures())
     }
 
@@ -898,6 +890,7 @@ class TaskEditViewModelTest {
             },
             anyOrNull(),
             any(),
+            any(),
         )
     }
 
@@ -911,7 +904,7 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
         departing.setTitle("Modified")
         val saveGate = CompletableDeferred<Unit>()
-        whenever(taskSaver.save(any(), anyOrNull(), any())).doSuspendableAnswer { invocation ->
+        whenever(taskSaver.save(any(), anyOrNull(), any(), any())).doSuspendableAnswer { invocation ->
             saveGate.await()
             val saved = invocation.arguments[0] as Task
             whenever(taskDao.fetch(42L))
@@ -959,7 +952,7 @@ class TaskEditViewModelTest {
         viewModel.saveCurrentTask()
         advanceUntilIdle()
 
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
         verify(taskDao, never()).createNew(any())
     }
 
@@ -982,7 +975,7 @@ class TaskEditViewModelTest {
     fun failureAfterTheRowExistsDoesNotCreateTheTaskTwice() = runTest(testDispatcher) {
         initializeNew()
         viewModel.setTitle("Created")
-        whenever(taskSaver.save(any(), anyOrNull(), any()))
+        whenever(taskSaver.save(any(), anyOrNull(), any(), any()))
             .thenThrow(RuntimeException("sync error"))
 
         viewModel.saveCurrentTask()
@@ -1003,7 +996,7 @@ class TaskEditViewModelTest {
     fun failedNewTaskSaveIsRetriedAsACreation() = runTest(testDispatcher) {
         initializeNew()
         viewModel.setTitle("Created")
-        whenever(taskSaver.save(any(), anyOrNull(), any()))
+        whenever(taskSaver.save(any(), anyOrNull(), any(), any()))
             .thenThrow(RuntimeException("sync error"))
 
         viewModel.saveCurrentTask()
@@ -1015,6 +1008,7 @@ class TaskEditViewModelTest {
             check { assertEquals("Created", it.title) },
             isNull(),
             any(),
+            any(),
         )
     }
 
@@ -1023,7 +1017,7 @@ class TaskEditViewModelTest {
     fun successfulRetryLeavesNothingOwing() = runTest(testDispatcher) {
         initializeNew()
         viewModel.setTitle("Created")
-        whenever(taskSaver.save(any(), anyOrNull(), any()))
+        whenever(taskSaver.save(any(), anyOrNull(), any(), any()))
             .thenThrow(RuntimeException("sync error"))
         viewModel.saveCurrentTask()
         advanceUntilIdle()
@@ -1034,7 +1028,7 @@ class TaskEditViewModelTest {
         viewModel.saveCurrentTask()
         advanceUntilIdle()
 
-        verify(taskSaver, times(1)).save(any(), anyOrNull(), any())
+        verify(taskSaver, times(1)).save(any(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -1068,6 +1062,7 @@ class TaskEditViewModelTest {
         verify(taskSaver).save(
             check { assertEquals("Modified", it.title) },
             check { assertEquals("Original", it.title) },
+            any(),
             any(),
         )
         assertEquals("Other Task", viewModel.state.value.task.title)
@@ -1353,7 +1348,7 @@ class TaskEditViewModelTest {
 
         viewModel.saveCurrentTask()
         advanceUntilIdle()
-        verify(taskSaver).save(check { assertEquals(localStart, it.hideUntil) }, anyOrNull(), any())
+        verify(taskSaver).save(check { assertEquals(localStart, it.hideUntil) }, anyOrNull(), any(), any())
     }
 
     @Test
@@ -1554,7 +1549,7 @@ class TaskEditViewModelTest {
 
         viewModel.saveCurrentTask()
         advanceUntilIdle()
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -1574,7 +1569,7 @@ class TaskEditViewModelTest {
 
         viewModel.saveCurrentTask()
         advanceUntilIdle()
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -1616,7 +1611,7 @@ class TaskEditViewModelTest {
 
         viewModel.saveCurrentTask()
         advanceUntilIdle()
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -1673,7 +1668,7 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
 
         verify(taskDao, never()).createNew(any())
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -1767,7 +1762,7 @@ class TaskEditViewModelTest {
         viewModel.onCleared()
         advanceUntilIdle()
 
-        verify(taskSaver).save(check { assertEquals("Edited on the way out", it.title) }, anyOrNull(), any())
+        verify(taskSaver).save(check { assertEquals("Edited on the way out", it.title) }, anyOrNull(), any(), any())
     }
 
     @Test
@@ -1777,7 +1772,7 @@ class TaskEditViewModelTest {
         viewModel.onCleared()
         advanceUntilIdle()
 
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -1794,7 +1789,7 @@ class TaskEditViewModelTest {
         viewModel.onCleared()
         advanceUntilIdle()
 
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -1817,7 +1812,7 @@ class TaskEditViewModelTest {
     fun awaitIdleWaitsForTheTeardownSave() = runTest(testDispatcher) {
         initializeExisting()
         val saveGate = CompletableDeferred<Unit>()
-        whenever(taskSaver.save(any(), anyOrNull(), any())).doSuspendableAnswer {
+        whenever(taskSaver.save(any(), anyOrNull(), any(), any())).doSuspendableAnswer {
             saveGate.await()
         }
 
@@ -1853,8 +1848,7 @@ class TaskEditViewModelTest {
     // region default hide-until seeding
 
     private suspend fun TestScope.initializeNewWithDefaultHideUntil(setting: Int) {
-        whenever(appPreferences.datePickerPreferences())
-            .thenReturn(DatePickerPreferences(defaultHideUntil = setting))
+        stubTaskDefaults(defaultHideUntil = setting)
         buildViewModel()
         advanceUntilIdle()
     }
@@ -1867,6 +1861,75 @@ class TaskEditViewModelTest {
         assertEquals(DUE_DATE, state.startDay)
         assertEquals(NO_TIME, state.startTime)
         assertEquals(0L, state.task.hideUntil)
+    }
+
+    @Test
+    fun aDefaultStartDateEarnsItsReminderOnceADueDateResolvesIt() = runTest(testDispatcher) {
+        whenever(appPreferences.defaultAlarms())
+            .thenReturn(listOf(Alarm.whenStarted(0), Alarm.whenDue(0)))
+        whenever(appPreferences.isDefaultDueTimeEnabled()).thenReturn(true)
+        stubTaskDefaults(defaultAlarms = listOf(Alarm.whenStarted(0), Alarm.whenDue(0)))
+        initializeNewWithDefaultHideUntil(Task.HIDE_UNTIL_DUE)
+
+        assertTrue(viewModel.state.value.alarms.isEmpty())
+
+        viewModel.setDueDate(currentTimeMillis().startOfDay())
+        advanceUntilIdle()
+
+        assertEquals(
+            persistentSetOf(Alarm.whenStarted(0), Alarm.whenDue(0)),
+            viewModel.state.value.alarms,
+        )
+    }
+
+    @Test
+    fun theDueDateARecurrenceForcesEarnsTheDefaultReminders() = runTest(testDispatcher) {
+        whenever(appPreferences.defaultAlarms())
+            .thenReturn(listOf(Alarm.whenStarted(0), Alarm.whenDue(0)))
+        whenever(appPreferences.isDefaultDueTimeEnabled()).thenReturn(true)
+        stubTaskDefaults(defaultAlarms = listOf(Alarm.whenStarted(0), Alarm.whenDue(0)))
+        initializeNewWithDefaultHideUntil(Task.HIDE_UNTIL_DUE)
+
+        assertTrue(viewModel.state.value.alarms.isEmpty())
+
+        viewModel.setRecurrence("FREQ=DAILY")
+        advanceUntilIdle()
+
+        assertEquals(
+            persistentSetOf(Alarm.whenStarted(0), Alarm.whenDue(0)),
+            viewModel.state.value.alarms,
+        )
+    }
+
+    @Test
+    fun aRecurrenceOnADatedTaskLeavesRemindersAlone() = runTest(testDispatcher) {
+        whenever(appPreferences.defaultAlarms()).thenReturn(listOf(Alarm.whenDue(0)))
+        whenever(appPreferences.isDefaultDueTimeEnabled()).thenReturn(true)
+        initializeNew()
+        viewModel.setDueDate(currentTimeMillis().startOfDay())
+        advanceUntilIdle()
+        viewModel.removeAlarm(Alarm.whenDue(0))
+
+        viewModel.setRecurrence("FREQ=DAILY")
+        advanceUntilIdle()
+
+        assertTrue(viewModel.state.value.alarms.isEmpty())
+    }
+
+    @Test
+    fun clearingTheDueDateOnAMonthlyRuleAddsNoReminders() = runTest(testDispatcher) {
+        whenever(appPreferences.defaultAlarms()).thenReturn(listOf(Alarm.whenDue(0)))
+        whenever(appPreferences.isDefaultDueTimeEnabled()).thenReturn(true)
+        initializeNew()
+        viewModel.setDueDate(currentTimeMillis().startOfDay())
+        viewModel.setRecurrence("FREQ=MONTHLY;BYDAY=2WE")
+        advanceUntilIdle()
+        viewModel.removeAlarm(Alarm.whenDue(0))
+
+        viewModel.setDueDate(0)
+        advanceUntilIdle()
+
+        assertTrue(viewModel.state.value.alarms.isEmpty())
     }
 
     @Test
@@ -1895,8 +1958,7 @@ class TaskEditViewModelTest {
 
     @Test
     fun doesNotSeedDefaultHideUntilForExistingTask() = runTest(testDispatcher) {
-        whenever(appPreferences.datePickerPreferences())
-            .thenReturn(DatePickerPreferences(defaultHideUntil = Task.HIDE_UNTIL_DUE))
+        stubTaskDefaults(defaultHideUntil = Task.HIDE_UNTIL_DUE)
         whenever(taskDao.fetch(42)).thenReturn(Task(id = 42, title = "t"))
         whenever(caldavDao.getTask(42)).thenReturn(null)
 
@@ -1908,8 +1970,7 @@ class TaskEditViewModelTest {
 
     @Test
     fun doesNotSeedDefaultHideUntilForRequestedButMissingTask() = runTest(testDispatcher) {
-        whenever(appPreferences.datePickerPreferences())
-            .thenReturn(DatePickerPreferences(defaultHideUntil = Task.HIDE_UNTIL_DAY_BEFORE))
+        stubTaskDefaults(defaultHideUntil = Task.HIDE_UNTIL_DAY_BEFORE)
         whenever(taskDao.fetch(99)).thenReturn(null)
         whenever(caldavDao.getTask(99)).thenReturn(null)
 
@@ -1977,7 +2038,7 @@ class TaskEditViewModelTest {
 
         viewModel.saveCurrentTask()
         advanceUntilIdle()
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -2264,7 +2325,7 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
 
         verify(taskDao, never()).createNew(any())
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     // endregion
@@ -2280,7 +2341,7 @@ class TaskEditViewModelTest {
         viewModel.markComplete()
         advanceUntilIdle()
 
-        verify(taskSaver).save(check { assertEquals("Edited", it.title) }, anyOrNull(), any())
+        verify(taskSaver).save(check { assertEquals("Edited", it.title) }, anyOrNull(), any(), any())
         verify(taskCompleter).setComplete(42L, true)
         assertTrue(closed())
     }
@@ -2351,7 +2412,7 @@ class TaskEditViewModelTest {
         viewModel.onCleared()
         advanceUntilIdle()
 
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -2388,7 +2449,7 @@ class TaskEditViewModelTest {
         viewModel.onCleared()
         advanceUntilIdle()
 
-        verify(taskSaver).save(check { assertEquals("Edited", it.title) }, anyOrNull(), any())
+        verify(taskSaver).save(check { assertEquals("Edited", it.title) }, anyOrNull(), any(), any())
     }
 
     // endregion
@@ -2421,7 +2482,7 @@ class TaskEditViewModelTest {
         viewModel.onCleared()
         advanceUntilIdle()
 
-        verify(taskSaver, never()).save(any(), anyOrNull(), any())
+        verify(taskSaver, never()).save(any(), anyOrNull(), any(), any())
     }
 
     @Test
@@ -2435,6 +2496,23 @@ class TaskEditViewModelTest {
         advanceUntilIdle()
 
         verify(taskDao, never()).createNew(any())
+    }
+
+    @Test
+    fun discardedRemindersAreNotWrittenOnTeardown() = runTest(testDispatcher) {
+        initializeExisting(title = "Original")
+
+        viewModel.addAlarm(Alarm(time = ONE_HOUR, type = Alarm.TYPE_RANDOM))
+        viewModel.discardChanges()
+        advanceUntilIdle()
+
+        assertTrue(viewModel.state.value.alarms.isEmpty())
+        assertFalse(viewModel.state.value.hasChanges)
+
+        viewModel.onCleared()
+        advanceUntilIdle()
+
+        verify(alarmService, never()).synchronizeAlarms(any(), any())
     }
 
     // endregion
@@ -2515,7 +2593,7 @@ class TaskEditViewModelTest {
         viewModel.save()
         advanceUntilIdle()
 
-        verify(taskSaver).save(any(), any(), any())
+        verify(taskSaver).save(any(), any(), any(), any())
     }
 
     @Test
@@ -2644,7 +2722,7 @@ class TaskEditViewModelTest {
     fun alarmAddedWhileSavingIsNotLost() = runTest(testDispatcher) {
         val added = Alarm(time = ONE_HOUR, type = Alarm.TYPE_RANDOM)
         initializeExisting()
-        whenever(taskSaver.save(any(), anyOrNull(), any())).thenAnswer {
+        whenever(taskSaver.save(any(), anyOrNull(), any(), any())).thenAnswer {
             viewModel.addAlarm(added)
             Unit
         }
@@ -2770,7 +2848,7 @@ class TaskEditViewModelTest {
 
     @Test
     fun newTaskWithDefaultAlarmsIsNotAChangeOnItsOwn() = runTest(testDispatcher) {
-        whenever(appPreferences.defaultRandomHours()).thenReturn(1)
+        stubTaskDefaults(defaultAlarms = listOf(Alarm(time = ONE_HOUR, type = Alarm.TYPE_RANDOM)))
 
         initializeNew()
 
@@ -2785,7 +2863,7 @@ class TaskEditViewModelTest {
     @Test
     fun newTaskWritesItsDefaultAlarms() = runTest(testDispatcher) {
         val default = Alarm(time = ONE_HOUR, type = Alarm.TYPE_RANDOM)
-        whenever(appPreferences.defaultRandomHours()).thenReturn(1)
+        stubTaskDefaults(defaultAlarms = listOf(default))
         initializeNew()
 
         viewModel.setTitle("New")
@@ -2808,4 +2886,117 @@ class TaskEditViewModelTest {
     }
 
     // endregion
+
+    private fun failingWatch(failures: Int, live: Flow<Task?>): () -> Int {
+        var attempts = 0
+        whenever(taskDao.watch(42L)).thenReturn(
+            flow {
+                attempts++
+                if (attempts <= failures) {
+                    throw RuntimeException("database went away")
+                }
+                emitAll(live)
+            }
+        )
+        return { attempts }
+    }
+
+    @Test
+    fun aWatchThatFailsIsArmedAgainAndStillReportsAnExternalDelete() = runTest(testDispatcher) {
+        val live = MutableSharedFlow<Task?>()
+        val attempts = failingWatch(failures = 1, live = live)
+        whenever(taskDao.fetch(42L)).thenReturn(Task(id = 42, title = "Existing"))
+        whenever(caldavDao.getTask(42L)).thenReturn(null)
+        buildViewModel(taskId = 42)
+        advanceUntilIdle()
+
+        live.emit(Task(id = 42, title = "Existing", deletionDate = currentTimeMillis()))
+        advanceUntilIdle()
+
+        assertEquals(2, attempts())
+        assertTrue(viewModel.state.value.deleted)
+    }
+
+    @Test
+    fun aWatchThatKeepsFailingIsGivenUpOnRatherThanRetriedForever() = runTest(testDispatcher) {
+        val attempts = failingWatch(failures = Int.MAX_VALUE, live = MutableSharedFlow())
+        whenever(taskDao.fetch(42L)).thenReturn(Task(id = 42, title = "Existing"))
+        whenever(caldavDao.getTask(42L)).thenReturn(null)
+        buildViewModel(taskId = 42)
+        advanceUntilIdle()
+
+        assertEquals(WATCH_MAX_ATTEMPTS, attempts())
+    }
+
+    @Test
+    fun aWatchThatWasGivenUpOnIsArmedAgainByTheNextSave() = runTest(testDispatcher) {
+        val attempts = failingWatch(failures = Int.MAX_VALUE, live = MutableSharedFlow())
+        whenever(taskDao.fetch(42L)).thenReturn(Task(id = 42, title = "Existing"))
+        whenever(caldavDao.getTask(42L)).thenReturn(null)
+        buildViewModel(taskId = 42)
+        advanceUntilIdle()
+
+        viewModel.saveCurrentTask()
+        advanceUntilIdle()
+
+        assertEquals(WATCH_MAX_ATTEMPTS * 2, attempts())
+    }
+
+    @Test
+    fun aCloseDecidedWhileNothingWasListeningStillReachesTheNextCollector() =
+        runTest(testDispatcher) {
+            initializeNew()
+            viewModel.setTitle("Something")
+
+            viewModel.save()
+            advanceUntilIdle()
+
+            var closed = false
+            val job = CoroutineScope(testDispatcher).launch {
+                viewModel.closeEvents.first()
+                closed = true
+            }
+            advanceUntilIdle()
+            job.cancel()
+
+            assertTrue("a close with no collector must not be dropped", closed)
+        }
+
+    @Test
+    fun anEditorOnAnUnidentifiedDestinationDoesNotWaitForAnothersSave() = runTest(testDispatcher) {
+        val first = buildViewModel()
+        advanceUntilIdle()
+        first.setTitle("First")
+        val saveGate = CompletableDeferred<Unit>()
+        whenever(taskSaver.save(any(), anyOrNull(), any(), any())).doSuspendableAnswer {
+            saveGate.await()
+            Unit
+        }
+        first.persistCurrentTask()
+        advanceUntilIdle()
+
+        val second = buildViewModel()
+        advanceUntilIdle()
+
+        assertFalse(
+            "an editor naming no task must not queue behind another that names no task either",
+            second.state.value.isLoading,
+        )
+
+        saveGate.complete(Unit)
+        advanceUntilIdle()
+    }
+
+    @Test
+    fun anUnknownDefaultDueDateSettingLeavesTheTaskWithoutOne() = runTest(testDispatcher) {
+        whenever(appPreferences.taskDefaults()).thenReturn(
+            TaskDefaultSettings(defaultAlarms = emptyList(), defaultDueDate = 9999)
+        )
+
+        initializeNew()
+
+        assertFalse(viewModel.loadError.value)
+        assertFalse(viewModel.state.value.isLoading)
+        assertEquals(0L, viewModel.state.value.task.dueDate)
+    }
 }

@@ -17,7 +17,6 @@ class CaldavManualSortTaskAdapter internal constructor(
     localBroadcastManager: LocalBroadcastManager,
     taskMover: TaskMover,
 ) : TaskAdapter(false, googleTaskDao, caldavDao, taskDao, taskSaver, dirtyDao, localBroadcastManager, taskMover) {
-
     override suspend fun moved(from: Int, to: Int, indent: Int) {
         moveCaldavTask(from, to, indent)
     }

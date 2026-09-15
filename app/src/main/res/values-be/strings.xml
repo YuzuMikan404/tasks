@@ -12,9 +12,6 @@
     <string name="ok">Добра</string>
     <string name="cancel">Адмена</string>
     <string name="read_permission_label">Правы дазволу Tasks</string>
-    <string name="discard_confirmation">Вы ўпэўнены, што хочаце адхіліць змены?</string>
-    <string name="keep_editing">Працягнуць змены</string>
-    <string name="DLG_delete_this_task_question">Выдаліць гэтую задачу?</string>
     <string name="DLG_hour_minutes">Час (гадзіны : хвіліны)</string>
     <string name="DLG_undo">Адмяніць</string>
     <string name="WID_dateButtonUnset">Націсніце, каб наставіць</string>
@@ -28,7 +25,6 @@
     <string name="SSD_sort_auto">Разумнае сартаванне</string>
     <string name="customize_drawer">Наладзіць панэль</string>
     <string name="customize_drawer_summary">Перацягніце элементы меню, каб іх пераставіць</string>
-    <string name="action_open">Адкрыць</string>
     <string name="SSD_sort_my_order">Мой парадак</string>
     <string name="astrid_sort_order_summary">Уключыце рэжым ручнога сартавання Astrid для «Маіх задач», «Сёння» і тэгаў. Гэты рэжым будзе заменены на «Мой парадак» у будучым абнаўленні</string>
     <string name="SSD_sort_alpha">Па назве</string>
@@ -40,7 +36,6 @@
     <string name="sort_list">Па спісу</string>
     <string name="today">Сёння</string>
     <string name="yesterday">Учора</string>
-    <string name="default_list">Спіс па ўмаўчанні</string>
     <string name="due_date">Дата выканання</string>
     <string name="TEA_timer_est">Прыбл. %s</string>
     <string name="TEA_timer_elap">Прайшло %s</string>
@@ -62,7 +57,6 @@
     <string name="FLA_new_filter">Стварыць новы фільтр</string>
     <string name="TEA_title_hint">Назва задання</string>
     <string name="TEA_importance_label">Прыярытэт</string>
-    <string name="TEA_add_subtask">Дадаць падзаданне</string>
     <string name="TEA_note_label">Апісанне</string>
     <string name="save">Захаваць</string>
     <string name="TEA_control_location">Месца</string>

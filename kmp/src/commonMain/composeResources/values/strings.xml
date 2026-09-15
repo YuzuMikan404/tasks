@@ -33,6 +33,7 @@
     <string name="add_task">Add task</string>
     <string name="show_unstarted">Show unstarted</string>
     <string name="show_completed">Show completed</string>
+    <string name="show_completed_subtasks">Show completed subtasks</string>
     <string name="wear_install_app">Install on phone</string>
     <string name="wear_phone_update_required">Phone update required</string>
     <string name="wear_unknown_error">Unknown error</string>
@@ -211,6 +212,7 @@
     <string name="discard_changes">Discard changes?</string>
     <string name="discard">Discard</string>
     <string name="delete">Delete</string>
+    <string name="undo_delete">Undo delete</string>
     <string name="delete_tasks_warning">%1$s will be deleted. This cannot be undone!</string>
     <plurals name="task_count">
         <item quantity="one">%1$d task</item>
@@ -248,6 +250,7 @@
     <string name="qr_code">QR Code</string>
     <string name="error_create_link_failed">Failed to create link. Please check your internet connection and try again.</string>
     <string name="error_confirmation_failed">Failed to confirm link. The code may be invalid or expired.</string>
+    <string name="error_encryption_failed">Encryption failed. Check that Tasks.org can access your system keychain, then try again.</string>
     <string name="error_network">Unable to connect. Please check your internet connection.</string>
     <string name="error_no_sponsorship">No sponsorship found</string>
     <string name="error_sponsorship_delay">New sponsorships might not be available immediately, try again in a few minutes.</string>
@@ -376,6 +379,7 @@
     <string name="repeat_monthly_fifth_week">fifth</string>
     <string name="repeat_monthly_last_week">last</string>
     <string name="repeat_monthly_on_the_nth_weekday">Monthly on the %1$s %2$s</string>
+    <string name="repeat_monthly_on_last_day">Monthly on the last day</string>
     <string name="repeats_ends">Ends</string>
     <string name="repeats_never">Never</string>
     <string name="repeats_on">On</string>
@@ -415,6 +419,7 @@
     <item quantity="other">occurrences</item>
   </plurals>
     <string name="repeat_monthly_every_day_of_nth_week">every %1$s %2$s</string>
+    <string name="repeat_monthly_last_day">the last day</string>
     <string name="no_task_selected">No task selected</string>
     <string name="resize_panes">Resize panes</string>
     <string name="repeats_single">Repeats %1$s</string>
@@ -548,7 +553,10 @@
     <string name="swipe_to_snooze_time_30_minutes">after 30 minutes</string>
     <string name="swipe_to_snooze_time_1_hour">after 1 hour</string>
     <string name="swipe_to_snooze_time_24_hours">after 24 hours</string>
+    <string name="rmd_NoA_done">Complete</string>
     <string name="rmd_NoA_snooze">Snooze</string>
+    <string name="snoozed_reminder">Snoozed reminder</string>
+    <string name="action_open">Open</string>
     <string name="date_shortcut_hour">For an hour</string>
     <string name="date_shortcut_morning">Morning</string>
     <string name="date_shortcut_afternoon">Afternoon</string>
@@ -558,4 +566,38 @@
     <string name="date_shortcut_tomorrow_afternoon">Tomorrow afternoon</string>
     <string name="date_shortcut_tomorrow_evening">Tomorrow evening</string>
     <string name="date_shortcut_tomorrow_night">Tomorrow night</string>
+    <string name="google_tasks_add_to_top">New tasks on top</string>
+    <string name="default_tags">Default tags</string>
+    <string name="EPr_default_importance_title">Default priority</string>
+    <string name="default_start_date">Default start date</string>
+    <string name="default_due_date">Default due date</string>
+    <string name="default_calendar">Default calendar</string>
+    <string name="TEA_control_reminders">Reminders</string>
+    <string name="EPr_default_reminders_title">Default reminders</string>
+    <string name="EPr_default_reminders_mode_title">Default ring/vibrate type</string>
+    <string name="default_recurrence">Default recurrence</string>
+    <string name="TEA_control_location">Location</string>
+    <string name="default_location">Default location</string>
+    <string name="EPr_default_location_reminder_title">Default location reminders</string>
+    <string name="location_update_interval_title">Background location updates</string>
+    <string name="dont_add_to_calendar">Don't add to calendar</string>
+    <string name="no_reminders">No reminders</string>
+    <string name="day_after_tomorrow">Day after tomorrow</string>
+    <string name="next_week">Next week</string>
+    <string name="default_location_reminder_on_arrival">On arrival</string>
+    <string name="default_location_reminder_on_departure">On departure</string>
+    <string name="default_location_reminder_on_arrival_or_departure">On arrival and departure</string>
+    <string name="location_update_interval_disabled">Disabled</string>
+    <string name="location_update_interval_15_minutes">Every 15 minutes</string>
+    <string name="location_update_interval_30_minutes">Every 30 minutes</string>
+    <string name="location_update_interval_1_hour">Every hour</string>
+    <string name="location_update_interval_2_hours">Every 2 hours</string>
+    <string name="discard_confirmation">Are you sure you want to discard your changes?</string>
+    <string name="keep_editing">Keep editing</string>
+    <string name="DLG_delete_this_task_question">Delete this task?</string>
+    <string name="TEA_add_subtask">Add subtask</string>
+    <string name="subtasks_multilevel_google_task">Multi-level subtasks not supported by Google Tasks</string>
+    <string name="subtasks_multilevel_microsoft">Multi-level subtasks not supported by Microsoft To Do</string>
+    <string name="subtasks_will_be_flattened">This list doesn't support nested subtasks. Saving will move them all to the top level.</string>
+    <string name="subtask_list_locked">New subtasks use the parent's list</string>
 </resources>

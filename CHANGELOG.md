@@ -1,3 +1,60 @@
+### 15.11 (2026-09-01)
+
+* Add 'last day of month' recurrence option
+* Drawer rendering performance improvement - @toxicphreAK [#4570](https://github.com/tasks/tasks/pull/4570)
+* Fix running tests on Windows - @przemhb [#4591](https://github.com/tasks/tasks/pull/4591)
+* Fix all-day dates edited across two devices and two time zones from wedging sync
+
+Desktop:
+  * Display reminders on macOS, Windows, and Linux
+  * Fix packaging app from source - @CR0CKER [#4589](https://github.com/tasks/tasks/pull/4589)
+
+Android:
+  * Task list rendering performance improvement - @toxicphreAK [#4569](https://github.com/tasks/tasks/pull/4569)
+  * Fix time display when ICU data is missing
+
+Update translations:
+  * Brazilian Portuguese - @restlessSangoLeelo
+  * Czech - @p-bo
+  * Esperanto - @Rajzin
+  * Estonian - Priit Jõerüüt
+  * Hungarian - Kaci
+  * Indonesian - @arifpedia
+  * Romanian - @ygorigor
+  * Serbian - @vale-decem
+  * Swedish - Jonatan Nyberg
+  * Thai - @KuroisKitsune
+  * Ukrainian - @IhorHordiichuk
+
+### 15.10 (2026-08-14)
+
+* Completed subtasks now remain under the parent task
+* Add 'Show completed subtasks' toggle to sort menu
+* Subtask sorting bug fixes
+
+Desktop:
+  * Add subtasks to the edit screen
+    * Supports drag and drop to reorder and nest
+    * Tab and shift-tab to change nesting
+    * Edit subtask titles from the parent task
+    * Edit subtasks without leaving the parent task
+  * Add Task defaults settings page
+  * Prompt before discarding or deleting tasks from the editor
+  * Fix Windows and Linux ARM builds
+  * Fix window size crashes on Windows
+  * Fix desktop app losing subscription status
+
+Update translations:
+  * Brazilian Portuguese - @restlessSangoLeelo
+  * Chinese (Simplified) - Sketch6580, hamburger2048
+  * Estonian - Priit Jõerüüt
+  * French - @FlorianLeChat
+  * German - @zhx000
+  * Hebrew - @ginger-co, @omeritzics
+  * Japanese - akira7095
+  * Polish - @pawerak
+  * Turkish - @oersen
+
 ### 15.9.1 (2026-08-05)
 
 * Google Tasks sync performance improvements

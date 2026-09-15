@@ -9,7 +9,6 @@
     <string name="import_summary_message">Datoteka %1$s je vsebovala %2$s.\n\n %3$s uvožen,\n %4$s že obstaja\n %5$s imel napake\n</string>
     <string name="import_progress_read">Berem opravek %d…</string>
     <string name="read_permission_label">Dovoljenje Opravkom</string>
-    <string name="DLG_delete_this_task_question">Zbrišem ta opravek?</string>
     <string name="DLG_hour_minutes">Čas (ure : minute)</string>
     <string name="DLG_undo">Razveljavi</string>
     <string name="WID_dateButtonUnset">Klikni za nastavitev</string>
@@ -52,9 +51,6 @@
     <string name="EPr_manage_delete_gcal_status">Število zbrisanih dogodkov na koledarju: %d </string>
     <string name="EPr_manage_delete_all_gcal">Zbriši vse dogodke na koledarju z opravki</string>
     <string name="EPr_manage_delete_all_gcal_message">Ste prepričani, da želite zbrisati vse opravke iz vaših dogodkov?</string>
-    <string name="EPr_default_importance_title">Privzeta dospelost</string>
-    <string name="EPr_default_reminders_title">Privzeti opomniki</string>
-    <string name="EPr_default_reminders_mode_title">Privzeti način zvonenja/vibriranja</string>
     <string name="day_after_tomorrow">Pojutrišnjem</string>
     <string name="next_week">Naslednji teden</string>
     <string name="BFE_Active">Moji Opravki</string>
@@ -79,14 +75,6 @@
     <string name="gtasks_GLA_authenticating">Avtentikacija v teku …</string>
     <string name="gtasks_error_accountNotFound">Račun %s ni najden—prosimo odjavite se, nato pa ponovno prijavite skozi nastavitve Google Nalog.</string>
     <string name="premium_record_audio">Posnemi opombo</string>
-    <string name="rmd_NoA_done">Končano</string>
-    <string name="rmd_NoA_snooze">Dremež</string>
-    <string name="rmd_EPr_defaultRemind_title">Naključni opomniki</string>
-    <string name="default_random_reminder_disabled">onemogočen</string>
-    <string name="default_random_reminder_hourly">vsako uro</string>
-    <string name="default_random_reminder_daily">dnevno</string>
-    <string name="default_random_reminder_weekly">tedensko</string>
-    <string name="default_random_reminder_bi_weekly">vsake dva tedna</string>
     <string name="TPl_notification">Merilniki časa aktivni za %s!</string>
     <string name="TEA_timer_controls">Merilnik časa</string>
     <string name="TEA_timer_comment_started">ta opravek začel:</string>

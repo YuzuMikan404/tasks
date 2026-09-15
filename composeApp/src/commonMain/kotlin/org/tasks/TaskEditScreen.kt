@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,7 +45,9 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.tasks.compose.PlatformBackHandler
 import org.tasks.compose.edit.AlarmsSection
+import org.tasks.compose.edit.DeleteTaskDialog
 import org.tasks.compose.edit.DescriptionRow
+import org.tasks.compose.edit.DiscardChangesDialog
 import org.tasks.compose.edit.DueDateRow
 import org.tasks.compose.edit.ListPickerDialog
 import org.tasks.compose.edit.MarkdownEditField
@@ -52,11 +55,14 @@ import org.tasks.compose.edit.PrioritySection
 import org.tasks.compose.edit.RecurrencePickerDialog
 import org.tasks.compose.edit.RepeatRow
 import org.tasks.compose.edit.StartDateRow
+import org.tasks.compose.edit.SubtasksSection
 import org.tasks.compose.edit.TagPickerDialog
 import org.tasks.compose.edit.TagsSection
 import org.tasks.compose.edit.TaskEditActionBar
 import org.tasks.compose.edit.TaskEditActionBarHeight
+import org.tasks.compose.edit.TaskEditCard
 import org.tasks.compose.edit.TaskEditCardRow
+import org.tasks.compose.edit.TaskEditCardRowContent
 import org.tasks.compose.pickers.DueDatePickerSheet
 import org.tasks.compose.pickers.StartDatePickerSheet
 import org.tasks.compose.pickers.alarmFromSelection
@@ -80,6 +86,10 @@ import tasks.kmp.generated.resources.back
 import tasks.kmp.generated.resources.failed_to_load_task
 import tasks.kmp.generated.resources.no_list_available
 import tasks.kmp.generated.resources.sort_list
+import tasks.kmp.generated.resources.subtask_list_locked
+import tasks.kmp.generated.resources.subtasks_multilevel_google_task
+import tasks.kmp.generated.resources.subtasks_multilevel_microsoft
+import tasks.kmp.generated.resources.subtasks_will_be_flattened
 import tasks.kmp.generated.resources.task_title
 
 val TaskEditIslandInset = 16.dp
@@ -92,6 +102,7 @@ fun TaskEditScreen(
     onCreateList: (accountId: Long) -> Unit = {},
     onSignIn: () -> Unit = {},
     backHandlerEnabled: Boolean = true,
+    onOpenSubtask: (taskId: Long, remoteId: String, isDraft: Boolean) -> Unit = { _, _, _ -> },
     onClose: () -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
@@ -179,6 +190,8 @@ fun TaskEditScreen(
                     var showStartDatePicker by remember { mutableStateOf(false) }
                     var showRecurrencePicker by remember { mutableStateOf(false) }
                     var showAlarmDateTimePicker by remember { mutableStateOf(false) }
+                    var showDiscardConfirmation by remember { mutableStateOf(false) }
+                    var showDeleteConfirmation by remember { mutableStateOf(false) }
                     var alarmToReplace by remember { mutableStateOf<Alarm?>(null) }
                     var pickerToken by remember { mutableStateOf(0) }
                     val reminderViewModel = koinViewModel<ReminderControlSetViewModel>()
@@ -197,14 +210,35 @@ fun TaskEditScreen(
                             focusRequester = titleFocusRequester,
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        TaskEditCardRow(
-                            value = list.title,
-                            valueColor = MaterialTheme.colorScheme.onSurface,
-                            onClick = { showListPicker = true },
-                            title = stringResource(Res.string.sort_list),
-                            icon = listIcon,
-                            iconTint = listTint,
-                        )
+                        if (state.isDraft) {
+                            TaskEditCard {
+                                TaskEditCardRowContent(
+                                    value = list.title,
+                                    valueColor = MaterialTheme.colorScheme.onSurface,
+                                    title = stringResource(Res.string.sort_list),
+                                    icon = listIcon,
+                                    iconTint = listTint,
+                                    trailing = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Lock,
+                                            contentDescription = stringResource(
+                                                Res.string.subtask_list_locked
+                                            ),
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    },
+                                )
+                            }
+                        } else {
+                            TaskEditCardRow(
+                                value = list.title,
+                                valueColor = MaterialTheme.colorScheme.onSurface,
+                                onClick = { showListPicker = true },
+                                title = stringResource(Res.string.sort_list),
+                                icon = listIcon,
+                                iconTint = listTint,
+                            )
+                        }
                         Spacer(modifier = Modifier.height(16.dp))
                         StartDateRow(
                             startDate = state.task.hideUntil,
@@ -280,6 +314,35 @@ fun TaskEditScreen(
                             description = state.task.notes.orEmpty(),
                             onDescriptionChange = viewModel::setDescription,
                         )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        SubtasksSection(
+                            subtasks = state.subtasks,
+                            focusSubtask = state.focusSubtask,
+                            unsupportedMessage = multilevelSubtaskMessage(state),
+                            flattenWarning = if (flattensOnSave(state)) {
+                                stringResource(Res.string.subtasks_will_be_flattened)
+                            } else {
+                                null
+                            },
+                            allowsNesting = state.allowsNesting,
+                            bottomInset = TaskEditActionBarHeight +
+                                FloatingToolbarBottomMargin +
+                                TaskEditIslandInset,
+                            onAddSubtask = { viewModel.addSubtask() },
+                            onAddAfter = { node -> viewModel.addSubtask(after = node) },
+                            onOpenSubtask = { node ->
+                                onOpenSubtask(node.id, node.task.uuid, node.isNew)
+                            },
+                            onCompleteSubtask = viewModel::toggleSubtaskComplete,
+                            onToggleCollapsed = viewModel::toggleSubtaskCollapsed,
+                            onMoveSubtask = viewModel::moveSubtask,
+                            onIndentSubtask = viewModel::indentSubtask,
+                            onTitleChange = viewModel::setSubtaskTitle,
+                            onRemoveSubtask = viewModel::removeSubtask,
+                            onBackspaceSubtask = viewModel::backspaceSubtask,
+                            onRestoreSubtask = viewModel::restoreSubtask,
+                            onSubtaskFocused = viewModel::onSubtaskFocused,
+                        )
                         Spacer(
                             modifier = Modifier.height(
                                 TaskEditActionBarHeight + FloatingToolbarBottomMargin
@@ -291,8 +354,18 @@ fun TaskEditScreen(
                             keyboardController?.hide()
                             viewModel.markComplete()
                         },
-                        onDiscardChanges = viewModel::discardChanges,
-                        onDeleteTask = viewModel::delete,
+                        onDiscardChanges = {
+                            keyboardController?.hide()
+                            if (state.hasChanges) {
+                                showDiscardConfirmation = true
+                            } else {
+                                viewModel.discardChanges()
+                            }
+                        },
+                        onDeleteTask = {
+                            keyboardController?.hide()
+                            showDeleteConfirmation = true
+                        },
                         enabled = !saving,
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
@@ -301,6 +374,24 @@ fun TaskEditScreen(
                                 vertical = FloatingToolbarBottomMargin,
                             ),
                     )
+                    if (showDiscardConfirmation) {
+                        DiscardChangesDialog(
+                            onDiscard = {
+                                showDiscardConfirmation = false
+                                viewModel.discardChanges()
+                            },
+                            onDismiss = { showDiscardConfirmation = false },
+                        )
+                    }
+                    if (showDeleteConfirmation) {
+                        DeleteTaskDialog(
+                            onDelete = {
+                                showDeleteConfirmation = false
+                                viewModel.delete()
+                            },
+                            onDismiss = { showDeleteConfirmation = false },
+                        )
+                    }
                     if (showDueDatePicker) {
                         val (initialDay, initialTime) = dueDateToSelection(state.task.dueDate)
                         // TODO: both date pickers hard-code autoClose
@@ -466,6 +557,40 @@ fun TaskEditScreen(
         }
     }
 }
+
+internal enum class MultilevelSubtaskLimit { GoogleTasks, Microsoft }
+
+internal fun multilevelSubtaskLimit(state: TaskEditViewModel.State): MultilevelSubtaskLimit? {
+    val list = state.list ?: return null
+    if (state.task.parent <= 0 && !state.isDraft) {
+        return null
+    }
+    if (list.isIcalendar) {
+        return null
+    }
+    val original = state.originalList
+    if (original != null && (original.isIcalendar || original.uuid != list.uuid)) {
+        return null
+    }
+    return if (list.isGoogleTasks) {
+        MultilevelSubtaskLimit.GoogleTasks
+    } else {
+        MultilevelSubtaskLimit.Microsoft
+    }
+}
+
+internal fun flattensOnSave(state: TaskEditViewModel.State): Boolean =
+    state.list?.isSingleLevel == true && state.subtasksNested
+
+@Composable
+private fun multilevelSubtaskMessage(state: TaskEditViewModel.State): String? =
+    when (multilevelSubtaskLimit(state)) {
+        null -> null
+        MultilevelSubtaskLimit.GoogleTasks ->
+            stringResource(Res.string.subtasks_multilevel_google_task)
+        MultilevelSubtaskLimit.Microsoft ->
+            stringResource(Res.string.subtasks_multilevel_microsoft)
+    }
 
 @Composable
 private fun TitleField(

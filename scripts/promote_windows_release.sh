@@ -60,7 +60,7 @@ if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
   gh release upload "$tag" "$msi" "$checksum" --repo "$GITHUB_REPOSITORY" --clobber
   gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --title "Tasks.org Windows $VERSION" --prerelease=false --latest
 else
-  gh release create "$tag" "$msi" "$checksum" --repo "$GITHUB_REPOSITORY" --target "$EXPECTED_CANDIDATE" --title "Tasks.org Windows $VERSION" --notes "Windows-only libre build based on the official Tasks.org $VERSION release. EteSync and self-hosted CalDAV synchronization do not require a Tasks.org subscription."
+  gh release create "$tag" "$msi" "$checksum" --repo "$GITHUB_REPOSITORY" --target "$EXPECTED_CANDIDATE" --title "Tasks.org Windows $VERSION" --notes "Windows desktop build based on the official Tasks.org $VERSION release, with the desktop generic entitlement enabled."
 fi
 
 git push origin --delete "$CANDIDATE_BRANCH" ||

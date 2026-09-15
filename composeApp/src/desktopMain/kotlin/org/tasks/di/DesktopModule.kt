@@ -27,6 +27,7 @@ import org.tasks.billing.DesktopLinkClientImpl
 import org.tasks.billing.GitHubSponsorClient
 import org.tasks.billing.GitHubSponsorClientImpl
 import org.tasks.billing.SubscriptionProvider
+import com.todoroo.astrid.service.CommonUpgrades
 import org.tasks.caldav.FileStorage
 import org.tasks.caldav.VtodoCache
 import org.tasks.data.db.CommonMigrations
@@ -45,7 +46,19 @@ import org.tasks.kmp.JvmBuildConfig
 import org.tasks.kmp.createDataStore
 import org.tasks.kmp.dataStoreFileName
 import org.tasks.data.TaskCreator
+import com.todoroo.astrid.alarms.AlarmService
+import org.tasks.notifications.DesktopNotifier
+import org.tasks.notifications.NotificationActionHandler
+import org.tasks.notifications.NotificationScheduler
+import org.tasks.notifications.NucleusLinuxNotifications
+import org.tasks.notifications.NucleusMacNotifications
+import org.tasks.notifications.NucleusWindowsNotifications
+import org.tasks.notifications.Notifier
+import org.tasks.notifications.notificationSessionToken
+import org.tasks.service.DesktopCleanup
+import org.tasks.service.TaskCleanup
 import org.tasks.preferences.TasksPreferences
+import org.tasks.service.Upgrader
 import org.tasks.security.DesktopKeyProvider
 import org.tasks.sync.microsoft.DesktopMicrosoftClientProvider
 import org.tasks.sync.microsoft.MicrosoftClientProvider
@@ -56,8 +69,12 @@ import org.tasks.extensions.supportsSystemNotificationSettings
 import org.tasks.sse.SseTokenProvider
 import java.io.File
 
-private val appName: String =
+internal val appName: String =
     if (JvmBuildConfig.DEBUG) "Tasks.org.debug" else "Tasks.org"
+
+// This independently distributed desktop fork unlocks premium features without
+// creating or impersonating a Tasks.org Cloud subscription.
+private const val IS_GENERIC = true
 
 internal enum class Platform { MAC, WINDOWS, LINUX }
 
@@ -70,54 +87,74 @@ internal fun platform(): Platform {
     }
 }
 
+private val directoryLock = Any()
 
-private fun ensureDirectory(dir: File): File? = try {
-    if ((dir.exists() || dir.mkdirs()) && dir.isDirectory) dir else null
-} catch (_: Exception) {
-    null
+private var overrideResolved = false
+private var cachedOverrideDir: File? = null
+private var cachedDataDir: File? = null
+private var cachedCookieDir: File? = null
+private var cachedLogDir: File? = null
+
+internal fun resetDirectories() = synchronized(directoryLock) {
+    overrideResolved = false
+    cachedOverrideDir = null
+    cachedDataDir = null
+    cachedCookieDir = null
+    cachedLogDir = null
 }
 
-private fun firstWritableDirectory(vararg candidates: File): File? {
-    for (candidate in candidates) {
-        ensureDirectory(candidate)?.let { return it }
+private val overrideDir: File?
+    get() = synchronized(directoryLock) {
+        if (!overrideResolved) {
+            cachedOverrideDir = resolveOverrideDir()
+            overrideResolved = true
+        }
+        cachedOverrideDir
     }
-    return null
-}
 
-
-private val overrideDir: File? by lazy {
+private fun resolveOverrideDir(): File? {
     val path = System.getProperty("tasks.dataDir")?.takeIf { it.isNotBlank() }
         ?: System.getenv("TASKS_DATA_DIR")?.takeIf { it.isNotBlank() }
-    path?.let { firstWritableDirectory(File(it)) }
+    return path?.let { File(it) }?.also {
+        require(it.exists() || it.mkdirs()) { "Failed to create data directory: $it" }
+        require(it.isDirectory) { "Data directory path is not a directory: $it" }
+    }
 }
 
-val dataDir: File by lazy {
-    overrideDir?.let { return@lazy it }
+val dataDir: File
+    get() = synchronized(directoryLock) {
+        cachedDataDir ?: resolveDataDir().also { cachedDataDir = it }
+    }
+
+private fun resolveDataDir(): File {
+    overrideDir?.let { return it }
     val home = System.getProperty("user.home")
     val legacyDir = File(home, ".tasks.org")
-    if (legacyDir.isDirectory) return@lazy legacyDir
+    if (legacyDir.exists()) return legacyDir
     val dir = when (platform()) {
         Platform.MAC -> File(home, "Library/Application Support/$appName")
         Platform.WINDOWS ->
-            File(
-                System.getenv("LOCALAPPDATA")
-                    ?: System.getenv("APPDATA")
-                    ?: "$home/AppData/Local",
-                appName,
-            )
+            File(System.getenv("LOCALAPPDATA") ?: "$home/AppData/Local", appName)
         Platform.LINUX -> {
             val xdgData = System.getenv("XDG_DATA_HOME") ?: "$home/.local/share"
             File(xdgData, appName.lowercase())
         }
     }
-    firstWritableDirectory(dir, legacyDir, File(System.getProperty("java.io.tmpdir"), appName.lowercase()))
-        ?: dir
+    return dir.also { it.mkdirs() }
 }
 
-val cookieDir: File by lazy { File(dataDir, "cookies") }
+val cookieDir: File
+    get() = synchronized(directoryLock) {
+        cachedCookieDir ?: File(dataDir, "cookies").also { cachedCookieDir = it }
+    }
 
-val logDir: File by lazy {
-    overrideDir?.let { return@lazy firstWritableDirectory(File(it, "logs")) ?: File(it, "logs") }
+val logDir: File
+    get() = synchronized(directoryLock) {
+        cachedLogDir ?: resolveLogDir().also { cachedLogDir = it }
+    }
+
+private fun resolveLogDir(): File {
+    overrideDir?.let { return File(it, "logs").also { d -> d.mkdirs() } }
     val home = System.getProperty("user.home")
     val dir = when (platform()) {
         Platform.MAC -> File(home, "Library/Logs/$appName")
@@ -127,11 +164,12 @@ val logDir: File by lazy {
             File(xdgState, "${appName.lowercase()}/logs")
         }
     }
-    firstWritableDirectory(dir) ?: dir
+    return dir.also { it.mkdirs() }
 }
 
 actual fun platformModule(): Module = module {
     singleOf(::TasksServerEnvironment)
+
     single {
         PlatformConfiguration(
             versionCode = JvmBuildConfig.VERSION_CODE,
@@ -140,7 +178,10 @@ actual fun platformModule(): Module = module {
             supportsEteSync = true,
             supportsGoogleTasks = true,
             supportsMicrosoft = true,
-        ).asForkLibreBuild()
+            supportsSwipeToSnooze = false,
+            supportsSystemNotificationSettings = supportsSystemNotificationSettings(),
+            showNotificationsEnabledSwitch = true,
+        )
     }
     single<Reporting> {
         PostHogReporting(
@@ -208,6 +249,7 @@ actual fun platformModule(): Module = module {
                 serviceName = "Tasks.org",
                 accountName = "encryption-key",
                 fallbackKeyFile = File(dataDir, ".key"),
+                hasEncryptedData = { File(dataDir, DesktopEntitlement.FILE_NAME).exists() },
             )
         )
     }
@@ -223,6 +265,7 @@ actual fun platformModule(): Module = module {
         val dataStoreFile = File(dataDir, dataStoreFileName)
         TasksPreferences(createDataStore { dataStoreFile.absolutePath })
     }
+    factory { Upgrader(get(), CommonUpgrades.all(get())) }
     factory {
         FileStorage(dataDir.absolutePath)
     }
@@ -256,6 +299,7 @@ actual fun platformModule(): Module = module {
             scope = get(),
             json = get(),
             encryption = get(),
+            syncAdapters = get(),
         ).also { it.initialize() }
     }
     single<SubscriptionProvider> {
@@ -268,6 +312,12 @@ actual fun platformModule(): Module = module {
             override val subscription: Flow<SubscriptionProvider.SubscriptionInfo?> =
                 combine(entitlement.hasPro, entitlement.sku, entitlement.provider, debugPro) { hasPro, sku, provider, debug ->
                     when {
+                        IS_GENERIC -> SubscriptionProvider.SubscriptionInfo(
+                            sku = "desktop_generic",
+                            isMonthly = false,
+                            isTasksSubscription = false,
+                            isGitHubSponsor = false,
+                        )
                         hasPro -> {
                             val isMonthly = sku?.startsWith("monthly") == true
                             SubscriptionProvider.SubscriptionInfo(
@@ -286,6 +336,11 @@ actual fun platformModule(): Module = module {
                         else -> null
                     }
                 }
+
+            override suspend fun awaitVerification(): Boolean = entitlement.awaitReady()
+
+            override val googleAndMicrosoftRequirePro: Boolean get() = true
+
             override suspend fun getFormattedPrice(sku: String): String? =
                 entitlement.formattedPrice.first()
         }
@@ -324,6 +379,58 @@ actual fun platformModule(): Module = module {
             environment = get(),
             httpClientFactory = get(),
             tokenProvider = get(),
+        )
+    }
+    single {
+        NotificationActionHandler(
+            scope = get(),
+            taskDao = get(),
+            taskCompleter = get(),
+            notifier = { get<Notifier>() },
+            taskRequests = get(),
+        )
+    }
+    single {
+        DesktopNotifier(
+            taskDao = get(),
+            notificationDao = get(),
+            alarmDao = get(),
+            refreshBroadcaster = get(),
+            signalScheduler = { get<NotificationScheduler>().signal() },
+            gatesOnPermission = { platform() == Platform.MAC },
+            notificationsEnabled = {
+                get<TasksPreferences>().get(TasksPreferences.notificationsEnabled, true)
+            },
+            recordScreenCleared = {
+                get<TasksPreferences>().set(TasksPreferences.screenClearedAtShutdown, true)
+            },
+            takeScreenCleared = {
+                get<TasksPreferences>()
+                    .getAndSet(TasksPreferences.screenClearedAtShutdown, false) == true
+            },
+            claimPlatformIds = {
+                val current = notificationSessionToken()
+                current != null && get<TasksPreferences>()
+                    .getAndSet(TasksPreferences.notificationSession, current) == current
+            },
+            createBackend = {
+                val listener = get<NotificationActionHandler>()
+                when (platform()) {
+                    Platform.LINUX -> NucleusLinuxNotifications.create(listener)
+                    Platform.WINDOWS -> NucleusWindowsNotifications.create(listener)
+                    Platform.MAC -> NucleusMacNotifications.create(listener)
+                }
+            },
+        )
+    }
+    factory<Notifier> { get<DesktopNotifier>() }
+    factory<TaskCleanup> { DesktopCleanup(notifier = get<DesktopNotifier>()) }
+    single {
+        val alarmService = lazy { get<AlarmService>() }
+        NotificationScheduler(
+            alarmService = alarmService::value,
+            trigger = { get<DesktopNotifier>().triggerNotifications(it) },
+            hold = { get<DesktopNotifier>().hold() },
         )
     }
 }

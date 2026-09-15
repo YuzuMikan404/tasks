@@ -5,7 +5,6 @@ import com.todoroo.astrid.timers.TimerPlugin
 import org.tasks.broadcast.RefreshBroadcaster
 import org.tasks.data.dao.CaldavDao
 import org.tasks.data.dao.TaskDao
-import org.tasks.data.db.SuspendDbUtils.eachChunk
 import org.tasks.data.entity.CaldavAccount
 import org.tasks.data.entity.CaldavAccount.Companion.TYPE_GOOGLE_TASKS
 import org.tasks.data.entity.CaldavAccount.Companion.TYPE_LOCAL
@@ -33,9 +32,26 @@ class TaskSaver(
     private val backgroundWork: BackgroundWork,
     private val caldavDao: CaldavDao,
 ) {
-    suspend fun save(task: Task, original: Task?, dirty: Boolean = true) {
-        val markDirty = dirty && needsSync(task, original)
-        if (taskDao.update(task, original, updateTimestamp = dirty, markDirty)) {
+    suspend fun save(
+        task: Task,
+        original: Task?,
+        dirty: Boolean = true,
+        preserveHierarchy: Boolean = false,
+    ) {
+        val changes = if (preserveHierarchy && original != null) {
+            task.copy(parent = original.parent, order = original.order)
+        } else {
+            task
+        }
+        val markDirty = dirty && needsSync(changes, original)
+        if (taskDao.update(
+                task,
+                original,
+                updateTimestamp = dirty,
+                markDirty = markDirty,
+                preserveHierarchy = preserveHierarchy,
+            )
+        ) {
             Logger.d("TaskSaver") { "Saved $task" }
             afterSave(task, original)
         }
@@ -97,10 +113,7 @@ class TaskSaver(
     }
 
     suspend fun setCollapsed(preferences: QueryPreferences, filter: Filter, collapsed: Boolean) {
-        taskDao.fetchTasks(TaskListQuery.getQuery(preferences, filter))
-            .filter(TaskContainer::hasChildren)
-            .map(TaskContainer::id)
-            .eachChunk { taskDao.setCollapsed(it, collapsed) }
+        taskDao.setCollapsed(preferences, filter, collapsed)
         refreshBroadcaster.broadcastRefresh()
     }
 }

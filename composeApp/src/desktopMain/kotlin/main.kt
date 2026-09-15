@@ -16,8 +16,10 @@ import co.touchlab.kermit.Logger
 import co.touchlab.kermit.Severity
 import co.touchlab.kermit.platformLogWriter
 import org.jetbrains.compose.resources.painterResource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -31,11 +33,19 @@ import org.tasks.analytics.PostHogReporting
 import org.tasks.analytics.Reporting
 import org.tasks.App
 import org.tasks.auth.TasksServerEnvironment
+import org.tasks.broadcast.ComposeRefreshBroadcaster
+import org.tasks.compose.StableWindowSize
 import org.tasks.jobs.BackgroundWork
+import org.tasks.notifications.DesktopNotifier
+import org.tasks.notifications.NotificationScheduler
+import org.tasks.requestForeground
+import org.tasks.setQuitting
 import org.tasks.PlatformConfiguration
+import org.tasks.TaskRequests
 import org.tasks.preferences.AppPreferences
 import org.tasks.preferences.TasksPreferences
 import org.tasks.preferences.recordInstallIfNeeded
+import org.tasks.service.Upgrader
 import org.tasks.viewmodel.PendingTaskSaves
 import org.tasks.http.EncryptedCookieStore
 import at.bitfire.cert4android.DesktopUserDecisionRegistry
@@ -47,12 +57,16 @@ import org.tasks.sync.microsoft.MicrosoftClientProvider
 import org.tasks.di.commonModule
 import org.tasks.di.dataDir
 import org.tasks.di.logDir
+import org.tasks.di.Platform
+import org.tasks.di.platform
 import org.tasks.di.platformModule
 import org.tasks.logging.FileLogWriter
+import org.tasks.logging.logStartup
+import org.tasks.update.WindowsUpdate
+import org.tasks.update.launchWindowsUpdate
+import org.tasks.update.prepareWindowsUpdate
 import java.awt.Desktop
 import java.awt.Dimension
-import java.awt.EventQueue
-import java.awt.Frame
 import java.awt.desktop.QuitStrategy
 import java.awt.event.WindowEvent
 import java.awt.event.WindowFocusListener
@@ -62,9 +76,13 @@ import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.nio.channels.FileChannel
+import javax.swing.JOptionPane
 import org.tasks.extensions.openInBrowser
 import tasks.kmp.generated.resources.Res
 import tasks.kmp.generated.resources.ic_round_icon
+import org.tasks.extensions.step
+
+private const val TAG = "main"
 
 private val portFile = File(dataDir, ".ipc_port")
 private val lockFile = File(dataDir, ".lock")
@@ -111,19 +129,11 @@ private fun startIpcServer() {
         while (true) {
             try {
                 server.accept().use { it.getInputStream().read() }
-                EventQueue.invokeLater {
-                    if (Desktop.isDesktopSupported()) {
-                        Desktop.getDesktop().requestForeground(true)
-                    }
-                    Frame.getFrames().forEach { frame ->
-                        frame.isVisible = true
-                        frame.extendedState = frame.extendedState and Frame.ICONIFIED.inv()
-                        frame.toFront()
-                        frame.requestFocus()
-                    }
-                }
+                requestForeground()
             } catch (e: Exception) {
-                Logger.w(e) { "IPC server stopped" }
+                if (!server.isClosed) {
+                    Logger.w(e) { "IPC server stopped" }
+                }
                 break
             }
         }
@@ -151,24 +161,27 @@ fun main() {
     }
     org.tasks.caldav.CaldavSynchronizer.registerFactories()
     Logger.setMinSeverity(if (TasksBuildConfig.DEBUG) Severity.Verbose else Severity.Debug)
+    val fileLogWriter = FileLogWriter(logDir)
     Logger.setLogWriters(
         buildList {
             if (TasksBuildConfig.DEBUG) add(platformLogWriter())
-            add(FileLogWriter(logDir))
+            add(fileLogWriter)
         }
     )
+    logStartup()
 
     startKoin {
         modules(commonModule, platformModule())
     }
     val koin = KoinPlatform.getKoin()
-    runCatching {
-        runBlocking {
-            koin.get<AppPreferences>()
-                .recordInstallIfNeeded(koin.get<PlatformConfiguration>().versionCode)
+    runBlocking {
+        val versionCode = koin.get<PlatformConfiguration>().versionCode
+        runCatching {
+            koin.get<AppPreferences>().recordInstallIfNeeded(versionCode)
+        }.onFailure { e ->
+            Logger.w(e) { "Failed to record install metadata" }
         }
-    }.onFailure { e ->
-        Logger.w(e) { "Failed to record install metadata" }
+        koin.get<Upgrader>().upgrade(versionCode)
     }
     // Cmd+Q on macOS goes through here rather than through the window: the JDK's default quit
     // strategy calls System.exit directly, so no window ever sees a close request and none of the
@@ -185,7 +198,9 @@ fun main() {
         }
     }
     Runtime.getRuntime().addShutdownHook(Thread {
-        try {
+        fileLogWriter.beginShutdown()
+        Logger.i(tag = TAG) { "Shutting down" }
+        step(TAG, "commit pending saves") {
             val pendingSaves = koin.get<PendingTaskSaves>()
             pendingSaves.flushPending()
             runBlocking {
@@ -193,23 +208,34 @@ fun main() {
                     Logger.w { "Timed out waiting for pending saves during shutdown" }
                 }
             }
-        } catch (e: Exception) {
-            Logger.e(e) { "Failed to commit pending saves during shutdown" }
         }
-        (koin.get<MicrosoftClientProvider>() as? DesktopMicrosoftClientProvider)?.close()
-        runBlocking { EncryptedCookieStore.flushAll() }
-        (koin.get<Reporting>() as? PostHogReporting)?.close()
-        ipcServer?.close()
-        portFile.delete()
-        lockChannel?.close()
-        lockFile.delete()
+        step(TAG, "stop the notification scheduler") {
+            runBlocking { koin.get<NotificationScheduler>().stop() }
+        }
+        step(TAG, "close notifications") {
+            runBlocking { koin.get<DesktopNotifier>().shutdown() }
+        }
+        step(TAG, "close the Microsoft client") {
+            (koin.get<MicrosoftClientProvider>() as? DesktopMicrosoftClientProvider)?.close()
+        }
+        step(TAG, "flush cookies") { runBlocking { EncryptedCookieStore.flushAll() } }
+        step(TAG, "close reporting") { (koin.get<Reporting>() as? PostHogReporting)?.close() }
+        step(TAG, "release the single instance lock") {
+            ipcServer?.close()
+            portFile.delete()
+            lockChannel?.close()
+            lockFile.delete()
+        }
+        Logger.i(tag = TAG) { "Shutdown complete" }
     })
 
     application {
         val preferences = koinInject<TasksPreferences>()
         val pendingSaves = koinInject<PendingTaskSaves>()
+        val taskRequests = koinInject<TaskRequests>()
         val shutdownScope = rememberCoroutineScope()
         var closing by remember { mutableStateOf(false) }
+        var pendingUpdate by remember { mutableStateOf<WindowsUpdate?>(null) }
         val windowState = rememberWindowState(size = DpSize(DEFAULT_WIDTH, DEFAULT_HEIGHT))
         var windowReady by remember { mutableStateOf(false) }
         // Restore saved window size and position before showing the window
@@ -250,6 +276,8 @@ fun main() {
             onCloseRequest = {
                 if (!closing) {
                     closing = true
+                    setQuitting(true)
+                    taskRequests.acceptOpenRequests(false)
                     // The monotonic count, not the one the snackbar acknowledges: that one goes
                     // down too, and App's snackbar loop is still running while this waits below - so
                     // an acknowledgement landing in between made a real shutdown failure compare
@@ -274,7 +302,17 @@ fun main() {
                                 pendingSaves.reportSaveFailure()
                             }
                             closing = false
+                            setQuitting(false)
+                            taskRequests.acceptOpenRequests(true)
                             return@launch
+                        }
+                        pendingUpdate?.let { update ->
+                            if (!launchWindowsUpdate(update)) {
+                                closing = false
+                                setQuitting(false)
+                                taskRequests.acceptOpenRequests(true)
+                                return@launch
+                            }
                         }
                         exitApplication()
                     }
@@ -293,20 +331,63 @@ fun main() {
             val sseClient = koinInject<SseClient>()
             val backgroundWork = koinInject<BackgroundWork>()
             val platformConfig = koinInject<PlatformConfiguration>()
+            val notificationScheduler = koinInject<NotificationScheduler>()
+            val notifier = koinInject<DesktopNotifier>()
+            val refreshBroadcaster = koinInject<ComposeRefreshBroadcaster>()
             val lifecycleScope = rememberCoroutineScope()
+            LaunchedEffect(Unit) {
+                if (platform() != Platform.WINDOWS) return@LaunchedEffect
+                val update = prepareWindowsUpdate(dataDir) ?: return@LaunchedEffect
+                val install = JOptionPane.showConfirmDialog(
+                    window,
+                    "Tasks.org ${update.version} is ready. Install it now?",
+                    "Tasks.org update",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE,
+                )
+                if (install == JOptionPane.YES_OPTION) {
+                    pendingUpdate = update
+                    window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING))
+                }
+            }
             LaunchedEffect(Unit) {
                 Thread.setDefaultUncaughtExceptionHandler { _, throwable ->
                     reporting.reportException(throwable, fatal = true)
-                }
-                val versionCode = platformConfig.versionCode
-                if (versionCode > 0) {
-                    preferences.set(TasksPreferences.currentVersion, versionCode)
                 }
                 reporting.logEvent(
                     AnalyticsEvents.APP_OPENED,
                     AnalyticsEvents.PARAM_FROM_BACKGROUND to false,
                 )
                 sseClient.start()
+                if (platformConfig.supportsNotifications) {
+                    notificationScheduler.start(lifecycleScope, Dispatchers.Default) {
+                        notifier.reconcileNotifications()
+                    }
+                }
+            }
+            LaunchedEffect(Unit) {
+                if (!platformConfig.supportsNotifications) {
+                    return@LaunchedEffect
+                }
+                launch { notifier.requestPermissionIfNeeded() }
+                refreshBroadcaster.refreshes.collect {
+                    launch { notifier.requestPermissionIfNeeded() }
+                }
+            }
+            LaunchedEffect(Unit) {
+                if (!platformConfig.supportsNotifications) {
+                    return@LaunchedEffect
+                }
+                refreshBroadcaster.refreshes.collect { notificationScheduler.signal() }
+            }
+            LaunchedEffect(Unit) {
+                if (!platformConfig.supportsNotifications) {
+                    return@LaunchedEffect
+                }
+                preferences.flow(TasksPreferences.notificationsEnabled, true)
+                    .distinctUntilChanged()
+                    .drop(1)
+                    .collect { notificationScheduler.signal() }
             }
             DisposableEffect(window) {
                 var backgrounded = false
@@ -319,6 +400,7 @@ fun main() {
                                 AnalyticsEvents.PARAM_FROM_BACKGROUND to true,
                             )
                             sseClient.reconnect()
+                            notificationScheduler.signal()
                             lifecycleScope.launch {
                                 backgroundWork.sync(SyncSource.APP_RESUME)
                             }
@@ -342,19 +424,21 @@ fun main() {
             val serverEnv = koinInject<TasksServerEnvironment>()
             val scope = rememberCoroutineScope()
             var currentEnv by remember { mutableStateOf(serverEnv.currentEnvironment) }
-            App(
-                openUrl = { url ->
-                    openInBrowser(url)
-                },
-                environments = serverEnv.environments,
-                currentEnvironment = currentEnv,
-                onSelectEnvironment = { env ->
-                    scope.launch {
-                        serverEnv.setEnvironment(env)
-                        currentEnv = env
-                    }
-                },
-            )
+            StableWindowSize {
+                App(
+                    openUrl = { url ->
+                        openInBrowser(url)
+                    },
+                    environments = serverEnv.environments,
+                    currentEnvironment = currentEnv,
+                    onSelectEnvironment = { env ->
+                        scope.launch {
+                            serverEnv.setEnvironment(env)
+                            currentEnv = env
+                        }
+                    },
+                )
+            }
         }
     }
 }

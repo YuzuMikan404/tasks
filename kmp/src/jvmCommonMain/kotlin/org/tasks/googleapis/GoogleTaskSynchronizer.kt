@@ -28,15 +28,10 @@ import org.tasks.preferences.AppPreferences
 import org.tasks.service.TaskCompleter
 import org.tasks.service.TaskDeleter
 import org.tasks.time.DateTimeUtils2.currentTimeMillis
-import java.io.EOFException
 import java.io.IOException
-import java.net.HttpRetryException
-import java.net.SocketException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import java.util.Collections
-import javax.net.ssl.SSLException
 import kotlin.math.max
+import org.tasks.extensions.truncate
 
 class GoogleTaskSynchronizer(
     private val caldavDao: CaldavDao,
@@ -59,30 +54,18 @@ class GoogleTaskSynchronizer(
         Logger.d(TAG) { "$account: start sync" }
         try {
             synchronize(account, invoker)
-        } catch (e: SocketTimeoutException) {
-            Logger.e(TAG, e) { e.message.orEmpty() }
-            account.error = e.message
-        } catch (e: SSLException) {
-            Logger.e(TAG, e) { e.message.orEmpty() }
-            account.error = e.message
-        } catch (e: SocketException) {
-            Logger.e(TAG, e) { e.message.orEmpty() }
-            account.error = e.message
-        } catch (e: UnknownHostException) {
-            Logger.e(TAG, e) { e.message.orEmpty() }
-            account.error = e.message
-        } catch (e: HttpRetryException) {
-            Logger.e(TAG, e) { e.message.orEmpty() }
-            account.error = e.message
-        } catch (e: EOFException) {
-            Logger.e(TAG, e) { e.message.orEmpty() }
-            account.error = e.message
         } catch (e: GoogleJsonResponseException) {
             account.error = e.message
             when (e.statusCode) {
                 401, 503 -> Logger.e(TAG, e) { e.message.orEmpty() }
                 else -> reporting.reportException(e)
             }
+        } catch (e: StaleTaskIdException) {
+            account.error = e.message
+            reporting.reportException(e)
+        } catch (e: IOException) {
+            Logger.e(TAG, e) { e.message.orEmpty() }
+            account.error = e.message
         } catch (e: Exception) {
             account.error = e.message
             reporting.reportException(e)
@@ -139,7 +122,7 @@ class GoogleTaskSynchronizer(
 
         while (retryTaskId != null) {
             if (failedTasks.contains(retryTaskId)) {
-                throw IOException("Invalid Task ID: $retryTaskId")
+                throw StaleTaskIdException(retryTaskId)
             }
             failedTasks.add(retryTaskId)
 
@@ -531,6 +514,8 @@ class GoogleTaskSynchronizer(
 
     private class RetryTaskException(val taskId: Long) : Exception()
 
+    private class StaleTaskIdException(taskId: Long) : IOException("Invalid Task ID: $taskId")
+
     companion object {
         private const val TAG = "GoogleTaskSynchronizer"
         private const val DEFAULT_LIST = "@default"
@@ -558,12 +543,12 @@ class GoogleTaskSynchronizer(
             }
         }
 
-        fun truncate(string: String?, max: Int): String? =
-            if (string == null || string.length <= max) string else string.substring(0, max)
+        fun truncate(string: String?, max: Int): String? = string?.truncate(max)
 
         fun getTruncatedValue(currentValue: String?, newValue: String?, maxLength: Int): String? =
             if (newValue.isNullOrEmpty()
-                || newValue.length < maxLength || currentValue.isNullOrEmpty()
-                || !currentValue.startsWith(newValue)) newValue else currentValue
+                || currentValue.isNullOrEmpty()
+                || !currentValue.startsWith(newValue)
+                || newValue != truncate(currentValue, maxLength)) newValue else currentValue
     }
 }

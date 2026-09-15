@@ -119,7 +119,6 @@ class TaskEditViewModel @Inject constructor(
     private val taskAttachmentDao: TaskAttachmentDao,
     private val defaultFilterProvider: DefaultFilterProvider,
 ) : ViewModel() {
-
     private val resources = context.resources
     private var cleared = false
 
@@ -189,9 +188,6 @@ class TaskEditViewModel @Inject constructor(
                                     add(alarm)
                             else -> add(alarm)
                         }
-                    }
-                    if (task.randomReminder > 0) {
-                        add(Alarm(time = task.randomReminder, type = Alarm.TYPE_RANDOM))
                     }
                 }
             } else {
@@ -442,7 +438,9 @@ class TaskEditViewModel @Inject constructor(
                         calendar = selectedList.uuid,
                     )
                     subtask.parent = task.id
-                    caldavTask.remoteParent = caldavDao.getRemoteIdForTask(task.id)
+                    if (selectedList.account.pushesRemoteParent) {
+                        caldavTask.remoteParent = caldavDao.getRemoteIdForTask(task.id)
+                    }
                     taskSaver.save(subtask, null)
                     caldavDao.insert(
                         task = subtask,

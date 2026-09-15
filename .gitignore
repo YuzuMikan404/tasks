@@ -2,6 +2,7 @@
 .idea
 *.iml
 .gradle
+.gradle-user-home/
 build/
 /composeApp/output
 *.apk

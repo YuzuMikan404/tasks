@@ -26,7 +26,7 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.androidx.room)
+            api(libs.androidx.room)
             implementation(libs.androidx.sqlite)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization)
@@ -79,7 +79,8 @@ android {
 
 redacted {
     redactedAnnotation = "org/tasks/data/Redacted"
-    enabled = gradle.startParameter.taskNames.any { it.contains("Release") }
+    enabled = gradle.startParameter.taskNames.any { it.contains("Release") } ||
+        providers.gradleProperty("release").isPresent
 }
 
 dependencies {

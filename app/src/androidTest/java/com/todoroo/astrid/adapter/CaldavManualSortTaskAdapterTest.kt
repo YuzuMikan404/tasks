@@ -7,6 +7,7 @@ import org.tasks.data.TaskMover
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
@@ -253,6 +254,20 @@ class CaldavManualSortTaskAdapterTest : InjectingTestCase() {
             .filter { it.parent == parent }
             .map { it.id }
         assertEquals(listOf(childA, dragged, childB), childOrder)
+    }
+
+    @Test
+    fun droppingIntoAFoldedRowLeavesItFolded() = runBlocking {
+        val created = DateTime(2020, 5, 17, 9, 53, 17)
+        val parent = addTask(with(CREATION_TIME, created))
+        addTask(with(CREATION_TIME, created.plusSeconds(1)), with(PARENT, parent))
+        val dragged = addTask(with(CREATION_TIME, created.plusSeconds(2)))
+        taskDao.setCollapsed(listOf(parent), true)
+
+        move(1, 1, 1)
+
+        assertEquals(parent, taskDao.fetch(dragged)!!.parent)
+        assertTrue(taskDao.fetch(parent)!!.isCollapsed)
     }
 
     private fun addTaskTo(list: String, created: DateTime, parent: Long = 0): Long = runBlocking {
