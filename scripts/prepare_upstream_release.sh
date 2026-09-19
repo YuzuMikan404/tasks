@@ -72,9 +72,10 @@ else
   fi
 
   # Upstream Actions are never imported; this fork publishes Windows only.
+  # Remove the merged workflow tree first so modify/delete conflicts and files
+  # that exist only upstream cannot leak into the candidate branch.
+  git rm -r -f --ignore-unmatch .github/workflows
   git checkout "$fork_head" -- .github/workflows
-  git rm -f --ignore-unmatch .github/workflows/bundle.yml .github/workflows/release.yml .github/workflows/deploy.yml
-  git add .github/workflows
 
   python3 scripts/resolve_upstream_conflicts.py --upstream-ref "refs/tags/upstream-$latest"
 
