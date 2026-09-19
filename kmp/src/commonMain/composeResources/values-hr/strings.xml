@@ -598,4 +598,26 @@
     <string name="TEA_add_subtask">Dodaj podzadatak</string>
     <string name="subtasks_multilevel_google_task">Google Tasks ne podržava višerazinske podzadatke</string>
     <string name="subtasks_multilevel_microsoft">Microsoft To Do ne podržava višerazinske podzadatke</string>
+    <string name="customize_drawer">Prilagodi izbornik</string>
+    <string name="customize_drawer_summary">Povuci i ispusti stavke za mijenjanje rasporeda u izborniku</string>
+    <string name="hide_unused_tags">Sakrij nekorištene oznake</string>
+    <string name="hide_unused_places">Sakrij nekorištena mjesta</string>
+    <string name="language">Jezik</string>
+    <string name="launcher_icon">Ikona pokretača</string>
+    <string name="markdown">Markdown</string>
+    <string name="markdown_description">Omogući Markdown u naslovu i opisu</string>
+    <string name="on_launch">Pri pokretanju</string>
+    <string name="open_last_viewed_list">Otvori zadnji pogledani popis</string>
+    <string name="settings_localization">Lokalizacija</string>
+    <string name="theme">Tema</string>
+    <string name="theme_dynamic">Dinamično</string>
+    <string name="translations">Doprinesi prijevodima</string>
+    <string name="widget_open_list">Otvori popis</string>
+    <string name="theme_light">Svjetla</string>
+    <string name="theme_black">Crna</string>
+    <string name="theme_dark">Tamna</string>
+    <string name="theme_wallpaper">Pozadinska slika</string>
+    <string name="theme_day_night">Dan/Noć</string>
+    <string name="theme_system_default">Standardne postavke sustava</string>
+    <string name="works_with_desktop">Tasks.org za desktop</string>
 </resources>

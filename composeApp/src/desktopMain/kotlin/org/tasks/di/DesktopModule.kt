@@ -63,6 +63,14 @@ import org.tasks.security.DesktopKeyProvider
 import org.tasks.sync.microsoft.DesktopMicrosoftClientProvider
 import org.tasks.sync.microsoft.MicrosoftClientProvider
 import org.tasks.sync.microsoft.MicrosoftSynchronizer
+import org.tasks.api.ApiListManager
+import org.tasks.api.ApiQueryEngine
+import org.tasks.api.ApiTaskFactory
+import org.tasks.api.ApiWriter
+import org.tasks.mcp.DatabaseTasksApi
+import org.tasks.mcp.DesktopApiTaskFactory
+import org.tasks.mcp.DesktopMcpServerController
+import org.tasks.mcp.McpServerController
 import org.tasks.security.KeyStoreEncryption
 import org.tasks.sse.SseClient
 import org.tasks.extensions.supportsSystemNotificationSettings
@@ -181,8 +189,12 @@ actual fun platformModule(): Module = module {
             supportsSwipeToSnooze = false,
             supportsSystemNotificationSettings = supportsSystemNotificationSettings(),
             showNotificationsEnabledSwitch = true,
+            supportsLanguageSelection = true,
+            localeChangeRequiresRestart = true,
+            supportsMcpServer = true,
         )
     }
+    single<org.tasks.analytics.Analytics> { get<Reporting>() }
     single<Reporting> {
         PostHogReporting(
             apiKey = JvmBuildConfig.POSTHOG_KEY,
@@ -243,6 +255,68 @@ actual fun platformModule(): Module = module {
             jwtProvider = { get<DesktopEntitlement>().getJwt() },
         )
     }
+
+    single { get<Database>().apiDao() }
+    single { ApiQueryEngine(get()) }
+    single<ApiTaskFactory> {
+        DesktopApiTaskFactory(
+            taskDao = get(),
+            caldavDao = get(),
+            taskCreator = TaskCreator(),
+            taskSaver = get(),
+            defaultListProvider = get(),
+            appPreferences = get(),
+        )
+    }
+    single {
+        ApiListManager(
+            caldavDao = get(),
+            taskDeleter = get(),
+            caldavClientProvider = get(),
+            etebaseClientProvider = get(),
+            microsoftClientProvider = get(),
+            gtasksInvoker = { account ->
+                org.tasks.googleapis.GtasksInvoker(
+                    org.tasks.googleapis.GoogleTasksCredentialsAdapter(
+                        account = account,
+                        encryption = get(),
+                        proxyAuthProvider = get(),
+                        caldavDao = get(),
+                    )
+                )
+            },
+        )
+    }
+    single {
+        ApiWriter(
+            apiDao = get(),
+            taskDao = get(),
+            caldavDao = get(),
+            tagDao = get(),
+            tagDataDao = get(),
+            alarmDao = get(),
+            locationDao = get(),
+            taskFactory = get(),
+            taskSaver = get(),
+            taskCompleter = get(),
+            taskMover = get(),
+            taskDeleter = get(),
+            alarmService = get(),
+            locationService = get(),
+            listManager = get(),
+        )
+    }
+    single { DatabaseTasksApi(engine = get(), writer = get()) }
+    single {
+        DesktopMcpServerController(
+            preferences = get(),
+            encryption = get(),
+            api = get(),
+            analytics = get(),
+            scope = get(),
+        )
+    }
+    single<McpServerController> { get<DesktopMcpServerController>() }
     single {
         KeyStoreEncryption(
             DesktopKeyProvider(
@@ -385,6 +459,7 @@ actual fun platformModule(): Module = module {
         NotificationActionHandler(
             scope = get(),
             taskDao = get(),
+            alarmService = { get<AlarmService>() },
             taskCompleter = get(),
             notifier = { get<Notifier>() },
             taskRequests = get(),

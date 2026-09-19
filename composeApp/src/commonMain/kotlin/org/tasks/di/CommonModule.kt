@@ -12,6 +12,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -55,6 +56,7 @@ import org.tasks.googleapis.DefaultListProvider
 import org.tasks.googleapis.DesktopGoogleTasksSynchronizer
 import org.tasks.sync.microsoft.MicrosoftSynchronizer
 import org.tasks.jobs.BackgroundWork
+import org.tasks.jobs.RefreshScheduler
 import org.tasks.location.Geocoder
 import org.tasks.location.LocationService
 import org.tasks.location.MapPosition
@@ -66,6 +68,8 @@ import org.tasks.preferences.DEFAULT_ALARMS_JSON
 import org.tasks.preferences.DataStoreQueryPreferences
 import org.tasks.preferences.DatePickerPreferences
 import org.tasks.preferences.NotificationSettings
+import org.tasks.preferences.DrawerSettings
+import org.tasks.preferences.LookAndFeelSettings
 import org.tasks.preferences.PreferencesSnapshot
 import org.tasks.preferences.QueryPreferences
 import org.tasks.preferences.TaskDefaultSettings
@@ -91,13 +95,16 @@ import org.tasks.viewmodel.CaldavCalendarSettingsViewModel
 import org.tasks.viewmodel.DrawerViewModel
 import org.tasks.viewmodel.EtebaseAccountSettingsViewModel
 import org.tasks.viewmodel.EtebaseCalendarSettingsViewModel
+import org.tasks.filters.FilterPreferenceCodec
 import org.tasks.viewmodel.FilterPickerViewModel
 import org.tasks.viewmodel.GoogleTaskListSettingsViewModel
 import org.tasks.viewmodel.GoogleTasksAccountViewModel
 import org.tasks.viewmodel.HelpAndFeedbackViewModel
 import org.tasks.viewmodel.LocalAccountViewModel
+import org.tasks.viewmodel.LookAndFeelViewModel
 import org.tasks.viewmodel.LocalListSettingsViewModel
 import org.tasks.viewmodel.MicrosoftListSettingsViewModel
+import org.tasks.viewmodel.NavigationDrawerViewModel
 import org.tasks.viewmodel.MainSettingsViewModel
 import org.tasks.viewmodel.NotificationsViewModel
 import org.tasks.viewmodel.ReminderChange
@@ -286,6 +293,38 @@ val commonModule = module {
                 tasksPreferences.snapshot().notificationSettings().isCurrentlyQuietHours()
             override suspend fun adjustForQuietHours(time: Long) =
                 tasksPreferences.snapshot().notificationSettings().adjustForQuietHours(time)
+            override suspend fun drawerSettings() =
+                tasksPreferences.snapshot().drawerSettings()
+            override suspend fun setFiltersEnabled(value: Boolean) =
+                tasksPreferences.set(TasksPreferences.filtersEnabled, value)
+            override suspend fun setTodayFilter(value: Boolean) =
+                tasksPreferences.set(TasksPreferences.showTodayFilter, value)
+            override suspend fun setRecentlyModifiedFilter(value: Boolean) =
+                tasksPreferences.set(TasksPreferences.showRecentlyModifiedFilter, value)
+            override suspend fun setTagsEnabled(value: Boolean) =
+                tasksPreferences.set(TasksPreferences.tagsEnabled, value)
+            override suspend fun setHideUnusedTags(value: Boolean) =
+                tasksPreferences.set(TasksPreferences.tagsHideUnused, value)
+            override suspend fun setPlacesEnabled(value: Boolean) =
+                tasksPreferences.set(TasksPreferences.placesEnabled, value)
+            override suspend fun setHideUnusedPlaces(value: Boolean) =
+                tasksPreferences.set(TasksPreferences.placesHideUnused, value)
+            override suspend fun lookAndFeelSettings() =
+                tasksPreferences.snapshot().lookAndFeelSettings()
+            override suspend fun setTheme(value: Int) =
+                tasksPreferences.set(TasksPreferences.theme, value)
+            override suspend fun setThemeColor(value: Int) =
+                tasksPreferences.set(TasksPreferences.themeColor, value)
+            override suspend fun setDynamicColor(value: Boolean) =
+                tasksPreferences.set(TasksPreferences.dynamicColor, value)
+            override suspend fun setMarkdown(value: Boolean) =
+                tasksPreferences.set(TasksPreferences.markdown, value)
+            override suspend fun setOpenLastViewedList(value: Boolean) =
+                tasksPreferences.set(TasksPreferences.openLastViewedList, value)
+            override suspend fun setDefaultOpenFilter(value: String?) =
+                tasksPreferences.set(TasksPreferences.defaultOpenFilter, value.orEmpty())
+            override suspend fun setLanguageTag(value: String?) =
+                tasksPreferences.set(TasksPreferences.languageTag, value.orEmpty())
             override suspend fun notificationSettings() =
                 tasksPreferences.snapshot().notificationSettings()
             override suspend fun setNotificationsEnabled(value: Boolean) =
@@ -326,10 +365,25 @@ val commonModule = module {
     factory<CalendarHelper> { object : CalendarHelper {} }
     factory<SoundPlayer> { object : SoundPlayer {} }
     factory<org.tasks.compose.drawer.DrawerConfiguration> {
+        val tasksPreferences = get<TasksPreferences>()
         object : org.tasks.compose.drawer.DrawerConfiguration {
             override val canCreateFilters: Boolean get() = false
             override val canCreateTags: Boolean get() = true
             override val canCreatePlaces: Boolean get() = false
+            override val filtersEnabled: Boolean
+                get() = runBlocking { tasksPreferences.get(TasksPreferences.filtersEnabled, true) }
+            override val todayFilter: Boolean
+                get() = runBlocking { tasksPreferences.get(TasksPreferences.showTodayFilter, true) }
+            override val recentlyModifiedFilter: Boolean
+                get() = runBlocking { tasksPreferences.get(TasksPreferences.showRecentlyModifiedFilter, true) }
+            override val tagsEnabled: Boolean
+                get() = runBlocking { tasksPreferences.get(TasksPreferences.tagsEnabled, true) }
+            override val hideUnusedTags: Boolean
+                get() = runBlocking { tasksPreferences.get(TasksPreferences.tagsHideUnused, false) }
+            override val placesEnabled: Boolean
+                get() = runBlocking { tasksPreferences.get(TasksPreferences.placesEnabled, true) }
+            override val hideUnusedPlaces: Boolean
+                get() = runBlocking { tasksPreferences.get(TasksPreferences.placesHideUnused, false) }
         }
     }
     single<org.tasks.billing.PurchaseState> {
@@ -359,13 +413,21 @@ val commonModule = module {
     }
 
     // Stateful singletons
+    single {
+        RefreshScheduler(
+            nextRefresh = { get<org.tasks.data.dao.TaskDao>().nextRefresh(it) },
+            refresh = { get<RefreshBroadcaster>().broadcastRefresh() },
+        )
+    }
     single<BackgroundWork> {
         val scope = get<CoroutineScope>()
         val mutex = kotlinx.coroutines.sync.Mutex()
         val pending = java.util.concurrent.atomic.AtomicBoolean(false)
+        val refreshScheduler = get<RefreshScheduler>()
         object : BackgroundWork {
             override fun updateCalendar(task: Task) {}
-            override suspend fun scheduleRefresh(timestamp: Long) {}
+            override suspend fun scheduleRefresh(timestamp: Long) =
+                refreshScheduler.schedule(timestamp)
             override suspend fun scheduleBlogFeedCheck() {}
             override fun migrateLocalTasks(
                 localAccount: CaldavAccount,
@@ -531,6 +593,14 @@ val commonModule = module {
             refreshFlow = get<ComposeRefreshBroadcaster>().refreshes,
         )
     }
+    single {
+        FilterPreferenceCodec(
+            filterDao = get(),
+            tagDataDao = get(),
+            caldavDao = get(),
+            locationDao = get(),
+        )
+    }
     single<QueryPreferences> { DataStoreQueryPreferences(get()) }
     viewModel {
         TaskListViewModel(
@@ -620,6 +690,22 @@ val commonModule = module {
                 }
                 notifier.triggerNotifications()
             },
+        )
+    }
+    viewModel {
+        LookAndFeelViewModel(
+            appPreferences = get(),
+            platformConfiguration = get(),
+            refreshBroadcaster = get(),
+            persistenceScope = get(),
+            filterCodec = get(),
+        )
+    }
+    viewModel {
+        NavigationDrawerViewModel(
+            appPreferences = get(),
+            refreshBroadcaster = get(),
+            persistenceScope = get(),
         )
     }
     viewModel {
@@ -782,6 +868,36 @@ val commonModule = module {
 }
 
 private val notificationDefaults = NotificationSettings()
+
+private val drawerDefaults = DrawerSettings()
+
+private val lookAndFeelDefaults = LookAndFeelSettings()
+
+private fun PreferencesSnapshot.lookAndFeelSettings() = LookAndFeelSettings(
+    theme = get(TasksPreferences.theme, lookAndFeelDefaults.theme),
+    themeColor = get(TasksPreferences.themeColor, lookAndFeelDefaults.themeColor),
+    dynamicColor = get(TasksPreferences.dynamicColor, lookAndFeelDefaults.dynamicColor),
+    markdown = get(TasksPreferences.markdown, lookAndFeelDefaults.markdown),
+    openLastViewedList = get(
+        TasksPreferences.openLastViewedList,
+        lookAndFeelDefaults.openLastViewedList
+    ),
+    defaultOpenFilter = get(TasksPreferences.defaultOpenFilter, "").takeIf { it.isNotBlank() },
+    languageTag = get(TasksPreferences.languageTag, "").takeIf { it.isNotBlank() },
+)
+
+private fun PreferencesSnapshot.drawerSettings() = DrawerSettings(
+    filtersEnabled = get(TasksPreferences.filtersEnabled, drawerDefaults.filtersEnabled),
+    todayFilter = get(TasksPreferences.showTodayFilter, drawerDefaults.todayFilter),
+    recentlyModifiedFilter = get(
+        TasksPreferences.showRecentlyModifiedFilter,
+        drawerDefaults.recentlyModifiedFilter
+    ),
+    tagsEnabled = get(TasksPreferences.tagsEnabled, drawerDefaults.tagsEnabled),
+    hideUnusedTags = get(TasksPreferences.tagsHideUnused, drawerDefaults.hideUnusedTags),
+    placesEnabled = get(TasksPreferences.placesEnabled, drawerDefaults.placesEnabled),
+    hideUnusedPlaces = get(TasksPreferences.placesHideUnused, drawerDefaults.hideUnusedPlaces),
+)
 
 private val taskSettingDefaults = TaskDefaultSettings()
 

@@ -390,4 +390,22 @@
     <string name="DLG_delete_this_task_question">Ezabatu zeregin hau?</string>
     <string name="TEA_add_subtask">Gehitu azpi-zeregina</string>
     <string name="subtasks_multilevel_google_task">Google Tasks-ek ez ditu hainbat mailako azpi-zereginak onartzen</string>
+    <string name="hide_unused_tags">Ezkutatu erabili gabeko etiketak</string>
+    <string name="hide_unused_places">Ezkutatu erabili gabeko tokiak</string>
+    <string name="language">Hizkuntza</string>
+    <string name="launcher_icon">Abiarazlearen ikonoa</string>
+    <string name="markdown">Markdown</string>
+    <string name="markdown_description">Markdown gaitu izenburuan eta deskribapenean</string>
+    <string name="on_launch">Abioan</string>
+    <string name="open_last_viewed_list">Ireki ikusitako azkenen zerrenda</string>
+    <string name="settings_localization">Lokalizazioa</string>
+    <string name="theme">Azala</string>
+    <string name="translations">Lagundu itzulpenekin</string>
+    <string name="widget_open_list">Ireki zerrenda</string>
+    <string name="theme_light">Argia</string>
+    <string name="theme_black">Beltza</string>
+    <string name="theme_dark">Iluna</string>
+    <string name="theme_wallpaper">Horma-papera</string>
+    <string name="theme_day_night">Eguna/Gaua</string>
+    <string name="theme_system_default">Sisteman lehenetsia</string>
 </resources>

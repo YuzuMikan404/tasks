@@ -544,4 +544,26 @@
     <string name="TEA_add_subtask">Adicionar subtarefa</string>
     <string name="subtasks_multilevel_google_task">As subtarefas em vários níveis não são suportadas pelo Google Tasks</string>
     <string name="subtasks_multilevel_microsoft">Subtarefas de múltiplos níveis não são suportadas pelo Microsoft To Do</string>
+    <string name="customize_drawer">Personalizar menu</string>
+    <string name="customize_drawer_summary">Arraste e solte para reorganizar os itens do menu</string>
+    <string name="hide_unused_tags">Ocultar etiquetas não usadas</string>
+    <string name="hide_unused_places">Ocultar locais não usados</string>
+    <string name="language">Idioma</string>
+    <string name="launcher_icon">Ícone do lançador</string>
+    <string name="markdown">Código Markdown</string>
+    <string name="markdown_description">Ativar código Markdown no título e descrição</string>
+    <string name="on_launch">Ao abrir a aplicação</string>
+    <string name="open_last_viewed_list">Abrir a última lista vista</string>
+    <string name="settings_localization">Tradução</string>
+    <string name="theme">Tema</string>
+    <string name="theme_dynamic">Dinâmico</string>
+    <string name="translations">Contribuir nas traduções</string>
+    <string name="widget_open_list">Abrir lista</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_black">Preto</string>
+    <string name="theme_dark">Escuro</string>
+    <string name="theme_wallpaper">Fundo</string>
+    <string name="theme_day_night">Dia/noite</string>
+    <string name="theme_system_default">Predefinição do sistema</string>
+    <string name="works_with_desktop">Tasks.org para desktop</string>
 </resources>

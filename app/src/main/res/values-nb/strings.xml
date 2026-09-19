@@ -36,7 +36,6 @@
     <string name="TEA_control_reminders">Påminnelser</string>
     <string name="TEA_control_hidden_section">----Skjul alltid----</string>
     <string name="BFE_Active">Mine gjøremål</string>
-    <string name="BFE_Recent">Nylig endret</string>
     <string name="CFA_button_add">Legg til kriterium</string>
     <string name="CFC_dueBefore_text">Frist til: ?</string>
     <string name="CFC_dueBefore_name">Frist til…</string>
@@ -70,14 +69,11 @@
     <string name="notifications"> Varsler</string>
     <string name="row_spacing">Radmellomrom</string>
     <string name="tags">Etiketter</string>
-    <string name="filters">Filtre</string>
     <string name="filter_settings">Filterinnstillinger</string>
     <string name="opacity">Ugjennomsiktighet</string>
-    <string name="language">Språk</string>
     <string name="restart_required">Start Tasks om igjen for å ta i bruk endringene</string>
     <string name="restart_now">Restart nå</string>
     <string name="restart_later">Senere</string>
-    <string name="settings_localization">Lokalisering</string>
     <string name="repeats_plural_number_of_times">Gjentas hver(t) %1$s, inntreffer %2$d %3$s</string>
     <string name="actfm_picture_clear">Tøm bilde</string>
     <string name="TVA_add_comment">Legg til kommentar…</string>
@@ -162,7 +158,6 @@
     <string name="enabled">Påskrudd</string>
     <string name="font_size">Skriftstørrelse</string>
     <string name="customize_edit_screen">Tilpass redigeringsskjerm</string>
-    <string name="translations">Hjelp til i oversettelsen</string>
     <string name="add_location">Legg til sted</string>
     <string name="remove">Fjern</string>
     <string name="geofence_radius">Radius for geogjerde</string>
@@ -188,7 +183,6 @@
     <string name="filter">Filter</string>
     <string name="theme">Drakt</string>
     <string name="color">Farge</string>
-    <string name="launcher_icon">Oppstarterfarge</string>
     <string name="theme_black">Svart</string>
     <string name="theme_light">Lys</string>
     <string name="theme_dark">Mørk</string>
@@ -261,7 +255,6 @@
     <string name="settings_default">Forvalg</string>
     <string name="widget_id">Miniprograms-ID: %d</string>
     <string name="color_wheel">Fargehjul</string>
-    <string name="widget_open_list">Åpne liste</string>
     <string name="widget_show_menu">Vis meny</string>
     <string name="filter_no_priority">Ingen prioritet</string>
     <string name="filter_low_priority">Lav prioritet</string>
@@ -288,8 +281,6 @@
     <string name="auto_dismiss_datetime_summary">Lukk datovelger etter å ha valgt dato eller tid</string>
     <string name="auto_dismiss_datetime_widget_summary">Lukk automatisk når valgt fra miniprogram</string>
     <string name="auto_dismiss_datetime">Lukk datovelger automatisk</string>
-    <string name="hide_unused_places">Skjul ubrukte steder</string>
-    <string name="hide_unused_tags">Skjul ubrukte etiketter</string>
     <string name="chip_appearance">Flisutseende</string>
     <string name="chips">Flis</string>
     <string name="upgrade_blurb_2">Jeg har brukt tusenvis av timer på å jobbe med Tasks, og jeg offentliggjør all kildekoden på nettet gratis. For å støtte mitt arbeid krever noen funksjoner et abonnement</string>
@@ -316,13 +307,11 @@
     <string name="sort_created_group">Opprettet %s</string>
     <string name="reset_sort_order">Tilbakestill sorteringsrekkefølge</string>
     <string name="lists">Lister</string>
-    <string name="on_launch">Ved oppstart</string>
     <string name="enjoying_tasks">Liker du Tasks\?</string>
     <string name="whats_new">Hva er nytt</string>
     <string name="CFC_list_name">På listen…</string>
     <string name="action_new_task">Nytt gjøremål</string>
     <string name="permission_read_tasks">Full tilgang til Tasks-database</string>
-    <string name="open_last_viewed_list">Åpne sist viste liste</string>
     <string name="support_development_subscribe">Lås opp ytterligere funksjoner og støtt fri programvare</string>
     <string name="astrid_sort_order_summary">Skru på Astrids manuelle sorteringsmodus for \"Mine gjøremål\", \"I dag\", og tagger. Denne sorteringsmodusen erstattes av \"Min rekkefølge\" i en fremtidig oppdatering</string>
     <string name="astrid_sort_order">Astrids manuelle sorteringsmodus</string>
@@ -379,8 +368,6 @@
     <string name="privacy">Personvern</string>
     <string name="open_source">Åpen kilde</string>
     <string name="support">Støtte</string>
-    <string name="markdown_description">Aktiver Markdown i tittel og beskrivelse</string>
-    <string name="markdown">Markdown</string>
     <string name="upgrade_open_source_description">Abonnementet støtter fortsatt utvikling</string>
     <string name="upgrade_tasks_org_account_description">Synkronisere med Tasks.org og samarbeide med andre brukere</string>
     <string name="upgrade_more_customization_description">Lås opp alle temaer, farger og ikoner</string>
@@ -401,7 +388,6 @@
     <string name="donate_today">Donér i dag</string>
     <string name="donate_maybe_later">Kanskje senere</string>
     <string name="customize_drawer">Tilpass meny</string>
-    <string name="customize_drawer_summary">Dra og slip for å omkonfigurere menyelementer</string>
     <string name="show_edit_screen_without_unlock">Vis redigeringsskjerm uten opplåsning</string>
     <string name="show_edit_screen_without_unlock_summary">Aktiverer bruken av knapp i hurtiginnstillinger uten å låse opp enheten</string>
     <string name="theme_dynamic">Dynamisk</string>

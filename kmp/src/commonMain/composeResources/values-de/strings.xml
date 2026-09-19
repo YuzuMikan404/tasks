@@ -118,7 +118,7 @@
     <string name="display_name">Anzeigename</string>
     <string name="upgrade_to_pro_card_description">Tasks.org Cloud-Synchronisierung, Freigabe für Freunde &amp; Familie und E-Mail Aufgabenerstellung freischalten</string>
     <string name="supporter">Unterstützer:in</string>
-    <string name="price_per_month_with_currency">%1$s/Der Monat</string>
+    <string name="price_per_month_with_currency">%1$s/Monat</string>
     <string name="price_per_year_with_currency">%1$s/Jahr</string>
     <string name="supporter_summary">%1$s • Danke!</string>
     <string name="sign_in_to_connect">Melde dich an, um dein Tasks.org Konto zu verbinden</string>
@@ -163,9 +163,9 @@
     <string name="migrate_count">Verschiebe %1$s zu Tasks.org</string>
     <string name="preferences_look_and_feel">Erscheinungsbild</string>
     <string name="notifications">Benachrichtigungen</string>
-    <string name="task_defaults">Vorgaben für Aufgaben</string>
+    <string name="task_defaults">Standards für Aufgaben</string>
     <string name="task_list_options">Aufgabenlisten-Optionen</string>
-    <string name="EPr_edit_screen_options">Bildschirmeinstellungen bearbeiten</string>
+    <string name="EPr_edit_screen_options">Bearbeitungsbildschirm-Optionen</string>
     <string name="date_and_time">Datum und Uhrzeit</string>
     <string name="navigation_drawer">Navigationsmenü</string>
     <string name="backup_BPr_header">Sicherungen</string>
@@ -443,8 +443,8 @@
         <item quantity="other">Zeiten</item>
     </plurals>
     <plurals name="repeat_n_minutes">
-        <item quantity="one">%1$d Die Minute</item>
-        <item quantity="other">%1$d Die Minuten</item>
+        <item quantity="one">%1$d Minute</item>
+        <item quantity="other">%1$d Minuten</item>
     </plurals>
     <plurals name="repeat_n_hours">
         <item quantity="one">%1$d Stunde</item>
@@ -587,7 +587,7 @@
     <string name="TEA_add_subtask">Teilaufgabe hinzufügen</string>
     <string name="subtasks_multilevel_google_task">Mehrstufige Teilaufgaben werden von Google Tasks nicht unterstützt</string>
     <string name="subtasks_multilevel_microsoft">Mehrstufige Teilaufgaben werden von Microsoft To Do nicht unterstützt</string>
-    <string name="show_completed_subtasks">Erledigte Unteraufgaben anzeigen</string>
+    <string name="show_completed_subtasks">Abgeschlossene Teilaufgaben anzeigen</string>
     <string name="error_encryption_failed">Verschlüsselung fehlgeschlagen. Überprüfen Sie, ob Tasks.org auf Ihren System-Schlüsselbund zugreifen kann, und versuchen Sie es erneut.</string>
     <string name="no_task_selected">Keine Aufgabe ausgewählt</string>
     <string name="resize_panes">Bereichsgröße ändern</string>
@@ -595,4 +595,31 @@
     <string name="repeat_type_completion_description">Die Aufgabe wiederholt sich basierend darauf, wann du sie tatsächlich erledigt hast</string>
     <string name="mark_completed">Als erledigt markieren</string>
     <string name="snoozed_reminder">Schlummernde Erinnerung</string>
+    <string name="customize_drawer">Drawer anpassen</string>
+    <string name="customize_drawer_summary">Menüelemente können per Drag &amp; Drop neu angeordnet werden</string>
+    <string name="hide_unused_tags">Ungenutzte Schlagwörter ausblenden</string>
+    <string name="hide_unused_places">Ungenutzte Orte ausblenden</string>
+    <string name="language">Sprache</string>
+    <string name="launcher_icon">Launcher-Symbol</string>
+    <string name="markdown">Markdown</string>
+    <string name="markdown_description">Markdown in Titel und Beschreibung aktivieren</string>
+    <string name="on_launch">Beim Start</string>
+    <string name="open_last_viewed_list">Zuletzt betrachtete Liste öffnen</string>
+    <string name="settings_localization">Übersetzung</string>
+    <string name="theme">Design</string>
+    <string name="theme_dynamic">Dynamisch</string>
+    <string name="translations">Zur Übersetzung beitragen</string>
+    <string name="widget_open_list">Liste öffnen</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_black">Schwarz</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="theme_wallpaper">Hintergrundbild</string>
+    <string name="theme_day_night">Tag/Nacht</string>
+    <string name="theme_system_default">Systemstandard</string>
+    <string name="undo_delete">Löschen rückgängig machen</string>
+    <string name="repeat_monthly_on_last_day">Monatlich am letzten Tag</string>
+    <string name="repeat_monthly_last_day">Der letzte Tag</string>
+    <string name="subtasks_will_be_flattened">Diese Liste unterstützt keine verschachtelten Teilaufgaben. Beim Speichern werden sie alle auf die höchste Stufe verschoben.</string>
+    <string name="subtask_list_locked">Neue Teilaufgaben werden in die Liste des übergeordneten Elements aufgenommen</string>
+    <string name="works_with_desktop">Tasks.org für Desktop</string>
 </resources>

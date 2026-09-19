@@ -65,7 +65,6 @@
     <string name="day_after_tomorrow">Послезавтра</string>
     <string name="next_week">Следующая неделя</string>
     <string name="BFE_Active">Мои задачи</string>
-    <string name="BFE_Recent">Недавно изменённые</string>
     <string name="CFA_button_add">Добавить условие</string>
     <string name="CFC_dueBefore_text">Дата завершения: \?</string>
     <string name="CFC_dueBefore_name">Дата завершения…</string>
@@ -155,13 +154,11 @@
     <string name="font_size">Размер шрифта</string>
     <string name="row_spacing">Межстрочный интервал</string>
     <string name="customize_edit_screen">Настроить экран редактирования</string>
-    <string name="translations">Участвовать в переводе программы</string>
     <string name="add_location">Добавить место</string>
     <string name="remove">Удалить</string>
     <string name="geofence_radius">Радиус геозоны</string>
     <string name="location_radius_meters">%s м</string>
     <string name="tags">Теги</string>
-    <string name="filters">Фильтры</string>
     <string name="date_shortcut_morning">Утро</string>
     <string name="date_shortcut_afternoon">Обед</string>
     <string name="date_shortcut_evening">Вечер</string>
@@ -185,17 +182,14 @@
     <string name="opacity">Непрозрачность</string>
     <string name="theme">Цветовая тема</string>
     <string name="color">Цвет</string>
-    <string name="launcher_icon">Иконка запуска</string>
     <string name="theme_black">Чёрная</string>
     <string name="theme_light">Светлая</string>
     <string name="theme_dark">Тёмная</string>
     <string name="theme_wallpaper">Как обои</string>
     <string name="theme_day_night">День / ночь</string>
-    <string name="language">Язык</string>
     <string name="restart_required">Перезапустите Tasks для применения изменений</string>
     <string name="restart_now">Перезапустить сейчас</string>
     <string name="restart_later">Позже</string>
-    <string name="settings_localization">Локализация</string>
     <string name="widget_settings">Настройки виджета</string>
     <string name="widget_header_settings">Настройки заголовка</string>
     <string name="widget_row_settings">Настройки строк</string>
@@ -269,8 +263,6 @@
     <string name="chip_appearance_icon_only">Только иконка</string>
     <string name="chip_appearance_text_only">Только текст</string>
     <string name="chip_appearance_text_and_icon">Текст и иконка</string>
-    <string name="hide_unused_places">Скрыть неиспользуемые места</string>
-    <string name="hide_unused_tags">Скрыть неиспользуемые метки</string>
     <string name="place_settings">Настройки места</string>
     <string name="places">Места</string>
     <string name="share">Поделиться</string>
@@ -290,7 +282,6 @@
     <string name="widget_due_date_hidden">Спрятано</string>
     <string name="widget_due_date_below_title">Под названием</string>
     <string name="widget_due_date_after_title">После названия</string>
-    <string name="widget_open_list">Открыть список</string>
     <string name="opacity_footer">Непрозрачность футера</string>
     <string name="opacity_row">Непрозрачность строки</string>
     <string name="opacity_header">Непрозрачность заголовка</string>
@@ -324,8 +315,6 @@
     <string name="permission_read_tasks">Полный доступ к базе данных Tasks</string>
     <string name="reset_sort_order">Сбросить порядок сортировки</string>
     <string name="lists">Списки</string>
-    <string name="open_last_viewed_list">Открыть последний просмотренный список</string>
-    <string name="on_launch">При запуске</string>
     <string name="CFC_list_name">В списке…</string>
     <string name="astrid_sort_order_summary">Включите режим ручной сортировки Astrid для «Моих задач», «Сегодня» и меток. Этот режим сортировки будет заменён на «Мой порядок» в будущем обновлении</string>
     <string name="astrid_sort_order">Ручная сортировка Astrid</string>
@@ -387,8 +376,6 @@
     <string name="upgrade_more_customization_description">Разблокировать все темы, цвета и иконки</string>
     <string name="upgrade_more_customization">Больше настроек</string>
     <string name="pro_free_trial">Новые подписчики получают 7-дневный бесплатный пробный период. Отмена возможна в любое время</string>
-    <string name="markdown_description">Включить Markdown в названии и описании</string>
-    <string name="markdown">Markdown</string>
     <string name="now">Сейчас</string>
     <string name="completed">Завершено</string>
     <string name="snackbar_task_completed">Задача выполнена</string>
@@ -403,7 +390,6 @@
     <string name="sort_list">Список</string>
     <string name="comment">Комментарий</string>
     <string name="yesterday">Вчера</string>
-    <string name="customize_drawer_summary">Перетаскивайте элементы меню, чтобы изменить их порядок</string>
     <string name="donate_maybe_later">Возможно, позже</string>
     <string name="multiline_title">Разрешить многострочные заголовки</string>
     <string name="sync_warning_google_tasks">Не все подробности задачи синхронизируются с Google Task</string>

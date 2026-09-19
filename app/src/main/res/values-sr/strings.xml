@@ -36,7 +36,6 @@
     <string name="app_settings">Подешавања апликације</string>
     <string name="TAd_actionEditTask">Преправи</string>
     <string name="yesterday">Јуче</string>
-    <string name="customize_drawer_summary">Превуци и пусти за прерасподелу ставки менија</string>
     <string name="today">Данас</string>
     <string name="action_call">Позив</string>
     <string name="SSD_sort_my_order">Мој редослед</string>
@@ -80,7 +79,6 @@
     <string name="day_after_tomorrow">Дан после сутра</string>
     <string name="next_week">Следећа седмица</string>
     <string name="BFE_Active">Моји задаци</string>
-    <string name="BFE_Recent">Недавно модификовани</string>
     <string name="CFC_dueBefore_name">Доспеће до…</string>
     <string name="no_due_date">Без датума доспећа</string>
     <string name="no_start_date">Без датума почетка</string>
@@ -160,7 +158,6 @@
     <string name="remove">Избриши</string>
     <string name="tags">Тагови</string>
     <string name="change_priority">Промени приоритет</string>
-    <string name="filters">Филтери</string>
     <string name="date_shortcut_morning">Јутро</string>
     <string name="date_shortcut_afternoon">Подне</string>
     <string name="date_shortcut_evening">Вече</string>
@@ -191,14 +188,12 @@
     <string name="theme_day_night">Дан/Ноћ</string>
     <string name="theme_system_default">Системски подразумевано</string>
     <string name="theme_dynamic">Динамично</string>
-    <string name="language">Језик</string>
     <string name="restart_required">Рестартуј Задатке како би се промене виделе</string>
     <string name="restart_now">Рестартуј сада</string>
     <string name="restart_later">Касније</string>
     <string name="widget_settings">Подешавања виџета</string>
     <string name="widget_header_settings">Подешавања заглавља</string>
     <string name="widget_row_settings">Подешавања редова</string>
-    <string name="widget_open_list">Отвори листу</string>
     <string name="widget_due_date_below_title">Испод назива</string>
     <string name="widget_due_date_hidden">Скривено</string>
     <string name="clear_completed_tasks_confirmation">Обрисати завршене задатке?</string>
@@ -252,8 +247,6 @@
     <string name="back">Назад</string>
     <string name="places">Места</string>
     <string name="place_settings">Подешавања места</string>
-    <string name="hide_unused_tags">Сакриј некоришћене тагове</string>
-    <string name="hide_unused_places">Сакриј некоришћена места</string>
     <string name="chip_appearance_text_and_icon">Текст и иконица</string>
     <string name="chip_appearance_text_only">Само текст</string>
     <string name="chip_appearance_icon_only">Само иконица</string>
@@ -295,7 +288,6 @@
     <string name="widget_show_dividers">Прикажи разделнике</string>
     <string name="attachment_directory">Директоријум са прилозима</string>
     <string name="customize_edit_screen">Подеси екран измене</string>
-    <string name="translations">Допринеси преводима</string>
     <string name="geofence_radius">Радијус геоограде</string>
     <string name="location_radius_meters">%s м</string>
     <string name="date_shortcut_must_come_before">%1$s мора бити пре %2$s</string>
@@ -305,8 +297,6 @@
     <string name="back_button_saves_task">Дугме ,,назад\'\' чува задатак</string>
     <string name="show_edit_screen_without_unlock">Прикажи екран измене без откључавања</string>
     <string name="show_edit_screen_without_unlock_summary">Омогућава коришћење брзих подешавања без откључавања уређаја</string>
-    <string name="launcher_icon">Иконица за покретање</string>
-    <string name="settings_localization">Локализација</string>
     <string name="widget_due_date_after_title">Након назива</string>
     <string name="repeats_plural_number_of_times">Понавља се сваких %1$s, појављује се %2$d %3$s</string>
     <string name="list_separator_with_space">", "</string>
@@ -359,8 +349,6 @@
     <string name="sort_created_group">Креирано %s</string>
     <string name="sort_modified_group">Модификовано %s</string>
     <string name="sort_completion_group">Завршетак %s</string>
-    <string name="on_launch">При покретању</string>
-    <string name="open_last_viewed_list">Отвори последње прегледану листу</string>
     <string name="local_lists">Локална листа</string>
     <string name="lists">Листе</string>
     <string name="reset_sort_order">Ресетуј редослед сортирања</string>
@@ -408,8 +396,6 @@
     <string name="upgrade_more_customization_description">Откључај све теме, боје, и иконице</string>
     <string name="upgrade_tasks_org_account_description">Синхронизуј са Tasks.org и сарађуј са другим корисницима</string>
     <string name="upgrade_open_source_description">Ова претплата омогућава наставак развоја апликације</string>
-    <string name="markdown">Редукција</string>
-    <string name="markdown_description">Омогући Редукцију у називу и опису</string>
     <string name="completed">Завршено</string>
     <string name="snackbar_task_completed">Задатак завршен</string>
     <string name="snackbar_tasks_completed">%d задатака завршено</string>

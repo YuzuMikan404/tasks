@@ -457,4 +457,25 @@
     <string name="DLG_delete_this_task_question">Usunąć to zadanie?</string>
     <string name="TEA_add_subtask">Dodaj podzadanie</string>
     <string name="subtasks_multilevel_google_task">Wielopoziomowe podzadania nie są obsługiwane przez Google Tasks</string>
+    <string name="customize_drawer">Dostosuj szufladę</string>
+    <string name="customize_drawer_summary">Przeciągnij i upuść, aby zmienić kolejność elementów menu</string>
+    <string name="hide_unused_tags">Ukryj nieużywane tagi</string>
+    <string name="hide_unused_places">Ukryj nieużywane miejsca</string>
+    <string name="language">Język</string>
+    <string name="launcher_icon">Ikona programu startowego</string>
+    <string name="markdown">Markdown</string>
+    <string name="markdown_description">Włącz Markdown w tytule i opisie</string>
+    <string name="on_launch">Przy uruchomieniu</string>
+    <string name="open_last_viewed_list">Otwórz ostatnio przeglądaną listę</string>
+    <string name="settings_localization">Ustawienia regionalne</string>
+    <string name="theme">Motyw</string>
+    <string name="theme_dynamic">Dynamiczny</string>
+    <string name="translations">Wspomóż tłumaczenie</string>
+    <string name="widget_open_list">Otwórz listę</string>
+    <string name="theme_light">Jasny</string>
+    <string name="theme_black">Czarny</string>
+    <string name="theme_dark">Ciemny</string>
+    <string name="theme_wallpaper">Tapeta</string>
+    <string name="theme_day_night">Dzień/noc</string>
+    <string name="theme_system_default">Domyślny systemowy</string>
 </resources>

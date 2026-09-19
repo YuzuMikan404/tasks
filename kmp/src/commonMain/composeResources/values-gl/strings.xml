@@ -434,4 +434,25 @@
     <string name="TEA_add_subtask">Engadir subtarefa</string>
     <string name="subtasks_multilevel_google_task">Gootle Tasks non acepta as subtarefas a múltiples niveis</string>
     <string name="subtasks_multilevel_microsoft">Subtarefas multinivel non compatibles con Microsoft To Do</string>
+    <string name="customize_drawer">Personalizar caixón</string>
+    <string name="customize_drawer_summary">Arrastrar e soltar para reorganizar os elementos do menú</string>
+    <string name="hide_unused_tags">Agochar etiquetas sen usar</string>
+    <string name="hide_unused_places">Agochar lugares sen usar</string>
+    <string name="language">Lingua</string>
+    <string name="launcher_icon">Icona de escritorio</string>
+    <string name="markdown">Markdown</string>
+    <string name="markdown_description">Activa Markdown no título e na descrición</string>
+    <string name="on_launch">Ao iniciar</string>
+    <string name="open_last_viewed_list">Abrir a última lista vista</string>
+    <string name="settings_localization">Localización</string>
+    <string name="theme">Tema</string>
+    <string name="theme_dynamic">Dinámico</string>
+    <string name="translations">Contribúe coa tradución</string>
+    <string name="widget_open_list">Abrir lista</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_black">Negro</string>
+    <string name="theme_dark">Escuro</string>
+    <string name="theme_wallpaper">Fondo de pantalla</string>
+    <string name="theme_day_night">Día/Noite</string>
+    <string name="theme_system_default">Predefinido do sistema</string>
 </resources>

@@ -2,6 +2,7 @@ package org.tasks.injection
 
 import android.content.Context
 import com.google.android.gms.wearable.Wearable
+import com.google.android.material.color.DynamicColors
 import com.todoroo.andlib.utility.AndroidUtilities
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.data.WearDataLayerRegistry
@@ -14,6 +15,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
+import org.tasks.AppStore
 import org.tasks.PlatformConfiguration
 import org.tasks.auth.TasksServerEnvironment
 import org.tasks.billing.DesktopLinkService
@@ -51,6 +53,8 @@ class FlavorModule {
         supportsGeofences = true,
         supportsCalendarEvents = true,
         billingProvider = org.tasks.billing.BillingProvider.GOOGLE_PLAY,
+        appStore = AppStore.GOOGLE_PLAY,
+        isAndroid = true,
         supportsWidgets = true,
         supportsDesktopLinking = true,
         supportsLogExport = true,
@@ -62,6 +66,12 @@ class FlavorModule {
         supportsCompletionSound = true,
         supportsSwipeToSnooze = true,
         supportsRingMode = true,
+        supportsDynamicColor = DynamicColors.isDynamicColorAvailable(),
+        supportsLauncherIcon = true,
+        supportsMarkdownToggle = true,
+        supportsWallpaperTheme = true,
+        supportsAutoNightTheme = true,
+        supportsLanguageSelection = true,
     )
 
     @Provides

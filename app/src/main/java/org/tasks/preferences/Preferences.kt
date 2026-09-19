@@ -41,6 +41,10 @@ class Preferences @JvmOverloads constructor(
 
     private val notificationDefaults = NotificationSettings()
 
+    private val drawerDefaults = DrawerSettings()
+
+    private val lookAndFeelDefaults = LookAndFeelSettings()
+
     fun registerOnSharedPreferenceChangeListener(
         listener: SharedPreferences.OnSharedPreferenceChangeListener
     ) {
@@ -153,6 +157,73 @@ class Preferences @JvmOverloads constructor(
 
     override suspend fun setQuietHoursEnd(value: Int) = setInt(R.string.p_rmd_quietEnd, value)
 
+    override suspend fun drawerSettings() = DrawerSettings(
+        filtersEnabled = getBoolean(R.string.p_filters_enabled, drawerDefaults.filtersEnabled),
+        todayFilter = getBoolean(R.string.p_show_today_filter, drawerDefaults.todayFilter),
+        recentlyModifiedFilter = getBoolean(
+            R.string.p_show_recently_modified_filter,
+            drawerDefaults.recentlyModifiedFilter
+        ),
+        tagsEnabled = getBoolean(R.string.p_tags_enabled, drawerDefaults.tagsEnabled),
+        hideUnusedTags = getBoolean(R.string.p_tags_hide_unused, drawerDefaults.hideUnusedTags),
+        placesEnabled = getBoolean(R.string.p_places_enabled, drawerDefaults.placesEnabled),
+        hideUnusedPlaces = getBoolean(
+            R.string.p_places_hide_unused,
+            drawerDefaults.hideUnusedPlaces
+        ),
+    )
+
+    override suspend fun setFiltersEnabled(value: Boolean) =
+        setBoolean(R.string.p_filters_enabled, value)
+
+    override suspend fun setTodayFilter(value: Boolean) =
+        setBoolean(R.string.p_show_today_filter, value)
+
+    override suspend fun setRecentlyModifiedFilter(value: Boolean) =
+        setBoolean(R.string.p_show_recently_modified_filter, value)
+
+    override suspend fun setTagsEnabled(value: Boolean) =
+        setBoolean(R.string.p_tags_enabled, value)
+
+    override suspend fun setHideUnusedTags(value: Boolean) =
+        setBoolean(R.string.p_tags_hide_unused, value)
+
+    override suspend fun setPlacesEnabled(value: Boolean) =
+        setBoolean(R.string.p_places_enabled, value)
+
+    override suspend fun setHideUnusedPlaces(value: Boolean) =
+        setBoolean(R.string.p_places_hide_unused, value)
+
+    override suspend fun lookAndFeelSettings() = LookAndFeelSettings(
+        theme = getInt(R.string.p_theme, lookAndFeelDefaults.theme),
+        themeColor = getInt(R.string.p_theme_color, lookAndFeelDefaults.themeColor),
+        dynamicColor = getBoolean(R.string.p_dynamic_color, lookAndFeelDefaults.dynamicColor),
+        markdown = getBoolean(R.string.p_markdown, lookAndFeelDefaults.markdown),
+        openLastViewedList = getBoolean(
+            R.string.p_open_last_viewed_list,
+            lookAndFeelDefaults.openLastViewedList
+        ),
+        defaultOpenFilter = getStringValue(R.string.p_default_open_filter),
+        languageTag = null,
+    )
+
+    override suspend fun setTheme(value: Int) = setInt(R.string.p_theme, value)
+
+    override suspend fun setThemeColor(value: Int) = setInt(R.string.p_theme_color, value)
+
+    override suspend fun setDynamicColor(value: Boolean) =
+        setBoolean(R.string.p_dynamic_color, value)
+
+    override suspend fun setMarkdown(value: Boolean) = setBoolean(R.string.p_markdown, value)
+
+    override suspend fun setOpenLastViewedList(value: Boolean) =
+        setBoolean(R.string.p_open_last_viewed_list, value)
+
+    override suspend fun setDefaultOpenFilter(value: String?) =
+        setString(R.string.p_default_open_filter, value)
+
+    override suspend fun setLanguageTag(value: String?) = Unit
+
     val dateShortcutMorning: Int
         get() = getMillisPerDayPref(R.string.p_date_shortcut_morning, R.integer.default_morning)
 
@@ -239,11 +310,9 @@ class Preferences @JvmOverloads constructor(
     }
 
     fun setDefaults() {
-        PreferenceManager.setDefaultValues(context, R.xml.preferences_look_and_feel, true)
         PreferenceManager.setDefaultValues(context, R.xml.preferences_notifications, true)
         PreferenceManager.setDefaultValues(context, R.xml.preferences_task_defaults, true)
         PreferenceManager.setDefaultValues(context, R.xml.preferences_date_and_time, true)
-        PreferenceManager.setDefaultValues(context, R.xml.preferences_navigation_drawer, true)
         PreferenceManager.setDefaultValues(context, R.xml.preferences_backups, true)
         PreferenceManager.setDefaultValues(context, R.xml.preferences_advanced, true)
         BeastModePreferences.setDefaultOrder(this, context)

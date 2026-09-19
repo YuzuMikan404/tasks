@@ -23,10 +23,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import org.tasks.R
+import org.jetbrains.compose.resources.stringResource
+import org.tasks.themes.BaseTheme
+import tasks.kmp.generated.resources.Res
+import tasks.kmp.generated.resources.color
+import tasks.kmp.generated.resources.language
+import tasks.kmp.generated.resources.launcher_icon
+import tasks.kmp.generated.resources.markdown
+import tasks.kmp.generated.resources.markdown_description
+import tasks.kmp.generated.resources.on_launch
+import tasks.kmp.generated.resources.open_last_viewed_list
+import tasks.kmp.generated.resources.requires_pro_subscription
+import tasks.kmp.generated.resources.settings_localization
+import tasks.kmp.generated.resources.theme
+import tasks.kmp.generated.resources.theme_black
+import tasks.kmp.generated.resources.theme_dark
+import tasks.kmp.generated.resources.theme_day_night
+import tasks.kmp.generated.resources.theme_dynamic
+import tasks.kmp.generated.resources.theme_light
+import tasks.kmp.generated.resources.theme_system_default
+import tasks.kmp.generated.resources.theme_wallpaper
+import tasks.kmp.generated.resources.translations
+import tasks.kmp.generated.resources.widget_open_list
 
 @Composable
 fun LookAndFeelScreen(
@@ -36,6 +55,9 @@ fun LookAndFeelScreen(
     dynamicColorProOnly: Boolean,
     themeColor: Int,
     launcherColor: Int,
+    showLauncherIcon: Boolean = true,
+    showLanguage: Boolean = true,
+    showMarkdown: Boolean = true,
     markdownEnabled: Boolean,
     openLastViewedList: Boolean,
     defaultFilterName: String,
@@ -58,19 +80,18 @@ fun LookAndFeelScreen(
     ) {
         Spacer(modifier = Modifier.height(SettingsContentPadding))
 
-        // Appearance island
         Column(
             modifier = Modifier.padding(horizontal = SettingsContentPadding),
             verticalArrangement = Arrangement.spacedBy(SettingsCardGap),
         ) {
             val showColor = !dynamicColorEnabled
             val total = 1 + (if (dynamicColorAvailable) 1 else 0) +
-                    (if (showColor) 1 else 0) + 1
+                    (if (showColor) 1 else 0) + (if (showLauncherIcon) 1 else 0)
             var i = 0
 
             SettingsItemCard(position = CardPosition.forIndex(i++, total)) {
                 PreferenceRow(
-                    title = stringResource(R.string.theme),
+                    title = stringResource(Res.string.theme),
                     summary = themeName,
                     onClick = onTheme,
                 )
@@ -78,12 +99,12 @@ fun LookAndFeelScreen(
             if (dynamicColorAvailable) {
                 SettingsItemCard(position = CardPosition.forIndex(i++, total)) {
                     SwitchPreferenceRow(
-                        title = stringResource(R.string.theme_dynamic),
+                        title = stringResource(Res.string.theme_dynamic),
                         checked = dynamicColorEnabled,
                         enabled = !dynamicColorProOnly,
                         onCheckedChange = onDynamicColor,
                         summary = if (dynamicColorProOnly)
-                            stringResource(R.string.requires_pro_subscription)
+                            stringResource(Res.string.requires_pro_subscription)
                         else
                             null,
                     )
@@ -92,36 +113,38 @@ fun LookAndFeelScreen(
             if (showColor) {
                 SettingsItemCard(position = CardPosition.forIndex(i++, total)) {
                     PreferenceRow(
-                        title = stringResource(R.string.color),
+                        title = stringResource(Res.string.color),
                         leading = { ColorIcon(Color(themeColor)) },
                         onClick = onColor,
                     )
                 }
             }
-            SettingsItemCard(position = CardPosition.forIndex(i, total)) {
-                PreferenceRow(
-                    title = stringResource(R.string.launcher_icon),
-                    leading = { ColorIcon(Color(launcherColor)) },
-                    onClick = onLauncher,
+            if (showLauncherIcon) {
+                SettingsItemCard(position = CardPosition.forIndex(i, total)) {
+                    PreferenceRow(
+                        title = stringResource(Res.string.launcher_icon),
+                        leading = { ColorIcon(Color(launcherColor)) },
+                        onClick = onLauncher,
+                    )
+                }
+            }
+        }
+
+        if (showMarkdown) {
+            Spacer(modifier = Modifier.height(SettingsContentPadding))
+
+            SettingsItemCard(modifier = Modifier.padding(horizontal = SettingsContentPadding)) {
+                SwitchPreferenceRow(
+                    title = stringResource(Res.string.markdown),
+                    summary = stringResource(Res.string.markdown_description),
+                    checked = markdownEnabled,
+                    onCheckedChange = onMarkdown,
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(SettingsContentPadding))
-
-        // Markdown island
-        SettingsItemCard(modifier = Modifier.padding(horizontal = SettingsContentPadding)) {
-            SwitchPreferenceRow(
-                title = stringResource(R.string.markdown),
-                summary = stringResource(R.string.markdown_description),
-                checked = markdownEnabled,
-                onCheckedChange = onMarkdown,
-            )
-        }
-
-        // On launch section
         SectionHeader(
-            R.string.on_launch,
+            stringResource(Res.string.on_launch),
             modifier = Modifier.padding(horizontal = SettingsContentPadding),
         )
         Column(
@@ -130,14 +153,14 @@ fun LookAndFeelScreen(
         ) {
             SettingsItemCard(position = CardPosition.First) {
                 SwitchPreferenceRow(
-                    title = stringResource(R.string.open_last_viewed_list),
+                    title = stringResource(Res.string.open_last_viewed_list),
                     checked = openLastViewedList,
                     onCheckedChange = onOpenLastViewedList,
                 )
             }
             SettingsItemCard(position = CardPosition.Last) {
                 PreferenceRow(
-                    title = stringResource(R.string.widget_open_list),
+                    title = stringResource(Res.string.widget_open_list),
                     summary = defaultFilterName,
                     enabled = !openLastViewedList,
                     onClick = onDefaultFilter,
@@ -145,25 +168,28 @@ fun LookAndFeelScreen(
             }
         }
 
-        // Localization section
         SectionHeader(
-            R.string.settings_localization,
+            stringResource(Res.string.settings_localization),
             modifier = Modifier.padding(horizontal = SettingsContentPadding),
         )
         Column(
             modifier = Modifier.padding(horizontal = SettingsContentPadding),
             verticalArrangement = Arrangement.spacedBy(SettingsCardGap),
         ) {
-            SettingsItemCard(position = CardPosition.First) {
-                PreferenceRow(
-                    title = stringResource(R.string.language),
-                    summary = localeName,
-                    onClick = onLanguage,
-                )
+            if (showLanguage) {
+                SettingsItemCard(position = CardPosition.First) {
+                    PreferenceRow(
+                        title = stringResource(Res.string.language),
+                        summary = localeName,
+                        onClick = onLanguage,
+                    )
+                }
             }
-            SettingsItemCard(position = CardPosition.Last) {
+            SettingsItemCard(
+                position = if (showLanguage) CardPosition.Last else CardPosition.Only
+            ) {
                 PreferenceRow(
-                    title = stringResource(R.string.translations),
+                    title = stringResource(Res.string.translations),
                     icon = Icons.AutoMirrored.Outlined.OpenInNew,
                     onClick = onTranslations,
                 )
@@ -190,3 +216,15 @@ private fun ColorIcon(color: Color) {
             )
     )
 }
+
+@Composable
+fun baseThemeName(index: Int): String = stringResource(
+    when (index) {
+        BaseTheme.LIGHT -> Res.string.theme_light
+        BaseTheme.BLACK -> Res.string.theme_black
+        BaseTheme.DARK -> Res.string.theme_dark
+        BaseTheme.WALLPAPER -> Res.string.theme_wallpaper
+        BaseTheme.DAY_NIGHT -> Res.string.theme_day_night
+        else -> Res.string.theme_system_default
+    }
+)

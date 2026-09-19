@@ -16,10 +16,14 @@ import org.tasks.data.db.SuspendDbUtils.chunkedMap
 import org.tasks.data.db.SuspendDbUtils.eachChunk
 import org.tasks.data.entity.Alarm
 import org.tasks.data.entity.CaldavAccount.Companion.TYPES_CALDAV
+import org.tasks.data.entity.SYNC_ALARMS
+import org.tasks.data.entity.SYNC_LOCATION
+import org.tasks.data.entity.SYNC_TAGS
 import org.tasks.data.entity.Task
 import org.tasks.data.sql.Criterion
 import org.tasks.data.sql.Functions
 import org.tasks.time.DateTimeUtils2
+import kotlin.math.max
 
 private const val MAX_TIME = 9999999999999
 
@@ -147,6 +151,15 @@ FROM (
     @Query("UPDATE tasks SET lastNotified = :timestamp WHERE _id = :id")
     abstract suspend fun setLastNotified(id: Long, timestamp: Long)
 
+    suspend fun setReminderDismissed(ids: List<Long>, timestamp: Long) =
+        ids.eachChunk { setReminderDismissedInternal(it, timestamp) }
+
+    @Query("UPDATE tasks SET reminderDismissed = :timestamp WHERE _id IN (:ids) AND reminderDismissed < :timestamp")
+    internal abstract suspend fun setReminderDismissedInternal(ids: List<Long>, timestamp: Long)
+
+    @Query("SELECT reminderDismissed FROM tasks WHERE _id = :id")
+    internal abstract suspend fun getReminderDismissed(id: Long): Long?
+
     suspend fun getChildren(id: Long): List<Long> = getChildren(listOf(id))
 
     @Query("""
@@ -207,8 +220,11 @@ FROM recursive_tasks
                 task.order = it.order
             }
         }
-        if (updateTimestamp && !task.insignificantChange(original)) {
+        if (updateTimestamp && (!task.insignificantChange(original) || task.checkTransitory(SYNC_TAGS, SYNC_ALARMS, SYNC_LOCATION))) {
             task.modificationDate = DateTimeUtils2.currentTimeMillis()
+        }
+        if (original == null || task.reminderDismissed >= original.reminderDismissed) {
+            task.reminderDismissed = max(task.reminderDismissed, getReminderDismissed(task.id) ?: 0)
         }
         val updated = updateInternal(task) == 1
         if (updated && markDirty) {

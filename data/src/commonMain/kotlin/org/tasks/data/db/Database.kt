@@ -5,7 +5,11 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.tasks.data.dao.AlarmDao
+import org.tasks.data.dao.ApiDao
 import org.tasks.data.dao.Astrid2ContentProviderDao
 import org.tasks.data.dao.CaldavDao
 import org.tasks.data.dao.CompletionDao
@@ -75,7 +79,7 @@ import org.tasks.data.entity.UserActivity
         AutoMigration(from = 91, to = 92),
         AutoMigration(from = 93, to = 94, spec = AutoMigrate93to94::class),
     ],
-    version = 97
+    version = 98
 )
 abstract class Database : RoomDatabase() {
     abstract fun notificationDao(): NotificationDao
@@ -93,6 +97,7 @@ abstract class Database : RoomDatabase() {
     abstract fun caldavDao(): CaldavDao
     abstract fun deletionDao(): DeletionDao
     abstract fun contentProviderDao(): Astrid2ContentProviderDao
+    abstract fun apiDao(): ApiDao
     abstract fun upgraderDao(): UpgraderDao
     abstract fun principalDao(): PrincipalDao
     abstract fun completionDao(): CompletionDao
@@ -133,10 +138,15 @@ abstract class Database : RoomDatabase() {
             END
         """.trimIndent()
 
+        private val _opened = MutableStateFlow(false)
+
+        val opened: StateFlow<Boolean> = _opened.asStateFlow()
+
         val CALLBACK = object : RoomDatabase.Callback() {
             override fun onOpen(connection: SQLiteConnection) {
                 connection.execSQL(TASK_DIRTY_TRIGGER)
                 connection.execSQL(TAG_METADATA_STATE_CLEANUP_TRIGGER)
+                _opened.value = true
             }
         }
     }

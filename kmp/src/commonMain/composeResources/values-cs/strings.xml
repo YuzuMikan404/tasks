@@ -599,4 +599,26 @@
     <string name="TEA_add_subtask">Přidat podúkol</string>
     <string name="subtasks_multilevel_google_task">Úkoly Google nepodporují víceúrovňové podúkoly</string>
     <string name="subtasks_multilevel_microsoft">Víceúrovňové dílčí úkoly nejsou podporované službou Microsoft To Do</string>
+    <string name="customize_drawer">Upravit šuplík</string>
+    <string name="customize_drawer_summary">Přetažením změníte uspořádání položek nabídky</string>
+    <string name="hide_unused_tags">Skrýt nevyužité štítky</string>
+    <string name="hide_unused_places">Skrýt nevyužitá místa</string>
+    <string name="language">Jazyk</string>
+    <string name="launcher_icon">Ikona na domovské obrazovce</string>
+    <string name="markdown">Značkovací jazyk</string>
+    <string name="markdown_description">Zapnout Markdown v nadpisu a popisu</string>
+    <string name="on_launch">Při spuštění</string>
+    <string name="open_last_viewed_list">Otevřít poslední prohlížený seznam</string>
+    <string name="settings_localization">Překlad</string>
+    <string name="theme">Vzhled</string>
+    <string name="theme_dynamic">Dynamické</string>
+    <string name="translations">Přispějte k překladu</string>
+    <string name="widget_open_list">Otevřít seznam</string>
+    <string name="theme_light">Světlý</string>
+    <string name="theme_black">Černý</string>
+    <string name="theme_dark">Tmavý</string>
+    <string name="theme_wallpaper">Tapeta</string>
+    <string name="theme_day_night">Den/Noc</string>
+    <string name="theme_system_default">Podle systému</string>
+    <string name="works_with_desktop">Tasks.org pro počítače</string>
 </resources>

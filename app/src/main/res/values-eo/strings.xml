@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="remove">Forigi</string>
-    <string name="translations">Helpi traduki</string>
     <string name="font_size">Tipara grando</string>
     <string name="notifications">Sciigoj</string>
     <string name="widget_show_menu">Vidigi menuon</string>
@@ -82,7 +81,6 @@
     <string name="CFC_dueBefore_name">Ĝis…</string>
     <string name="CFC_dueBefore_text">Ĝis: \?</string>
     <string name="CFA_button_add">Aldoni Kriteriojn</string>
-    <string name="BFE_Recent">Lastatempe ŝanĝitaj</string>
     <string name="next_week">Sekvanta semajno</string>
     <string name="EPr_manage_delete_gcal_status">Forigis %d kalendarajn eventojn!</string>
     <string name="EPr_delete_task_data">Forigi taskan datumon</string>
@@ -122,10 +120,8 @@
     <string name="delete_selected_tasks">Ĉu forigi elektitajn taskojn\?</string>
     <string name="delete_multiple_tasks_confirmation">%s forigitaj</string>
     <string name="copy_multiple_tasks_confirmation">%s kopitaj</string>
-    <string name="widget_open_list">Malfermi liston</string>
     <string name="widget_settings">Agordoj de fenestraĵo</string>
     <string name="restart_later">Poste</string>
-    <string name="language">Lingvo</string>
     <string name="theme_system_default">Laŭ operaciumo</string>
     <string name="theme_day_night">Tago/Nokto</string>
     <string name="theme_wallpaper">Ekranfono</string>
@@ -215,7 +211,6 @@
     <string name="or_choose_a_location">Aŭ elekti lokon</string>
     <string name="auto_dismiss_datetime_summary">Fermi data/hora elektilo post elekti daton aŭ horon</string>
     <string name="auto_dismiss_datetime">Aŭtomate fermi datan/horan elektilon</string>
-    <string name="filters">Filtriloj</string>
     <string name="filter_after_today">Post hodiaŭ</string>
     <string name="widget_due_date_after_title">Post titolo</string>
     <string name="widget_header_settings">Kapaj agordoj</string>
@@ -247,7 +242,6 @@
     <string name="auto_dismiss_datetime_widget">Fenestraĵo</string>
     <string name="widget_show_checkboxes">Vidigi elektobutonojn</string>
     <string name="widget_show_header">Vidigi kapon</string>
-    <string name="settings_localization">Traduko</string>
     <string name="device_settings">Agordoj de aparato</string>
     <string name="account">Konto</string>
     <string name="ring_nonstop">Soni daŭre</string>
@@ -268,7 +262,6 @@
     <string name="missing_permissions">Permesoj mankas</string>
     <string name="documentation">Dokumentado</string>
     <string name="places">Lokoj</string>
-    <string name="hide_unused_places">Kaŝi neuzatajn lokojn</string>
     <string name="current_subscription">Aktuala abono: %s</string>
     <string name="hint_customize_edit_title">Tro da informo?</string>
     <string name="sort_list">Laŭ listo</string>
@@ -287,7 +280,6 @@
     <string name="choose_a_location">Elekti lokon</string>
     <string name="open_map">Malfermi mapon</string>
     <string name="choose_synchronization_service">Elekti platformon</string>
-    <string name="hide_unused_tags">Kaŝi neuzatajn etikedojn</string>
     <string name="place_settings">Agordoj de loko</string>
     <string name="settings_default">Defaŭlta</string>
     <string name="upgrade_blurb_2">Mi laboris milojn da horoj pri Tasks, kaj mi rete eldonas senpage ĉiun da la fontkodo. Por subteni mian laboron, kelkaj funkcioj postulas abonon</string>
@@ -339,7 +331,6 @@
     <string name="last_backup">Lasta savkopio: %s</string>
     <string name="TPl_notification">Tempumiloj Aktivaj por %s!</string>
     <string name="no_app_found">Neniu aplikaĵo povis pritrakti ĉi tiun peton</string>
-    <string name="launcher_icon">Lanĉila piktogramo</string>
     <string name="refresh_purchases">Reŝargi aĉetojn</string>
     <string name="background_location_permission_required">Tasks kolektas lokan datumon por ebligi lok-bazitajn memorigilojn, eĉ kiam la aplikaĵo estas fermita aŭ ne uzata.</string>
     <string name="dismiss">Fermi</string>
@@ -354,10 +345,8 @@
     <string name="snackbar_task_completed">Tasko finita</string>
     <string name="snackbar_tasks_completed">%d taskoj estas finitaj</string>
     <string name="above_average">Super meznombra</string>
-    <string name="on_launch">Je lanĉi</string>
     <string name="save_percent">Ŝpari je %d%%</string>
     <string name="widget_id">Fenestraĵa ID: %d</string>
-    <string name="open_last_viewed_list">Malfermi liston de laste rigardita</string>
     <string name="permission_read_tasks">Tuta atingorajto al Tasks datumbazo</string>
     <string name="foreground_location">Malfona loko</string>
     <string name="background_location">Fona loko</string>
@@ -390,8 +379,6 @@
     <string name="pro_dashclock_extension">Dashclock kromprogramo</string>
     <string name="tasker_list_notification">Sciigo de listo</string>
     <string name="auto_dismiss_datetime_edit">Redakti taskon</string>
-    <string name="markdown">Simpla Marklingo</string>
-    <string name="markdown_description">Ebligi simplan markadon en titolo kaj priskribo</string>
     <string name="chips">Elementoj</string>
     <string name="chip_appearance">Aspekto de elemento</string>
     <string name="theme_dynamic">Dinamika</string>
@@ -401,7 +388,6 @@
     <string name="donate_nag">Bonvolu doni subtenon per donaco!</string>
     <string name="donate_maybe_later">Eble poste</string>
     <string name="customize_drawer">Adapti tirkeston</string>
-    <string name="customize_drawer_summary">Ŝovu kaj demetu por rearanĝi menuerojn</string>
     <string name="delete_comment">komento</string>
     <string name="yesterday">Hieraŭ</string>
     <string name="enable_alarms_description">Por certigi ke vi sciiĝos je la ĝusta horo, permesu agordi alarmojn kaj memorigilojn per Agordoj</string>
@@ -452,4 +438,6 @@
     <string name="upgrade_desktop_app_description">Frua atingo de la nova labortabla aplikaĵo</string>
     <string name="read_more">Legi pli</string>
     <string name="sort_options">Agordoj de ordigo</string>
+    <string name="write_permission_label">Modifi Taskojn</string>
+    <string name="permission_write_tasks">Aldoni, ŝanĝi kaj forigi viajn taskojn, listojn, etikedojn, kaj lokojn</string>
 </resources>

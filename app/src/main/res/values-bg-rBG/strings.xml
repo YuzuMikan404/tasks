@@ -66,7 +66,6 @@
     <string name="day_after_tomorrow">Вдругиден</string>
     <string name="next_week">Следваща седмица</string>
     <string name="BFE_Active">Мои задачи</string>
-    <string name="BFE_Recent">Последно променени</string>
     <string name="custom_filter_or">ИЛИ</string>
     <string name="custom_filter_not">НЕ</string>
     <string name="custom_filter_and">И</string>
@@ -151,13 +150,11 @@
     <string name="font_size">Размер на шрифта</string>
     <string name="row_spacing">Междуредие</string>
     <string name="customize_edit_screen">Настройване на екрана за редактиране</string>
-    <string name="translations">Допринасяне с превод</string>
     <string name="add_location">Добавяне на място</string>
     <string name="remove">Премахване</string>
     <string name="geofence_radius">Радиус на геозащита</string>
     <string name="location_radius_meters">%s м</string>
     <string name="tags">Етикети</string>
-    <string name="filters">Филтри</string>
     <string name="date_shortcut_morning">Сутрин</string>
     <string name="date_shortcut_afternoon">Следобед</string>
     <string name="date_shortcut_evening">Вечер</string>
@@ -181,17 +178,14 @@
     <string name="opacity">Непрозрачност</string>
     <string name="theme">Тема</string>
     <string name="color">Цвят</string>
-    <string name="launcher_icon">Икона за стартиране</string>
     <string name="theme_black">Черна</string>
     <string name="theme_light">Светла</string>
     <string name="theme_dark">Тъмна</string>
     <string name="theme_wallpaper">Тапет</string>
     <string name="theme_day_night">Ден/нощ</string>
-    <string name="language">Език</string>
     <string name="restart_required">За да влязат промените в сила Tasks трябва да рестартира</string>
     <string name="restart_now">Рестартиране</string>
     <string name="restart_later">По-късно</string>
-    <string name="settings_localization">Локализация</string>
     <string name="widget_settings">Настройки на приспособления</string>
     <string name="widget_header_settings">Настройки на заглавката</string>
     <string name="widget_row_settings">Настройки на реда</string>
@@ -238,8 +232,6 @@
     <string name="choose_new_location">Избиране на ново местоположение</string>
     <string name="invalid_backup_file">Невалидно резервно копие</string>
     <string name="action_new_task">Нова задача</string>
-    <string name="hide_unused_places">Скриване на неизползвани места</string>
-    <string name="hide_unused_tags">Скриване на неизползвани етикети</string>
     <string name="support">Поддръжка</string>
     <string name="enjoying_tasks">Харесвате ли Tasks\?</string>
     <string name="filter_eisenhower_box_4">Не важни и не спешни</string>
@@ -270,7 +262,6 @@
     <string name="astrid_sort_order_summary">Използвайте режима за ръчно сортиране на Astrid за „Моите задачи“, „Днес“ и етикетите. Този режим на сортиране ще бъде заменен с „Моя подредба“ в бъдещо издание</string>
     <string name="astrid_sort_order">Ръчно сортиране на Astrid</string>
     <string name="SSD_sort_my_order">Моя подредба</string>
-    <string name="markdown">Markdown</string>
     <string name="this_feature_requires_a_subscription">Тази възможност изисква абонамент</string>
     <string name="list_separator_with_space">", "</string>
     <string name="subscription">Абонамент</string>
@@ -317,7 +308,6 @@
     <string name="widget_due_date_below_title">Под заглавието</string>
     <string name="opacity_header">Непрозрачност на заглавката</string>
     <string name="widget_due_date_after_title">След заглавието</string>
-    <string name="widget_open_list">Отваряне на списък</string>
     <string name="url">Адрес</string>
     <string name="davx5_selection_description">Синхронизиране на задачите с DAVx⁵</string>
     <string name="upgrade_blurb_1">Здравейте! Аз съм Алекс. Независимият разработчик, който стои зад Tasks</string>
@@ -346,7 +336,6 @@
     <string name="android_auto_backup">Услуга за резервни копия на Android</string>
     <string name="device_settings">Настройки на устройството</string>
     <string name="support_development_subscribe">Отключване на допълнителни възможности и подкрепа на софтуера с отворен код</string>
-    <string name="on_launch">При стартиране</string>
     <string name="sort_created_group">Създадена %s</string>
     <string name="sort_modified_group">Променена %s</string>
     <string name="github_sponsor">Дарител</string>
@@ -361,11 +350,9 @@
     <string name="current_subscription">Текущ абонамент: %s</string>
     <string name="permission_read_tasks">Пълен дистъп до банката данни на Task</string>
     <string name="github_sponsors">Дарители от GitHub</string>
-    <string name="markdown_description">Markdown в заглавията и описанията</string>
     <string name="upgrade_open_source_description">Абонаментът поддържа непрекъснатото развитие</string>
     <string name="your_subscription_expired">Абонаментът е изтекъл. Подновете го, за да се възстанови услугата.</string>
     <string name="upgrade_more_customization">Повече настройки</string>
-    <string name="open_last_viewed_list">Отваряне на последно прегледания списък</string>
     <string name="reset_sort_order">Нулиране на сортирането</string>
     <string name="open_source">Отворен код</string>
     <string name="privacy">Поверителност</string>
@@ -398,7 +385,6 @@
     <string name="show_edit_screen_without_unlock">Показване на екран за редактиране без отключване</string>
     <string name="show_edit_screen_without_unlock_summary">Използва плочката за бързи настройки без отключване на устройството</string>
     <string name="customize_drawer">Настройка на менюто</string>
-    <string name="customize_drawer_summary">Пренаредете елементите с плъзгане и пускане</string>
     <string name="donate_nag">Помислете дали да не покажете подкрепата си чрез дарение!</string>
     <string name="donate_today">Даряване днес</string>
     <string name="donate_maybe_later">Може би после</string>

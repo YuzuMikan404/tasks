@@ -598,4 +598,26 @@
     <string name="snoozed_reminder">Senarelagd påminnelse</string>
     <string name="subtasks_will_be_flattened">Den här listan stöder inte deluppgifter i flera nivåer. När du sparar flyttas alla till den översta nivån.</string>
     <string name="subtask_list_locked">Nya deluppgifter använder den överordnade uppgiftens lista</string>
+    <string name="customize_drawer">Anpassa navigeringspanelen</string>
+    <string name="customize_drawer_summary">Dra och släpp för att ordna om menyobjekt</string>
+    <string name="hide_unused_tags">Dölj oanvända etiketter</string>
+    <string name="hide_unused_places">Dölj oanvända platser</string>
+    <string name="language">Språk</string>
+    <string name="launcher_icon">Appikon</string>
+    <string name="markdown">Markdown</string>
+    <string name="markdown_description">Aktivera Markdown i titel och beskrivning</string>
+    <string name="on_launch">Vid start</string>
+    <string name="open_last_viewed_list">Öppna den senast visade listan</string>
+    <string name="settings_localization">Språk och region</string>
+    <string name="theme">Tema</string>
+    <string name="theme_dynamic">Dynamisk</string>
+    <string name="translations">Hjälp till att översätta</string>
+    <string name="widget_open_list">Öppna lista</string>
+    <string name="theme_light">Ljust</string>
+    <string name="theme_black">Svart</string>
+    <string name="theme_dark">Mörkt</string>
+    <string name="theme_wallpaper">Bakgrundsbild</string>
+    <string name="theme_day_night">Dag/natt</string>
+    <string name="theme_system_default">Följ systemet</string>
+    <string name="works_with_desktop">Tasks.org för datorer</string>
 </resources>

@@ -572,4 +572,26 @@
     <string name="TEA_add_subtask">הוספת תת־משימה</string>
     <string name="subtasks_multilevel_google_task">תתי־משימות מקוננות אינן נתמכות על ידי Google Tasks</string>
     <string name="subtasks_multilevel_microsoft">תתי־משימות מקוננות אינן נתמכות על ידי Microsoft To Do</string>
+    <string name="customize_drawer">התאמה אישית של מגירה</string>
+    <string name="customize_drawer_summary">יש לגרור ולשחרר כדי לסדר מחדש את פריטי התפריט</string>
+    <string name="hide_unused_tags">הסתרת תגיות שאינן בשימוש</string>
+    <string name="hide_unused_places">הסתרת מקומות שאינן בשימוש</string>
+    <string name="language">שפה</string>
+    <string name="launcher_icon">סמל משגר</string>
+    <string name="markdown">Markdown</string>
+    <string name="markdown_description">אפשור Markdown בכותרת ובתיאור</string>
+    <string name="on_launch">בעת שיגור</string>
+    <string name="open_last_viewed_list">פתיחת הרשימה האחרונה שנצפתה</string>
+    <string name="settings_localization">לוקליזציה</string>
+    <string name="theme">ערכת נושא</string>
+    <string name="theme_dynamic">דינמי</string>
+    <string name="translations">לתרום תרגומים</string>
+    <string name="widget_open_list">פתיחת רשימה</string>
+    <string name="theme_light">בהיר</string>
+    <string name="theme_black">שחור</string>
+    <string name="theme_dark">כהה</string>
+    <string name="theme_wallpaper">תמונת רקע</string>
+    <string name="theme_day_night">יום/לילה</string>
+    <string name="theme_system_default">ברירת מחדל של המערכת</string>
+    <string name="works_with_desktop">Tasks.org למחשב שולחני</string>
 </resources>

@@ -392,4 +392,24 @@
     <string name="DLG_delete_this_task_question">Xoá công việc này?</string>
     <string name="TEA_add_subtask">Thêm công việc con</string>
     <string name="subtasks_multilevel_google_task">Các công việc con có nhiều cấp không được Google Tasks hỗ trợ</string>
+    <string name="customize_drawer">Tùy chỉnh ngăn kéo</string>
+    <string name="customize_drawer_summary">Kéo và thả để sắp xếp lại các mục danh sách</string>
+    <string name="hide_unused_tags">Ẩn các thẻ chưa sử dụng</string>
+    <string name="hide_unused_places">Ẩn các địa điểm chưa sử dụng</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="launcher_icon">Biểu tượng trên launcher</string>
+    <string name="markdown">Markdown</string>
+    <string name="markdown_description">Bật Markdown trong tiêu đề và mô tả</string>
+    <string name="on_launch">Khi khởi động</string>
+    <string name="open_last_viewed_list">Mở danh sách đã xem lần cuối</string>
+    <string name="settings_localization">Ngôn ngữ</string>
+    <string name="theme">Chủ đề</string>
+    <string name="translations">Đóng góp bản dịch</string>
+    <string name="widget_open_list">Mở danh sách</string>
+    <string name="theme_light">Sáng</string>
+    <string name="theme_black">Đen</string>
+    <string name="theme_dark">Tối</string>
+    <string name="theme_wallpaper">Hình nền</string>
+    <string name="theme_day_night">Ngày/Đêm</string>
+    <string name="theme_system_default">Mặc định hệ thống</string>
 </resources>

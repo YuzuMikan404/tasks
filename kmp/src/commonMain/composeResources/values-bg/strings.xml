@@ -529,4 +529,26 @@
     <string name="TEA_add_subtask">Добавяне на задача</string>
     <string name="subtasks_multilevel_google_task">Вложени задачи не се поддържат от Google Tasks</string>
     <string name="subtasks_multilevel_microsoft">Вложени задачи не се поддържат от Microsoft To Do</string>
+    <string name="customize_drawer">Настройка на менюто</string>
+    <string name="customize_drawer_summary">Пренаредете елементите с плъзгане и пускане</string>
+    <string name="hide_unused_tags">Скриване на неизползвани етикети</string>
+    <string name="hide_unused_places">Скриване на неизползвани места</string>
+    <string name="language">Език</string>
+    <string name="launcher_icon">Икона за стартиране</string>
+    <string name="markdown">Markdown</string>
+    <string name="markdown_description">Markdown в заглавията и описанията</string>
+    <string name="on_launch">При стартиране</string>
+    <string name="open_last_viewed_list">Отваряне на последно прегледания списък</string>
+    <string name="settings_localization">Локализация</string>
+    <string name="theme">Тема</string>
+    <string name="theme_dynamic">Динамична</string>
+    <string name="translations">Допринасяне с превод</string>
+    <string name="widget_open_list">Отваряне на списък</string>
+    <string name="theme_light">Светла</string>
+    <string name="theme_black">Черна</string>
+    <string name="theme_dark">Тъмна</string>
+    <string name="theme_wallpaper">Тапет</string>
+    <string name="theme_day_night">Ден/нощ</string>
+    <string name="theme_system_default">Спрямо системата</string>
+    <string name="works_with_desktop">Tasks.org за настолно у-во</string>
 </resources>

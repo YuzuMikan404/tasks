@@ -5,14 +5,11 @@
     <string name="TEA_control_notes">Descriere</string>
     <string name="TEA_control_files">Fișiere</string>
     <string name="custom_filter_or">SAU</string>
-    <string name="filters">Filtre</string>
     <string name="compact">Compact</string>
     <string name="TEA_timer_est">Estim. %s</string>
     <string name="TEA_control_gcal">Calendar</string>
     <string name="export_toast">Salvat %1$s în %2$s.</string>
     <string name="actfm_picture_clear">Șterge poza</string>
-    <string name="markdown_description">Activează Markdown în titlu și descriere</string>
-    <string name="markdown">Markdown</string>
     <string name="upgrade_open_source_description">Abonamentul sprijină dezvoltarea continuă</string>
     <string name="upgrade_tasks_org_account_description">Sincronizează cu Tasks.org și colaborează cu alți utilizatori</string>
     <string name="upgrade_more_customization_description">Deblochează toate temele, culorile și pictogramele</string>
@@ -72,22 +69,18 @@
     <string name="widget_due_date_hidden">Ascuns</string>
     <string name="widget_due_date_below_title">Sub titlul</string>
     <string name="widget_due_date_after_title">După titlu</string>
-    <string name="widget_open_list">Listă deschisă</string>
     <string name="widget_row_settings">Setări de rânduri</string>
     <string name="widget_header_settings">Setări de antet</string>
     <string name="widget_settings">Setări Widget</string>
-    <string name="settings_localization">Localizare</string>
     <string name="restart_later">Mai târziu</string>
     <string name="restart_now">Repornește acum</string>
     <string name="restart_required">Repornește Tasks pentru ca această modificare să intre în vigoare</string>
-    <string name="language">Limbă</string>
     <string name="theme_system_default">Implicit</string>
     <string name="theme_day_night">Zi/Noapte</string>
     <string name="theme_wallpaper">Imagine de fundal</string>
     <string name="theme_dark">Întunecată</string>
     <string name="theme_light">Luminoasă</string>
     <string name="theme_black">Neagră</string>
-    <string name="launcher_icon">Pictograma lansatorului</string>
     <string name="icon">Pictogramă</string>
     <string name="color">Culoare</string>
     <string name="theme">Temă</string>
@@ -122,7 +115,6 @@
     <string name="geofence_radius">Raza locației</string>
     <string name="remove">Elimină</string>
     <string name="add_location">Adaugă locația</string>
-    <string name="translations">Contribuie la traduceri</string>
     <string name="customize_edit_screen">Personalizează ecranul de editare</string>
     <string name="row_spacing">Distanța dintre rânduri</string>
     <string name="header_spacing">Distanțare</string>
@@ -216,7 +208,6 @@
     <string name="CFC_dueBefore_name">Scadent la…</string>
     <string name="CFC_dueBefore_text">Scadent la:\?</string>
     <string name="CFA_button_add">Adaugă criterii</string>
-    <string name="BFE_Recent">Modificat recent</string>
     <string name="BFE_Active">Sarcinile mele</string>
     <string name="next_week">Săptămâna viitoare</string>
     <string name="day_after_tomorrow">Poimâine</string>
@@ -289,8 +280,6 @@
     <string name="reset_sort_order">Resetează ordinea de sortare</string>
     <string name="lists">Liste</string>
     <string name="local_lists">Liste locale</string>
-    <string name="open_last_viewed_list">Deschide ultima listă vizualizată</string>
-    <string name="on_launch">La lansare</string>
     <string name="sort_modified_group">Modificat %s</string>
     <string name="sort_created_group">Creat %s</string>
     <string name="support_development_subscribe">Deblochează funcții suplimentare și sprijină software-ul cu sursă deschisă</string>
@@ -329,8 +318,6 @@
     <string name="chip_appearance_icon_only">Doar pictograma</string>
     <string name="chip_appearance_text_only">Doar text</string>
     <string name="chip_appearance_text_and_icon">Text și pictogramă</string>
-    <string name="hide_unused_places">Ascunde locurile nefolosite</string>
-    <string name="hide_unused_tags">Ascunde etichetele nefolosite</string>
     <string name="place_settings">Setări de locație</string>
     <string name="places">Locuri</string>
     <string name="chip_appearance">Aspect fragmentat</string>
@@ -411,7 +398,6 @@
     <string name="show_edit_screen_without_unlock_summary">Permite utilizarea dalelor setărilor rapide fără a debloca dispozitivul</string>
     <string name="theme_dynamic">Dinamic</string>
     <string name="customize_drawer">Personalizează sertarul</string>
-    <string name="customize_drawer_summary">Trage și plasează pentru a rearanja elementele din meniu</string>
     <string name="yesterday">Ieri</string>
     <string name="delete_comment">comentariu</string>
     <string name="comment">Comentariu</string>
@@ -463,4 +449,7 @@
     <string name="read_more">Citeşte mai mult</string>
     <string name="email_to_task">E-mail către sarcină</string>
     <string name="sort_options">Opțiuni de sortare</string>
+    <string name="write_permission_label">Modificare sarcini</string>
+    <string name="p_per_list_sort">per_list_sort</string>
+    <string name="permission_write_tasks">Adaugă modifică și șterge sarcinile, listele, etichetele și locurile</string>
 </resources>

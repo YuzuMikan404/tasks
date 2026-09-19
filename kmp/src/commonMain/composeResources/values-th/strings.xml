@@ -338,4 +338,22 @@
     <string name="TEA_add_subtask">เพิ่มงานย่อย</string>
     <string name="subtasks_multilevel_google_task">งานย่อยหลายระดับไม่ได้รับการสนับสนุนโดย Google Tasks</string>
     <string name="app_settings">การตั้งค่าแอป</string>
+    <string name="hide_unused_tags">ซ่อนแท็กที่ไม่ได้ใช้</string>
+    <string name="hide_unused_places">ซ่อนสถานที่ที่ไม่ได้ใช้</string>
+    <string name="language">ภาษา</string>
+    <string name="launcher_icon">ไอคอนตัวเปิดใช้</string>
+    <string name="markdown">มาร์กดาวน์</string>
+    <string name="markdown_description">เปิดใช้งานการทําเครื่องหมายในชื่อและคําอธิบาย</string>
+    <string name="on_launch">เปิดตัว</string>
+    <string name="open_last_viewed_list">เปิดรายการที่ดูล่าสุด</string>
+    <string name="settings_localization">แปล</string>
+    <string name="theme">หัวข้อ</string>
+    <string name="translations">สนับสนุนการแปล</string>
+    <string name="widget_open_list">เปิดรายการ</string>
+    <string name="theme_light">แสง</string>
+    <string name="theme_black">ดำ</string>
+    <string name="theme_dark">รูปแบบสีดำ</string>
+    <string name="theme_wallpaper">วอลเปเปอร์</string>
+    <string name="theme_day_night">กลางวัน/กลางคืน</string>
+    <string name="theme_system_default">ค่าเริ่มต้นของระบบ</string>
 </resources>

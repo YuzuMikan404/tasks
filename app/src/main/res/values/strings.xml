@@ -19,6 +19,7 @@ File %1$s contained %2$s.\n\n
   <string name="import_failed">Import failed</string>
   <string name="import_failed_message">Could not read backup file</string>
   <string name="read_permission_label">Tasks Permission</string>
+  <string name="write_permission_label">Modify Tasks</string>
   <string name="DLG_hour_minutes">Time (hours : minutes)</string>
   <string name="DLG_undo">Undo</string>
   <string name="WID_dateButtonUnset">Click to set</string>
@@ -30,7 +31,6 @@ File %1$s contained %2$s.\n\n
   <string name="app_settings">App settings</string>
   <string name="TAd_actionEditTask">Edit</string>
   <string name="customize_drawer">Customize drawer</string>
-  <string name="customize_drawer_summary">Drag and drop to rearrange menu items</string>
   <string name="action_call">Call</string>
   <string name="SSD_sort_my_order">My order</string>
   <string name="astrid_sort_order">Astrid manual sorting</string>
@@ -89,7 +89,6 @@ File %1$s contained %2$s.\n\n
   <string name="next_week">Next week</string>
   <string name="location_update_interval_summary">Periodic location updates improve geofence reliability</string>
   <string name="BFE_Active">My Tasks</string>
-  <string name="BFE_Recent">Recently modified</string>
   <string name="CFA_button_add">Add Criteria</string>
   <string name="CFC_dueBefore_text">Due By: ?</string>
   <string name="CFC_dueBefore_name">Due By…</string>
@@ -187,14 +186,12 @@ File %1$s contained %2$s.\n\n
   <string name="row_spacing">Row spacing</string>
   <string name="customize_edit_screen">Customize edit screen</string>
   <string name="customize_edit_screen_summary">Rearrange or remove fields</string>
-  <string name="translations">Contribute translations</string>
   <string name="add_location">Add location</string>
   <string name="remove">Remove</string>
   <string name="geofence_radius">Geofence radius</string>
   <string name="location_radius_meters">%s m</string>
   <string name="tags">Tags</string>
   <string name="change_priority">Change priority</string>
-  <string name="filters">Filters</string>
   <string name="date_shortcut_morning">Morning</string>
   <string name="date_shortcut_afternoon">Afternoon</string>
   <string name="date_shortcut_evening">Evening</string>
@@ -226,7 +223,6 @@ File %1$s contained %2$s.\n\n
   <string name="theme">Theme</string>
   <string name="color">Color</string>
   <string name="icon">Icon</string>
-  <string name="launcher_icon">Launcher icon</string>
   <string name="theme_black">Black</string>
   <string name="theme_light">Light</string>
   <string name="theme_dark">Dark</string>
@@ -234,15 +230,12 @@ File %1$s contained %2$s.\n\n
   <string name="theme_day_night">Day/Night</string>
   <string name="theme_system_default">System default</string>
   <string name="theme_dynamic">Dynamic</string>
-  <string name="language">Language</string>
   <string name="restart_required">Restart Tasks for this change to take effect</string>
   <string name="restart_now">Restart now</string>
   <string name="restart_later">Later</string>
-  <string name="settings_localization">Localization</string>
   <string name="widget_settings">Widget settings</string>
   <string name="widget_header_settings">Header settings</string>
   <string name="widget_row_settings">Row settings</string>
-  <string name="widget_open_list">Open list</string>
   <string name="widget_due_date_after_title">After title</string>
   <string name="widget_due_date_below_title">Below title</string>
   <string name="widget_due_date_hidden">Hidden</string>
@@ -318,8 +311,6 @@ File %1$s contained %2$s.\n\n
   <string name="chip_appearance">Chip appearance</string>
   <string name="places">Places</string>
   <string name="place_settings">Place settings</string>
-  <string name="hide_unused_tags">Hide unused tags</string>
-  <string name="hide_unused_places">Hide unused places</string>
   <string name="chip_appearance_text_and_icon">Text and icon</string>
   <string name="chip_appearance_text_only">Text only</string>
   <string name="chip_appearance_icon_only">Icon only</string>
@@ -369,12 +360,11 @@ File %1$s contained %2$s.\n\n
   <string name="sort_created_group">Created %s</string>
   <string name="sort_modified_group">Modified %s</string>
   <string name="sort_completion_group">Completion %s</string>
-  <string name="on_launch">On launch</string>
-  <string name="open_last_viewed_list">Open last viewed list</string>
   <string name="local_lists">Local lists</string>
   <string name="lists">Lists</string>
   <string name="reset_sort_order">Reset sort order</string>
   <string name="permission_read_tasks">Full access to Tasks database</string>
+  <string name="permission_write_tasks">Add, change and delete your tasks, lists, tags and places</string>
   <string name="automatic_backups">Automatic backups</string>
   <string name="android_auto_backup">Android Backup Service</string>
   <string name="android_auto_backup_device_summary">You must also opt in to backup service through your device settings. Not all devices provide backup service.</string>
@@ -430,8 +420,6 @@ File %1$s contained %2$s.\n\n
   <string name="upgrade_email_to_task_description">Turn emails into tasks by forwarding them to your private inbox</string>
   <string name="advanced_tools">Advanced tools</string>
   <string name="advanced_tools_description">Google Places, CalDAV, EteSync, and more!</string>
-  <string name="markdown">Markdown</string>
-  <string name="markdown_description">Enable Markdown in title and description</string>
   <string name="completed">Completed</string>
   <string name="snackbar_task_completed">Task completed</string>
   <string name="snackbar_tasks_completed">%d tasks completed</string>

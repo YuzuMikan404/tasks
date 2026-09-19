@@ -524,4 +524,26 @@
     <string name="TEA_add_subtask">Aggiungi attività secondaria</string>
     <string name="subtasks_multilevel_google_task">Google Tasks non supporta attività secondarie su più livelli</string>
     <string name="subtasks_multilevel_microsoft">Attività secondarie multilivello non supportate da Microsoft To Do</string>
+    <string name="customize_drawer">Personalizza il menù laterale</string>
+    <string name="customize_drawer_summary">Trascina e rilascia le voci del menù per riorganizzarlo</string>
+    <string name="hide_unused_tags">Nascondi etichette non usate</string>
+    <string name="hide_unused_places">Nascondi luoghi non usati</string>
+    <string name="language">Lingua</string>
+    <string name="launcher_icon">Icona del launcher</string>
+    <string name="markdown">Markdown</string>
+    <string name="markdown_description">Abilita la formattazione Markdown nel titolo e nella descrizione</string>
+    <string name="on_launch">All'avvio</string>
+    <string name="open_last_viewed_list">Apri l'ultima lista visualizzata</string>
+    <string name="settings_localization">Localizzazione</string>
+    <string name="theme">Tema</string>
+    <string name="theme_dynamic">Dinamico</string>
+    <string name="translations">Contribuisci alla traduzione</string>
+    <string name="widget_open_list">Apri lista</string>
+    <string name="theme_light">Chiaro</string>
+    <string name="theme_black">Nero</string>
+    <string name="theme_dark">Scuro</string>
+    <string name="theme_wallpaper">Sfondo</string>
+    <string name="theme_day_night">Giorno/Notte</string>
+    <string name="theme_system_default">Predefinito del sistema</string>
+    <string name="works_with_desktop">Tasks.org per desktop</string>
 </resources>

@@ -479,4 +479,26 @@
     <string name="TEA_add_subtask">Adaugă o sarcină secundară</string>
     <string name="subtasks_multilevel_google_task">Sub-sarcinile pe mai multe niveluri nu sunt acceptate de Google Tasks</string>
     <string name="subtasks_multilevel_microsoft">Subsarcini pe mai multe niveluri nu sunt acceptate de Microsoft To Do</string>
+    <string name="customize_drawer">Personalizează sertarul</string>
+    <string name="customize_drawer_summary">Trage și plasează pentru a rearanja elementele din meniu</string>
+    <string name="hide_unused_tags">Ascunde etichetele nefolosite</string>
+    <string name="hide_unused_places">Ascunde locurile nefolosite</string>
+    <string name="language">Limbă</string>
+    <string name="launcher_icon">Pictograma lansatorului</string>
+    <string name="markdown">Markdown</string>
+    <string name="markdown_description">Activează Markdown în titlu și descriere</string>
+    <string name="on_launch">La lansare</string>
+    <string name="open_last_viewed_list">Deschide ultima listă vizualizată</string>
+    <string name="settings_localization">Localizare</string>
+    <string name="theme">Temă</string>
+    <string name="theme_dynamic">Dinamic</string>
+    <string name="translations">Contribuie la traduceri</string>
+    <string name="widget_open_list">Listă deschisă</string>
+    <string name="theme_light">Luminoasă</string>
+    <string name="theme_black">Neagră</string>
+    <string name="theme_dark">Întunecată</string>
+    <string name="theme_wallpaper">Imagine de fundal</string>
+    <string name="theme_day_night">Zi/Noapte</string>
+    <string name="theme_system_default">Implicit</string>
+    <string name="works_with_desktop">Tasks.org pentru desktop</string>
 </resources>

@@ -26,7 +26,6 @@
   <string name="url_donate">https://tasks.org/donate</string>
   <string name="url_filters">https://tasks.org/filters</string>
   <string name="url_backups">https://tasks.org/backups</string>
-  <string name="url_translations">https://tasks.org/translations</string>
   <string name="url_notifications">https://tasks.org/notifications</string>
   <string name="url_troubleshoot_intents">https://tasks.org/intents</string>
   <string name="url_google_tasks">https://tasks.org/docs/sync_google_tasks</string>
@@ -338,6 +337,7 @@
   <string name="event_sync_unknown_access">sync_unknown_access</string>
   <string name="event_banner">banner</string>
   <string name="event_pebble">pebble</string>
+  <string name="event_dashclock">dashclock</string>
   <string name="param_device_model">device_model</string>
   <string name="event_add_task">add_task</string>
   <string name="event_complete_task">complete_task</string>

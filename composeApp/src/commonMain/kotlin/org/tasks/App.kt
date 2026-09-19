@@ -1,7 +1,10 @@
 package org.tasks
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.shrinkHorizontally
@@ -11,7 +14,6 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -181,6 +183,7 @@ import org.tasks.compose.settings.GoogleTasksAccountSettingsPane
 import org.tasks.compose.settings.MicrosoftAccountSettingsDetail
 import org.tasks.compose.settings.MicrosoftAccountSettingsPane
 import org.tasks.compose.settings.HelpAndFeedbackDetail
+import org.tasks.compose.settings.NavigationDrawerDetail
 import org.tasks.compose.settings.NotificationsDetail
 import org.tasks.compose.settings.TaskDefaultsDetail
 import org.tasks.compose.settings.LinkDesktopScreen
@@ -188,6 +191,7 @@ import org.tasks.compose.settings.ListSettingsScreen
 import org.tasks.compose.settings.TagSettingsScreen
 import org.tasks.compose.settings.LocalAccountSettingsDetail
 import org.tasks.compose.settings.LocalAccountSettingsPane
+import org.tasks.compose.settings.LookAndFeelDetail
 import org.tasks.compose.settings.MainSettingsScreen
 import org.tasks.compose.settings.ManageSubscriptionSheetContent
 import org.tasks.compose.settings.OpenTaskAccountSettingsDetail
@@ -197,6 +201,7 @@ import org.tasks.compose.settings.SettingsMenuButton
 import org.tasks.compose.settings.SettingsPane
 import org.tasks.compose.settings.TasksAccountSettingsDetail
 import org.tasks.compose.settings.TasksAccountSettingsPane
+import org.tasks.compose.settings.WorksWithDetail
 import org.tasks.compose.sort.BottomSheetContent
 import org.tasks.compose.sort.SortPicker
 import org.tasks.compose.sort.SortSheetContent
@@ -218,13 +223,21 @@ import org.tasks.filters.EmptyFilter
 import org.tasks.filters.Filter
 import org.tasks.filters.FilterProvider.Companion.REQUEST_NEW_TAGS
 import org.tasks.filters.key
+import org.tasks.filters.FilterPreferenceCodec
 import org.tasks.filters.MyTasksFilter
+import org.tasks.filters.SearchFilter
+import org.tasks.preferences.TasksPreferences
 import org.tasks.filters.TagFilter
 import org.tasks.kmp.org.tasks.themes.ColorProvider
 import org.tasks.compose.rememberDateFormatter
 import org.tasks.tasklist.SectionedDataSource
 import org.tasks.tasklist.TasksResults
-import org.tasks.themes.BLUE
+import org.tasks.kmp.org.tasks.themes.ColorProvider.BLUE_500
+import org.tasks.themes.BaseTheme
+import org.tasks.themes.ThemeColorSpring
+import org.tasks.themes.floatingBarColors
+import org.tasks.themes.rememberThemeColor
+import org.tasks.themes.isDarkTheme
 import org.tasks.themes.TasksTheme
 import org.tasks.time.DateTimeUtils2.currentTimeMillis
 import org.tasks.reminders.SNOOZE_PICKER_OFFSET
@@ -324,7 +337,13 @@ fun App(
             }
         }
     }
-    TasksTheme {
+    val themePreferences = koinInject<TasksPreferences>()
+    val baseTheme by remember { themePreferences.flow(TasksPreferences.theme, BaseTheme.DEFAULT) }
+        .collectAsState(initial = BaseTheme.DEFAULT)
+    val storedColor by remember { themePreferences.flow(TasksPreferences.themeColor, BLUE_500) }
+        .collectAsState(initial = BLUE_500)
+    val themeColor = ColorProvider.getColor(storedColor, isDarkTheme(baseTheme), adjust = true)
+    TasksTheme(theme = baseTheme, primary = themeColor) {
         androidx.compose.runtime.CompositionLocalProvider(
             androidx.compose.ui.platform.LocalUriHandler provides uriHandler,
         ) {
@@ -556,7 +575,7 @@ fun App(
             val chromeScope = rememberCoroutineScope()
             val chromeCaldavDao = koinInject<CaldavDao>()
             val tasksAccountDataRepository = koinInject<TasksAccountDataRepository>()
-            val isDarkChrome = isSystemInDarkTheme()
+            val isDarkChrome = isDarkTheme()
             var newListAccountId by rememberSaveable { mutableStateOf<Long?>(null) }
             var createTaskAfterList by rememberSaveable { mutableStateOf(false) }
             var showNewTag by rememberSaveable { mutableStateOf(false) }
@@ -565,11 +584,12 @@ fun App(
 
             // Seeded here rather than in the task list nav entry: that entry is disposed whenever a
             // task is opened in single-pane, and re-running this on back would undo the user's pick.
+            val filterCodec = koinInject<FilterPreferenceCodec>()
             LaunchedEffect(taskListViewModel) {
                 if (taskListViewModel != null &&
                     taskListViewModel.state.value.filter is EmptyFilter
                 ) {
-                    taskListViewModel.setFilter(MyTasksFilter.create())
+                    taskListViewModel.setFilter(startupFilter(themePreferences, filterCodec))
                 }
             }
 
@@ -578,7 +598,14 @@ fun App(
             // goes through the task list view model, so mirroring it here rather than at each of
             // those call sites leaves nothing to keep in sync by hand.
             LaunchedEffect(taskListState?.filter) {
-                taskListState?.filter?.let { drawerViewModel?.setSelectedFilter(it) }
+                taskListState?.filter?.let { filter ->
+                    drawerViewModel?.setSelectedFilter(filter)
+                    if (filter !is EmptyFilter && filter !is SearchFilter) {
+                        filterCodec.encode(filter)?.let {
+                            themePreferences.set(TasksPreferences.lastViewedList, it)
+                        }
+                    }
+                }
             }
 
             fun closeDetail() {
@@ -942,6 +969,7 @@ fun App(
                             TaskEditEntry(
                                 destination = destination,
                                 filterPickerViewModel = filterPickerViewModel,
+                                filterTint = taskListState?.filter?.tint ?: 0,
                                 onOpenSubtask = { taskId, remoteId, isDraft ->
                                     openSubtask(
                                         TaskEditDestination(
@@ -1509,7 +1537,7 @@ private fun TaskListChrome(
                         listState = sidebarListState,
                         searchButtonInset = SearchButtonInset,
                     )
-                    val sidebarScrimColor = MaterialTheme.colorScheme.background.copy(alpha = 0.8f)
+                    val sidebarScrimColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
                     StatusBarScrim(
                         color = sidebarScrimColor,
                         modifier = Modifier.align(Alignment.TopCenter),
@@ -1660,15 +1688,10 @@ private fun TaskListScreen(
     val caldavDao = koinInject<CaldavDao>()
     val tagDataDao = koinInject<TagDataDao>()
     val scope = rememberCoroutineScope()
-    val isDark = isSystemInDarkTheme()
+    val isDark = isDarkTheme()
 
     val filterTint = state.filter.tint
-    val themeColor = remember(filterTint, isDark) {
-        ColorProvider.themeColor(
-            seedColor = if (filterTint != 0) filterTint else BLUE,
-            isDark = isDark,
-        )
-    }
+    val themeColor = rememberThemeColor(filterTint)
 
     val editableCaldavFilter = state.filter as? CaldavFilter
     val editableTagFilter = state.filter as? TagFilter
@@ -1764,13 +1787,14 @@ private fun TaskEditEntry(
     onAddAccount: () -> Unit,
     onSubscribe: () -> Unit,
     onListsChanged: () -> Unit,
+    filterTint: Int = 0,
     onOpenSubtask: (taskId: Long, remoteId: String, isDraft: Boolean) -> Unit,
     onClose: () -> Unit,
 ) {
     val taskEditViewModel = koinViewModel<TaskEditViewModel> {
         org.koin.core.parameter.parametersOf(destination)
     }
-    val isDark = isSystemInDarkTheme()
+    val isDark = isDarkTheme()
     var newListAccountId by rememberSaveable { mutableStateOf<Long?>(null) }
 
     TaskEditScreen(
@@ -1779,6 +1803,7 @@ private fun TaskEditEntry(
         onCreateList = { accountId -> newListAccountId = accountId },
         onSignIn = onAddAccount,
         backHandlerEnabled = backHandlerEnabled,
+        filterTint = filterTint,
         onOpenSubtask = onOpenSubtask,
         onClose = onClose,
     )
@@ -2127,6 +2152,11 @@ private fun TaskListPane(
         }
 
         val statusBarTop = platformStatusBarInsets().calculateTopPadding()
+        val titleColor by animateColorAsState(
+            targetValue = Color(themeColor.primaryColor),
+            animationSpec = ThemeColorSpring,
+            label = "titleContentColor",
+        )
         TopAppBar(
             modifier = Modifier
                 .onSizeChanged { size ->
@@ -2153,13 +2183,13 @@ private fun TaskListPane(
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                scrolledContainerColor = MaterialTheme.colorScheme.background,
-                titleContentColor = Color(themeColor.primaryColor),
+                containerColor = MaterialTheme.colorScheme.surface,
+                scrolledContainerColor = MaterialTheme.colorScheme.surface,
+                titleContentColor = titleColor,
             ),
         )
 
-        val scrimColor = MaterialTheme.colorScheme.background.copy(alpha = 0.8f)
+        val scrimColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
         StatusBarScrim(color = scrimColor, modifier = Modifier.align(Alignment.TopCenter))
         NavigationBarScrim(color = scrimColor, modifier = Modifier.align(Alignment.BottomCenter))
 
@@ -2171,6 +2201,7 @@ private fun TaskListPane(
             scrollBehavior = floatingToolbarScrollBehavior,
             fabContainerColor = Color(themeColor.primaryColor),
             fabContentColor = Color(themeColor.onPrimaryColor),
+            filterTint = state.filter.tint,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .platformNavigationBarsPadding()
@@ -2780,10 +2811,20 @@ private fun FloatingToolbar(
     scrollBehavior: androidx.compose.material3.FloatingToolbarScrollBehavior? = null,
     fabContainerColor: Color = Color.Unspecified,
     fabContentColor: Color = Color.Unspecified,
+    filterTint: Int = 0,
     modifier: Modifier = Modifier,
 ) {
-    val resolvedFabContainer = fabContainerColor.takeOrElse { MaterialTheme.colorScheme.primaryContainer }
-    val resolvedFabContent = fabContentColor.takeOrElse { MaterialTheme.colorScheme.onPrimaryContainer }
+    val barColors = floatingBarColors(filterTint)
+    val resolvedFabContainer by animateColorAsState(
+        targetValue = fabContainerColor.takeOrElse { MaterialTheme.colorScheme.primaryContainer },
+        animationSpec = ThemeColorSpring,
+        label = "fabContainerColor",
+    )
+    val resolvedFabContent by animateColorAsState(
+        targetValue = fabContentColor.takeOrElse { MaterialTheme.colorScheme.onPrimaryContainer },
+        animationSpec = ThemeColorSpring,
+        label = "fabContentColor",
+    )
     HorizontalFloatingToolbar(
         expanded = true,
         floatingActionButton = {
@@ -2796,8 +2837,8 @@ private fun FloatingToolbar(
             }
         },
         colors = FloatingToolbarDefaults.standardFloatingToolbarColors(
-            toolbarContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-            toolbarContentColor = MaterialTheme.colorScheme.onSurface,
+            toolbarContainerColor = barColors.container,
+            toolbarContentColor = barColors.content,
         ),
         scrollBehavior = scrollBehavior,
         modifier = modifier,
@@ -2878,6 +2919,7 @@ private fun SettingsScreen(
                         showBackupWarning = false,
                         showWidgets = viewModel.supportsWidgets,
                         showNotifications = configuration.supportsNotifications,
+                        showMcpServer = configuration.supportsMcpServer,
                         isDebug = viewModel.isDebug,
                         showDesktopLinking = configuration.supportsDesktopLinking
                                 && !purchaseState.hasTasksAccount,
@@ -2987,6 +3029,13 @@ private fun SettingsScreen(
                             },
                         )
                     }
+                    is org.tasks.compose.settings.SettingsDestination.McpServer -> {
+                        org.tasks.compose.settings.McpServerDetail(
+                            onNavigateBack = {
+                                scope.launch { navigator.navigateBack() }
+                            },
+                        )
+                    }
                     is org.tasks.compose.settings.SettingsDestination.Notifications -> {
                         NotificationsDetail(
                             onNavigateBack = {
@@ -3002,6 +3051,37 @@ private fun SettingsScreen(
                             onSignIn = onAddAccountClick,
                             onSubscribe = onUpgradeClick,
                             onAddAccount = onAddAccountClick,
+                        )
+                    }
+                    is org.tasks.compose.settings.SettingsDestination.LookAndFeel -> {
+                        LookAndFeelDetail(
+                            onNavigateBack = {
+                                scope.launch { navigator.navigateBack() }
+                            },
+                            onSubscribe = onUpgradeClick,
+                        )
+                    }
+                    is org.tasks.compose.settings.SettingsDestination.NavigationDrawer -> {
+                        NavigationDrawerDetail(
+                            onNavigateBack = {
+                                scope.launch { navigator.navigateBack() }
+                            },
+                        )
+                    }
+                    is org.tasks.compose.settings.SettingsDestination.WorksWith -> {
+                        WorksWithDetail(
+                            onNavigateBack = {
+                                scope.launch { navigator.navigateBack() }
+                            },
+                            onPricingClick = onUpgradeClick,
+                            onMcpSettingsClick = {
+                                scope.launch {
+                                    navigator.navigateTo(
+                                        ListDetailPaneScaffoldRole.Detail,
+                                        org.tasks.compose.settings.SettingsDestination.McpServer,
+                                    )
+                                }
+                            },
                         )
                     }
                     is org.tasks.compose.settings.SettingsDestination.Debug -> {
@@ -3105,7 +3185,6 @@ private fun SettingsScreen(
                             },
                         )
                     }
-
                     null -> {}
                 }
             }
@@ -3212,3 +3291,14 @@ private fun MutableList<NavKey>.push(key: NavKey) {
     }
 }
 
+private suspend fun startupFilter(
+    tasksPreferences: TasksPreferences,
+    filterCodec: FilterPreferenceCodec,
+): Filter {
+    val stored = if (tasksPreferences.get(TasksPreferences.openLastViewedList, true)) {
+        tasksPreferences.get(TasksPreferences.lastViewedList, "")
+    } else {
+        tasksPreferences.get(TasksPreferences.defaultOpenFilter, "")
+    }
+    return filterCodec.decode(stored.takeIf { it.isNotBlank() }) ?: MyTasksFilter.create()
+}

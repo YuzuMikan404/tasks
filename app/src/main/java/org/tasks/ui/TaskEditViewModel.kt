@@ -174,22 +174,7 @@ class TaskEditViewModel @Inject constructor(
                         .toPersistentList()
                 },
             alarms = if (task.isNew) {
-                val defaults = task.getTransitory<List<Alarm>>(Task.TRANS_DEFAULT_ALARMS)
-                    ?: emptyList()
-                val defaultRemindersEnabled = runBlocking { preferences.isDefaultDueTimeEnabled() }
-                buildList {
-                    for (alarm in defaults) {
-                        when (alarm.type) {
-                            TYPE_REL_START ->
-                                if (task.hasStartDate() && (task.hasStartTime() || defaultRemindersEnabled))
-                                    add(alarm)
-                            TYPE_REL_END ->
-                                if (task.hasDueDate() && (task.hasDueTime() || defaultRemindersEnabled))
-                                    add(alarm)
-                            else -> add(alarm)
-                        }
-                    }
-                }
+                task.getDefaultAlarms(runBlocking { preferences.isDefaultDueTimeEnabled() })
             } else {
                 emptyList()
             }.toPersistentSet(),
@@ -367,13 +352,11 @@ class TaskEditViewModel @Inject constructor(
                 locationService.updateGeofences(place)
             }
             task.putTransitory(SYNC_LOCATION, true)
-            task.modificationDate = currentTimeMillis()
         }
         val selectedTags = _viewState.value.tags
         if ((isNew && selectedTags.isNotEmpty()) || originalState.value.tags.toHashSet() != selectedTags.toHashSet()) {
             tagDao.applyTags(task, selectedTags)
             task.putTransitory(SYNC_TAGS, true)
-            task.modificationDate = currentTimeMillis()
         }
 
         if (!task.hasStartDate()) {
@@ -397,7 +380,6 @@ class TaskEditViewModel @Inject constructor(
         ) {
             alarmService.synchronizeAlarms(task.id, _viewState.value.alarms.toMutableSet())
             task.putTransitory(SYNC_ALARMS, true)
-            task.modificationDate = currentTimeMillis()
         }
 
         taskSaver.save(task, original)

@@ -65,7 +65,6 @@
     <string name="day_after_tomorrow">Yarından Sonra</string>
     <string name="next_week">Gelecek Hafta</string>
     <string name="BFE_Active">Görevlerim</string>
-    <string name="BFE_Recent">Yakında değiştirilenler</string>
     <string name="CFA_button_add">Ölçüt Ekle</string>
     <string name="CFC_dueBefore_text">Bitiş: \?</string>
     <string name="CFC_dueBefore_name">Bitiş…</string>
@@ -147,12 +146,10 @@
     <string name="font_size">Yazı tipi boyutu</string>
     <string name="row_spacing">Satır aralığı</string>
     <string name="customize_edit_screen">Düzenleme ekranını özelleştir</string>
-    <string name="translations">Çeviri katkıları</string>
     <string name="add_location">Konum ekle</string>
     <string name="remove">Kaldır</string>
     <string name="geofence_radius">Coğrafi sınır yarıçapı</string>
     <string name="tags">Etiketler</string>
-    <string name="filters">Süzgeçler</string>
     <string name="date_shortcut_morning">Sabah</string>
     <string name="date_shortcut_afternoon">Öğle</string>
     <string name="date_shortcut_evening">Akşam</string>
@@ -176,17 +173,14 @@
     <string name="opacity">Şeffaflık</string>
     <string name="theme">Gövde</string>
     <string name="color">Renk</string>
-    <string name="launcher_icon">Başlatıcı simgesi</string>
     <string name="theme_black">Siyah</string>
     <string name="theme_light">Açık</string>
     <string name="theme_dark">Koyu</string>
     <string name="theme_wallpaper">Duvar kağıdı</string>
     <string name="theme_day_night">Gündüz/Gece</string>
-    <string name="language">Dil</string>
     <string name="restart_required">Bu değişikliğin etkinleşmesi için Tasks\'ı yeniden başlat</string>
     <string name="restart_now">Şimdi yeniden başlat</string>
     <string name="restart_later">Sonra</string>
-    <string name="settings_localization">Yerelleştirme</string>
     <string name="widget_settings">Widget ayarları</string>
     <string name="widget_header_settings">Başlık ayarları</string>
     <string name="widget_row_settings">Satır ayarları</string>
@@ -259,8 +253,6 @@
     <string name="chip_appearance">Yonga görünümü</string>
     <string name="places">Yerler</string>
     <string name="place_settings">Yer ayarları</string>
-    <string name="hide_unused_tags">Kullanılmayan etiketleri gizle</string>
-    <string name="hide_unused_places">Kullanılmayan yerleri gizle</string>
     <string name="auto_dismiss_datetime_summary">Tarih veya zaman seçince tarih zaman seçiciyi kapat</string>
     <string name="auto_dismiss_datetime">Tarih zaman seçiciyi kendiliğinden kapat</string>
     <string name="calendar_event_created">%s için takvim olayı oluşturuldu</string>
@@ -276,7 +268,6 @@
     <string name="widget_due_date_hidden">Gizli</string>
     <string name="widget_due_date_below_title">Başlığın altında</string>
     <string name="widget_due_date_after_title">Başlıktan sonra</string>
-    <string name="widget_open_list">Listeyi aç</string>
     <string name="opacity_footer">Alt bölüm opaklığı</string>
     <string name="opacity_row">Satır opaklığı</string>
     <string name="opacity_header">Başlık opaklığı</string>
@@ -314,8 +305,6 @@
     <string name="sort_created_group">%s oluşturulan</string>
     <string name="sort_modified_group">%s değiştirilen</string>
     <string name="lists">Listeler</string>
-    <string name="open_last_viewed_list">Son görülen listeyi aç</string>
-    <string name="on_launch">Başlangıçta</string>
     <string name="CFC_list_name">Listede…</string>
     <string name="astrid_sort_order_summary">\'Görevlerim\', \'Bugün\' ve etiketler için elle sıralama kipini etkinleştirir. Bu sıralama kipi, gelecek güncellemede \'Düzenim\' ile değiştirilecek</string>
     <string name="astrid_sort_order">Astrid elle sıralama</string>
@@ -379,8 +368,6 @@
     <string name="upgrade_tasks_org_account_description">Tasks.org ile eşzamanla ve diğer kullanıcılarla ortak çalış</string>
     <string name="upgrade_more_customization">Daha çok özelleştirme</string>
     <string name="pro_free_trial">Yeni aboneler 7 günlük sınama süresi kazanır. İstendiğinde iptal edilir</string>
-    <string name="markdown_description">Başlık ve açıklamada Markdown\'ı etkinleştir</string>
-    <string name="markdown">Markdown</string>
     <string name="now">Şimdi</string>
     <string name="completed">Tamamlandı</string>
     <string name="snackbar_task_completed">Görev tamamlandı</string>
@@ -398,7 +385,6 @@
     <string name="show_edit_screen_without_unlock">Kilidi açmadan düzenleme ekranını göster</string>
     <string name="show_edit_screen_without_unlock_summary">Aygıtın kilidini açmadan Hızlı Ayarlar kutucuğunun kullanılmasını sağlar</string>
     <string name="customize_drawer">Çekmeceyi özelleştir</string>
-    <string name="customize_drawer_summary">Menü ögelerini yeniden düzenlemek için sürükleyip bırakın</string>
     <string name="donate_today">Bugün bağış yapın</string>
     <string name="donate_maybe_later">Belki daha sonra</string>
     <string name="donate_nag">Desteğinizi bağış yaparak göstermeyi düşünün!</string>
@@ -452,4 +438,6 @@
     <string name="upgrade_desktop_app">Masaüstü için Tasks.org</string>
     <string name="upgrade_desktop_app_description">Yeni masaüstü uygulamasına erken erişim</string>
     <string name="sort_options">Sıralama seçenekleri</string>
+    <string name="write_permission_label">Görevleri Değiştir</string>
+    <string name="permission_write_tasks">Görevlerinizi, listelerinizi, etiketlerinizi ve konumlarınızı ekleyin, değiştirin ve silin</string>
 </resources>

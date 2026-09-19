@@ -293,8 +293,10 @@ class MainSettingsComposeFragment : Fragment() {
             SettingsDestination.Backups -> Backups()
             SettingsDestination.Widgets -> Widgets()
             SettingsDestination.Advanced -> Advanced()
+            SettingsDestination.WorksWith -> WorksWith()
             SettingsDestination.HelpAndFeedback -> HelpAndFeedback()
             SettingsDestination.Debug -> Debug()
+            SettingsDestination.McpServer -> return
         }
         viewLifecycleOwner.lifecycleScope.launch {
             activity.startPreference(

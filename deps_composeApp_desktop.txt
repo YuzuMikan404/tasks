@@ -1,7 +1,7 @@
 ++--- org.jetbrains.kotlin:kotlin-stdlib:2.4.10
 +|    +--- org.jetbrains:annotations:13.0 -> 23.0.0
-+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0 -> 1.9.0 (c)
-+|    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0 -> 1.9.0 (c)
++|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0 -> 2.1.21 (c)
++|    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0 -> 2.1.21 (c)
 ++--- project ':data'
 +|    +--- androidx.room:room-runtime:2.8.4
 +|    |    \--- androidx.room:room-runtime-jvm:2.8.4
@@ -19,12 +19,11 @@
 +|    |         |         +--- org.jetbrains.kotlin:kotlin-stdlib -> 2.4.10 (*)
 +|    |         |         +--- androidx.room:room-runtime:2.8.4 (c)
 +|    |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (c)
-+|    |         +--- androidx.sqlite:sqlite:2.6.2
-+|    |         |    \--- androidx.sqlite:sqlite-jvm:2.6.2
++|    |         +--- androidx.sqlite:sqlite:2.6.2 -> 2.7.0
++|    |         |    \--- androidx.sqlite:sqlite-jvm:2.7.0
 +|    |         |         +--- androidx.annotation:annotation:1.9.1 (*)
-+|    |         |         +--- org.jetbrains.kotlin:kotlin-stdlib -> 2.4.10 (*)
-+|    |         |         +--- androidx.sqlite:sqlite-bundled:2.6.2 (c)
-+|    |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (c)
++|    |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
++|    |         |         \--- androidx.sqlite:sqlite-bundled:2.7.0 (c)
 +|    |         +--- org.jetbrains.kotlin:kotlin-stdlib -> 2.4.10 (*)
 +|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1 -> 1.11.0
 +|    |         |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.11.0
@@ -38,23 +37,22 @@
 +|    |         +--- androidx.room:room-common:2.8.4 (c)
 +|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (c)
 +|    +--- org.jetbrains.kotlin:kotlin-stdlib:2.4.10 (*)
-+|    +--- androidx.sqlite:sqlite-bundled:2.6.2
-+|    |    \--- androidx.sqlite:sqlite-bundled-jvm:2.6.2
-+|    |         +--- androidx.sqlite:sqlite:2.6.2 (*)
-+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib -> 2.4.10 (*)
-+|    |         +--- androidx.sqlite:sqlite:2.6.2 (c)
-+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (c)
-+|    +--- org.jetbrains.kotlinx:kotlinx-datetime:0.7.1-0.6.x-compat
-+|    |    \--- org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.7.1-0.6.x-compat
++|    +--- androidx.sqlite:sqlite-bundled:2.7.0
++|    |    \--- androidx.sqlite:sqlite-bundled-jvm:2.7.0
++|    |         +--- androidx.sqlite:sqlite:2.7.0 (*)
++|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
++|    |         \--- androidx.sqlite:sqlite:2.7.0 (c)
++|    +--- org.jetbrains.kotlinx:kotlinx-datetime:0.8.0-0.6.x-compat
++|    |    \--- org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.8.0-0.6.x-compat
 +|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
-+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0 -> 1.11.0
++|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0
 +|    |    \--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.11.0
 +|    |         +--- org.jetbrains.kotlinx:kotlinx-serialization-bom:1.11.0
 +|    |         |    +--- org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.11.0 (c)
 +|    |         |    +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.11.0 (c)
++|    |         |    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.11.0 (c)
 +|    |         |    +--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0 (c)
 +|    |         |    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-io:1.11.0 (c)
-+|    |         |    +--- org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.11.0 (c)
 +|    |         |    \--- org.jetbrains.kotlinx:kotlinx-serialization-json-io-jvm:1.11.0 (c)
 +|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.3.20 -> 2.4.10 (*)
 +|    |         \--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.11.0
@@ -419,9 +417,8 @@
 +|    |    |         \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0 -> 1.11.0 (*)
 +|    |    +--- org.jetbrains.kotlin:kotlin-stdlib:2.4.10 (*)
 +|    |    +--- org.jetbrains.compose.foundation:foundation:1.12.0 (*)
-+|    |    +--- org.jetbrains.compose.material3:material3:1.9.0 -> 1.10.0-alpha05
-+|    |    |    \--- org.jetbrains.compose.material3:material3-desktop:1.10.0-alpha05
-+|    |    |         +--- androidx.annotation:annotation:1.9.1 (*)
++|    |    +--- org.jetbrains.compose.material3:material3:1.9.0 -> 1.12.0-alpha03
++|    |    |    \--- org.jetbrains.compose.material3:material3-desktop:1.12.0-alpha03
 +|    |    |         +--- androidx.collection:collection:1.5.0 (*)
 +|    |    |         +--- androidx.graphics:graphics-shapes:1.1.0
 +|    |    |         |    \--- androidx.graphics:graphics-shapes-desktop:1.1.0
@@ -429,10 +426,10 @@
 +|    |    |         |         +--- androidx.collection:collection:1.5.0 (*)
 +|    |    |         |         +--- org.jetbrains.kotlin:kotlin-stdlib -> 2.4.10 (*)
 +|    |    |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.0.21 -> 2.4.10 (c)
-+|    |    |         +--- org.jetbrains.compose.animation:animation-core:1.9.3 -> 1.12.0 (*)
-+|    |    |         +--- org.jetbrains.compose.foundation:foundation:1.9.3 -> 1.12.0 (*)
-+|    |    |         +--- org.jetbrains.compose.foundation:foundation-layout:1.9.3 -> 1.12.0 (*)
-+|    |    |         +--- org.jetbrains.compose.material:material-ripple:1.9.3 -> 1.12.0
++|    |    |         +--- org.jetbrains.compose.animation:animation-core:1.12.0-beta01 -> 1.12.0 (*)
++|    |    |         +--- org.jetbrains.compose.foundation:foundation:1.12.0-beta01 -> 1.12.0 (*)
++|    |    |         +--- org.jetbrains.compose.foundation:foundation-layout:1.12.0-beta01 -> 1.12.0 (*)
++|    |    |         +--- org.jetbrains.compose.material:material-ripple:1.12.0-beta01 -> 1.12.0
 +|    |    |         |    \--- org.jetbrains.compose.material:material-ripple-desktop:1.12.0
 +|    |    |         |         +--- androidx.collection:collection:1.5.0 (*)
 +|    |    |         |         +--- org.jetbrains.compose.animation:animation:1.12.0 (*)
@@ -440,8 +437,9 @@
 +|    |    |         |         +--- org.jetbrains.compose.runtime:runtime:1.12.0 (*)
 +|    |    |         |         +--- org.jetbrains.compose.ui:ui-util:1.12.0 (*)
 +|    |    |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.2.20 -> 2.4.10 (*)
-+|    |    |         +--- org.jetbrains.compose.runtime:runtime:1.9.3 -> 1.12.0 (*)
-+|    |    |         +--- org.jetbrains.compose.ui:ui-backhandler:1.9.3 -> 1.12.0
++|    |    |         +--- org.jetbrains.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
++|    |    |         +--- org.jetbrains.compose.ui:ui:1.12.0-beta01 -> 1.12.0 (*)
++|    |    |         +--- org.jetbrains.compose.ui:ui-backhandler:1.12.0-beta01 -> 1.12.0
 +|    |    |         |    \--- org.jetbrains.compose.ui:ui-backhandler-desktop:1.12.0
 +|    |    |         |         +--- androidx.annotation:annotation:1.9.1 (*)
 +|    |    |         |         +--- org.jetbrains.androidx.navigationevent:navigationevent-compose:1.1.0 (*)
@@ -456,13 +454,11 @@
 +|    |    |         |         +--- org.jetbrains.compose.ui:ui-tooling-preview:1.12.0 (c)
 +|    |    |         |         +--- org.jetbrains.compose.ui:ui-unit:1.12.0 (c)
 +|    |    |         |         \--- org.jetbrains.compose.ui:ui-util:1.12.0 (c)
-+|    |    |         +--- org.jetbrains.compose.ui:ui-graphics:1.9.3 -> 1.12.0 (*)
-+|    |    |         +--- org.jetbrains.compose.ui:ui-text:1.9.3 -> 1.12.0 (*)
-+|    |    |         +--- org.jetbrains.compose.ui:ui-util:1.9.3 -> 1.12.0 (*)
-+|    |    |         +--- org.jetbrains.kotlin:kotlin-stdlib -> 2.4.10 (*)
-+|    |    |         +--- org.jetbrains.kotlinx:atomicfu:0.23.2 -> 0.28.0 (*)
-+|    |    |         +--- org.jetbrains.kotlinx:kotlinx-datetime:0.7.1 -> 0.7.1-0.6.x-compat (*)
-+|    |    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.2.20 -> 2.4.10 (c)
++|    |    |         +--- org.jetbrains.compose.ui:ui-text:1.12.0-beta01 -> 1.12.0 (*)
++|    |    |         +--- org.jetbrains.compose.ui:ui-util:1.12.0-beta01 -> 1.12.0 (*)
++|    |    |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.2.20 -> 2.4.10 (*)
++|    |    |         +--- org.jetbrains.kotlinx:atomicfu:0.28.0 (*)
++|    |    |         \--- org.jetbrains.kotlinx:kotlinx-datetime:0.7.1 -> 0.8.0-0.6.x-compat (*)
 +|    |    +--- org.jetbrains.compose.runtime:runtime:1.12.0 (*)
 +|    |    \--- org.jetbrains.compose.ui:ui-tooling-preview:1.12.0
 +|    |         \--- org.jetbrains.compose.ui:ui-tooling-preview-desktop:1.12.0
@@ -480,7 +476,7 @@
 +|    +--- org.jetbrains.kotlin:kotlin-stdlib:2.4.10 (*)
 +|    +--- project ':data' (*)
 +|    +--- org.jetbrains.compose.foundation:foundation:1.12.0 (*)
-+|    +--- org.jetbrains.compose.material3:material3:1.9.0 -> 1.10.0-alpha05 (*)
++|    +--- org.jetbrains.compose.material3:material3:1.9.0 -> 1.12.0-alpha03 (*)
 +|    +--- org.jetbrains.compose.material:material-icons-extended:1.7.3
 +|    |    \--- org.jetbrains.compose.material:material-icons-extended-desktop:1.7.3
 +|    |         +--- org.jetbrains.compose.material:material-icons-core:1.7.3
@@ -492,13 +488,13 @@
 +|    |         \--- org.jetbrains.compose.ui:ui-graphics:1.7.3 -> 1.12.0 (*)
 +|    +--- org.jetbrains.compose.runtime:runtime:1.12.0 (*)
 +|    +--- org.jetbrains.compose.ui:ui-tooling-preview:1.12.0 (*)
-+|    +--- io.github.vinceglb:confettikit:0.8.0
-+|    |    \--- io.github.vinceglb:confettikit-jvm:0.8.0
-+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.3.10 -> 2.4.10 (*)
-+|    |         +--- org.jetbrains.compose.runtime:runtime:1.10.1 -> 1.12.0 (*)
-+|    |         +--- org.jetbrains.compose.foundation:foundation:1.10.1 -> 1.12.0 (*)
-+|    |         +--- org.jetbrains.compose.ui:ui:1.10.1 -> 1.12.0 (*)
-+|    |         \--- org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.9.6 -> 2.11.0 (*)
++|    +--- io.github.vinceglb:confettikit:0.9.0
++|    |    \--- io.github.vinceglb:confettikit-jvm:0.9.0
++|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.4.10 (*)
++|    |         +--- org.jetbrains.compose.runtime:runtime:1.11.1 -> 1.12.0 (*)
++|    |         +--- org.jetbrains.compose.foundation:foundation:1.11.1 -> 1.12.0 (*)
++|    |         +--- org.jetbrains.compose.ui:ui:1.11.1 -> 1.12.0 (*)
++|    |         \--- org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.11.0 (*)
 +|    +--- androidx.datastore:datastore-preferences:1.2.1
 +|    |    \--- androidx.datastore:datastore-preferences-jvm:1.2.1
 +|    |         +--- androidx.datastore:datastore:1.2.1
@@ -518,9 +514,9 @@
 +|    |         |         +--- androidx.datastore:datastore-core-okio:1.2.1
 +|    |         |         |    \--- androidx.datastore:datastore-core-okio-jvm:1.2.1
 +|    |         |         |         +--- androidx.datastore:datastore-core:1.2.1 (*)
-+|    |         |         |         +--- com.squareup.okio:okio:3.9.1 -> 3.16.4
-+|    |         |         |         |    \--- com.squareup.okio:okio-jvm:3.16.4
-+|    |         |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.2.20 -> 2.4.10 (*)
++|    |         |         |         +--- com.squareup.okio:okio:3.9.1 -> 3.17.0
++|    |         |         |         |    \--- com.squareup.okio:okio-jvm:3.17.0
++|    |         |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.21 -> 2.4.10 (*)
 +|    |         |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.0.21 -> 2.4.10 (*)
 +|    |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0 -> 1.11.0 (*)
 +|    |         |         |         +--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3 -> 1.11.0 (*)
@@ -557,7 +553,7 @@
 +|    |         |         |    +--- androidx.datastore:datastore-preferences:1.2.1 (c)
 +|    |         |         |    +--- androidx.datastore:datastore-preferences-core:1.2.1 (c)
 +|    |         |         |    \--- androidx.datastore:datastore-preferences-external-protobuf:1.2.1 (c)
-+|    |         |         +--- com.squareup.okio:okio:3.9.1 -> 3.16.4 (*)
++|    |         |         +--- com.squareup.okio:okio:3.9.1 -> 3.17.0 (*)
 +|    |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.0.21 -> 2.4.10 (*)
 +|    |         |         +--- androidx.datastore:datastore:1.2.1 (c)
 +|    |         |         +--- androidx.datastore:datastore-core:1.2.1 (c)
@@ -575,34 +571,35 @@
 +|    |         \--- androidx.datastore:datastore-preferences-external-protobuf:1.2.1 (c)
 +|    +--- androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0 (*)
 +|    +--- co.touchlab:kermit:2.1.0 (*)
-+|    +--- org.jetbrains.kotlinx:kotlinx-datetime:0.7.1-0.6.x-compat (*)
-+|    +--- org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0
-+|    |    \--- org.jetbrains.kotlinx:kotlinx-collections-immutable-jvm:0.4.0
-+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
-+|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0 -> 1.11.0 (*)
-+|    +--- com.materialkolor:material-kolor:4.1.1
-+|    |    \--- com.materialkolor:material-kolor-jvm:4.1.1
-+|    |         +--- com.materialkolor:material-color-utilities:4.1.1
-+|    |         |    \--- com.materialkolor:material-color-utilities-jvm:4.1.1
-+|    |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
-+|    |         |         \--- dev.drewhamilton.poko:poko-annotations:0.21.1
-+|    |         |              \--- dev.drewhamilton.poko:poko-annotations-jvm:0.21.1
-+|    |         |                   \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
-+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
-+|    |         +--- org.jetbrains.compose.material3:material3:1.10.0-alpha05 (*)
-+|    |         +--- org.jetbrains.compose.runtime:runtime:1.10.0 -> 1.12.0 (*)
-+|    |         +--- org.jetbrains.compose.ui:ui:1.10.0 -> 1.12.0 (*)
++|    +--- org.jetbrains.kotlinx:kotlinx-datetime:0.8.0-0.6.x-compat (*)
++|    +--- org.jetbrains.kotlinx:kotlinx-collections-immutable:0.5.2
++|    |    \--- org.jetbrains.kotlinx:kotlinx-collections-immutable-jvm:0.5.2
++|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
++|    +--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0 (*)
++|    +--- com.materialkolor:material-kolor:5.0.1
++|    |    \--- com.materialkolor:material-kolor-jvm:5.0.1
++|    |         +--- com.materialkolor:material-color-utilities:5.0.1
++|    |         |    \--- com.materialkolor:material-color-utilities-jvm:5.0.1
++|    |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.4.10 (*)
++|    |         |         \--- dev.drewhamilton.poko:poko-annotations:0.23.1
++|    |         |              \--- dev.drewhamilton.poko:poko-annotations-jvm:0.23.1
++|    |         |                   \--- org.jetbrains.kotlin:kotlin-stdlib:2.4.0 -> 2.4.10 (*)
++|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.4.10 (*)
++|    |         +--- org.jetbrains.compose.material3:material3:1.12.0-alpha03 (*)
++|    |         +--- org.jetbrains.compose.foundation:foundation:1.12.0 (*)
++|    |         +--- org.jetbrains.compose.runtime:runtime:1.12.0 (*)
++|    |         +--- org.jetbrains.compose.ui:ui:1.12.0 (*)
 +|    |         \--- com.github.ajalt.colormath:colormath:3.6.1
 +|    |              \--- com.github.ajalt.colormath:colormath-jvm:3.6.1
 +|    |                   \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.0 -> 2.4.10 (*)
-+|    +--- io.github.alexzhirkevich:qrose:1.0.1
-+|    |    \--- io.github.alexzhirkevich:qrose-desktop:1.0.1
-+|    |         +--- io.github.alexzhirkevich:qrose-core:1.0.1
-+|    |         |    \--- io.github.alexzhirkevich:qrose-core-desktop:1.0.1
-+|    |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.9.22 -> 2.4.10 (*)
-+|    |         |         \--- org.jetbrains.compose.ui:ui:1.6.0 -> 1.12.0 (*)
-+|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.9.22 -> 2.4.10 (*)
-+|    |         \--- org.jetbrains.compose.ui:ui:1.6.0 -> 1.12.0 (*)
++|    +--- io.github.alexzhirkevich:qrose:1.1.2
++|    |    \--- io.github.alexzhirkevich:qrose-desktop:1.1.2
++|    |         +--- io.github.alexzhirkevich:qrose-core:1.1.2
++|    |         |    \--- io.github.alexzhirkevich:qrose-core-desktop:1.1.2
++|    |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
++|    |         |         \--- org.jetbrains.compose.ui:ui:1.10.0 -> 1.12.0 (*)
++|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
++|    |         \--- org.jetbrains.compose.ui:ui:1.10.0 -> 1.12.0 (*)
 +|    +--- org.mnode.ical4j:ical4j:3.2.19
 +|    |    +--- org.slf4j:slf4j-api:2.0.9 -> 2.0.18
 +|    |    +--- commons-codec:commons-codec:1.15 -> 1.17.1
@@ -618,26 +615,26 @@
 +|    |    |    \--- io.ktor:ktor-client-encoding-jvm:3.5.0
 +|    |    |         +--- org.slf4j:slf4j-api:2.0.18
 +|    |    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
-+|    |    |         +--- io.ktor:ktor-client-core:3.5.0
-+|    |    |         |    \--- io.ktor:ktor-client-core-jvm:3.5.0
++|    |    |         +--- io.ktor:ktor-client-core:3.5.0 -> 3.5.2
++|    |    |         |    \--- io.ktor:ktor-client-core-jvm:3.5.2
 +|    |    |         |         +--- org.slf4j:slf4j-api:2.0.18
 +|    |    |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
-+|    |    |         |         +--- io.ktor:ktor-http:3.5.0
-+|    |    |         |         |    \--- io.ktor:ktor-http-jvm:3.5.0
++|    |    |         |         +--- io.ktor:ktor-http:3.5.2
++|    |    |         |         |    \--- io.ktor:ktor-http-jvm:3.5.2
 +|    |    |         |         |         +--- org.slf4j:slf4j-api:2.0.18
 +|    |    |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
-+|    |    |         |         |         +--- io.ktor:ktor-utils:3.5.0
-+|    |    |         |         |         |    \--- io.ktor:ktor-utils-jvm:3.5.0
++|    |    |         |         |         +--- io.ktor:ktor-utils:3.5.2
++|    |    |         |         |         |    \--- io.ktor:ktor-utils-jvm:3.5.2
 +|    |    |         |         |         |         +--- org.slf4j:slf4j-api:2.0.18
 +|    |    |         |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
-+|    |    |         |         |         |         +--- io.ktor:ktor-io:3.5.0
-+|    |    |         |         |         |         |    \--- io.ktor:ktor-io-jvm:3.5.0
++|    |    |         |         |         |         +--- io.ktor:ktor-io:3.5.2
++|    |    |         |         |         |         |    \--- io.ktor:ktor-io-jvm:3.5.2
 +|    |    |         |         |         |         |         +--- org.slf4j:slf4j-api:2.0.18
 +|    |    |         |         |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
-+|    |    |         |         |         |         |         +--- org.jetbrains.kotlinx:kotlinx-io-core:0.9.0
-+|    |    |         |         |         |         |         |    \--- org.jetbrains.kotlinx:kotlinx-io-core-jvm:0.9.0
-+|    |    |         |         |         |         |         |         +--- org.jetbrains.kotlinx:kotlinx-io-bytestring:0.9.0
-+|    |    |         |         |         |         |         |         |    \--- org.jetbrains.kotlinx:kotlinx-io-bytestring-jvm:0.9.0
++|    |    |         |         |         |         |         +--- org.jetbrains.kotlinx:kotlinx-io-core:0.9.1
++|    |    |         |         |         |         |         |    \--- org.jetbrains.kotlinx:kotlinx-io-core-jvm:0.9.1
++|    |    |         |         |         |         |         |         +--- org.jetbrains.kotlinx:kotlinx-io-bytestring:0.9.1
++|    |    |         |         |         |         |         |         |    \--- org.jetbrains.kotlinx:kotlinx-io-bytestring-jvm:0.9.1
 +|    |    |         |         |         |         |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
 +|    |    |         |         |         |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
 +|    |    |         |         |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
@@ -645,47 +642,47 @@
 +|    |    |         |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
 +|    |    |         |         |         +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.11.0 (*)
 +|    |    |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
-+|    |    |         |         +--- io.ktor:ktor-http-cio:3.5.0
-+|    |    |         |         |    \--- io.ktor:ktor-http-cio-jvm:3.5.0
++|    |    |         |         +--- io.ktor:ktor-http-cio:3.5.2
++|    |    |         |         |    \--- io.ktor:ktor-http-cio-jvm:3.5.2
 +|    |    |         |         |         +--- org.slf4j:slf4j-api:2.0.18
-+|    |    |         |         |         +--- io.ktor:ktor-network:3.5.0
-+|    |    |         |         |         |    \--- io.ktor:ktor-network-jvm:3.5.0
++|    |    |         |         |         +--- io.ktor:ktor-network:3.5.2
++|    |    |         |         |         |    \--- io.ktor:ktor-network-jvm:3.5.2
 +|    |    |         |         |         |         +--- org.slf4j:slf4j-api:2.0.18
 +|    |    |         |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
-+|    |    |         |         |         |         +--- io.ktor:ktor-utils:3.5.0 (*)
++|    |    |         |         |         |         +--- io.ktor:ktor-utils:3.5.2 (*)
 +|    |    |         |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
 +|    |    |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
-+|    |    |         |         |         +--- io.ktor:ktor-http:3.5.0 (*)
-+|    |    |         |         |         +--- io.ktor:ktor-io:3.5.0 (*)
++|    |    |         |         |         +--- io.ktor:ktor-http:3.5.2 (*)
++|    |    |         |         |         +--- io.ktor:ktor-io:3.5.2 (*)
 +|    |    |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
-+|    |    |         |         +--- io.ktor:ktor-events:3.5.0
-+|    |    |         |         |    \--- io.ktor:ktor-events-jvm:3.5.0
++|    |    |         |         +--- io.ktor:ktor-events:3.5.2
++|    |    |         |         |    \--- io.ktor:ktor-events-jvm:3.5.2
 +|    |    |         |         |         +--- org.slf4j:slf4j-api:2.0.18
 +|    |    |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
-+|    |    |         |         |         +--- io.ktor:ktor-utils:3.5.0 (*)
++|    |    |         |         |         +--- io.ktor:ktor-utils:3.5.2 (*)
 +|    |    |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
-+|    |    |         |         +--- io.ktor:ktor-websocket-serialization:3.5.0
-+|    |    |         |         |    \--- io.ktor:ktor-websocket-serialization-jvm:3.5.0
++|    |    |         |         +--- io.ktor:ktor-websocket-serialization:3.5.2
++|    |    |         |         |    \--- io.ktor:ktor-websocket-serialization-jvm:3.5.2
 +|    |    |         |         |         +--- org.slf4j:slf4j-api:2.0.18
 +|    |    |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
-+|    |    |         |         |         +--- io.ktor:ktor-serialization:3.5.0
-+|    |    |         |         |         |    \--- io.ktor:ktor-serialization-jvm:3.5.0
++|    |    |         |         |         +--- io.ktor:ktor-serialization:3.5.2
++|    |    |         |         |         |    \--- io.ktor:ktor-serialization-jvm:3.5.2
 +|    |    |         |         |         |         +--- org.slf4j:slf4j-api:2.0.18
 +|    |    |         |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
-+|    |    |         |         |         |         +--- io.ktor:ktor-websockets:3.5.0
-+|    |    |         |         |         |         |    \--- io.ktor:ktor-websockets-jvm:3.5.0
++|    |    |         |         |         |         +--- io.ktor:ktor-websockets:3.5.2
++|    |    |         |         |         |         |    \--- io.ktor:ktor-websockets-jvm:3.5.2
 +|    |    |         |         |         |         |         +--- org.slf4j:slf4j-api:2.0.18
 +|    |    |         |         |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
-+|    |    |         |         |         |         |         +--- io.ktor:ktor-utils:3.5.0 (*)
-+|    |    |         |         |         |         |         +--- io.ktor:ktor-http:3.5.0 (*)
++|    |    |         |         |         |         |         +--- io.ktor:ktor-utils:3.5.2 (*)
++|    |    |         |         |         |         |         +--- io.ktor:ktor-http:3.5.2 (*)
 +|    |    |         |         |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
 +|    |    |         |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
 +|    |    |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
-+|    |    |         |         +--- io.ktor:ktor-sse:3.5.0
-+|    |    |         |         |    \--- io.ktor:ktor-sse-jvm:3.5.0
++|    |    |         |         +--- io.ktor:ktor-sse:3.5.2
++|    |    |         |         |    \--- io.ktor:ktor-sse-jvm:3.5.2
 +|    |    |         |         |         +--- org.slf4j:slf4j-api:2.0.18
 +|    |    |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
-+|    |    |         |         |         +--- io.ktor:ktor-utils:3.5.0 (*)
++|    |    |         |         |         +--- io.ktor:ktor-utils:3.5.2 (*)
 +|    |    |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
 +|    |    |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
 +|    |    |         |         \--- org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0
@@ -694,10 +691,10 @@
 +|    |    |         |              +--- org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.11.0 (*)
 +|    |    |         |              \--- org.jetbrains.kotlin:kotlin-stdlib:2.2.20 -> 2.4.10 (*)
 +|    |    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
-+|    |    +--- io.ktor:ktor-client-core:3.5.0 (*)
++|    |    +--- io.ktor:ktor-client-core:3.5.0 -> 3.5.2 (*)
 +|    |    +--- com.squareup.okhttp3:okhttp:5.3.2
 +|    |    |    \--- com.squareup.okhttp3:okhttp-jvm:5.3.2
-+|    |    |         +--- com.squareup.okio:okio:3.16.4 (*)
++|    |    |         +--- com.squareup.okio:okio:3.16.4 -> 3.17.0 (*)
 +|    |    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.2.21 -> 2.4.10 (*)
 +|    |    +--- com.github.spotbugs:spotbugs-annotations:4.9.8
 +|    |    |    +--- org.junit:junit-bom:5.14.0
@@ -753,195 +750,205 @@
 +|    |         +--- org.apache.httpcomponents:httpcore:4.4.16
 +|    |         +--- org.apache.httpcomponents:httpclient:4.5.14 (*)
 +|    |         \--- com.google.http-client:google-http-client:1.45.2 (*)
-+|    +--- io.ktor:ktor-client-core:3.4.1 -> 3.5.0 (*)
-+|    +--- io.ktor:ktor-client-okhttp:3.4.1
-+|    |    \--- io.ktor:ktor-client-okhttp-jvm:3.4.1
-+|    |         +--- org.slf4j:slf4j-api:2.0.17 -> 2.0.18
-+|    |         +--- io.ktor:ktor-client-core:3.4.1 -> 3.5.0 (*)
++|    +--- io.ktor:ktor-client-core:3.5.2 (*)
++|    +--- androidx.sqlite:sqlite-bundled:2.7.0 (*)
++|    +--- io.ktor:ktor-client-okhttp:3.5.2
++|    |    \--- io.ktor:ktor-client-okhttp-jvm:3.5.2
++|    |         +--- org.slf4j:slf4j-api:2.0.18
++|    |         +--- io.ktor:ktor-client-core:3.5.2 (*)
 +|    |         +--- com.squareup.okhttp3:okhttp:5.3.2 (*)
-+|    |         +--- com.squareup.okio:okio:3.16.4 (*)
-+|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2 -> 1.11.0 (*)
-+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
-+|    +--- io.ktor:ktor-client-logging:3.4.1
-+|    |    \--- io.ktor:ktor-client-logging-jvm:3.4.1
-+|    |         +--- org.slf4j:slf4j-api:2.0.17 -> 2.0.18
-+|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.10.2 -> 1.11.0 (*)
-+|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2 -> 1.11.0 (*)
-+|    |         +--- io.ktor:ktor-client-core:3.4.1 -> 3.5.0 (*)
-+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
-+|    +--- io.ktor:ktor-client-content-negotiation:3.4.1
-+|    |    \--- io.ktor:ktor-client-content-negotiation-jvm:3.4.1
-+|    |         +--- org.slf4j:slf4j-api:2.0.17 -> 2.0.18
-+|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2 -> 1.11.0 (*)
-+|    |         +--- io.ktor:ktor-client-core:3.4.1 -> 3.5.0 (*)
-+|    |         +--- io.ktor:ktor-serialization:3.4.1 -> 3.5.0 (*)
-+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
-+|    +--- io.ktor:ktor-serialization-kotlinx-json:3.4.1
-+|    |    \--- io.ktor:ktor-serialization-kotlinx-json-jvm:3.4.1
-+|    |         +--- org.slf4j:slf4j-api:2.0.17 -> 2.0.18
-+|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2 -> 1.11.0 (*)
-+|    |         +--- io.ktor:ktor-serialization-kotlinx:3.4.1
-+|    |         |    \--- io.ktor:ktor-serialization-kotlinx-jvm:3.4.1
-+|    |         |         +--- org.slf4j:slf4j-api:2.0.17 -> 2.0.18
-+|    |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2 -> 1.11.0 (*)
-+|    |         |         +--- io.ktor:ktor-serialization:3.4.1 -> 3.5.0 (*)
-+|    |         |         +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.9.0 -> 1.11.0 (*)
-+|    |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
-+|    |         +--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0 -> 1.11.0 (*)
-+|    |         +--- org.jetbrains.kotlinx:kotlinx-serialization-json-io:1.9.0 -> 1.11.0
++|    |         +--- com.squareup.okio:okio:3.17.0 (*)
++|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
++|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
++|    +--- io.ktor:ktor-client-logging:3.5.2
++|    |    \--- io.ktor:ktor-client-logging-jvm:3.5.2
++|    |         +--- org.slf4j:slf4j-api:2.0.18
++|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0 (*)
++|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
++|    |         +--- io.ktor:ktor-client-core:3.5.2 (*)
++|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
++|    +--- io.ktor:ktor-client-content-negotiation:3.5.2
++|    |    \--- io.ktor:ktor-client-content-negotiation-jvm:3.5.2
++|    |         +--- org.slf4j:slf4j-api:2.0.18
++|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
++|    |         +--- io.ktor:ktor-client-core:3.5.2 (*)
++|    |         +--- io.ktor:ktor-serialization:3.5.2 (*)
++|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
++|    +--- io.ktor:ktor-serialization-kotlinx-json:3.5.2
++|    |    \--- io.ktor:ktor-serialization-kotlinx-json-jvm:3.5.2
++|    |         +--- org.slf4j:slf4j-api:2.0.18
++|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
++|    |         +--- io.ktor:ktor-serialization-kotlinx:3.5.2
++|    |         |    \--- io.ktor:ktor-serialization-kotlinx-jvm:3.5.2
++|    |         |         +--- org.slf4j:slf4j-api:2.0.18
++|    |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
++|    |         |         +--- io.ktor:ktor-serialization:3.5.2 (*)
++|    |         |         +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.11.0 (*)
++|    |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
++|    |         +--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0 (*)
++|    |         +--- org.jetbrains.kotlinx:kotlinx-serialization-json-io:1.11.0
 +|    |         |    \--- org.jetbrains.kotlinx:kotlinx-serialization-json-io-jvm:1.11.0
 +|    |         |         +--- org.jetbrains.kotlinx:kotlinx-serialization-bom:1.11.0 (*)
 +|    |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.3.20 -> 2.4.10 (*)
 +|    |         |         +--- org.jetbrains.kotlinx:kotlinx-serialization-core:1.11.0 (*)
 +|    |         |         +--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0 (*)
-+|    |         |         \--- org.jetbrains.kotlinx:kotlinx-io-core:0.6.0 -> 0.9.0 (*)
-+|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
++|    |         |         \--- org.jetbrains.kotlinx:kotlinx-io-core:0.6.0 -> 0.9.1 (*)
++|    |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
 +|    \--- org.ogce:xpp3:1.1.6
 +|         +--- junit:junit:4.7
 +|         \--- jakarta-regexp:jakarta-regexp:1.4
 ++--- androidx.room:room-runtime:2.8.4 (*)
-++--- androidx.sqlite:sqlite-bundled:2.6.2 (*)
+++--- androidx.sqlite:sqlite-bundled:2.7.0 (*)
 ++--- androidx.datastore:datastore-preferences:1.2.1 (*)
 ++--- org.jetbrains.compose.components:components-resources:1.12.0 (*)
 ++--- org.jetbrains.compose.foundation:foundation:1.12.0 (*)
-++--- androidx.compose.material3:material3:1.5.0-alpha15
-+|    \--- androidx.compose.material3:material3-jvmstubs:1.5.0-alpha15
+++--- androidx.compose.material3:material3:1.5.0-alpha27
++|    \--- androidx.compose.material3:material3-jvmstubs:1.5.0-alpha27
 +|         +--- androidx.collection:collection:1.4.5 -> 1.5.0 (*)
-+|         +--- androidx.compose.animation:animation-core:1.8.1 -> 1.11.0-alpha06
-+|         |    \--- androidx.compose.animation:animation-core-jvmstubs:1.11.0-alpha06
++|         +--- androidx.compose.animation:animation-core:1.12.0-beta01
++|         |    \--- androidx.compose.animation:animation-core-jvmstubs:1.12.0-beta01
 +|         |         +--- androidx.collection:collection:1.5.0 (*)
-+|         |         +--- androidx.compose.runtime:runtime:1.11.0-alpha06 -> 1.12.0 (*)
-+|         |         +--- androidx.compose.ui:ui:1.10.0 -> 1.11.0-alpha06
-+|         |         |    \--- androidx.compose.ui:ui-jvmstubs:1.11.0-alpha06
++|         |         +--- androidx.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
++|         |         +--- androidx.compose.ui:ui:1.10.0 -> 1.12.0-beta01
++|         |         |    \--- androidx.compose.ui:ui-jvmstubs:1.12.0-beta01
 +|         |         |         +--- androidx.annotation:annotation:1.8.1 -> 1.9.1 (*)
 +|         |         |         +--- androidx.collection:collection:1.5.0 (*)
-+|         |         |         +--- androidx.compose.runtime:runtime:1.11.0-alpha06 -> 1.12.0 (*)
-+|         |         |         +--- androidx.compose.runtime:runtime-retain:1.11.0-alpha06 -> 1.12.0 (*)
-+|         |         |         +--- androidx.compose.runtime:runtime-saveable:1.11.0-alpha06 -> 1.12.0 (*)
-+|         |         |         +--- androidx.compose.ui:ui-geometry:1.11.0-alpha06
-+|         |         |         |    \--- androidx.compose.ui:ui-geometry-jvmstubs:1.11.0-alpha06
-+|         |         |         |         +--- androidx.compose.runtime:runtime:1.11.0-alpha06 -> 1.12.0 (*)
-+|         |         |         |         +--- androidx.compose.ui:ui-util:1.11.0-alpha06
-+|         |         |         |         |    \--- androidx.compose.ui:ui-util-jvmstubs:1.11.0-alpha06
++|         |         |         +--- androidx.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
++|         |         |         +--- androidx.compose.runtime:runtime-retain:1.12.0-beta01 -> 1.12.0 (*)
++|         |         |         +--- androidx.compose.runtime:runtime-saveable:1.12.0-beta01 -> 1.12.0 (*)
++|         |         |         +--- androidx.compose.ui:ui-geometry:1.12.0-beta01
++|         |         |         |    \--- androidx.compose.ui:ui-geometry-jvmstubs:1.12.0-beta01
++|         |         |         |         +--- androidx.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
++|         |         |         |         +--- androidx.compose.ui:ui-util:1.12.0-beta01
++|         |         |         |         |    \--- androidx.compose.ui:ui-util-jvmstubs:1.12.0-beta01
 +|         |         |         |         |         +--- androidx.collection:collection:1.4.3 -> 1.5.0 (*)
-+|         |         |         |         |         +--- androidx.compose.runtime:runtime:1.11.0-alpha06 -> 1.12.0 (*)
++|         |         |         |         |         +--- androidx.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
 +|         |         |         |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
-+|         |         |         |         |         +--- androidx.compose.ui:ui:1.11.0-alpha06 (c)
-+|         |         |         |         |         +--- androidx.compose.ui:ui-geometry:1.11.0-alpha06 (c)
-+|         |         |         |         |         +--- androidx.compose.ui:ui-graphics:1.11.0-alpha06 (c)
-+|         |         |         |         |         +--- androidx.compose.ui:ui-text:1.11.0-alpha06 (c)
-+|         |         |         |         |         \--- androidx.compose.ui:ui-unit:1.11.0-alpha06 (c)
++|         |         |         |         |         +--- androidx.compose.ui:ui:1.12.0-beta01 (c)
++|         |         |         |         |         +--- androidx.compose.ui:ui-geometry:1.12.0-beta01 (c)
++|         |         |         |         |         +--- androidx.compose.ui:ui-graphics:1.12.0-beta01 (c)
++|         |         |         |         |         +--- androidx.compose.ui:ui-text:1.12.0-beta01 (c)
++|         |         |         |         |         \--- androidx.compose.ui:ui-unit:1.12.0-beta01 (c)
 +|         |         |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
-+|         |         |         |         +--- androidx.compose.ui:ui:1.11.0-alpha06 (c)
-+|         |         |         |         +--- androidx.compose.ui:ui-graphics:1.11.0-alpha06 (c)
-+|         |         |         |         +--- androidx.compose.ui:ui-text:1.11.0-alpha06 (c)
-+|         |         |         |         +--- androidx.compose.ui:ui-unit:1.11.0-alpha06 (c)
-+|         |         |         |         \--- androidx.compose.ui:ui-util:1.11.0-alpha06 (c)
-+|         |         |         +--- androidx.compose.ui:ui-graphics:1.11.0-alpha06
-+|         |         |         |    \--- androidx.compose.ui:ui-graphics-jvmstubs:1.11.0-alpha06
++|         |         |         |         +--- androidx.compose.ui:ui:1.12.0-beta01 (c)
++|         |         |         |         +--- androidx.compose.ui:ui-graphics:1.12.0-beta01 (c)
++|         |         |         |         +--- androidx.compose.ui:ui-text:1.12.0-beta01 (c)
++|         |         |         |         +--- androidx.compose.ui:ui-unit:1.12.0-beta01 (c)
++|         |         |         |         \--- androidx.compose.ui:ui-util:1.12.0-beta01 (c)
++|         |         |         +--- androidx.compose.ui:ui-graphics:1.12.0-beta01
++|         |         |         |    \--- androidx.compose.ui:ui-graphics-jvmstubs:1.12.0-beta01
 +|         |         |         |         +--- androidx.annotation:annotation:1.7.0 -> 1.9.1 (*)
 +|         |         |         |         +--- androidx.collection:collection:1.4.2 -> 1.5.0 (*)
-+|         |         |         |         +--- androidx.compose.runtime:runtime:1.11.0-alpha06 -> 1.12.0 (*)
-+|         |         |         |         +--- androidx.compose.ui:ui-unit:1.11.0-alpha06
-+|         |         |         |         |    \--- androidx.compose.ui:ui-unit-jvmstubs:1.11.0-alpha06
++|         |         |         |         +--- androidx.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
++|         |         |         |         +--- androidx.compose.ui:ui-unit:1.12.0-beta01
++|         |         |         |         |    \--- androidx.compose.ui:ui-unit-jvmstubs:1.12.0-beta01
 +|         |         |         |         |         +--- androidx.annotation:annotation:1.8.1 -> 1.9.1 (*)
 +|         |         |         |         |         +--- androidx.collection:collection:1.4.2 -> 1.5.0 (*)
-+|         |         |         |         |         +--- androidx.compose.runtime:runtime:1.11.0-alpha06 -> 1.12.0 (*)
-+|         |         |         |         |         +--- androidx.compose.ui:ui-geometry:1.11.0-alpha06 (*)
-+|         |         |         |         |         +--- androidx.compose.ui:ui-util:1.11.0-alpha06 (*)
++|         |         |         |         |         +--- androidx.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
++|         |         |         |         |         +--- androidx.compose.ui:ui-geometry:1.12.0-beta01 (*)
++|         |         |         |         |         +--- androidx.compose.ui:ui-util:1.12.0-beta01 (*)
 +|         |         |         |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
-+|         |         |         |         |         +--- androidx.compose.ui:ui:1.11.0-alpha06 (c)
-+|         |         |         |         |         +--- androidx.compose.ui:ui-geometry:1.11.0-alpha06 (c)
-+|         |         |         |         |         +--- androidx.compose.ui:ui-graphics:1.11.0-alpha06 (c)
-+|         |         |         |         |         +--- androidx.compose.ui:ui-text:1.11.0-alpha06 (c)
-+|         |         |         |         |         \--- androidx.compose.ui:ui-util:1.11.0-alpha06 (c)
-+|         |         |         |         +--- androidx.compose.ui:ui-util:1.11.0-alpha06 (*)
++|         |         |         |         |         +--- androidx.compose.ui:ui:1.12.0-beta01 (c)
++|         |         |         |         |         +--- androidx.compose.ui:ui-geometry:1.12.0-beta01 (c)
++|         |         |         |         |         +--- androidx.compose.ui:ui-graphics:1.12.0-beta01 (c)
++|         |         |         |         |         +--- androidx.compose.ui:ui-text:1.12.0-beta01 (c)
++|         |         |         |         |         \--- androidx.compose.ui:ui-util:1.12.0-beta01 (c)
++|         |         |         |         +--- androidx.compose.ui:ui-util:1.12.0-beta01 (*)
 +|         |         |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
-+|         |         |         |         +--- androidx.compose.ui:ui:1.11.0-alpha06 (c)
-+|         |         |         |         +--- androidx.compose.ui:ui-geometry:1.11.0-alpha06 (c)
-+|         |         |         |         +--- androidx.compose.ui:ui-text:1.11.0-alpha06 (c)
-+|         |         |         |         +--- androidx.compose.ui:ui-unit:1.11.0-alpha06 (c)
-+|         |         |         |         \--- androidx.compose.ui:ui-util:1.11.0-alpha06 (c)
-+|         |         |         +--- androidx.compose.ui:ui-text:1.11.0-alpha06
-+|         |         |         |    \--- androidx.compose.ui:ui-text-jvmstubs:1.11.0-alpha06
++|         |         |         |         +--- androidx.compose.ui:ui:1.12.0-beta01 (c)
++|         |         |         |         +--- androidx.compose.ui:ui-geometry:1.12.0-beta01 (c)
++|         |         |         |         +--- androidx.compose.ui:ui-text:1.12.0-beta01 (c)
++|         |         |         |         +--- androidx.compose.ui:ui-unit:1.12.0-beta01 (c)
++|         |         |         |         \--- androidx.compose.ui:ui-util:1.12.0-beta01 (c)
++|         |         |         +--- androidx.compose.ui:ui-text:1.12.0-beta01
++|         |         |         |    \--- androidx.compose.ui:ui-text-jvmstubs:1.12.0-beta01
 +|         |         |         |         +--- androidx.collection:collection:1.5.0 (*)
-+|         |         |         |         +--- androidx.compose.runtime:runtime:1.11.0-alpha06 -> 1.12.0 (*)
-+|         |         |         |         +--- androidx.compose.runtime:runtime-saveable:1.11.0-alpha06 -> 1.12.0 (*)
-+|         |         |         |         +--- androidx.compose.ui:ui-graphics:1.11.0-alpha06 (*)
-+|         |         |         |         +--- androidx.compose.ui:ui-unit:1.11.0-alpha06 (*)
-+|         |         |         |         +--- androidx.compose.ui:ui-util:1.11.0-alpha06 (*)
++|         |         |         |         +--- androidx.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
++|         |         |         |         +--- androidx.compose.runtime:runtime-saveable:1.12.0-beta01 -> 1.12.0 (*)
++|         |         |         |         +--- androidx.compose.ui:ui-graphics:1.12.0-beta01 (*)
++|         |         |         |         +--- androidx.compose.ui:ui-unit:1.12.0-beta01 (*)
++|         |         |         |         +--- androidx.compose.ui:ui-util:1.12.0-beta01 (*)
 +|         |         |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
 +|         |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0 -> 1.11.0 (*)
-+|         |         |         |         +--- androidx.compose.ui:ui:1.11.0-alpha06 (c)
-+|         |         |         |         +--- androidx.compose.ui:ui-graphics:1.11.0-alpha06 (c)
-+|         |         |         |         +--- androidx.compose.ui:ui-unit:1.11.0-alpha06 (c)
-+|         |         |         |         +--- androidx.compose.ui:ui-util:1.11.0-alpha06 (c)
-+|         |         |         |         \--- androidx.compose.ui:ui-geometry:1.11.0-alpha06 (c)
-+|         |         |         +--- androidx.compose.ui:ui-unit:1.11.0-alpha06 (*)
-+|         |         |         +--- androidx.compose.ui:ui-util:1.11.0-alpha06 (*)
++|         |         |         |         +--- androidx.compose.ui:ui:1.12.0-beta01 (c)
++|         |         |         |         +--- androidx.compose.ui:ui-geometry:1.12.0-beta01 (c)
++|         |         |         |         +--- androidx.compose.ui:ui-graphics:1.12.0-beta01 (c)
++|         |         |         |         +--- androidx.compose.ui:ui-unit:1.12.0-beta01 (c)
++|         |         |         |         \--- androidx.compose.ui:ui-util:1.12.0-beta01 (c)
++|         |         |         +--- androidx.compose.ui:ui-unit:1.12.0-beta01 (*)
++|         |         |         +--- androidx.compose.ui:ui-util:1.12.0-beta01 (*)
 +|         |         |         +--- androidx.lifecycle:lifecycle-runtime-compose:2.8.7 -> 2.11.0 (*)
 +|         |         |         +--- androidx.savedstate:savedstate-compose:1.3.0 -> 1.4.0 (*)
 +|         |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
 +|         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0 -> 1.11.0 (*)
 +|         |         |         +--- org.jspecify:jspecify:1.0.0
-+|         |         |         +--- androidx.compose.ui:ui-geometry:1.11.0-alpha06 (c)
-+|         |         |         +--- androidx.compose.ui:ui-graphics:1.11.0-alpha06 (c)
-+|         |         |         +--- androidx.compose.ui:ui-text:1.11.0-alpha06 (c)
-+|         |         |         +--- androidx.compose.ui:ui-unit:1.11.0-alpha06 (c)
-+|         |         |         +--- androidx.compose.ui:ui-util:1.11.0-alpha06 (c)
-+|         |         |         \--- androidx.compose.foundation:foundation:1.7.0 -> 1.11.0-alpha06 (c)
-+|         |         +--- androidx.compose.ui:ui-graphics:1.10.0 -> 1.11.0-alpha06 (*)
-+|         |         +--- androidx.compose.ui:ui-unit:1.10.0 -> 1.11.0-alpha06 (*)
-+|         |         +--- androidx.compose.ui:ui-util:1.10.0 -> 1.11.0-alpha06 (*)
++|         |         |         +--- androidx.compose.ui:ui-geometry:1.12.0-beta01 (c)
++|         |         |         +--- androidx.compose.ui:ui-graphics:1.12.0-beta01 (c)
++|         |         |         +--- androidx.compose.ui:ui-text:1.12.0-beta01 (c)
++|         |         |         +--- androidx.compose.ui:ui-unit:1.12.0-beta01 (c)
++|         |         |         +--- androidx.compose.ui:ui-util:1.12.0-beta01 (c)
++|         |         |         \--- androidx.compose.foundation:foundation:1.7.0 -> 1.12.0-beta01 (c)
++|         |         +--- androidx.compose.ui:ui-graphics:1.10.0 -> 1.12.0-beta01 (*)
++|         |         +--- androidx.compose.ui:ui-unit:1.10.0 -> 1.12.0-beta01 (*)
++|         |         +--- androidx.compose.ui:ui-util:1.10.0 -> 1.12.0-beta01 (*)
 +|         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
 +|         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0 -> 1.11.0 (*)
-+|         |         \--- androidx.compose.animation:animation:1.11.0-alpha06 (c)
-+|         +--- androidx.compose.foundation:foundation:1.11.0-alpha06
-+|         |    \--- androidx.compose.foundation:foundation-jvmstubs:1.11.0-alpha06
++|         |         \--- androidx.compose.animation:animation:1.12.0-beta01 (c)
++|         +--- androidx.compose.foundation:foundation:1.12.0-beta01
++|         |    \--- androidx.compose.foundation:foundation-jvmstubs:1.12.0-beta01
 +|         |         +--- androidx.collection:collection:1.5.0 (*)
-+|         |         +--- androidx.compose.animation:animation:1.11.0-alpha06
-+|         |         |    \--- androidx.compose.animation:animation-jvmstubs:1.11.0-alpha06
++|         |         +--- androidx.compose.animation:animation:1.12.0-beta01
++|         |         |    \--- androidx.compose.animation:animation-jvmstubs:1.12.0-beta01
 +|         |         |         +--- androidx.collection:collection:1.5.0 (*)
-+|         |         |         +--- androidx.compose.animation:animation-core:1.11.0-alpha06 (*)
-+|         |         |         +--- androidx.compose.foundation:foundation-layout:1.10.0 -> 1.11.0-alpha06
-+|         |         |         |    \--- androidx.compose.foundation:foundation-layout-jvmstubs:1.11.0-alpha06
++|         |         |         +--- androidx.compose.animation:animation-core:1.12.0-beta01 (*)
++|         |         |         +--- androidx.compose.foundation:foundation-layout:1.10.0 -> 1.12.0-beta01
++|         |         |         |    \--- androidx.compose.foundation:foundation-layout-jvmstubs:1.12.0-beta01
 +|         |         |         |         +--- androidx.collection:collection:1.5.0 (*)
-+|         |         |         |         +--- androidx.compose.runtime:runtime:1.11.0-alpha06 -> 1.12.0 (*)
-+|         |         |         |         +--- androidx.compose.ui:ui:1.11.0-alpha06 (*)
-+|         |         |         |         +--- androidx.compose.ui:ui-unit:1.10.0 -> 1.11.0-alpha06 (*)
-+|         |         |         |         +--- androidx.compose.ui:ui-util:1.10.0 -> 1.11.0-alpha06 (*)
++|         |         |         |         +--- androidx.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
++|         |         |         |         +--- androidx.compose.ui:ui:1.12.0-beta01 (*)
++|         |         |         |         +--- androidx.compose.ui:ui-unit:1.10.0 -> 1.12.0-beta01 (*)
++|         |         |         |         +--- androidx.compose.ui:ui-util:1.10.0 -> 1.12.0-beta01 (*)
 +|         |         |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
-+|         |         |         |         \--- androidx.compose.foundation:foundation:1.11.0-alpha06 (c)
-+|         |         |         +--- androidx.compose.runtime:runtime:1.11.0-alpha06 -> 1.12.0 (*)
-+|         |         |         +--- androidx.compose.ui:ui:1.10.0 -> 1.11.0-alpha06 (*)
-+|         |         |         +--- androidx.compose.ui:ui-geometry:1.10.0 -> 1.11.0-alpha06 (*)
-+|         |         |         +--- androidx.compose.ui:ui-graphics:1.10.0 -> 1.11.0-alpha06 (*)
-+|         |         |         +--- androidx.compose.ui:ui-util:1.10.0 -> 1.11.0-alpha06 (*)
++|         |         |         |         \--- androidx.compose.foundation:foundation:1.12.0-beta01 (c)
++|         |         |         +--- androidx.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
++|         |         |         +--- androidx.compose.ui:ui:1.10.0 -> 1.12.0-beta01 (*)
++|         |         |         +--- androidx.compose.ui:ui-geometry:1.10.0 -> 1.12.0-beta01 (*)
++|         |         |         +--- androidx.compose.ui:ui-graphics:1.10.0 -> 1.12.0-beta01 (*)
++|         |         |         +--- androidx.compose.ui:ui-util:1.10.0 -> 1.12.0-beta01 (*)
 +|         |         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
-+|         |         |         \--- androidx.compose.animation:animation-core:1.11.0-alpha06 (c)
-+|         |         +--- androidx.compose.foundation:foundation-layout:1.11.0-alpha06 (*)
-+|         |         +--- androidx.compose.runtime:runtime:1.11.0-alpha06 -> 1.12.0 (*)
-+|         |         +--- androidx.compose.ui:ui:1.10.0 -> 1.11.0-alpha06 (*)
-+|         |         +--- androidx.compose.ui:ui-text:1.10.0 -> 1.11.0-alpha06 (*)
-+|         |         +--- androidx.compose.ui:ui-util:1.10.0 -> 1.11.0-alpha06 (*)
++|         |         |         \--- androidx.compose.animation:animation-core:1.12.0-beta01 (c)
++|         |         +--- androidx.compose.foundation:foundation-layout:1.12.0-beta01 (*)
++|         |         +--- androidx.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
++|         |         +--- androidx.compose.ui:ui:1.10.0 -> 1.12.0-beta01 (*)
++|         |         +--- androidx.compose.ui:ui-text:1.10.0 -> 1.12.0-beta01 (*)
++|         |         +--- androidx.compose.ui:ui-util:1.10.0 -> 1.12.0-beta01 (*)
 +|         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
-+|         |         \--- androidx.compose.foundation:foundation-layout:1.11.0-alpha06 (c)
-+|         +--- androidx.compose.foundation:foundation-layout:1.8.1 -> 1.11.0-alpha06 (*)
-+|         +--- androidx.compose.material:material-ripple:1.8.1
-+|         |    \--- androidx.compose.material:material-ripple-jvmstubs:1.8.1
++|         |         \--- androidx.compose.foundation:foundation-layout:1.12.0-beta01 (c)
++|         +--- androidx.compose.foundation:foundation-layout:1.12.0-beta01 (*)
++|         +--- androidx.compose.material:material-ripple:1.12.0-beta01
++|         |    \--- androidx.compose.material:material-ripple-jvmstubs:1.12.0-beta01
 +|         |         +--- androidx.collection:collection:1.5.0 (*)
-+|         |         +--- androidx.compose.animation:animation:1.7.1 -> 1.11.0-alpha06 (*)
-+|         |         +--- androidx.compose.foundation:foundation:1.7.1 -> 1.11.0-alpha06 (*)
-+|         |         +--- androidx.compose.runtime:runtime:1.8.1 -> 1.12.0 (*)
-+|         |         +--- androidx.compose.ui:ui-util:1.7.1 -> 1.11.0-alpha06 (*)
-+|         |         +--- org.jetbrains.kotlin:kotlin-stdlib -> 2.4.10 (*)
-+|         |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.9.24 -> 2.4.10 (c)
-+|         +--- androidx.compose.runtime:runtime:1.9.0 -> 1.12.0 (*)
-+|         +--- androidx.compose.ui:ui:1.8.2 -> 1.11.0-alpha06 (*)
-+|         +--- androidx.compose.ui:ui-text:1.11.0-alpha06 (*)
-+|         +--- androidx.compose.ui:ui-util:1.8.1 -> 1.11.0-alpha06 (*)
++|         |         +--- androidx.compose.animation:animation:1.7.1 -> 1.12.0-beta01 (*)
++|         |         +--- androidx.compose.foundation:foundation:1.7.1 -> 1.12.0-beta01 (*)
++|         |         +--- androidx.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
++|         |         +--- androidx.compose.ui:ui-util:1.7.1 -> 1.12.0-beta01 (*)
++|         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
++|         +--- androidx.compose.material3:material3-ripple:1.5.0-alpha27
++|         |    \--- androidx.compose.material3:material3-ripple-jvmstubs:1.5.0-alpha27
++|         |         +--- androidx.collection:collection:1.5.0 (*)
++|         |         +--- androidx.compose.animation:animation:1.11.4 -> 1.12.0-beta01 (*)
++|         |         +--- androidx.compose.foundation:foundation:1.11.4 -> 1.12.0-beta01 (*)
++|         |         +--- androidx.compose.runtime:runtime:1.11.4 -> 1.12.0 (*)
++|         |         +--- androidx.compose.ui:ui-util:1.11.4 -> 1.12.0-beta01 (*)
++|         |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
++|         |         \--- androidx.compose.material3:material3:1.5.0-alpha27 (c)
++|         +--- androidx.compose.runtime:runtime:1.12.0-beta01 -> 1.12.0 (*)
++|         +--- androidx.compose.ui:ui:1.12.0-beta01 (*)
++|         +--- androidx.compose.ui:ui-text:1.12.0-beta01 (*)
++|         +--- androidx.compose.ui:ui-util:1.12.0-beta01 (*)
 +|         +--- androidx.graphics:graphics-shapes:1.0.1 -> 1.1.0 (*)
-+|         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
++|         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
++|         \--- androidx.compose.material3:material3-ripple:1.5.0-alpha27 (c)
 ++--- org.jetbrains.compose.material:material-icons-extended:1.7.3 (*)
 ++--- org.jetbrains.compose.runtime:runtime:1.12.0 (*)
 ++--- org.jetbrains.compose.ui:ui:1.12.0 (*)
@@ -1042,12 +1049,12 @@
 +|         +--- org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate:2.11.0 (c)
 +|         +--- org.jetbrains.androidx.lifecycle:lifecycle-common:2.11.0 (c)
 +|         \--- org.jetbrains.androidx.lifecycle:lifecycle-runtime:2.11.0 (c)
-++--- org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0 (*)
-++--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0 -> 1.11.0 (*)
+++--- org.jetbrains.kotlinx:kotlinx-collections-immutable:0.5.2 (*)
+++--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0 (*)
 ++--- co.touchlab:kermit:2.1.0 (*)
-++--- io.insert-koin:koin-core:4.1.0
-+|    \--- io.insert-koin:koin-core-jvm:4.1.0
-+|         +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
+++--- io.insert-koin:koin-core:4.2.2
++|    \--- io.insert-koin:koin-core-jvm:4.2.2
++|         +--- org.jetbrains.kotlin:kotlin-stdlib:2.3.20 -> 2.4.10 (*)
 +|         +--- co.touchlab:stately-concurrency:2.1.0
 +|         |    \--- co.touchlab:stately-concurrency-jvm:2.1.0
 +|         |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.9.23 -> 2.4.10 (*)
@@ -1058,23 +1065,23 @@
 +|              \--- co.touchlab:stately-concurrent-collections-jvm:2.1.0
 +|                   +--- co.touchlab:stately-concurrency:2.1.0 (*)
 +|                   \--- org.jetbrains.kotlin:kotlin-stdlib:1.9.23 -> 2.4.10 (*)
-++--- io.insert-koin:koin-compose:4.1.0
-+|    \--- io.insert-koin:koin-compose-jvm:4.1.0
-+|         +--- io.insert-koin:koin-core:4.1.0 (*)
-+|         +--- org.jetbrains.compose.runtime:runtime:1.8.0 -> 1.12.0 (*)
-+|         +--- org.jetbrains.compose.foundation:foundation:1.8.0 -> 1.12.0 (*)
-+|         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
-++--- io.insert-koin:koin-compose-viewmodel:4.1.0
-+|    \--- io.insert-koin:koin-compose-viewmodel-jvm:4.1.0
-+|         +--- io.insert-koin:koin-compose:4.1.0 (*)
-+|         +--- io.insert-koin:koin-core-viewmodel:4.1.0
-+|         |    \--- io.insert-koin:koin-core-viewmodel-jvm:4.1.0
-+|         |         +--- io.insert-koin:koin-core:4.1.0 (*)
-+|         |         +--- org.jetbrains.androidx.lifecycle:lifecycle-viewmodel:2.9.0-beta01 -> 2.11.0 (*)
-+|         |         +--- org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate:2.9.0-beta01 -> 2.11.0 (*)
-+|         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
-+|         +--- org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.9.0-beta01 -> 2.11.0 (*)
-+|         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.20 -> 2.4.10 (*)
+++--- io.insert-koin:koin-compose:4.2.2
++|    \--- io.insert-koin:koin-compose-jvm:4.2.2
++|         +--- io.insert-koin:koin-core:4.2.2 (*)
++|         +--- org.jetbrains.compose.runtime:runtime:1.10.2 -> 1.12.0 (*)
++|         +--- org.jetbrains.compose.foundation:foundation:1.10.2 -> 1.12.0 (*)
++|         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.20 -> 2.4.10 (*)
+++--- io.insert-koin:koin-compose-viewmodel:4.2.2
++|    \--- io.insert-koin:koin-compose-viewmodel-jvm:4.2.2
++|         +--- io.insert-koin:koin-compose:4.2.2 (*)
++|         +--- io.insert-koin:koin-core-viewmodel:4.2.2
++|         |    \--- io.insert-koin:koin-core-viewmodel-jvm:4.2.2
++|         |         +--- io.insert-koin:koin-core:4.2.2 (*)
++|         |         +--- org.jetbrains.androidx.lifecycle:lifecycle-viewmodel:2.9.6 -> 2.11.0 (*)
++|         |         +--- org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate:2.9.6 -> 2.11.0 (*)
++|         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.20 -> 2.4.10 (*)
++|         +--- org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.9.6 -> 2.11.0 (*)
++|         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.20 -> 2.4.10 (*)
 ++--- com.mikepenz:multiplatform-markdown-renderer-m3:0.39.2
 +|    \--- com.mikepenz:multiplatform-markdown-renderer-m3-jvm:0.39.2
 +|         +--- com.mikepenz:multiplatform-markdown-renderer:0.39.2
@@ -1082,16 +1089,16 @@
 +|         |         +--- org.jetbrains:markdown:0.7.3
 +|         |         |    \--- org.jetbrains:markdown-jvm:0.7.3
 +|         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.0.0 -> 2.4.10 (*)
-+|         |         +--- org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0 (*)
++|         |         +--- org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0 -> 0.5.2 (*)
 +|         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
 +|         +--- org.jetbrains:markdown:0.7.3 (*)
 +|         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.0 -> 2.4.10 (*)
 ++--- sh.calvin.reorderable:reorderable:3.1.0
 +|    \--- sh.calvin.reorderable:reorderable-jvm:3.1.0
-+|         +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0
-+|         |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.9.0 -> 2.4.10 (*)
-+|         |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.0
-+|         |         \--- org.jetbrains.kotlin:kotlin-stdlib:1.9.0 -> 2.4.10 (*)
++|         +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0 -> 2.1.21
++|         |    +--- org.jetbrains.kotlin:kotlin-stdlib:2.1.21 -> 2.4.10 (*)
++|         |    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.1.21
++|         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.21 -> 2.4.10 (*)
 +|         +--- org.jetbrains.compose.runtime:runtime:1.7.0 -> 1.12.0 (*)
 +|         +--- org.jetbrains.compose.animation:animation:1.7.0 -> 1.12.0 (*)
 +|         \--- org.jetbrains.compose.foundation:foundation:1.7.0 -> 1.12.0 (*)
@@ -1173,6 +1180,77 @@
 +|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
 +|    +--- org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.11.0 (*)
 +|    \--- org.jetbrains.kotlin:kotlin-stdlib:2.2.20 -> 2.4.10 (*)
+++--- io.modelcontextprotocol:kotlin-sdk-jvm:0.15.0
++|    +--- io.modelcontextprotocol:kotlin-sdk-core:0.15.0
++|    |    \--- io.modelcontextprotocol:kotlin-sdk-core-jvm:0.15.0
++|    |         +--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0 (*)
++|    |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
++|    |         +--- org.jetbrains.kotlinx:kotlinx-io-core:0.9.1 (*)
++|    |         +--- org.jetbrains.kotlinx:kotlinx-collections-immutable:0.5.1 -> 0.5.2 (*)
++|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.4.0 -> 2.4.10 (*)
++|    |         +--- io.ktor:ktor-server-websockets:3.5.1
++|    |         |    \--- io.ktor:ktor-server-websockets-jvm:3.5.1
++|    |         |         +--- org.slf4j:slf4j-api:2.0.18
++|    |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
++|    |         |         +--- io.ktor:ktor-server-core:3.5.1
++|    |         |         |    \--- io.ktor:ktor-server-core-jvm:3.5.1
++|    |         |         |         +--- org.slf4j:slf4j-api:2.0.18
++|    |         |         |         +--- com.typesafe:config:1.4.9
++|    |         |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
++|    |         |         |         +--- io.ktor:ktor-utils:3.5.1 -> 3.5.2 (*)
++|    |         |         |         +--- io.ktor:ktor-http:3.5.1 -> 3.5.2 (*)
++|    |         |         |         +--- io.ktor:ktor-serialization:3.5.1 -> 3.5.2 (*)
++|    |         |         |         +--- io.ktor:ktor-events:3.5.1 -> 3.5.2 (*)
++|    |         |         |         +--- io.ktor:ktor-http-cio:3.5.1 -> 3.5.2 (*)
++|    |         |         |         +--- io.ktor:ktor-websockets:3.5.1 -> 3.5.2 (*)
++|    |         |         |         +--- org.jetbrains.kotlin:kotlin-reflect:2.3.21
++|    |         |         |         |    \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
++|    |         |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
++|    |         |         +--- io.ktor:ktor-websockets:3.5.1 -> 3.5.2 (*)
++|    |         |         +--- io.ktor:ktor-websocket-serialization:3.5.1 -> 3.5.2 (*)
++|    |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
++|    |         \--- io.github.oshai:kotlin-logging:8.0.4
++|    |              \--- io.github.oshai:kotlin-logging-jvm:8.0.4
++|    |                   \--- org.jetbrains.kotlin:kotlin-stdlib:2.1.21 -> 2.4.10 (*)
++|    +--- io.modelcontextprotocol:kotlin-sdk-client:0.15.0
++|    |    \--- io.modelcontextprotocol:kotlin-sdk-client-jvm:0.15.0
++|    |         +--- io.modelcontextprotocol:kotlin-sdk-core:0.15.0 (*)
++|    |         +--- io.ktor:ktor-client-core:3.5.1 -> 3.5.2 (*)
++|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.4.0 -> 2.4.10 (*)
++|    |         \--- io.github.oshai:kotlin-logging:8.0.4 (*)
++|    +--- io.modelcontextprotocol:kotlin-sdk-server:0.15.0
++|    |    \--- io.modelcontextprotocol:kotlin-sdk-server-jvm:0.15.0
++|    |         +--- io.modelcontextprotocol:kotlin-sdk-core:0.15.0 (*)
++|    |         +--- io.ktor:ktor-server-core:3.5.1 (*)
++|    |         +--- io.ktor:ktor-server-sse:3.5.1
++|    |         |    \--- io.ktor:ktor-server-sse-jvm:3.5.1
++|    |         |         +--- org.slf4j:slf4j-api:2.0.18
++|    |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
++|    |         |         +--- io.ktor:ktor-server-core:3.5.1 (*)
++|    |         |         +--- io.ktor:ktor-sse:3.5.1 -> 3.5.2 (*)
++|    |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
++|    |         +--- org.jetbrains.kotlin:kotlin-stdlib:2.4.0 -> 2.4.10 (*)
++|    |         +--- io.ktor:ktor-server-content-negotiation:3.5.1
++|    |         |    \--- io.ktor:ktor-server-content-negotiation-jvm:3.5.1
++|    |         |         +--- org.slf4j:slf4j-api:2.0.18
++|    |         |         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
++|    |         |         +--- io.ktor:ktor-server-core:3.5.1 (*)
++|    |         |         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
++|    |         +--- io.ktor:ktor-server-websockets:3.5.1 (*)
++|    |         +--- io.ktor:ktor-serialization-kotlinx-json:3.5.1 -> 3.5.2 (*)
++|    |         \--- io.github.oshai:kotlin-logging:8.0.4 (*)
++|    \--- org.jetbrains.kotlin:kotlin-stdlib:2.4.0 -> 2.4.10 (*)
+++--- io.ktor:ktor-server-core:3.5.1 (*)
+++--- io.ktor:ktor-server-cio:3.5.1
++|    \--- io.ktor:ktor-server-cio-jvm:3.5.1
++|         +--- org.slf4j:slf4j-api:2.0.18
++|         +--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0 (*)
++|         +--- io.ktor:ktor-server-core:3.5.1 (*)
++|         +--- io.ktor:ktor-http-cio:3.5.1 -> 3.5.2 (*)
++|         +--- io.ktor:ktor-websockets:3.5.1 -> 3.5.2 (*)
++|         +--- io.ktor:ktor-network:3.5.1 -> 3.5.2 (*)
++|         \--- org.jetbrains.kotlin:kotlin-stdlib:2.3.21 -> 2.4.10 (*)
+++--- io.ktor:ktor-server-sse:3.5.1 (*)
 ++--- com.github.javakeyring:java-keyring:1.0.4
 +|    +--- de.swiesend:secret-service:1.8.1-jdk17
 +|    |    +--- at.favre.lib:hkdf:1.1.0
@@ -1184,11 +1262,11 @@
 +|    |    \--- net.java.dev.jna:jna:5.13.0
 +|    +--- org.slf4j:slf4j-api:2.0.7 -> 2.0.18
 +|    \--- pt.davidafsilva.apple:jkeychain:1.1.0
-++--- com.posthog:posthog:3.19.1
-+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22 -> 1.9.0 (*)
+++--- com.posthog:posthog:6.34.1
++|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.21 (*)
 +|    +--- com.google.code.gson:gson:2.10.1 -> 2.11.0 (*)
-+|    +--- com.squareup.okhttp3:okhttp-bom:4.11.0
-+|    |    \--- com.squareup.okhttp3:okhttp:4.11.0 -> 5.3.2 (c)
++|    +--- com.squareup.okhttp3:okhttp-bom:4.12.0
++|    |    \--- com.squareup.okhttp3:okhttp:4.12.0 -> 5.3.2 (c)
 +|    \--- com.squareup.okhttp3:okhttp -> 5.3.2 (*)
 ++--- dev.nucleusframework:nucleus.notification-linux:2.5.12
 +|    +--- dev.nucleusframework:nucleus.core-runtime:2.5.12

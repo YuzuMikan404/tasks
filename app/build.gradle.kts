@@ -19,6 +19,7 @@ plugins {
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
+        moduleName.set("tasks_app")
     }
 }
 
@@ -33,6 +34,7 @@ android {
         viewBinding = true
         compose = true
         buildConfig = true
+        resValues = true
     }
 
     lint {
@@ -179,6 +181,7 @@ dependencies {
     implementation(libs.dagger.hilt)
     ksp(libs.dagger.hilt.compiler)
     ksp(libs.androidx.hilt.compiler)
+    ksp(libs.androidx.appfunctions.compiler)
     implementation(libs.androidx.hilt.navigation)
     implementation(libs.androidx.hilt.work)
 
@@ -193,6 +196,7 @@ dependencies {
     implementation(libs.androidx.room)
     implementation(libs.androidx.sqlite)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.appfunctions)
     implementation(libs.iconics)
     implementation(libs.markwon)
     implementation(libs.markwon.editor)

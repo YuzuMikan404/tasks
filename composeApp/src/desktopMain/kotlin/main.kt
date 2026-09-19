@@ -36,6 +36,8 @@ import org.tasks.auth.TasksServerEnvironment
 import org.tasks.broadcast.ComposeRefreshBroadcaster
 import org.tasks.compose.StableWindowSize
 import org.tasks.jobs.BackgroundWork
+import org.tasks.jobs.RefreshScheduler
+import org.tasks.mcp.DesktopMcpServerController
 import org.tasks.notifications.DesktopNotifier
 import org.tasks.notifications.NotificationScheduler
 import org.tasks.requestForeground
@@ -71,6 +73,7 @@ import java.awt.desktop.QuitStrategy
 import java.awt.event.WindowEvent
 import java.awt.event.WindowFocusListener
 import java.io.File
+import java.util.Locale
 import java.io.RandomAccessFile
 import java.net.InetAddress
 import java.net.ServerSocket
@@ -182,6 +185,15 @@ fun main() {
             Logger.w(e) { "Failed to record install metadata" }
         }
         koin.get<Upgrader>().upgrade(versionCode)
+        koin.get<TasksPreferences>()
+            .get(TasksPreferences.languageTag, "")
+            .takeIf { it.isNotBlank() }
+            ?.let { runCatching { Locale.forLanguageTag(it) }.getOrNull() }
+            ?.takeIf { it.language.isNotBlank() }
+            ?.let { Locale.setDefault(it) }
+        step(TAG, "start the MCP server") {
+            koin.get<DesktopMcpServerController>().initialize()
+        }
     }
     // Cmd+Q on macOS goes through here rather than through the window: the JDK's default quit
     // strategy calls System.exit directly, so no window ever sees a close request and none of the
@@ -214,6 +226,9 @@ fun main() {
         }
         step(TAG, "close notifications") {
             runBlocking { koin.get<DesktopNotifier>().shutdown() }
+        }
+        step(TAG, "stop the MCP server") {
+            runBlocking { koin.get<DesktopMcpServerController>().shutdown() }
         }
         step(TAG, "close the Microsoft client") {
             (koin.get<MicrosoftClientProvider>() as? DesktopMicrosoftClientProvider)?.close()
@@ -332,6 +347,7 @@ fun main() {
             val backgroundWork = koinInject<BackgroundWork>()
             val platformConfig = koinInject<PlatformConfiguration>()
             val notificationScheduler = koinInject<NotificationScheduler>()
+            val refreshScheduler = koinInject<RefreshScheduler>()
             val notifier = koinInject<DesktopNotifier>()
             val refreshBroadcaster = koinInject<ComposeRefreshBroadcaster>()
             val lifecycleScope = rememberCoroutineScope()
@@ -359,6 +375,7 @@ fun main() {
                     AnalyticsEvents.PARAM_FROM_BACKGROUND to false,
                 )
                 sseClient.start()
+                refreshScheduler.start(lifecycleScope, Dispatchers.Default)
                 if (platformConfig.supportsNotifications) {
                     notificationScheduler.start(lifecycleScope, Dispatchers.Default) {
                         notifier.reconcileNotifications()
@@ -400,6 +417,7 @@ fun main() {
                                 AnalyticsEvents.PARAM_FROM_BACKGROUND to true,
                             )
                             sseClient.reconnect()
+                            refreshScheduler.signal()
                             notificationScheduler.signal()
                             lifecycleScope.launch {
                                 backgroundWork.sync(SyncSource.APP_RESUME)

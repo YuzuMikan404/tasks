@@ -542,4 +542,26 @@
     <string name="TEA_add_subtask">サブタスクを追加</string>
     <string name="subtasks_multilevel_google_task">Google Tasks は多層式のサブタスクに対応していません</string>
     <string name="subtasks_multilevel_microsoft">Microsoft To Do は多層式のサブタスクに対応していません</string>
+    <string name="customize_drawer">ドロワーのカスタマイズ</string>
+    <string name="customize_drawer_summary">ドラッグ&amp;ドロップしてメニューを並び替え</string>
+    <string name="hide_unused_tags">使われていないタグを隠す</string>
+    <string name="hide_unused_places">使われていない場所を隠す</string>
+    <string name="language">言語</string>
+    <string name="launcher_icon">ランチャーアイコン</string>
+    <string name="markdown">マークダウン</string>
+    <string name="markdown_description">タイトル欄と説明欄でマークダウン記法を有効にします</string>
+    <string name="on_launch">起動時</string>
+    <string name="open_last_viewed_list">最後に表示したリストを開く</string>
+    <string name="settings_localization">ローカライズ</string>
+    <string name="theme">テーマ</string>
+    <string name="theme_dynamic">ダイナミック</string>
+    <string name="translations">翻訳に協力する</string>
+    <string name="widget_open_list">開くリスト</string>
+    <string name="theme_light">ライト</string>
+    <string name="theme_black">黒</string>
+    <string name="theme_dark">ダーク</string>
+    <string name="theme_wallpaper">壁紙</string>
+    <string name="theme_day_night">デイナイト</string>
+    <string name="theme_system_default">システムデフォルト</string>
+    <string name="works_with_desktop">デスクトップ版Tasks.org</string>
 </resources>
