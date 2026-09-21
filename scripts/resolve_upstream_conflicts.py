@@ -25,6 +25,7 @@ PATCH_MARKERS = {
         "if (signalExistingInstance()) return",
         "icon = painterResource(Res.drawable.ic_round_icon)",
         "prepareDesktopUpdate(dataDir, platform())",
+        "JOptionPane.YES_OPTION",
     ),
     "composeApp/src/desktopMain/kotlin/org/tasks/analytics/PostHogReporting.kt": (
         "PostHog initialization failed",

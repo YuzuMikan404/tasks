@@ -79,6 +79,7 @@ import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.nio.channels.FileChannel
+import javax.swing.JOptionPane
 import org.tasks.extensions.openInBrowser
 import tasks.kmp.generated.resources.Res
 import tasks.kmp.generated.resources.ic_round_icon
@@ -352,7 +353,17 @@ fun main() {
             val lifecycleScope = rememberCoroutineScope()
             LaunchedEffect(Unit) {
                 val update = prepareDesktopUpdate(dataDir, platform()) ?: return@LaunchedEffect
-                pendingUpdate = update
+                val install = JOptionPane.showConfirmDialog(
+                    window,
+                    "Tasks.org ${update.version} のアップデートがあります。今すぐインストールしますか？",
+                    "Tasks.org アップデート",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE,
+                )
+                if (install == JOptionPane.YES_OPTION) {
+                    pendingUpdate = update
+                    window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING))
+                }
             }
             LaunchedEffect(Unit) {
                 Thread.setDefaultUncaughtExceptionHandler { _, throwable ->
