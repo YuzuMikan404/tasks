@@ -15,7 +15,7 @@ index ed5b62ec71..f0d435d881 100644
      }
  }
 diff --git a/composeApp/src/desktopMain/kotlin/main.kt b/composeApp/src/desktopMain/kotlin/main.kt
-index d926423e05..38bd81183a 100644
+index d926423e05..9f54af7bc7 100644
 --- a/composeApp/src/desktopMain/kotlin/main.kt
 +++ b/composeApp/src/desktopMain/kotlin/main.kt
 @@ -15,6 +15,7 @@ import androidx.compose.ui.window.rememberWindowState
@@ -133,14 +133,13 @@ index d926423e05..38bd81183a 100644
              state = windowState,
              // Hidden the moment the user asks to quit. The flush above has already read what the
              // open editor was holding and there is no second one, so anything typed after it would
-@@ -317,6 +350,11 @@ fun main() {
+@@ -317,6 +350,10 @@ fun main() {
              val notifier = koinInject<DesktopNotifier>()
              val refreshBroadcaster = koinInject<ComposeRefreshBroadcaster>()
              val lifecycleScope = rememberCoroutineScope()
 +            LaunchedEffect(Unit) {
 +                val update = prepareDesktopUpdate(dataDir, platform()) ?: return@LaunchedEffect
 +                pendingUpdate = update
-+                window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING))
 +            }
              LaunchedEffect(Unit) {
                  Thread.setDefaultUncaughtExceptionHandler { _, throwable ->

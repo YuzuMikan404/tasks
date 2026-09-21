@@ -353,7 +353,6 @@ fun main() {
             LaunchedEffect(Unit) {
                 val update = prepareDesktopUpdate(dataDir, platform()) ?: return@LaunchedEffect
                 pendingUpdate = update
-                window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING))
             }
             LaunchedEffect(Unit) {
                 Thread.setDefaultUncaughtExceptionHandler { _, throwable ->
