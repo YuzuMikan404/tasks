@@ -39,10 +39,19 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
         self.assertIn('git push origin "$candidate:refs/heads/main"', self.promote)
         self.assertNotIn("--force-with-lease", self.promote)
 
+    def test_superseded_candidate_is_a_successful_noop(self):
+        stale_guard = self.promote.index('if [ "$current_main" != "$EXPECTED_BASE" ]')
+        promotion = self.promote.index('git push origin "$candidate:refs/heads/main"')
+        stale_path = self.promote[stale_guard:promotion]
+        self.assertIn("candidate is superseded, skipping publication", stale_path)
+        self.assertIn('remote_candidate="$(git ls-remote origin', stale_path)
+        self.assertIn('if [ "$remote_candidate" = "$EXPECTED_CANDIDATE" ]', stale_path)
+        self.assertIn("exit 0", stale_path)
+
     def test_release_happens_after_main_promotion(self):
         push = self.promote.index('git push origin "$candidate:refs/heads/main"')
         release = self.promote.index('gh release view "$tag"')
-        cleanup = self.promote.index('git push origin --delete "$CANDIDATE_BRANCH"')
+        cleanup = self.promote.rindex('git push origin --delete "$CANDIDATE_BRANCH"')
         self.assertLess(push, release)
         self.assertLess(release, cleanup)
 

@@ -52,8 +52,16 @@ git merge-base --is-ancestor "$EXPECTED_BASE" "$candidate"
 git fetch origin main
 current_main="$(git rev-parse origin/main)"
 if [ "$current_main" != "$EXPECTED_BASE" ]; then
-  echo "main advanced while the candidate was building; refusing stale promotion."
-  exit 1
+  echo "main advanced while the candidate was building; candidate is superseded, skipping publication."
+
+  # Only remove the candidate branch when it still points at this run's exact
+  # candidate. This avoids deleting a branch that another actor refreshed.
+  remote_candidate="$(git ls-remote origin "refs/heads/$CANDIDATE_BRANCH" | awk '{print $1}' || true)"
+  if [ "$remote_candidate" = "$EXPECTED_CANDIDATE" ]; then
+    git push origin --delete "$CANDIDATE_BRANCH" ||
+      echo "Superseded candidate branch was already removed."
+  fi
+  exit 0
 fi
 if [ "$candidate" != "$current_main" ]; then
   # A normal fast-forward push rejects any race after the SHA comparison.
