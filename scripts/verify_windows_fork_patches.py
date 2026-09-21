@@ -25,6 +25,7 @@ REQUIRED_MARKERS = {
     "composeApp/src/desktopMain/kotlin/org/tasks/update/WindowsAutoUpdater.kt": (
         "YuzuMikan404/tasks/releases/latest",
         '"msiexec.exe"',
+        'listOf("pkexec", "dpkg", "-i", update.installer.absolutePath)',
         "downloadVerified(installerUrl, installer, expectedHash)",
     ),
 }

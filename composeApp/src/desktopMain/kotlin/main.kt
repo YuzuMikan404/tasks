@@ -64,9 +64,9 @@ import org.tasks.di.platform
 import org.tasks.di.platformModule
 import org.tasks.logging.FileLogWriter
 import org.tasks.logging.logStartup
-import org.tasks.update.WindowsUpdate
-import org.tasks.update.launchWindowsUpdate
-import org.tasks.update.prepareWindowsUpdate
+import org.tasks.update.DesktopUpdate
+import org.tasks.update.launchDesktopUpdate
+import org.tasks.update.prepareDesktopUpdate
 import java.awt.Desktop
 import java.awt.Dimension
 import java.awt.desktop.QuitStrategy
@@ -79,7 +79,6 @@ import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.nio.channels.FileChannel
-import javax.swing.JOptionPane
 import org.tasks.extensions.openInBrowser
 import tasks.kmp.generated.resources.Res
 import tasks.kmp.generated.resources.ic_round_icon
@@ -250,7 +249,7 @@ fun main() {
         val taskRequests = koinInject<TaskRequests>()
         val shutdownScope = rememberCoroutineScope()
         var closing by remember { mutableStateOf(false) }
-        var pendingUpdate by remember { mutableStateOf<WindowsUpdate?>(null) }
+        var pendingUpdate by remember { mutableStateOf<DesktopUpdate?>(null) }
         val windowState = rememberWindowState(size = DpSize(DEFAULT_WIDTH, DEFAULT_HEIGHT))
         var windowReady by remember { mutableStateOf(false) }
         // Restore saved window size and position before showing the window
@@ -322,7 +321,7 @@ fun main() {
                             return@launch
                         }
                         pendingUpdate?.let { update ->
-                            if (!launchWindowsUpdate(update)) {
+                            if (!launchDesktopUpdate(update)) {
                                 closing = false
                                 setQuitting(false)
                                 taskRequests.acceptOpenRequests(true)
@@ -352,19 +351,9 @@ fun main() {
             val refreshBroadcaster = koinInject<ComposeRefreshBroadcaster>()
             val lifecycleScope = rememberCoroutineScope()
             LaunchedEffect(Unit) {
-                if (platform() != Platform.WINDOWS) return@LaunchedEffect
-                val update = prepareWindowsUpdate(dataDir) ?: return@LaunchedEffect
-                val install = JOptionPane.showConfirmDialog(
-                    window,
-                    "Tasks.org ${update.version} is ready. Install it now?",
-                    "Tasks.org update",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE,
-                )
-                if (install == JOptionPane.YES_OPTION) {
-                    pendingUpdate = update
-                    window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING))
-                }
+                val update = prepareDesktopUpdate(dataDir, platform()) ?: return@LaunchedEffect
+                pendingUpdate = update
+                window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING))
             }
             LaunchedEffect(Unit) {
                 Thread.setDefaultUncaughtExceptionHandler { _, throwable ->

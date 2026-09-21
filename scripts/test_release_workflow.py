@@ -20,7 +20,14 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
 
     def test_publish_requires_successful_windows_job(self):
         self.assertIn("needs.windows.result == 'success'", self.workflow)
+        self.assertIn("needs.linux.result == 'success'", self.workflow)
         self.assertIn("Atomically promote and publish candidate", self.workflow)
+
+    def test_linux_deb_is_built_and_published(self):
+        self.assertIn(":composeApp:packageDeb", self.workflow)
+        self.assertIn('if [ "$msi_count" -gt 0 ] && [ "$deb_count" -gt 0 ]', self.prepare)
+        self.assertIn('deb="release-files/tasks-org-linux-x64-$VERSION.deb"', self.promote)
+        self.assertIn('test -f "$deb"', self.promote)
 
     def test_prepare_never_pushes_main(self):
         self.assertNotIn("refs/heads/main", self.prepare)

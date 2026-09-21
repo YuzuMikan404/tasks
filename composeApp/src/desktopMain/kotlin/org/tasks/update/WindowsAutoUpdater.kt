@@ -8,6 +8,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.tasks.TasksBuildConfig
+import org.tasks.di.Platform
 import java.io.File
 import java.net.HttpURLConnection
 import java.net.URI
@@ -15,23 +16,26 @@ import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
 
-private const val TAG = "WindowsAutoUpdater"
+private const val TAG = "DesktopAutoUpdater"
 private const val RELEASE_API =
     "https://api.github.com/repos/YuzuMikan404/tasks/releases/latest"
 private const val CHECK_INTERVAL_MS = 24L * 60L * 60L * 1000L
 private val SHA256 = Regex("(?i)\\b[0-9a-f]{64}\\b")
 
-data class WindowsUpdate(
+internal data class DesktopUpdate(
     val version: String,
     val installer: File,
+    val platform: Platform,
 )
 
 /**
- * Checks the fork's latest GitHub release without delaying application startup. The MSI and its
- * published checksum are downloaded together; an installer is only returned after SHA-256
- * verification succeeds.
+ * Checks the fork's latest GitHub release without delaying application startup. The native
+ * package and its published checksum are downloaded together; an installer is only returned after
+ * SHA-256 verification succeeds.
  */
-suspend fun prepareWindowsUpdate(dataDir: File): WindowsUpdate? = withContext(Dispatchers.IO) {
+internal suspend fun prepareDesktopUpdate(dataDir: File, platform: Platform): DesktopUpdate? =
+    withContext(Dispatchers.IO) {
+    if (platform == Platform.MAC) return@withContext null
     val updateDir = File(dataDir, "updates").also { it.mkdirs() }
     val checkedAt = File(updateDir, "last-check")
     if (System.currentTimeMillis() - checkedAt.lastModified() < CHECK_INTERVAL_MS) {
@@ -49,8 +53,13 @@ suspend fun prepareWindowsUpdate(dataDir: File): WindowsUpdate? = withContext(Di
         }
 
         val assets = root.getValue("assets").jsonArray.map { it.jsonObject }
-        val installerName = "tasks-org-windows-x64-$version.msi"
-        val checksumName = "tasks-org-windows-x64-$version.sha256"
+        val packageStem = when (platform) {
+            Platform.WINDOWS -> "tasks-org-windows-x64-$version"
+            Platform.LINUX -> "tasks-org-linux-x64-$version"
+            Platform.MAC -> return@runCatching null
+        }
+        val installerName = "$packageStem.${if (platform == Platform.WINDOWS) "msi" else "deb"}"
+        val checksumName = "$packageStem.sha256"
         val installerUrl = assets.firstOrNull {
             it["name"]?.jsonPrimitive?.content == installerName
         }?.get("browser_download_url")?.jsonPrimitive?.content
@@ -66,24 +75,31 @@ suspend fun prepareWindowsUpdate(dataDir: File): WindowsUpdate? = withContext(Di
         if (!installer.isFile || sha256(installer) != expectedHash) {
             downloadVerified(installerUrl, installer, expectedHash)
         }
-        WindowsUpdate(version, installer)
+        DesktopUpdate(version, installer, platform)
     }.onFailure { error ->
         Logger.w(error, tag = TAG) { "Automatic update check failed" }
     }.getOrNull()
 }
 
-/** Starts the verified MSI. The caller should immediately begin the application's normal close. */
-fun launchWindowsUpdate(update: WindowsUpdate): Boolean = runCatching {
-    ProcessBuilder(
-        "msiexec.exe",
-        "/i",
-        update.installer.absolutePath,
-        "/passive",
-        "/norestart",
-    ).start()
+/** Starts the verified native package. The caller should immediately finish the normal close. */
+internal fun launchDesktopUpdate(update: DesktopUpdate): Boolean = runCatching {
+    val command = when (update.platform) {
+        Platform.WINDOWS -> listOf(
+            "msiexec.exe",
+            "/i",
+            update.installer.absolutePath,
+            "/passive",
+            "/norestart",
+        )
+        // pkexec provides the required interactive privilege prompt without running the app itself
+        // as root. dpkg upgrades the package in place once the application has closed.
+        Platform.LINUX -> listOf("pkexec", "dpkg", "-i", update.installer.absolutePath)
+        Platform.MAC -> error("Automatic updates are unavailable on macOS")
+    }
+    ProcessBuilder(command).start()
     true
 }.onFailure { error ->
-    Logger.e(error, tag = TAG) { "Could not launch Windows update ${update.version}" }
+    Logger.e(error, tag = TAG) { "Could not launch desktop update ${update.version}" }
 }.getOrDefault(false)
 
 internal fun compareVersions(left: String, right: String): Int {
@@ -107,7 +123,7 @@ private fun downloadVerified(url: String, destination: File, expectedHash: Strin
         open(url).inputStream.use { input ->
             temporary.outputStream().buffered().use(input::copyTo)
         }
-        check(sha256(temporary) == expectedHash) { "Downloaded MSI checksum mismatch" }
+        check(sha256(temporary) == expectedHash) { "Downloaded package checksum mismatch" }
         try {
             Files.move(
                 temporary.toPath(),
@@ -133,7 +149,7 @@ private fun open(url: String): HttpURLConnection =
         readTimeout = 60_000
         instanceFollowRedirects = true
         setRequestProperty("Accept", "application/vnd.github+json")
-        setRequestProperty("User-Agent", "Tasks.org-Windows/${TasksBuildConfig.VERSION_NAME}")
+        setRequestProperty("User-Agent", "Tasks.org-Desktop/${TasksBuildConfig.VERSION_NAME}")
         check(responseCode in 200..299) { "HTTP $responseCode from $url" }
     }
 

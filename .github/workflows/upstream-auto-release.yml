@@ -1,4 +1,4 @@
-name: Update from upstream and release Windows
+name: Update from upstream and release desktop builds
 
 on:
   push:
@@ -151,12 +151,62 @@ jobs:
           path: composeApp/build/reports/tests/desktopTest/
           if-no-files-found: warn
 
+  linux:
+    name: Build isolated Linux candidate
+    needs: prepare
+    if: ${{ needs.prepare.outputs.needs_update == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.prepare.outputs.candidate_branch }}
+
+      - name: Verify candidate SHA
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ needs.prepare.outputs.candidate_sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: gradle/actions/setup-gradle@v5
+
+      - name: Build Linux DEB
+        env:
+          POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
+        run: ./gradlew :composeApp:packageDeb -Prelease --console=plain
+
+      - name: Prepare release files
+        shell: bash
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          deb="$(find composeApp/build/compose/binaries/main/deb -maxdepth 1 -type f -name '*.deb' -print -quit)"
+          test -n "$deb" || { echo "The Linux DEB was not generated."; exit 1; }
+          mkdir -p release-files
+          release_deb="release-files/tasks-org-linux-x64-$VERSION.deb"
+          cp "$deb" "$release_deb"
+          sha256sum "$release_deb" > "release-files/tasks-org-linux-x64-$VERSION.sha256"
+
+      - name: Upload validated Linux candidate
+        uses: actions/upload-artifact@v7
+        with:
+          name: tasks-org-linux-${{ needs.prepare.outputs.version }}
+          path: release-files/*
+          if-no-files-found: error
+
   publish:
     name: Atomically promote and publish candidate
     needs:
       - prepare
       - windows
-    if: ${{ needs.windows.result == 'success' }}
+      - linux
+    if: ${{ needs.windows.result == 'success' && needs.linux.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -168,8 +218,9 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: tasks-org-windows-${{ needs.prepare.outputs.version }}
+          pattern: tasks-org-*-${{ needs.prepare.outputs.version }}
           path: release-files
+          merge-multiple: true
 
       - name: Promote and publish validated candidate
         shell: bash
@@ -187,8 +238,9 @@ jobs:
       - prepare
       - maintenance
       - windows
+      - linux
       - publish
-    if: ${{ always() && (needs.prepare.result == 'failure' || needs.maintenance.result == 'failure' || needs.windows.result == 'failure' || needs.publish.result == 'failure') }}
+    if: ${{ always() && (needs.prepare.result == 'failure' || needs.maintenance.result == 'failure' || needs.windows.result == 'failure' || needs.linux.result == 'failure' || needs.publish.result == 'failure') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -202,5 +254,6 @@ jobs:
           PREPARE_RESULT: ${{ needs.prepare.result }}
           MAINTENANCE_RESULT: ${{ needs.maintenance.result }}
           WINDOWS_RESULT: ${{ needs.windows.result }}
+          LINUX_RESULT: ${{ needs.linux.result }}
           PUBLISH_RESULT: ${{ needs.publish.result }}
         run: bash scripts/report_upstream_failure.sh

@@ -30,14 +30,17 @@ if [ "$latest" = "$current" ]; then
   msi_count="$(
     gh release view "windows-v$latest" --repo "$GITHUB_REPOSITORY" --json assets --jq '[.assets[].name | select(endswith(".msi"))] | length' 2>/dev/null || echo 0
   )"
-  if [ "$msi_count" -gt 0 ]; then
-    echo "Windows release windows-v$latest already has an MSI."
+  deb_count="$(
+    gh release view "windows-v$latest" --repo "$GITHUB_REPOSITORY" --json assets --jq '[.assets[].name | select(endswith(".deb"))] | length' 2>/dev/null || echo 0
+  )"
+  if [ "$msi_count" -gt 0 ] && [ "$deb_count" -gt 0 ]; then
+    echo "Desktop release windows-v$latest already has MSI and DEB packages."
     echo "needs_update=false" >> "$GITHUB_OUTPUT"
     echo "candidate_sha=$base_sha" >> "$GITHUB_OUTPUT"
     echo "candidate_branch=" >> "$GITHUB_OUTPUT"
     exit 0
   fi
-  echo "Windows release windows-v$latest is incomplete; rebuilding from main."
+  echo "Desktop release windows-v$latest is incomplete; rebuilding from main."
 else
   fork_head="$base_sha"
   git fetch upstream "refs/tags/$latest:refs/tags/upstream-$latest"
@@ -71,7 +74,7 @@ else
     exit 1
   fi
 
-  # Upstream Actions are never imported; this fork publishes Windows only.
+  # Upstream Actions are never imported; this fork keeps its desktop release workflow.
   # Remove the merged workflow tree first so modify/delete conflicts and files
   # that exist only upstream cannot leak into the candidate branch.
   git rm -r -f --ignore-unmatch .github/workflows

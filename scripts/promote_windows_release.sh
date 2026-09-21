@@ -5,23 +5,33 @@ normalize_release() {
   : "${VERSION:?VERSION is required}"
   release="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/windows-v$VERSION")"
   msi_name="tasks-org-windows-x64-$VERSION.msi"
-  checksum_name="tasks-org-windows-x64-$VERSION.sha256"
+  deb_name="tasks-org-linux-x64-$VERSION.deb"
   msi_id="$(jq -r '.assets[] | select(.name | endswith(".msi")) | .id' <<< "$release" | head -n 1)"
   msi_digest="$(jq -r '.assets[] | select(.name | endswith(".msi")) | .digest' <<< "$release" | head -n 1)"
+  deb_id="$(jq -r '.assets[] | select(.name | endswith(".deb")) | .id' <<< "$release" | head -n 1)"
+  deb_digest="$(jq -r '.assets[] | select(.name | endswith(".deb")) | .digest' <<< "$release" | head -n 1)"
 
   test -n "$msi_id"
   test -n "$msi_digest"
   test "$msi_digest" != "null"
+  test -n "$deb_id"
+  test -n "$deb_digest"
+  test "$deb_digest" != "null"
   gh api --method PATCH "repos/$GITHUB_REPOSITORY/releases/assets/$msi_id" -f "name=$msi_name" >/dev/null
+  gh api --method PATCH "repos/$GITHUB_REPOSITORY/releases/assets/$deb_id" -f "name=$deb_name" >/dev/null
 
   jq -r '.assets[] | select(.name | endswith(".sha256")) | .name' <<< "$release" |
     while IFS= read -r old_checksum; do
       gh release delete-asset "windows-v$VERSION" "$old_checksum" --repo "$GITHUB_REPOSITORY" --yes
     done
 
-  printf '%s  %s\n' "${msi_digest#sha256:}" "$msi_name" > "$checksum_name"
-  gh release upload "windows-v$VERSION" "$checksum_name" --repo "$GITHUB_REPOSITORY" --clobber
-  gh release edit "windows-v$VERSION" --repo "$GITHUB_REPOSITORY" --title "Tasks.org Windows $VERSION" --prerelease=false --latest
+  printf '%s  %s\n' "${msi_digest#sha256:}" "$msi_name" > "tasks-org-windows-x64-$VERSION.sha256"
+  printf '%s  %s\n' "${deb_digest#sha256:}" "$deb_name" > "tasks-org-linux-x64-$VERSION.sha256"
+  gh release upload "windows-v$VERSION" \
+    "tasks-org-windows-x64-$VERSION.sha256" \
+    "tasks-org-linux-x64-$VERSION.sha256" \
+    --repo "$GITHUB_REPOSITORY" --clobber
+  gh release edit "windows-v$VERSION" --repo "$GITHUB_REPOSITORY" --title "Tasks.org Desktop $VERSION" --prerelease=false --latest
 }
 
 if [ "${1:-}" = "--normalize-only" ]; then
@@ -53,14 +63,18 @@ fi
 tag="windows-v$VERSION"
 msi="release-files/tasks-org-windows-x64-$VERSION.msi"
 checksum="release-files/tasks-org-windows-x64-$VERSION.sha256"
+deb="release-files/tasks-org-linux-x64-$VERSION.deb"
+deb_checksum="release-files/tasks-org-linux-x64-$VERSION.sha256"
 test -f "$msi"
 test -f "$checksum"
+test -f "$deb"
+test -f "$deb_checksum"
 
 if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-  gh release upload "$tag" "$msi" "$checksum" --repo "$GITHUB_REPOSITORY" --clobber
-  gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --title "Tasks.org Windows $VERSION" --prerelease=false --latest
+  gh release upload "$tag" "$msi" "$checksum" "$deb" "$deb_checksum" --repo "$GITHUB_REPOSITORY" --clobber
+  gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --title "Tasks.org Desktop $VERSION" --prerelease=false --latest
 else
-  gh release create "$tag" "$msi" "$checksum" --repo "$GITHUB_REPOSITORY" --target "$EXPECTED_CANDIDATE" --title "Tasks.org Windows $VERSION" --notes "Windows desktop build based on the official Tasks.org $VERSION release, with the desktop generic entitlement enabled."
+  gh release create "$tag" "$msi" "$checksum" "$deb" "$deb_checksum" --repo "$GITHUB_REPOSITORY" --target "$EXPECTED_CANDIDATE" --title "Tasks.org Desktop $VERSION" --notes "Windows and Linux desktop builds based on the official Tasks.org $VERSION release, with the desktop generic entitlement enabled."
 fi
 
 git push origin --delete "$CANDIDATE_BRANCH" ||
