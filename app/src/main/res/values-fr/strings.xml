@@ -197,11 +197,8 @@
     <string name="tasker_create_task">Créer une tâche</string>
     <string name="tasker_list_notification">Notification de liste</string>
     <string name="help">Aide</string>
-    <string name="upgrade_to_pro">Mise à niveau vers la version « pro »</string>
     <string name="refresh_purchases">Rafraîchir les achats</string>
-    <string name="button_subscribe">S\'abonner</string>
     <string name="pro_dashclock_extension">Extension du tableau de bord</string>
-    <string name="requires_pro_subscription">Nécessite un abonnement pro</string>
     <string name="logout">Se déconnecter</string>
     <string name="reinitialize_account">Réinitialiser</string>
     <string name="action_create_new_task">Créer une nouvelle tâche</string>
@@ -237,13 +234,11 @@
     <string name="badges">Badges</string>
     <string name="list_separator_with_space">", "</string>
     <string name="icon">Icône</string>
-    <string name="name_your_price">Donnez votre prix</string>
     <string name="SSD_sort_my_order">Mon tri</string>
     <string name="expand_subtasks">Développer les sous-tâches</string>
     <string name="collapse_subtasks">Réduire les sous-tâches</string>
     <string name="subtasks">Sous-tâches</string>
     <string name="display_name">Afficher le nom</string>
-    <string name="this_feature_requires_a_subscription">Cette fonctionnalité nécessite un abonnement</string>
     <string name="choose_synchronization_service">Sélectionner une plate-forme</string>
     <string name="caldav_selection_description">Synchronisation basée sur des normes d\'Internet ouvertes</string>
     <string name="etesync_selection_description">Synchronisation du chiffrement de bout en bout</string>
@@ -334,7 +329,7 @@
     <string name="header_spacing">Espacement</string>
     <string name="multi_select_reschedule">Replanifier</string>
     <string name="cancel">Annuler</string>
-    <string name="ok">Valider</string>
+    <string name="ok">OK</string>
     <string name="always_display_full_date">Afficher la date complète</string>
     <string name="custom_filter_is_subtask">Est une sous-tâche</string>
     <string name="custom_filter_has_subtask">A des sous-tâches</string>
@@ -363,7 +358,6 @@
     <string name="filter_any_start_date">N\'importe quelle date de début</string>
     <string name="CFC_startBefore_name">Débute par…</string>
     <string name="CFC_startBefore_text">Débute par : \?</string>
-    <string name="account_not_included">Non inclus avec les abonnements « Donnez votre prix »</string>
     <string name="subscription">Abonnement</string>
     <string name="widget_show_title">Afficher le titre</string>
     <string name="tasks_org_account_required">Compte « Tasks.org » requis</string>
@@ -426,7 +420,6 @@
     <string name="returning_user">Restaurer les données ?</string>
     <string name="import_failed_message">Impossible de lire le fichier de sauvegarde</string>
     <string name="import_failed">Échec de l\'importation</string>
-    <string name="banner_subscription_required_title">Abonnement requis</string>
     <string name="banner_subscription_required_body">Payez ce que vous voulez pour déverrouiller la synchronisation %s</string>
     <string name="email_to_task">Courriel en tâche</string>
     <string name="email_to_task_address">Votre adresse électronique</string>

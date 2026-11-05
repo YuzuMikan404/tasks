@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Hledat</string>
-    <string name="subscribe">Předplatit</string>
     <string name="filter_my_tasks">Moje úkoly</string>
     <string name="filter_notifications">Oznámení</string>
     <string name="filter_snoozed">Odloženo</string>
@@ -26,7 +25,6 @@
     <string name="yesterday_abbrev_lowercase">včera</string>
     <string name="yesterday_lowercase">včera</string>
     <string name="search_no_results">Žádné výsledky</string>
-    <string name="requires_pro_subscription">Vyžaduje předplatné Pro</string>
     <string name="subscription_required_description">Odemkněte všechny funkce za pouhý $1 USD ročně</string>
     <string name="show_completed">Zobrazit dokončené</string>
     <string name="show_unstarted">Zobrazit nezahájené</string>
@@ -67,7 +65,6 @@
     <string name="microsoft_selection_description_googleplay">Synchronizujte se svým pracovním, školním nebo osobním účtem Microsoft</string>
     <string name="tasks_org_description">Zahrnuje sdílení s rodinou a přáteli a e-mail na úkol</string>
     <string name="name_your_price">Zaplaťte libovolnou částku</string>
-    <string name="upgrade_to_pro">Získat verzi Pro</string>
     <string name="legal_disclosure_prefix_using">Používáním Tasks.org</string>
     <string name="caldav_selection_description">Synchronizace založená na otevřených internetových standardech</string>
     <string name="davx5_selection_description">Synchronizujte své úkoly pomocí aplikace DAVx⁵</string>
@@ -76,8 +73,6 @@
     <string name="sign_in_to_tasks">Přihlásit se do Tasks.org</string>
     <string name="sign_in_with_google">Přihlášení přes Google</string>
     <string name="sign_in_with_github">Přihlášení přes GitHub</string>
-    <string name="google_play_subscribers">předplatitelé Google Play</string>
-    <string name="github_sponsors">sponzoři na GitHubu</string>
     <string name="completed">Splněný</string>
     <string name="filter_overdue">Po termínu</string>
     <string name="no_due_date">Bez termínu</string>
@@ -117,7 +112,6 @@
     <string name="show_less">Zobrazit méně</string>
     <string name="display_name">Zobrazované jméno</string>
     <string name="upgrade_to_pro_card_description">Odemkněte cloudovou synchronizaci Tasks.org, sdílení s rodinou a přáteli a e-mail na úkol</string>
-    <string name="supporter">Podporovatel</string>
     <string name="price_per_month_with_currency">%1$s měsíčně</string>
     <string name="price_per_year_with_currency">%1$s ročně</string>
     <string name="supporter_summary">%1$s • Děkujeme!</string>
@@ -150,7 +144,6 @@
     <string name="tos_updated_title">Upravili jsme naše Podmínky služby</string>
     <string name="view_tos">Zobrazit Podmínky služby</string>
     <string name="insufficient_sponsorship">Nenalezeno žádné platné GitHub sponzorování</string>
-    <string name="button_subscribe">Předplatit</string>
     <string name="your_subscription_expired">Platnost vašeho předplatného skončila. Pokud chcete službu dále využívat, obnovte ho.</string>
     <string name="insufficient_subscription">Nedostatečná úroveň předplatného. Pokud chcete službu dále využívat, prosím zvyšte své předplatné.</string>
     <string name="authentication_required">Je vyžadováno ověření se</string>
@@ -243,7 +236,6 @@
     <string name="error_github_verification_failed">Ověření selhalo. Prosím, zkuste to znovu.</string>
     <string name="pricing_subtitle">Svobodné a s otevřeným zdrojovým kódem. Předplatné podporují vývoj a odemykají další funkce.</string>
     <string name="pricing_cloud_description">Odemkněte všechny funkce aplikace a připojte se k Tasks.org Cloud synchronizaci.</string>
-    <string name="pricing_nyp_title">Řekněte si cenu</string>
     <string name="pricing_from">Od %1$s</string>
     <string name="pricing_nyp_description">Vyberte si svou vlastní cenu předplatného. Toto odemkne všechny funkce aplikace.</string>
     <string name="pricing_recommended">Doporučené</string>
@@ -520,7 +512,7 @@
     </plurals>
     <string name="delete_task">Smazat úkol</string>
     <string name="menu_discard_changes">Zrušit změny</string>
-    <string name="more_options">Další volby</string>
+    <string name="more_options">Další možnosti</string>
     <string name="quiet_hours_in_effect">Režim nerušit je zapnutý</string>
     <string name="troubleshooting">Řešení problémů</string>
     <string name="notification_troubleshooting_summary">Klepněte sem pokud se vám zpožďují upozornění či se vůbec nezobrazují</string>
@@ -621,4 +613,12 @@
     <string name="theme_day_night">Den/Noc</string>
     <string name="theme_system_default">Podle systému</string>
     <string name="works_with_desktop">Tasks.org pro počítače</string>
+    <string name="mcp_access_advanced">Pokročilé možnosti</string>
+    <string name="mcp_tools_group_lists">Seznamy</string>
+    <string name="mcp_tools_group_tags">Štítky</string>
+    <string name="mcp_tools_group_places">Místa</string>
+    <string name="mcp_tools_group_reminders">Upomínky</string>
+    <string name="mcp_copy">Kopírovat</string>
+    <string name="new_filter">Vytvořit nový filtr</string>
+    <string name="subscription_required">Vyžadováno předplatné</string>
 </resources>

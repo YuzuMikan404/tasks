@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Пошук</string>
-    <string name="subscribe">Підписатися</string>
     <string name="filter_my_tasks">Мої завдання</string>
     <string name="filter_notifications">Сповіщення</string>
     <string name="filter_snoozed">Відкладені</string>
@@ -11,7 +10,6 @@
     <string name="default_list">Типовий список</string>
     <string name="search_no_results">Не знайдено</string>
     <string name="subscription_required_description">Розблокуйте всі функції всього за 1 долар США на рік</string>
-    <string name="requires_pro_subscription">Функція Pro</string>
     <string name="help_and_feedback">Довідка і зворотний зв'язок</string>
     <string name="settings">Налаштування</string>
     <string name="drawer_filters">Фільтри</string>
@@ -50,7 +48,6 @@
     <string name="microsoft_selection_description">Синхронізація з особистим обліковим записом Microsoft</string>
     <string name="cost_free">Безплатно</string>
     <string name="name_your_price">Назвіть свою ціну</string>
-    <string name="upgrade_to_pro">Покращити до Преміум</string>
     <string name="caldav_selection_description">Синхронізація на основі стандартів відкритого інтернету</string>
     <string name="davx5_selection_description">Синхронізувати ваші завдання з застосунком DAVx⁵</string>
     <string name="etesync_selection_description">Захищена наскрізним шифруванням синхронізація</string>
@@ -58,8 +55,6 @@
     <string name="sign_in_to_tasks">Увійти на Tasks.org</string>
     <string name="sign_in_with_google">Увійти через Google</string>
     <string name="sign_in_with_github">Увійти через GitHub</string>
-    <string name="google_play_subscribers">Підписники Google Play</string>
-    <string name="github_sponsors">Спонсори GitHub</string>
     <string name="completed">Виконано</string>
     <string name="filter_overdue">Прострочені</string>
     <string name="no_due_date">Немає дати завершення</string>
@@ -90,7 +85,7 @@
     <string name="subtasks">Підзавдання</string>
     <string name="sort_not_available">Недоступно для міток, фільтрів і місць</string>
     <string name="none">Немає</string>
-    <string name="ok">Гаразд</string>
+    <string name="ok">OK</string>
     <string name="cancel">Скасувати</string>
     <string name="back">Назад</string>
     <string name="help">Довідка</string>
@@ -114,7 +109,6 @@
     <string name="app_password_delete_confirmation">Будь-який застосунок, що використовує цей пароль, вийде з облікового запису</string>
     <string name="app_password_enter_description">Дайте назву своєму паролю (необов’язково)</string>
     <string name="insufficient_sponsorship">Відповідного вимогам спонсорства GitHub не знайдено</string>
-    <string name="button_subscribe">Підписатися</string>
     <string name="your_subscription_expired">Термін дії вашої підписки закінчився. Підпишіться зараз, щоб відновити обслуговування.</string>
     <string name="insufficient_subscription">Недостатній рівень підписки. Будь ласка, оновіть свою підписку, щоб відновити обслуговування.</string>
     <string name="authentication_required">Необхідна аутентифікація</string>
@@ -391,7 +385,7 @@
     </plurals>
     <string name="delete_task">Видалити завдання</string>
     <string name="menu_discard_changes">Скасувати зміни</string>
-    <string name="more_options">Додаткові параметри</string>
+    <string name="more_options">Більше</string>
     <string name="quiet_hours_in_effect">Активовано тихі години</string>
     <string name="troubleshooting">Розв'язання проблем</string>
     <string name="notification_troubleshooting_summary">Натисніть тут, якщо маєте проблеми з повідомленнями</string>
@@ -481,4 +475,33 @@
     <string name="theme_wallpaper">Шпалери</string>
     <string name="theme_day_night">День/Ніч</string>
     <string name="theme_system_default">За системними налаштуваннями</string>
+    <string name="mcp_access_advanced">Розширені</string>
+    <string name="mcp_tools_group_lists">Списки</string>
+    <string name="mcp_tools_group_tags">Мітки</string>
+    <string name="mcp_tools_group_places">Місця</string>
+    <string name="mcp_tools_group_reminders">Нагадування</string>
+    <string name="mcp_copy">Копіювати</string>
+    <string name="show_completed_subtasks">Показати виконані підзавдання</string>
+    <string name="wear_phone_update_required">Оновлення телефона обов\'язкове</string>
+    <string name="wear_connecting_to_phone">Під\'єднання до телефона…</string>
+    <string name="edit_task">Змінити завдання</string>
+    <string name="task_title">Загаловок завдання</string>
+    <string name="no_list_available">Немає доступних списків</string>
+    <string name="failed_to_save_task">Не вдалося зберегти завдання</string>
+    <string name="failed_to_load_task">Не вдалося завантажити завдання</string>
+    <string name="enter_title">Ввести заголовок</string>
+    <string name="group_mode">Група</string>
+    <string name="sort_alphabetical">За абеткою</string>
+    <string name="sort_created">Створено</string>
+    <string name="sort_modified">Змінено</string>
+    <string name="all_done">Усе виконано!</string>
+    <string name="add_platform_account">Додати обліковий запис %1$s</string>
+    <string name="works_with_desktop">Tasks.org для комп\'ютера</string>
+    <string name="new_filter">Створити новий фільтр</string>
+    <string name="email_to_task_address">Ваша адреса е-пошти</string>
+    <string name="legal_disclosure_prefix_using">Використовуючи Tasks.org</string>
+    <string name="tos_updated_title">Ми оновили Умови користування</string>
+    <string name="accept">Прийняти</string>
+    <string name="email_to_task">Е-лист до завдання</string>
+    <string name="subscription_required">Потрібна передплата</string>
 </resources>

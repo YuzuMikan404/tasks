@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Buscar</string>
-    <string name="subscribe">Suscribirse</string>
     <string name="filter_my_tasks">As miñas tarefas</string>
     <string name="filter_notifications">Notificacións</string>
     <string name="filter_snoozed">Posposta</string>
@@ -28,7 +27,6 @@
     <string name="show_unstarted">Amosar sen comezar</string>
     <string name="show_completed">Amosar finalizadas</string>
     <string name="search_no_results">Sen resultados</string>
-    <string name="requires_pro_subscription">Característica Pro</string>
     <string name="subscription_required_description">Desbloquea todas as características por tan pouco como 1$/ano</string>
     <string name="add_task">Engade a tarefa</string>
     <string name="wear_install_app">Instala en teléfono</string>
@@ -50,7 +48,6 @@
     <string name="microsoft_selection_description">Sincronizar coa túa conta persoal de Microsoft</string>
     <string name="cost_free">Gratis</string>
     <string name="name_your_price">Prezo flexible</string>
-    <string name="upgrade_to_pro">Anovar a pro</string>
     <string name="caldav_selection_description">Sincronización basada en estándares abertos de internet</string>
     <string name="davx5_selection_description">Sincronizar tarefas co aplicativo DAVx⁵</string>
     <string name="etesync_selection_description">Sincronización con cifrado par a par</string>
@@ -58,8 +55,6 @@
     <string name="sign_in_to_tasks">Acceder a Tasks.org</string>
     <string name="sign_in_with_google">Acceso con Google</string>
     <string name="sign_in_with_github">Acceso con GitHub</string>
-    <string name="google_play_subscribers">Subscritores de Google Play</string>
-    <string name="github_sponsors">Patrocinadores de GitHub</string>
     <string name="completed">Finalizada</string>
     <string name="filter_overdue">Atrasada</string>
     <string name="no_due_date">Sen data de vencemiento</string>
@@ -114,7 +109,6 @@
     <string name="app_password_delete_confirmation">Calquera aplicación que use este contrasinal pechará sesión</string>
     <string name="app_password_enter_description">Dálle un nome ao contrasinal (opcional)</string>
     <string name="insufficient_sponsorship">Non se atopou ningún patrocinio de GitHub elixible</string>
-    <string name="button_subscribe">Suscribirse</string>
     <string name="your_subscription_expired">A túa subscrición caducou. Subscríbete agora para retomar o servizo.</string>
     <string name="insufficient_subscription">Nivel de subscrición insuficiente. Por favor actualiza a túa subscrición para reanudar o servizo.</string>
     <string name="authentication_required">Precísase autenticación</string>
@@ -455,4 +449,11 @@
     <string name="theme_wallpaper">Fondo de pantalla</string>
     <string name="theme_day_night">Día/Noite</string>
     <string name="theme_system_default">Predefinido do sistema</string>
+    <string name="mcp_access_advanced">Avanzada</string>
+    <string name="mcp_tools_group_lists">Listas</string>
+    <string name="mcp_tools_group_tags">Etiquetas</string>
+    <string name="mcp_tools_group_places">Lugares</string>
+    <string name="mcp_tools_group_reminders">Recordatorios</string>
+    <string name="mcp_copy">Copiar</string>
+    <string name="new_filter">Crear novo filtro</string>
 </resources>

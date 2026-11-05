@@ -1,22 +1,98 @@
 name: Install Conveyor
-description: Download and verify Conveyor binary
+description: Set up JDK, Gradle and Conveyor
 
 inputs:
   version:
     description: Conveyor version
-    required: true
     default: "22.0"
   sha256:
-    description: Expected SHA-256 hash of the tarball
-    required: true
+    description: Conveyor SHA-256
     default: "768ea002e99149deb502a9177c11f2f00dcbffa976e505f7f424a5492287ee3c"
 
 runs:
   using: composite
   steps:
-    - name: Install Conveyor
+    - uses: ./.github/actions/setup-gradle
+
+    - name: Cache Conveyor distribution
+      uses: actions/cache@v6
+      with:
+        path: ${{ runner.temp }}/conveyor.tar.gz
+        key: conveyor-dist-${{ inputs.version }}-${{ inputs.sha256 }}
+
+    - name: Download Conveyor
       shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+        SHA256: ${{ inputs.sha256 }}
       run: |
-        curl -fsSL -o /tmp/conveyor.tar.gz "https://downloads.hydraulic.dev/conveyor/conveyor-${{ inputs.version }}-linux-amd64.tar.gz"
-        echo "${{ inputs.sha256 }}  /tmp/conveyor.tar.gz" | sha256sum -c
-        sudo tar xf /tmp/conveyor.tar.gz -C /usr/local --strip-components=1
+        set -euo pipefail
+        if echo "$SHA256  $RUNNER_TEMP/conveyor.tar.gz" | sha256sum -c --status 2>/dev/null; then
+          echo "Restored from cache, checksum verified."
+          exit 0
+        fi
+        rm -f "$RUNNER_TEMP/conveyor.tar.gz"
+        scripts/fetch "$RUNNER_TEMP/conveyor.tar.gz" "https://downloads.hydraulic.dev/conveyor/conveyor-$VERSION-linux-amd64.tar.gz" "$SHA256"
+        ls -l "$RUNNER_TEMP/conveyor.tar.gz"
+
+    - name: Extract Conveyor
+      shell: bash
+      run: sudo tar xf "$RUNNER_TEMP/conveyor.tar.gz" -C /usr/local --strip-components=1
+
+    - name: Linker JDK cache key
+      id: linker-jdk
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+      run: |
+        set -euo pipefail
+        jdk=$(sed -n 's#.*/stdlib/jdk/\([0-9]*\)/.*#\1#p' composeApp/conveyor.conf)
+        echo "jdk=$jdk" >> "$GITHUB_OUTPUT"
+        echo "key=conveyor-linker-jdk-$VERSION-jdk$jdk-$RUNNER_OS-$RUNNER_ARCH" >> "$GITHUB_OUTPUT"
+
+    - name: Restore Conveyor linker JDK
+      id: restore-linker-jdk
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ runner.temp }}/conveyor-linker-jdk
+        key: ${{ steps.linker-jdk.outputs.key }}
+
+    - name: Install Conveyor linker JDK
+      shell: bash
+      env:
+        KEY: ${{ steps.linker-jdk.outputs.key }}
+        HIT: ${{ steps.restore-linker-jdk.outputs.cache-hit }}
+      run: |
+        set -euo pipefail
+        echo "CONVEYOR_LINKER_JDK_KEY=$KEY" >> "$GITHUB_ENV"
+        echo "CONVEYOR_LINKER_JDK_HIT=$HIT" >> "$GITHUB_ENV"
+        if [ -d "$RUNNER_TEMP/conveyor-linker-jdk" ]; then
+          entries="$HOME/.cache/hydraulic/conveyor/cache/entries"
+          mkdir -p "$entries"
+          cp -R "$RUNNER_TEMP/conveyor-linker-jdk/." "$entries/"
+        fi
+
+    - name: Foojay outage workaround
+      if: steps.restore-linker-jdk.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+        JDK: ${{ steps.linker-jdk.outputs.jdk }}
+      run: |
+        set -euo pipefail
+        if [ "$VERSION" != "22.0" ] || [ "$JDK" != "25" ]; then
+          echo "::notice::Stale Linker JDK seed, skipping (remove it!)"
+          exit 0
+        fi
+        entry="$HOME/.cache/hydraulic/conveyor/cache/entries/f4/b1/f4b1f0a211954506"
+        mkdir -p "$entry/content"
+        cat > "$entry/key.md" <<'EOF'
+        Foojay API request for oracle_open_jdk using query version=25&operating_system=linux&architecture=x64&latest=available
+        EOF
+        cat > "$entry/metadata" <<'EOF'
+        {"totalSize":0,"timeTakenToBuildSeconds":0}
+        EOF
+        cat > "$entry/content/response.txt" <<'EOF'
+        https://download.java.net/java/GA/jdk25.0.2/b1e0dfa218384cb9959bdcb897162d4e/10/GPL/openjdk-25.0.2_linux-x64_bin.tar.gz
+        openjdk-25.0.2_linux-x64_bin.tar.gz
+        EOF

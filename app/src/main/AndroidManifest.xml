@@ -191,6 +191,12 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="org.tasks.github.a50fdbf3e289a7fb2fc6" />
       </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="org.tasks.apple" />
+      </intent-filter>
     </activity>
 
     <activity
@@ -381,18 +387,6 @@
           android:name="androidx.work.WorkManagerInitializer"
           android:value="androidx.startup"
           tools:node="remove" />
-      <meta-data
-          android:name="com.mikepenz.iconics.animation.SpinProcessor"
-          android:value="androidx.startup"
-          tools:node="remove" />
-      <meta-data
-          android:name="com.mikepenz.iconics.animation.BlinkAlphaProcessor"
-          android:value="androidx.startup"
-          tools:node="remove" />
-      <meta-data
-          android:name="com.mikepenz.iconics.animation.BlinkScaleProcessor"
-          android:value="androidx.startup"
-          tools:node="remove" />
     </provider>
 
     <provider
@@ -548,22 +542,7 @@
       </intent-filter>
     </receiver>
 
-    <service
-      android:exported="false"
-      android:name=".receivers.RefreshReceiver"
-      android:permission="android.permission.BIND_JOB_SERVICE"/>
-
-    <service
-      android:exported="false"
-      android:name=".scheduling.NotificationSchedulerIntentService"
-      android:permission="android.permission.BIND_JOB_SERVICE"/>
-
     <receiver android:name=".notifications.NotificationClearedReceiver"/>
-
-    <service
-      android:exported="false"
-      android:name=".locale.receiver.TaskerIntentService"
-      android:permission="android.permission.BIND_JOB_SERVICE"/>
 
     <receiver android:name=".location.AndroidGeofenceTransitionIntentService$Broadcast"/>
 

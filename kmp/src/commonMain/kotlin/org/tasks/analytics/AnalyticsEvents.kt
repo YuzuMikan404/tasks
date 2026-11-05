@@ -7,8 +7,9 @@ object AnalyticsEvents {
     const val CONTENT_PROVIDER_TASKS = "cp_tasks"
     const val CONTENT_PROVIDER_ASTRID2 = "cp_astrid2"
 
-    const val MCP_TOOL_CALL = "mcp_tool_call"
+    const val MCP_TOOL_USED = "mcp_tool_used"
     const val APP_FUNCTION_CALL = "app_function_call"
+    const val APP_INTENT_CALL = "app_intent_call"
 
     const val PARAM_PACKAGE = "package"
     const val PARAM_COLLECTION = "collection"
@@ -37,6 +38,7 @@ object AnalyticsEvents {
     const val SETTINGS_CLICK = "settings_click"
     const val SORT_CHANGE = "sort_change"
     const val SYNC_ADD_ACCOUNT = "sync_add_account"
+    const val SYNC_NOT_FOUND = "sync_not_found"
     const val SYNC_UNKNOWN_ACCESS = "sync_unknown_access"
 
     const val PARAM_FROM_BACKGROUND = "from_background"
@@ -53,6 +55,8 @@ object AnalyticsEvents {
     const val PERIOD_MONTHLY = "monthly"
     const val SELECTION_GITHUB = "github"
     const val SELECTION_GOOGLE_PLAY = "google_play"
+    const val SOURCE_DRAWER = "drawer"
+    const val SOURCE_ONBOARDING = "onboarding"
     const val SOURCE_SETTINGS = "settings"
     const val TIER_CLOUD = "cloud"
     const val TIER_NYP = "nyp"

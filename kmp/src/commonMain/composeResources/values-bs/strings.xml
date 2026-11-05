@@ -9,7 +9,7 @@
     <string name="sort_priority">Prioritet</string>
     <string name="sort_start_date">Datum početka</string>
     <string name="group_none">Ništa</string>
-    <string name="ok">OK</string>
+    <string name="ok">Uredu</string>
     <string name="cancel">Otkaži</string>
     <string name="no_due_date">Bez datuma roka</string>
     <string name="no_start_date">Bez datuma početka</string>
@@ -67,4 +67,6 @@
     <string name="TEA_add_subtask">Dodaj podzadatak</string>
     <string name="customize_drawer">Prilagodi meni</string>
     <string name="customize_drawer_summary">Povuci i pusti za promjenu rasporeda u meniju</string>
+    <string name="mcp_tools_group_reminders">Podsjetnici</string>
+    <string name="more_options">Više opcija</string>
 </resources>

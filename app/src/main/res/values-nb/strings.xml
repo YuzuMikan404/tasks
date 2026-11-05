@@ -208,11 +208,8 @@
     <string name="tasker_create_task">Opprett gjøremål</string>
     <string name="tasker_list_notification">Listemerknad</string>
     <string name="help">Hjelp</string>
-    <string name="upgrade_to_pro">Oppgrader til pro</string>
     <string name="refresh_purchases">Gjenoppfrisk kjøp</string>
-    <string name="button_subscribe">Abonner</string>
     <string name="pro_dashclock_extension">Dashclock-utvidelse</string>
-    <string name="requires_pro_subscription">Krever pro-abonnement</string>
     <string name="logout">Logg ut</string>
     <string name="reinitialize_account">Last inn på ny</string>
     <string name="action_create_new_task">Opprett nytt gjøremål</string>
@@ -235,13 +232,11 @@
     <string name="choose_new_location">Velg nytt sted</string>
     <string name="invalid_backup_file">Ugyldig sikkerhetskopifil</string>
     <string name="icon">Ikon</string>
-    <string name="name_your_price">Betal det du vil</string>
     <string name="SSD_sort_my_order">Min bestilling</string>
     <string name="expand_subtasks">Fold ut gjøremålssteg</string>
     <string name="collapse_subtasks">Fold sammen gjøremålssteg</string>
     <string name="subtasks">Gjøremålssteg</string>
     <string name="display_name">Visningsnavn</string>
-    <string name="this_feature_requires_a_subscription">Denne funksjonen krever abonnement</string>
     <string name="choose_synchronization_service">Velg en plattform</string>
     <string name="show_advanced_settings">Vis avanserte innstillinger</string>
     <string name="help_and_feedback">Hjelp og tilbakemelding</string>
@@ -354,7 +349,6 @@
     <string name="app_password">Programpassord</string>
     <string name="local_lists">Lokale lister</string>
     <string name="copied_to_clipboard">%s kopiert til utklippstavlen</string>
-    <string name="account_not_included">Ikke inkludert i «Bestem prisen selv»-abonnementer</string>
     <string name="subscription">Abonnement</string>
     <string name="filter_criteria_unstarted">Ikke startet</string>
     <string name="filter_any_start_date">Vilkårlig startdato</string>

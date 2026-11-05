@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Søk</string>
-    <string name="subscribe">Abonner</string>
     <string name="filter_my_tasks">Mine gjøremål</string>
     <string name="filter_notifications">Varsler</string>
     <string name="filter_snoozed">Slumret</string>
@@ -39,11 +38,9 @@
     <string name="password_required">Passord kreves</string>
     <string name="caldav_home_set_not_found">Hjemmesettet ble ikke funnet</string>
     <string name="add_account">Legg til konto</string>
-    <string name="requires_pro_subscription">Krever pro-abonnement</string>
     <string name="google_tasks_selection_description">Enkel tjeneste som synkroniserer med Google-kontoen din</string>
     <string name="microsoft_selection_description">Synkroniser med din personlige Microsoft-konto</string>
     <string name="name_your_price">Betal det du vil</string>
-    <string name="upgrade_to_pro">Oppgrader til pro</string>
     <string name="caldav_selection_description">Synkronisering basert på åpne internettstandarder</string>
     <string name="davx5_selection_description">Synkroniser dine gjøremål med DAVx⁵-programmet</string>
     <string name="etesync_selection_description">Ende-til-ende-kryptert synkronisering</string>
@@ -51,8 +48,6 @@
     <string name="sign_in_to_tasks">Logg inn på Tasks.org</string>
     <string name="sign_in_with_google">Logg inn med Google</string>
     <string name="sign_in_with_github">Logg inn med GitHub</string>
-    <string name="google_play_subscribers">Google Play-abonnenter</string>
-    <string name="github_sponsors">GitHub-sponsorer</string>
     <string name="completed">Fullført</string>
     <string name="filter_overdue">Forsinket</string>
     <string name="no_due_date">Ingen tidsfristdato</string>
@@ -105,7 +100,6 @@
     <string name="app_password_delete_confirmation">Ethvert program som bruker dette passordet vil bli utlogget</string>
     <string name="app_password_enter_description">Gi ditt nye passord et navn (valgfritt)</string>
     <string name="insufficient_sponsorship">Fant ikke noe GitHub-sponsorabonnement</string>
-    <string name="button_subscribe">Abonner</string>
     <string name="your_subscription_expired">Ditt abonnement har utløpt. Abonner nå for å fortsette tjenesten.</string>
     <string name="insufficient_subscription">Utilstrekkelig abonnementsnivå. Oppgrader ditt abonnement for å fortsette tjenesten.</string>
     <string name="authentication_required">Identitetsbekreftelse kreves</string>
@@ -351,7 +345,7 @@
     </plurals>
     <string name="delete_task">Slett gjøremål</string>
     <string name="menu_discard_changes">Forkast endringer</string>
-    <string name="more_options">Flere innstillinger</string>
+    <string name="more_options">Flere alternativer</string>
     <string name="troubleshooting">Feilsøking</string>
     <string name="notification_troubleshooting_summary">Trykk her hvis du har problemer med merknader</string>
     <string name="disable_battery_optimizations">Skru av batterisparing</string>
@@ -436,4 +430,11 @@
     <string name="theme_wallpaper">Bakgrunnsbilde</string>
     <string name="theme_day_night">Dag/natt</string>
     <string name="theme_system_default">Systemforvalg</string>
+    <string name="mcp_access_advanced">Avansert</string>
+    <string name="mcp_tools_group_lists">Lister</string>
+    <string name="mcp_tools_group_tags">Etiketter</string>
+    <string name="mcp_tools_group_places">Steder</string>
+    <string name="mcp_tools_group_reminders">Påminnelser</string>
+    <string name="mcp_copy">Kopier</string>
+    <string name="new_filter">Opprett nytt filter</string>
 </resources>

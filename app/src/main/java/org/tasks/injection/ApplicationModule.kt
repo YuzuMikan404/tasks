@@ -41,11 +41,13 @@ import org.tasks.etebase.EtebaseSynchronizer
 import org.tasks.caldav.TasksBasicAuth
 import org.tasks.feed.BlogFeedChecker
 import org.tasks.http.HttpClientFactory
+import org.tasks.http.OkHttpKtorClientFactory
 import org.tasks.caldav.FileStorage
 import org.tasks.analytics.Analytics
 import org.tasks.analytics.CrashReporting
 import org.tasks.caldav.TasksAccountDataRepository
 import org.tasks.caldav.VtodoCache
+import org.tasks.caldav.metadata.TagMetadataSync
 import org.tasks.compose.drawer.DrawerConfiguration
 import org.tasks.R
 import org.tasks.data.OpenTaskDao
@@ -134,7 +136,10 @@ class ApplicationModule {
 
     @Provides
     fun getRepeatRuleToString(locale: Locale, crashReporting: CrashReporting) =
-        RepeatRuleToString(locale = locale, crashReporting = crashReporting)
+        RepeatRuleToString(
+            crashReporting = crashReporting,
+            languageTag = locale.toLanguageTag(),
+        )
 
     @Provides
     @Singleton
@@ -282,7 +287,7 @@ class ApplicationModule {
         provider: org.tasks.caldav.CaldavClientProvider,
         vtodoCache: VtodoCache,
         tasksPreferences: TasksPreferences,
-    ) = org.tasks.caldav.metadata.TagMetadataSync(caldavDao, tagDataDao, provider, vtodoCache, tasksPreferences)
+    ) = TagMetadataSync(caldavDao, tagDataDao, provider, vtodoCache, tasksPreferences)
 
     @Provides
     @Singleton
@@ -449,7 +454,7 @@ class ApplicationModule {
         encryption = encryption,
         tasksPreferences = tasksPreferences,
         environment = environment,
-        httpClientFactory = httpClientFactory,
+        httpClientFactory = OkHttpKtorClientFactory(httpClientFactory),
         tokenProvider = tokenProvider,
         subscriptionProvider = {
             inventory.subscription.value?.let {
@@ -546,7 +551,7 @@ class ApplicationModule {
         principalDao: org.tasks.data.dao.PrincipalDao,
         vtodoCache: VtodoCache,
         accountDataRepository: org.tasks.caldav.TasksAccountDataRepository,
-        tagMetadataSync: org.tasks.caldav.metadata.TagMetadataSync,
+        tagMetadataSync: TagMetadataSync,
     ) = org.tasks.caldav.CaldavSynchronizer(
         caldavDao, dirtyDao, refreshBroadcaster, taskDeleter, reporting,
         provider, iCal, principalDao, vtodoCache, accountDataRepository, tagMetadataSync,
@@ -685,6 +690,7 @@ class ApplicationModule {
         alarmService: AlarmService,
         locationService: LocationService,
         listManager: org.tasks.api.ApiListManager,
+        tagMetadataSync: TagMetadataSync,
     ) = org.tasks.api.ApiWriter(
         apiDao = apiDao,
         taskDao = taskDao,
@@ -701,6 +707,7 @@ class ApplicationModule {
         alarmService = alarmService,
         locationService = locationService,
         listManager = listManager,
+        tagMetadataEditor = tagMetadataSync,
     )
 
     @Provides

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Keresés</string>
-    <string name="subscribe">Előfizetés</string>
     <string name="filter_my_tasks">Saját Feladatok</string>
     <string name="filter_notifications">Értesítések</string>
     <string name="filter_snoozed">Elhalasztva</string>
@@ -26,7 +25,6 @@
     <string name="yesterday_lowercase">tegnap</string>
     <string name="today_lowercase">ma</string>
     <string name="search_no_results">Nincs találat</string>
-    <string name="requires_pro_subscription">Előfizetés szükséges</string>
     <string name="subscription_required_description">Csupán 1$/év az összes funkcióért</string>
     <string name="add_task">Feladat létrehozása</string>
     <string name="show_unstarted">El nem kezdettek mutatása</string>
@@ -59,7 +57,6 @@
     <string name="microsoft_selection_description_googleplay">Szinkronizálás munkahelyi, iskolai vagy személyes Microsoft fiókkal</string>
     <string name="tasks_org_description">Beleértve a megosztás családdal és barátokkal, illetve Task e-mailből funkciókat</string>
     <string name="name_your_price">Nevezd meg az árat</string>
-    <string name="upgrade_to_pro">Upgrade pro verzióra</string>
     <string name="legal_disclosure_prefix_using">A Tasks.org használata által</string>
     <string name="caldav_selection_description">Nyílt Internetes szabványon alapuló szinkronizáció</string>
     <string name="davx5_selection_description">Feladatok szinkronizálása DAVx⁵ alkalmazással</string>
@@ -68,8 +65,6 @@
     <string name="sign_in_to_tasks">Tasks.org bejelentkezés</string>
     <string name="sign_in_with_google">Bejelentkezés Google fiókkal</string>
     <string name="sign_in_with_github">Bejelentkezés GitHub fiókkal</string>
-    <string name="google_play_subscribers">Google Play előfizetők</string>
-    <string name="github_sponsors">GitHub szponzorok</string>
     <string name="completed">Elvégzett</string>
     <string name="filter_overdue">Határidőn túli</string>
     <string name="no_due_date">Határidő nélkül</string>
@@ -117,7 +112,6 @@
     <string name="show_less">Kevesebb mutatása</string>
     <string name="display_name">Megjelenített név</string>
     <string name="upgrade_to_pro_card_description">Tasks.org felhős szinkronizálás, megosztás családdal és barátokkal, illetve Task e-mailből funkciók feloldása</string>
-    <string name="supporter">Támogató</string>
     <string name="price_per_month_with_currency">%1$s/hónap</string>
     <string name="price_per_year_with_currency">%1$s/év</string>
     <string name="supporter_summary">%1$s • Köszönöm!</string>
@@ -150,7 +144,6 @@
     <string name="tos_updated_title">Frissítettük a Szolgáltatási feltételeket</string>
     <string name="view_tos">Szolgáltatási feltételek megtekintése</string>
     <string name="insufficient_sponsorship">Nem található GitHub szponzorálás</string>
-    <string name="button_subscribe">Előfizetés</string>
     <string name="your_subscription_expired">Az előfizetés lejárt. Fizessen elő most a szolgáltatás folytatásához.</string>
     <string name="insufficient_subscription">Elégtelen előfizetési szint. Kérem, upgrade-elje az előfizetést a szolgáltatás folytatásához.</string>
     <string name="authentication_required">Azonosítás szükséges</string>
@@ -419,7 +412,7 @@
     </plurals>
     <string name="delete_task">Feladat törlése</string>
     <string name="menu_discard_changes">Módosítások elvetése</string>
-    <string name="more_options">Több opció</string>
+    <string name="more_options">További lehetőségek</string>
     <string name="quiet_hours_in_effect">Csendes órák bekapcsolva</string>
     <string name="troubleshooting">Hibaelhárítás</string>
     <string name="notification_troubleshooting_summary">Kattints ide, ha nem működnek az értesítések</string>
@@ -520,4 +513,12 @@
     <string name="theme_day_night">Nappal/Éjszaka</string>
     <string name="theme_system_default">Alapértelmezett</string>
     <string name="works_with_desktop">Tasks.org PC-re</string>
+    <string name="mcp_access_advanced">További lehetőségek</string>
+    <string name="mcp_tools_group_lists">Listák</string>
+    <string name="mcp_tools_group_tags">Címkék</string>
+    <string name="mcp_tools_group_places">Helyek</string>
+    <string name="mcp_tools_group_reminders">Emlékeztetők</string>
+    <string name="mcp_copy">Másolás</string>
+    <string name="new_filter">Új szűrő létrehozása</string>
+    <string name="subscription_required">Előfizetés szükséges</string>
 </resources>

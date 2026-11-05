@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Bilatu</string>
-    <string name="subscribe">Harpidetu</string>
     <string name="filter_my_tasks">Nire zereginak</string>
     <string name="filter_notifications">Jakinarazpenak</string>
     <string name="filter_snoozed">Lo</string>
@@ -39,13 +38,11 @@
     <string name="password_required">Pasahitza ezinbestekoa da</string>
     <string name="caldav_home_set_not_found">Ez da jatorria aurkitu</string>
     <string name="add_account">Gehitu kontua</string>
-    <string name="requires_pro_subscription">Pro harpidetza eskatzen du</string>
     <string name="google_tasks_selection_description">Zure Google kontuarekin sinkronizatzen den oinarrizko zerbitzua</string>
     <string name="microsoft_selection_description">Sinkronizatu zure Microsoft kontu pertsonalarekin</string>
     <string name="name_your_price">Jarri zuk prezioa</string>
-    <string name="upgrade_to_pro">Aldatu pro bertsiora</string>
     <string name="ok">Ados</string>
-    <string name="cancel">Ezeztatu</string>
+    <string name="cancel">Utzi</string>
     <string name="caldav_selection_description">Internet estandar irekietan oinarritutako sinkronizazioa</string>
     <string name="davx5_selection_description">Sinkronizatu zure zereginak DAVx⁵ aplikazioarekin</string>
     <string name="etesync_selection_description">Muturretik-muturrera zifratutako sinkronizazioa</string>
@@ -53,8 +50,6 @@
     <string name="sign_in_to_tasks">Hasi saioa Tasks.org gunean</string>
     <string name="sign_in_with_google">Hasi saioa Google-n</string>
     <string name="sign_in_with_github">Hasi saioa GitHub erabiliz</string>
-    <string name="google_play_subscribers">Google Play harpideak</string>
-    <string name="github_sponsors">GitHub babesleak</string>
     <string name="completed">Amaituta</string>
     <string name="filter_overdue">Gainditua</string>
     <string name="no_due_date">Epemuga gabe</string>
@@ -98,7 +93,6 @@
     <string name="app_password_delete_confirmation">Pasahitz hau darabiltzaten aplikazioen saioak amaituko dira</string>
     <string name="app_password_enter_description">Eman izen bat zure pasahitzari (aukerazkoa)</string>
     <string name="insufficient_sponsorship">Ez da GitHub sponsorship egokirik aurkitu</string>
-    <string name="button_subscribe">Harpidetu</string>
     <string name="your_subscription_expired">Zure harpidetza agortu da. Harpidetu orain zerbitzua berrekiteko.</string>
     <string name="insufficient_subscription">Harpidetza maila ez da nahikoa. Hobetu zure harpidetza zerbitzua berrekiteko.</string>
     <string name="authentication_required">Autentifikazioa derrigorrezkoa</string>
@@ -408,4 +402,11 @@
     <string name="theme_wallpaper">Horma-papera</string>
     <string name="theme_day_night">Eguna/Gaua</string>
     <string name="theme_system_default">Sisteman lehenetsia</string>
+    <string name="mcp_access_advanced">Aurreratua</string>
+    <string name="mcp_tools_group_lists">Zerrendak</string>
+    <string name="mcp_tools_group_tags">Etiketak</string>
+    <string name="mcp_tools_group_places">Tokiak</string>
+    <string name="mcp_tools_group_reminders">Oroigarriak</string>
+    <string name="mcp_copy">Kopiatu</string>
+    <string name="new_filter">Sortu iragazki berria</string>
 </resources>

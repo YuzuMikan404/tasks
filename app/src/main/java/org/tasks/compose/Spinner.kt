@@ -1,11 +1,10 @@
 package org.tasks.compose
 
+import org.tasks.themes.TasksIcons
+import org.tasks.compose.components.SymbolIcon
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,8 +27,8 @@ fun <T> Spinner(
             text = selectedOption,
             color = MaterialTheme.colorScheme.onSurface,
         )
-        Icon(
-            imageVector = Icons.Outlined.ArrowDropDown,
+        SymbolIcon(
+            name = TasksIcons.ARROW_DROP_DOWN,
             contentDescription = "",
             tint = MaterialTheme.colorScheme.onSurface,
         )

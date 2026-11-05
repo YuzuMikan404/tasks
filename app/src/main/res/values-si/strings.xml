@@ -39,7 +39,6 @@
     <string name="upgrade_more_customization_description">සියලුම තේමාවන්, වර්ණ සහ අයිකන අගුළු ඇරීම</string>
     <string name="upgrade_more_customization">තවත් අභිරුචිකරණය</string>
     <string name="pro_free_trial">නව ග්‍රාහකයින්ට දින 7 ක නොමිලේ අත්හදා බැලීම් කාලයක් ලැබේ. ඕනෑම වේලාවක අවලංගු කරන්න</string>
-    <string name="account_not_included">\'ඔබේ මිල නම් කරන්න\' (\'Name your price\') දායකත්වයන් සමඟ ඇතුළත් නොවේ</string>
     <string name="tasks_org_account_required">Tasks.org ගිණුම අවශ්‍යයි</string>
     <string name="copied_to_clipboard">%s ක්ලිප් පුවරුවට පිටපත් කරන ලදි</string>
     <string name="app_passwords_more_info">තෙවන පාර්ශවීය ඩෙස්ක්ටොප් සහ ජංගම යෙදුම් සමඟ ඔබගේ කාර්යයන් සහ දින දර්ශන සමමුහුර්ත කරන්න. වැඩි විස්තර සඳහා මෙහි තට්ටු කරන්න</string>
@@ -213,11 +212,9 @@
     <string name="color_wheel">වර්ණ රෝදය</string>
     <string name="etesync_selection_description">End-to-end encrypted සමමුහුර්තකරණය</string>
     <string name="caldav_selection_description">විවෘත අන්තර්ජාල ප්‍රමිතීන් මත පදනම් වූ සමමුහුර්තකරණය</string>
-    <string name="name_your_price">මිලක් නියම කරන්න</string>
     <string name="missing_permissions">අවසරය ලැබී නොමැත</string>
     <string name="location_arrived">%s වෙත පැමිණියේය</string>
     <string name="pro_dashclock_extension">Dashclock දිගුව</string>
-    <string name="upgrade_to_pro">Pro වෙත උත්ශ්‍රේණි කරන්න</string>
     <string name="list_separator_with_space">", "</string>
     <string name="repeats_plural_number_of_times">පුනරාවර්තනය සෑම %1$s, %2$d %3$s සිදු වේ</string>
     <string name="repeats_from">පුනරාවර්තනය වනුයේ</string>
@@ -314,9 +311,6 @@
     <string name="action_create_new_task">නව කාර්යයක් සාදන්න</string>
     <string name="reinitialize_account">නැවත ආරම්භ කරන්න</string>
     <string name="logout">ඉවත් වන්න</string>
-    <string name="this_feature_requires_a_subscription">මෙම අංගයට දායකත්වයක් අවශ්‍ය වේ</string>
-    <string name="requires_pro_subscription">Pro දායකත්වයක් අවශ්‍යයි</string>
-    <string name="button_subscribe">දායක වන්න</string>
     <string name="refresh_purchases">මිලදී ගැනීම් නැවුම් කරන්න</string>
     <string name="subscription">දායකත්වය</string>
     <string name="help_and_feedback">උදව් සහ ප්‍රතිපෝෂණ</string>

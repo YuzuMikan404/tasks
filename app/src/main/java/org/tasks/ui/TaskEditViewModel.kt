@@ -15,6 +15,7 @@ import org.tasks.data.TaskSaver
 import com.todoroo.astrid.files.FilesControlSet
 import com.todoroo.astrid.gcal.GCalHelper
 import com.todoroo.astrid.repeats.RepeatControlSet
+import org.tasks.resources.getString
 import org.tasks.service.TaskCompleter
 import org.tasks.data.getDefaultAlarms
 import org.tasks.service.TaskDeleter
@@ -38,7 +39,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.jetbrains.compose.resources.getString
 import org.tasks.R
 import tasks.kmp.generated.resources.Res
 import tasks.kmp.generated.resources.no_title
@@ -82,9 +82,7 @@ import org.tasks.location.LocationService
 import org.tasks.preferences.DefaultFilterProvider
 import org.tasks.preferences.PermissionChecker
 import org.tasks.preferences.Preferences
-import net.fortuna.ical4j.model.Recur
-import net.fortuna.ical4j.model.WeekDay
-import org.tasks.repeats.RecurrenceUtils.newRecur
+import org.tasks.repeats.anchoredToDueDate
 import org.tasks.time.DateTime
 import org.tasks.time.DateTimeUtils2.currentTimeMillis
 import org.tasks.time.startOfDay
@@ -635,22 +633,9 @@ class TaskEditViewModel @Inject constructor(
 
     fun onDueDateChanged() {
         _viewState.value.task.recurrence?.takeIf { it.isNotBlank() }?.let { recurrence ->
-            val recur = newRecur(recurrence)
-            if (recur.frequency == Recur.Frequency.MONTHLY && recur.dayList.isNotEmpty()) {
-                val weekdayNum = recur.dayList[0]
-                val dateTime =
-                    DateTime(dueDate.value.let { if (it > 0) it else currentTimeMillis() })
-                val dayOfWeekInMonth = dateTime.dayOfWeekInMonth
-                val num = if (weekdayNum.offset == -1 || dayOfWeekInMonth == 5) {
-                    if (dayOfWeekInMonth == dateTime.maxDayOfWeekInMonth) -1 else dayOfWeekInMonth
-                } else {
-                    dayOfWeekInMonth
-                }
-                recur.dayList.let {
-                    it.clear()
-                    it.add(WeekDay(dateTime.weekDay, num))
-                }
-                setRecurrence(recur.toString())
+            val anchored = recurrence.anchoredToDueDate(dueDate.value)
+            if (anchored != recurrence) {
+                setRecurrence(anchored)
             }
         }
     }

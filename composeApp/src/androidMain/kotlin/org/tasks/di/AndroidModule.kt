@@ -1,6 +1,6 @@
 package org.tasks.di
 
-import androidx.room.Room
+import androidx.room3.Room
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -9,7 +9,6 @@ import org.koin.dsl.module
 import org.tasks.analytics.Reporting
 import org.tasks.auth.AndroidSignInHandler
 import org.tasks.auth.SignInHandler
-import org.tasks.auth.TasksServerEnvironment
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -35,7 +34,6 @@ import org.tasks.service.TaskCleanup
 
 actual fun platformModule(): Module = module {
     includes(flavorModule)
-    singleOf(::TasksServerEnvironment)
     factory<Notifier> {
         object : Notifier {
             override suspend fun cancel(id: Long, reason: CancelReason) {}
@@ -53,7 +51,7 @@ actual fun platformModule(): Module = module {
             override fun logEvent(event: String, vararg params: Pair<String, Any>) {}
             override fun addTask(source: String) {}
             override fun completeTask(source: String) {}
-            override fun identify(distinctId: String) {}
+            override fun setSku(sku: String?) {}
             override fun reportException(t: Throwable, fatal: Boolean) {}
         }
     }

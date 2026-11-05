@@ -30,7 +30,7 @@
     <string name="DLG_undo">Poništi</string>
     <string name="import_progress_read">Učitavanje zadatka %d…</string>
     <string name="TVA_add_comment">Dodaj komentar …</string>
-    <string name="cancel">Prekini</string>
+    <string name="cancel">Odustani</string>
     <string name="ok">U redu</string>
     <string name="location_remind_departure">Podsjeti pri odlasku</string>
     <string name="location_remind_arrival">Podsjeti pri dolasku</string>
@@ -117,7 +117,6 @@
     <string name="upgrade_more_customization_description">Otključaj sve teme, boje i ikone</string>
     <string name="upgrade_more_customization">Više prilagođavanja</string>
     <string name="pro_free_trial">Novi pretplatnici dobivaju 7-dnevno besplatno probno razdoblje. Otkaži bilo kada</string>
-    <string name="account_not_included">Nije uključeno s pretplatama „Odredi tvoju cijenu”</string>
     <string name="tasks_org_account_required">Potreban je Tasks.org račun</string>
     <string name="copied_to_clipboard">%s kopirano u međuspremnik</string>
     <string name="app_passwords_more_info">Sinkroniziraj tvoje zadatke i kalendare s računalnim i mobilnim programima trećih strana. Dodirni ovdje za više informacija</string>
@@ -161,7 +160,6 @@
     <string name="caldav_selection_description">Sinkronizacija temeljena na otvorenim internetskim standardima</string>
     <string name="collapse_subtasks">Sklopi podzadatke</string>
     <string name="expand_subtasks">Rasklopi podzadatke</string>
-    <string name="name_your_price">Odredi tvoju cijenu</string>
     <string name="invalid_backup_file">Neispravna datoteka sigurnosne kopije</string>
     <string name="choose_new_location">Odaberi novu lokaciju</string>
     <string name="open_map">Otvori kartu</string>
@@ -176,13 +174,9 @@
     <string name="location_arrived">Stigao/la %s</string>
     <string name="linkify_description">Dodaj poveznice na web-stranice, adrese i telefonske brojeve</string>
     <string name="reinitialize_account">Vrati na početne vrijednosti</string>
-    <string name="this_feature_requires_a_subscription">Ova funkcija zahtijeva pretplata</string>
-    <string name="requires_pro_subscription">Zahtijeva „Pro” pretplatu</string>
     <string name="pro_dashclock_extension">Proširenje sata na preglednoj ploči</string>
-    <string name="button_subscribe">Pretplati se</string>
     <string name="refresh_purchases">Osvježi kupnje</string>
     <string name="subscription">Pretplata</string>
-    <string name="upgrade_to_pro">Nadogradi na Pro verziju</string>
     <string name="tasker_list_notification">Obavijest popisa</string>
     <string name="tasker_create_task">Stvori zadatak</string>
     <string name="badges_description">Prikaži broj zadataka na ikoni pokretača programa Tasks. Neki pokretači ne podržavaju značke.</string>
@@ -419,7 +413,6 @@
     <string name="widget_view_more_tasks">Prikaži više zadataka</string>
     <string name="import_failed">Uvoz neuspio</string>
     <string name="import_failed_message">Nije moguće čitati datoteku sigurnosne kopije</string>
-    <string name="banner_subscription_required_title">Potrebna je pretplata</string>
     <string name="banner_subscription_required_body">Plati koliko god želiš za otključavanje %s sinkronizacije</string>
     <string name="subscription_required_fdroid">Za korištenje Tasks.org sinkronizacije je potrebna pretplata. Pretplata se mora pokrenuti putem Tasks verzije na Google Playu.</string>
     <string name="sponsorship_required_fdroid">Za korištenje Tasks.org sinkronizacije je potrebno GitHub sponzorstvo. Klikni dolje da postaneš sponzor.</string>

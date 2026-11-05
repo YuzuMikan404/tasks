@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Pesquisar</string>
-    <string name="subscribe">Inscrever-se</string>
     <string name="filter_my_tasks">Minhas tarefas</string>
     <string name="filter_notifications">Notificações</string>
     <string name="filter_snoozed">Adiado</string>
@@ -28,7 +27,6 @@
     <string name="show_unstarted">Mostrar não iniciadas</string>
     <string name="show_completed">Mostrar terminadas</string>
     <string name="search_no_results">Não há resultados</string>
-    <string name="requires_pro_subscription">Requer inscrição pro</string>
     <string name="subscription_required_description">Desbloqueie todas as funcionalidades por apenas $1 USD por ano</string>
     <string name="wear_install_app">Instale no celular</string>
     <string name="wear_unknown_error">Erro desconhecido</string>
@@ -50,7 +48,6 @@
     <string name="microsoft_selection_description">Sincronize com a sua conta pessoal Microsoft</string>
     <string name="cost_free">Grátis</string>
     <string name="name_your_price">Dê o seu valor</string>
-    <string name="upgrade_to_pro">Atualizar para pro</string>
     <string name="caldav_selection_description">Sincronização baseada em padrões abertos da Internet</string>
     <string name="davx5_selection_description">Sincronize as suas tarefas com a aplicação DAVx⁵</string>
     <string name="etesync_selection_description">Sincronização com encriptação ponta-a-ponta</string>
@@ -58,8 +55,6 @@
     <string name="sign_in_to_tasks">Iniciar sessão com o Tasks.org</string>
     <string name="sign_in_with_google">Iniciar sessão com o Google</string>
     <string name="sign_in_with_github">Iniciar sessão com o GitHub</string>
-    <string name="google_play_subscribers">Subscritores do Google Play</string>
-    <string name="github_sponsors">Patrocinadores do GitHub</string>
     <string name="completed">Terminado</string>
     <string name="filter_overdue">Ultrapassado</string>
     <string name="no_due_date">Sem data de fim</string>
@@ -90,7 +85,7 @@
     <string name="subtasks">Subtarefas</string>
     <string name="sort_not_available">Não disponível para etiquetas, filtros ou locais</string>
     <string name="none">Nenhum</string>
-    <string name="ok">Aceitar</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
     <string name="back">Voltar</string>
     <string name="help">Ajuda</string>
@@ -114,7 +109,6 @@
     <string name="app_password_delete_confirmation">Qualquer aplicação que usar esta palavra-passe será desconectada</string>
     <string name="app_password_enter_description">Atribua um nome à sua palavra-passe (opcional)</string>
     <string name="insufficient_sponsorship">Não foi encontrado nenhum patrocínio GitHub elegível</string>
-    <string name="button_subscribe">Subscrever</string>
     <string name="your_subscription_expired">A sua subscrição expirou. Renova agora a subscrição para continuar a usar o serviço.</string>
     <string name="insufficient_subscription">Nível de subscrição insuficiente. Por favor atualize a sua subscrição para continuar o serviço.</string>
     <string name="authentication_required">É necessário iniciar sessão</string>
@@ -232,7 +226,6 @@
     <string name="show_more">Mostrar mais</string>
     <string name="show_less">Mostrar menos</string>
     <string name="upgrade_to_pro_card_description">Desbloquear sincronização com nuvem Tasks.org, Partilhamento com Amigos &amp; Família e Email-para-Tarefa</string>
-    <string name="supporter">Apoiador</string>
     <string name="supporter_summary_no_price">Obrigado!</string>
     <string name="supporter_summary">%1$s • Obrigado!</string>
     <string name="sign_in_to_connect">Faça login para conectar a sua conta Tasks.org</string>
@@ -566,4 +559,12 @@
     <string name="theme_day_night">Dia/noite</string>
     <string name="theme_system_default">Predefinição do sistema</string>
     <string name="works_with_desktop">Tasks.org para desktop</string>
+    <string name="mcp_access_advanced">Avançado</string>
+    <string name="mcp_tools_group_lists">Listas</string>
+    <string name="mcp_tools_group_tags">Etiquetas</string>
+    <string name="mcp_tools_group_places">Locais</string>
+    <string name="mcp_tools_group_reminders">Lembretes</string>
+    <string name="mcp_copy">Copiar</string>
+    <string name="new_filter">Criar novo filtro</string>
+    <string name="subscription_required">Inscrição necessária</string>
 </resources>

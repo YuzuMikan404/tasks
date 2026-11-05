@@ -12,6 +12,7 @@ build/
 *.AppImage
 *.AppImage.zsync
 local.properties
+iosApp/Configuration/Local.xcconfig
 Thumbs.db
 /captures/
 /fastlane/report.xml
@@ -24,3 +25,5 @@ __pycache__/
 
 # Local AI handoff notes (must not be published)
 /AI_HANDOFF_LOCAL.md
+
+xcuserdata/

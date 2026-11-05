@@ -20,7 +20,7 @@
     <string name="backup_BAc_export">Извези задатке</string>
     <string name="TVA_add_comment">Додај коментар…</string>
     <string name="cancel">Откажи</string>
-    <string name="ok">У реду</string>
+    <string name="ok">Потврди</string>
     <string name="read_permission_label">Дозволе задатака</string>
     <string name="import_progress_read">Учитавам задатак %d…</string>
     <string name="TLA_menu_settings">Подешавања</string>
@@ -211,9 +211,6 @@
     <string name="tasker_create_task">Креирај задатак</string>
     <string name="help">Помоћ</string>
     <string name="subscription">Претплате</string>
-    <string name="button_subscribe">Претплати се</string>
-    <string name="requires_pro_subscription">Захтева претплату</string>
-    <string name="this_feature_requires_a_subscription">Ова функционалност захтева претплату</string>
     <string name="logout">Одјави се</string>
     <string name="delete_tasks_warning">%s ће бити избрисан. Ово се не може опозвати!</string>
     <string name="reinitialize_account">Поново иницијализуј</string>
@@ -302,7 +299,6 @@
     <string name="list_separator_with_space">", "</string>
     <string name="badges_description">Прикажи број задатака на иконици за покретање. Неки покретачи не подржавају беџеве.</string>
     <string name="tasker_list_notification">Обавештење листе</string>
-    <string name="upgrade_to_pro">Пређи на претплату</string>
     <string name="refresh_purchases">Освежи уплате</string>
     <string name="pro_dashclock_extension">Екстензија ,,Dashclock\'\'</string>
     <string name="location_remind_arrival">Подсети при доласку</string>
@@ -312,7 +308,6 @@
     <string name="building_notifications">Генерисање обавештења</string>
     <string name="missing_permissions">Недостају дозволе</string>
     <string name="banner_app_updated_description">Апликација је ажурирана на %s. Приказати белешке о ажурирању?</string>
-    <string name="name_your_price">Наведи цену</string>
     <string name="collapse_subtasks">Споји подзадатке</string>
     <string name="caldav_selection_description">Синхронизација заснована на стандардима отвореног интернета</string>
     <string name="color_wheel">Палета боја</string>
@@ -390,7 +385,6 @@
     <string name="app_passwords_more_info">Синхронизуј задатке и календар са десктоп и мобилним апликацијама треће стране. Тапни овде за додатне информације</string>
     <string name="copied_to_clipboard">%s копирано у привремену меморију</string>
     <string name="tasks_org_account_required">Неопходан налог на Tasks.org</string>
-    <string name="account_not_included">Није укључено у ,,Задај цену\'\' тип претплате</string>
     <string name="pro_free_trial">Нови претплатници добијају 7-дневно бесплатно коришћење. Може се отказати у било ком тренутку</string>
     <string name="upgrade_more_customization">Додатно прилагоди</string>
     <string name="upgrade_more_customization_description">Откључај све теме, боје, и иконице</string>
@@ -418,7 +412,6 @@
     <string name="CFC_importance_text">Минимум приоритета ?</string>
     <string name="widget_view_more_tasks">Погледај још задатака</string>
     <string name="banner_subscription_required_body">Плати колико желиш за откључавање %s синхронизације</string>
-    <string name="banner_subscription_required_title">Потребна је претплата</string>
     <string name="import_failed_message">Неуспело читање резервног фајла</string>
     <string name="import_failed">Увоз није успео</string>
     <string name="returning_user">Поновни корисник?</string>

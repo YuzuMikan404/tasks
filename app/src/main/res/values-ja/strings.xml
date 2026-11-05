@@ -169,7 +169,7 @@
     <string name="take_a_picture">写真を撮影</string>
     <string name="pick_from_gallery">ギャラリーから選択</string>
     <string name="pick_from_storage">ストレージから選択</string>
-    <string name="name_cannot_be_empty">名前は空にできません</string>
+    <string name="name_cannot_be_empty">名前を入力してください</string>
     <string name="back_button_saves_task">戻るボタンでタスクを保存</string>
     <string name="filter">フィルター</string>
     <string name="opacity">透明度</string>
@@ -202,11 +202,8 @@
     <string name="tasker_create_task">タスクを作成</string>
     <string name="tasker_list_notification">通知のリスト</string>
     <string name="help">ヘルプ</string>
-    <string name="upgrade_to_pro">プロ版にアップグレード</string>
     <string name="refresh_purchases">購入を更新</string>
-    <string name="button_subscribe">購入</string>
     <string name="pro_dashclock_extension">Dashclock 拡張</string>
-    <string name="requires_pro_subscription">プロサブスクリプションが必要</string>
     <string name="logout">ログアウト</string>
     <string name="reinitialize_account">再初期化</string>
     <string name="action_create_new_task">新しいタスクを作成</string>
@@ -232,12 +229,10 @@
     <string name="url">URL</string>
     <string name="list_separator_with_space">", "</string>
     <string name="icon">アイコン</string>
-    <string name="name_your_price">価格はあなた次第</string>
     <string name="cancel">キャンセル</string>
     <string name="add_tags">タグを追加</string>
     <string name="filter_no_tags">タグなし</string>
     <string name="action_new_task">新しいタスク</string>
-    <string name="this_feature_requires_a_subscription">この機能はサブスクリプションが必要です</string>
     <string name="subscription">サブスクリプション</string>
     <string name="help_and_feedback">ヘルプとフィードバック</string>
     <string name="theme_system_default">システムデフォルト</string>
@@ -295,7 +290,7 @@
     <string name="auto_dismiss_datetime_widget_summary">ウィジェットから選択時に自動で閉じる</string>
     <string name="auto_dismiss_datetime_summary">日付または時刻を選択したあとに日時選択画面を閉じる</string>
     <string name="widget_id">ウィジェット ID: %d</string>
-    <string name="filter_overdue">遅延</string>
+    <string name="filter_overdue">締切を過ぎている</string>
     <string name="filter_any_due_date">締切あり</string>
     <string name="filter_medium_priority">優先度 中</string>
     <string name="support_development_subscribe">追加機能を利用可能にし、オープンソースソフトウェアを支援する</string>
@@ -328,7 +323,6 @@
     <string name="privacy">プライバシー</string>
     <string name="authorization_cancelled">認証が取り消されました</string>
     <string name="tasks_org_account_required">Tasks.org のアカウントが必要です</string>
-    <string name="account_not_included">「価格はあなた次第」でのサブスクリプションには含まれていません</string>
     <string name="decsync_selection_description">ファイルベースによる同期</string>
     <string name="filter_no_priority">優先度 なし</string>
     <string name="filter_eisenhower_box_3">重要ではないが緊急</string>
@@ -410,7 +404,6 @@
     <string name="widget_view_more_tasks">ほかのタスクを表示</string>
     <string name="import_failed_message">バックアップファイルを読めません</string>
     <string name="import_failed">インポートできませんでした</string>
-    <string name="banner_subscription_required_title">サブスクリプションが必要です</string>
     <string name="banner_subscription_required_body">%sとの同期をするため、お好みの金額をお支払いください</string>
     <string name="sponsorship_required_fdroid">Tasks.orgと同期するには GitHubへの寄付が必要です。寄付をするには下をクリックしてください。</string>
     <string name="subscription_required_fdroid">Tasks.orgと同期するには定期購入が必要です。定期購入はGoogle Play版のTasksアプリからお申し込みください。</string>

@@ -5,9 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Help
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -37,6 +34,7 @@ import org.tasks.compose.FilterCondition.InputTextOption
 import org.tasks.compose.FilterCondition.NewCriterionFAB
 import org.tasks.compose.FilterCondition.SelectCriterionType
 import org.tasks.compose.FilterCondition.SelectFromList
+import org.tasks.compose.components.SymbolIcon
 import org.tasks.data.NO_ORDER
 import org.tasks.data.dao.FilterDao
 import org.tasks.data.dao.TaskDao.TaskCriteria.activeAndVisible
@@ -182,8 +180,8 @@ class FilterSettingsActivity : BaseListSettingsActivity() {
                                 } else {
                                     Modifier
                                 }
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.Help,
+                            SymbolIcon(
+                                name = TasksIcons.HELP,
                                 contentDescription = "",
                                 modifier = modifier,
                             )

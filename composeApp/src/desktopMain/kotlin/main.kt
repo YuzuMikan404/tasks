@@ -162,7 +162,8 @@ fun main() {
     } else {
         startIpcServer()
     }
-    org.tasks.caldav.CaldavSynchronizer.registerFactories()
+    startIpcServer()
+    org.tasks.caldav.CaldavClient.registerFactories()
     Logger.setMinSeverity(if (TasksBuildConfig.DEBUG) Severity.Verbose else Severity.Debug)
     val fileLogWriter = FileLogWriter(logDir)
     Logger.setLogWriters(

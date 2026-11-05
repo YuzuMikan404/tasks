@@ -97,12 +97,12 @@
         <item quantity="other">%d Aufgaben</item>
     </plurals>
     <plurals name="repeat_times">
-        <item quantity="one">Zeit</item>
-        <item quantity="other">Zeiten</item>
+        <item quantity="one">Mal</item>
+        <item quantity="other">Mal</item>
     </plurals>
     <plurals name="repeat_n_minutes">
-        <item quantity="one">%d Die Minute</item>
-        <item quantity="other">%d Die Minuten</item>
+        <item quantity="one">%d Minute</item>
+        <item quantity="other">%d Minuten</item>
     </plurals>
     <plurals name="repeat_n_hours">
         <item quantity="one">%d Stunde</item>
@@ -197,11 +197,8 @@
     <string name="tasker_create_task">Aufgabe erstellen</string>
     <string name="tasker_list_notification">Listenbenachrichtigung</string>
     <string name="help">Hilfe</string>
-    <string name="upgrade_to_pro">Pro-Funktionen freischalten</string>
     <string name="refresh_purchases">Einkäufe aktualisieren</string>
-    <string name="button_subscribe">Abonnieren</string>
     <string name="pro_dashclock_extension">Dashclock-Erweiterung</string>
-    <string name="requires_pro_subscription">Benötigt ein Pro-Abo</string>
     <string name="logout">Abmelden</string>
     <string name="reinitialize_account">Neu initialisieren</string>
     <string name="action_create_new_task">Neue Aufgabe erstellen</string>
@@ -229,16 +226,14 @@
     <string name="filter">Filter</string>
     <string name="theme">Design</string>
     <string name="url">URL</string>
-    <string name="list_separator_with_space">", • "</string>
+    <string name="list_separator_with_space">", "</string>
     <string name="icon">Symbol</string>
-    <string name="name_your_price">Nenn deinen Preis</string>
     <string name="SSD_sort_my_order">Eigene Sortierung</string>
     <string name="always_display_full_date">Datum ganz anzeigen</string>
     <string name="expand_subtasks">Teilaufgaben ausklappen</string>
     <string name="collapse_subtasks">Teilaufgaben einklappen</string>
     <string name="subtasks">Teilaufgaben</string>
     <string name="display_name">Anzeigename</string>
-    <string name="this_feature_requires_a_subscription">Diese Funktion benötigt ein Abonnement</string>
     <string name="help_and_feedback">Hilfe &amp; Rückmeldung</string>
     <string name="theme_system_default">Systemstandard</string>
     <string name="choose_synchronization_service">Einen Dienst wählen</string>
@@ -346,7 +341,6 @@
     <string name="github_sponsors">GitHub-Sponsoren</string>
     <string name="authorization_cancelled">Autorisierung abgebrochen</string>
     <string name="sign_in_with_google">Mit Google anmelden</string>
-    <string name="account_not_included">Nicht im „Wähle deinen Preis“-Abonnement enthalten</string>
     <string name="copied_to_clipboard">%s in Zwischenablage kopiert</string>
     <string name="app_passwords_more_info">Synchronisiere deine Aufgaben und Kalender mit Desktop- und mobilen Apps von Drittanbietern. Tippe hier für mehr Informationen</string>
     <string name="app_password">App-Passwort</string>
@@ -390,7 +384,7 @@
     <string name="show_edit_screen_without_unlock">Bearbeitungsbildschirm ohne Entsperren anzeigen</string>
     <string name="enable_alarms">Rechtzeitig benachrichtigt werden</string>
     <string name="enable_alarms_description">Um rechtzeitig benachrichtigt zu werden, musst du in den Einstellungen die Berechtigung erteilen, dass Alarme und Erinnerungen eingerichtet werden dürfen</string>
-    <string name="price_per_month_with_currency">%s/Der Monat</string>
+    <string name="price_per_month_with_currency">%s/Monat</string>
     <string name="price_per_year_with_currency">%s/Jahr</string>
     <string name="delete_comment">Kommentar</string>
     <string name="yesterday">Gestern</string>
@@ -420,7 +414,6 @@
     <string name="subscription_required_fdroid">Ein Abo ist erforderlich, um die Tasks.org-Synchronisierung zu nutzen. Abos müssen über die Google Play-Version von Tasks gekauft werden.</string>
     <string name="sponsorship_required_fdroid">Ein GitHub-Sponsoring ist erforderlich, um die Tasks.org-Synchronisierung zu nutzen. Klicke unten, um Sponsor:in zu werden.</string>
     <string name="banner_subscription_required_body">Bezahle, was du möchtest, um die Synchronisierung von %s freizuschalten</string>
-    <string name="banner_subscription_required_title">Abo erforderlich</string>
     <string name="email_to_task_address">Deine E-Mail-Adresse</string>
     <string name="email_to_task">E-Mail Aufgabenerstellung</string>
     <string name="rmd_EPr_rmd_time_desc">Benachrichtigungen für Aufgaben ohne Uhrzeit werden um %1$s angezeigt</string>
@@ -439,4 +432,5 @@
     <string name="p_per_list_sort">sortierung_nach_liste</string>
     <string name="sort_options">Sortieroptionen</string>
     <string name="write_permission_label">Aufgaben bearbeiten</string>
+    <string name="permission_write_tasks">Hinzufügen, Ändern und Löschen deiner Aufgaben, Listen, Tags und Orte</string>
 </resources>

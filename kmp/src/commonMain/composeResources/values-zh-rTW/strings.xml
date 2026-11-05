@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="subscribe">訂閱</string>
     <string name="search">搜尋</string>
     <string name="subscription_required_description">解鎖所有功能最低僅需每年 1 美元</string>
     <string name="search_no_results">沒有結果</string>
-    <string name="requires_pro_subscription">專業版功能</string>
     <string name="filter_my_tasks">我的工作</string>
     <string name="filter_notifications">通知</string>
     <string name="filter_snoozed">延後</string>
@@ -67,7 +65,6 @@
     <string name="cost_free">免費</string>
     <string name="tasks_org_description">包含家人和朋友共享以及電子郵件轉任務</string>
     <string name="name_your_price">自行設定價格</string>
-    <string name="upgrade_to_pro">升級至專業版</string>
     <string name="legal_disclosure_prefix_using">使用 Tasks.org</string>
     <string name="caldav_selection_description">基於開放網際網路標準的同步</string>
     <string name="davx5_selection_description">使用 DAVx⁵ 應用程式同步您的任務</string>
@@ -76,8 +73,6 @@
     <string name="sign_in_to_tasks">登入 Tasks.org</string>
     <string name="sign_in_with_google">使用 Google 登入</string>
     <string name="sign_in_with_github">使用 GitHub 登入</string>
-    <string name="google_play_subscribers">Google Play 訂閱者</string>
-    <string name="github_sponsors">GitHub 贊助者</string>
     <string name="completed">已完成</string>
     <string name="filter_overdue">已逾期</string>
     <string name="no_due_date">無期限</string>
@@ -108,14 +103,13 @@
     <string name="subtasks">子任務</string>
     <string name="sort_not_available">不支援標籤、篩選或地點</string>
     <string name="none">無</string>
-    <string name="ok">OK</string>
+    <string name="ok">確定</string>
     <string name="cancel">取消</string>
     <string name="accept">接受</string>
     <string name="back">返回</string>
     <string name="help">幫助</string>
     <string name="display_name">顯示名稱</string>
     <string name="upgrade_to_pro_card_description">解鎖 Tasks.org 雲端同步、家人和朋友共享，以及電子郵件轉任務</string>
-    <string name="supporter">支持者</string>
     <string name="price_per_month_with_currency">每月 %1$s</string>
     <string name="price_per_year_with_currency">每年 %1$s</string>
     <string name="supporter_summary">%1$s • 感謝您！</string>
@@ -148,7 +142,6 @@
     <string name="tos_updated_title">我們已更新服務條款</string>
     <string name="view_tos">查看服務條款</string>
     <string name="insufficient_sponsorship">沒有符合資格的 GitHub 贊助</string>
-    <string name="button_subscribe">訂閱</string>
     <string name="your_subscription_expired">您的訂閱已過期。立即訂閱以恢復服務。</string>
     <string name="insufficient_subscription">訂閱等級不足。請升級訂閱以恢復服務。</string>
     <string name="authentication_required">需要授權</string>
@@ -489,4 +482,12 @@
     <string name="theme_wallpaper">桌布</string>
     <string name="theme_day_night">日/夜</string>
     <string name="theme_system_default">系統預設</string>
+    <string name="mcp_access_advanced">進階</string>
+    <string name="mcp_tools_group_lists">清單</string>
+    <string name="mcp_tools_group_tags">標籤</string>
+    <string name="mcp_tools_group_places">地點</string>
+    <string name="mcp_tools_group_reminders">提醒</string>
+    <string name="mcp_copy">複製</string>
+    <string name="new_filter">新增過濾器</string>
+    <string name="subscription_required">需要訂閱</string>
 </resources>

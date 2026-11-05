@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">खोज</string>
-    <string name="ok">ठीक</string>
+    <string name="ok">ठीक है</string>
     <string name="search_no_results">कोई नतीजे नही</string>
     <string name="cancel">रद्द करें</string>
-    <string name="requires_pro_subscription">प्रो सब्सक्रिप्शन की ज़रूरत है</string>
     <string name="password_required">पासवर्ड आवश्यक है</string>
     <string name="display_name">प्रदर्शित नाम</string>
     <string name="caldav_home_set_not_found">होम सेट नहीं मिला</string>
     <string name="subscription_required_description">कम से कम $1 डॉलर/हर साल में सभी सुविधाओं को अनलॉक करें</string>
-    <string name="subscribe">सदस्यता लें</string>
     <string name="filter_my_tasks">मेरे कार्य</string>
     <string name="filter_notifications">नोटिफ़िकेशन</string>
     <string name="filter_snoozed">स्नूज़ किया गया</string>
@@ -33,4 +31,5 @@
     <string name="discard_confirmation">क्या आप वाकई अपने बदलावों को रद्द करना चाहते हैं?</string>
     <string name="keep_editing">बदलाव करना जारी रखें</string>
     <string name="DLG_delete_this_task_question">इस टास्क को मिटाएँ?</string>
+    <string name="more_options">ज़्यादा विकल्प</string>
 </resources>

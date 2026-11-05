@@ -1,5 +1,7 @@
 package org.tasks.compose.settings
 
+import org.tasks.themes.TasksIcons
+import org.tasks.compose.components.SymbolIcon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.tasks.kmp.formatNumber
@@ -49,7 +50,7 @@ import tasks.kmp.generated.resources.link_desktop_success
 import tasks.kmp.generated.resources.google_play_subscription
 import tasks.kmp.generated.resources.restore_purchases
 import tasks.kmp.generated.resources.scan_qr_code
-import tasks.kmp.generated.resources.upgrade_to_pro
+import tasks.kmp.generated.resources.upgrade
 
 sealed interface LinkDesktopState {
     data object Idle : LinkDesktopState
@@ -78,8 +79,8 @@ fun LinkDesktopScreen(
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                        SymbolIcon(
+                            name = TasksIcons.ARROW_BACK,
                             contentDescription = stringResource(Res.string.back),
                         )
                     }
@@ -134,7 +135,7 @@ fun LinkDesktopScreen(
                                     2,
                                     stringResource(
                                         Res.string.link_desktop_step_2,
-                                        stringResource(Res.string.upgrade_to_pro),
+                                        stringResource(Res.string.upgrade),
                                         stringResource(Res.string.restore_purchases),
                                     )
                                 )
@@ -162,7 +163,7 @@ fun LinkDesktopScreen(
                                             } else {
                                                 LinkDesktopState.Error(confirmationErrorMessage)
                                             }
-                                        } catch (e: java.io.IOException) {
+                                        } catch (e: IOException) {
                                             state = LinkDesktopState.Error(networkErrorMessage)
                                         } catch (e: Exception) {
                                             state = LinkDesktopState.Error(confirmationErrorMessage)

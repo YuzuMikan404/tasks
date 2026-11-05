@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Căutare</string>
-    <string name="subscribe">Abonează-te la</string>
     <string name="filter_my_tasks">Sarcinile mele</string>
     <string name="filter_notifications">Notificări</string>
     <string name="filter_snoozed">Amânate</string>
@@ -28,7 +27,6 @@
     <string name="show_unstarted">Afișează datele nepornite</string>
     <string name="show_completed">Afișează finalizate</string>
     <string name="search_no_results">Niciun rezultat</string>
-    <string name="requires_pro_subscription">Caracteristică Pro</string>
     <string name="subscription_required_description">Deblochează toate caracteristicile pentru un USD/an</string>
     <string name="wear_install_app">Instalează pe telefon</string>
     <string name="add_task">Adaugă o sarcină</string>
@@ -50,7 +48,6 @@
     <string name="microsoft_selection_description">Sincronizarea cu contul personal Microsoft</string>
     <string name="cost_free">Gratuit</string>
     <string name="name_your_price">Spune prețul</string>
-    <string name="upgrade_to_pro">Actualizare la PRO</string>
     <string name="caldav_selection_description">Sincronizare bazată pe standarde deschise de internet</string>
     <string name="davx5_selection_description">Sincronizează-ți sarcinile cu aplicația DAVx⁵</string>
     <string name="etesync_selection_description">Sincronizare criptată end-to-end</string>
@@ -58,8 +55,6 @@
     <string name="sign_in_to_tasks">Conectează-te la Tasks.org</string>
     <string name="sign_in_with_google">Conectează-te cu Google</string>
     <string name="sign_in_with_github">Conectează-te cu GitHub</string>
-    <string name="google_play_subscribers">Abonații Google Play</string>
-    <string name="github_sponsors">Sponsorii GitHub</string>
     <string name="completed">Finalizat</string>
     <string name="filter_overdue">Depășit</string>
     <string name="no_due_date">Fără dată scadență</string>
@@ -114,7 +109,6 @@
     <string name="app_password_delete_confirmation">Orice aplicație care utilizează această parolă va fi deconectată</string>
     <string name="app_password_enter_description">Dă un nume parolei (opțional)</string>
     <string name="insufficient_sponsorship">Nu s-au găsit sponsorizări GitHub eligibile</string>
-    <string name="button_subscribe">Abonează-te la</string>
     <string name="your_subscription_expired">Abonamentul a expirat. Abonează-te acum pentru a relua serviciul.</string>
     <string name="insufficient_subscription">Nivel de abonament insuficient. Actualizează abonamentul pentru a relua serviciul.</string>
     <string name="authentication_required">Autentificare necesară</string>
@@ -501,4 +495,12 @@
     <string name="theme_day_night">Zi/Noapte</string>
     <string name="theme_system_default">Implicit</string>
     <string name="works_with_desktop">Tasks.org pentru desktop</string>
+    <string name="mcp_access_advanced">Avansat</string>
+    <string name="mcp_tools_group_lists">Liste</string>
+    <string name="mcp_tools_group_tags">Etichete</string>
+    <string name="mcp_tools_group_places">Locuri</string>
+    <string name="mcp_tools_group_reminders">Mementouri</string>
+    <string name="mcp_copy">Copiază</string>
+    <string name="new_filter">Crează filtru nou</string>
+    <string name="subscription_required">Este necesar un abonament</string>
 </resources>

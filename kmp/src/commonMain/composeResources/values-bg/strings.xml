@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Търсене</string>
-    <string name="subscribe">Абониране</string>
     <string name="search_no_results">Липсват резултати</string>
     <string name="subscription_required_description">Отключете всички възможности за по-малко от 1 долар/година</string>
-    <string name="requires_pro_subscription">Изисква абонамент Про</string>
     <string name="filter_my_tasks">Мои задачи</string>
     <string name="filter_notifications">Известия</string>
     <string name="filter_snoozed">Отложени</string>
@@ -66,7 +64,6 @@
     <string name="name_your_price_blurb">Платете сума по желание, за да отключите теми, икони и тези разширени възможности за синхронизиране</string>
     <string name="microsoft_selection_description_googleplay">Синхронизирайте със служебен, учебен или личен профил в Microsoft</string>
     <string name="name_your_price">Посочете своя цена</string>
-    <string name="upgrade_to_pro">Надграждане до версия Про</string>
     <string name="legal_disclosure_prefix_using">Използвайки Tasks.org</string>
     <string name="caldav_selection_description">Синхронизиране посредством отворени стандарти</string>
     <string name="davx5_selection_description">Синхронизиране на задачите с DAVx⁵</string>
@@ -75,8 +72,6 @@
     <string name="sign_in_to_tasks">Вход в Tasks.org</string>
     <string name="sign_in_with_google">Вход с Google</string>
     <string name="sign_in_with_github">Вход с GitHub</string>
-    <string name="google_play_subscribers">Абонати на Google Play</string>
-    <string name="github_sponsors">Дарители от GitHub</string>
     <string name="completed">Завършена</string>
     <string name="filter_overdue">Просрочени</string>
     <string name="no_due_date">Без крайна дата</string>
@@ -107,14 +102,13 @@
     <string name="subtasks">Задачи</string>
     <string name="sort_not_available">Не е налично за етикети, филтри или места</string>
     <string name="none">Без</string>
-    <string name="ok">Добре</string>
+    <string name="ok">OK</string>
     <string name="cancel">Отказ</string>
     <string name="accept">Приемане</string>
     <string name="back">Назад</string>
     <string name="help">Помощ</string>
     <string name="tasks_org_description">Включва споделяне със семейство и приятели и задачи от писмо</string>
     <string name="display_name">Показвано име</string>
-    <string name="supporter">Поддръжник</string>
     <string name="price_per_month_with_currency">%1$s/месец</string>
     <string name="price_per_year_with_currency">%1$s/година</string>
     <string name="supporter_summary">%1$s • Благодаря ви!</string>
@@ -143,7 +137,6 @@
     <string name="tos_updated_title">Променихме условията за използване на услугата</string>
     <string name="view_tos">Преглед на условията на услугата</string>
     <string name="insufficient_sponsorship">Не е намерен подходящо спонсорство в GitHub</string>
-    <string name="button_subscribe">Абониране</string>
     <string name="your_subscription_expired">Абонаментът е изтекъл. Подновете го, за да се възстанови услугата.</string>
     <string name="insufficient_subscription">Недостатъчно ниво на абонамент. За да бъде възстановена услугата надстройте своя абонамент.</string>
     <string name="authentication_required">Необходимо е удостоверяване</string>
@@ -450,7 +443,7 @@
     </plurals>
     <string name="delete_task">Изтриване на задача</string>
     <string name="menu_discard_changes">Отхвърляне на промените</string>
-    <string name="more_options">Допълнителни настройки</string>
+    <string name="more_options">Още опции</string>
     <string name="quiet_hours_in_effect">В момента е време за тишина</string>
     <string name="troubleshooting">Отстраняване на неизправности</string>
     <string name="notification_troubleshooting_summary">Докоснете тук, ако имате проблеми с известията</string>
@@ -551,4 +544,12 @@
     <string name="theme_day_night">Ден/нощ</string>
     <string name="theme_system_default">Спрямо системата</string>
     <string name="works_with_desktop">Tasks.org за настолно у-во</string>
+    <string name="mcp_access_advanced">Разширени</string>
+    <string name="mcp_tools_group_lists">Списъци</string>
+    <string name="mcp_tools_group_tags">Етикети</string>
+    <string name="mcp_tools_group_places">Места</string>
+    <string name="mcp_tools_group_reminders">Напомняне</string>
+    <string name="mcp_copy">Копиране</string>
+    <string name="new_filter">Нов филтър</string>
+    <string name="subscription_required">Изисква абонамент</string>
 </resources>

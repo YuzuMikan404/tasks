@@ -34,9 +34,9 @@ import org.tasks.receivers.CompleteTaskReceiver
 import org.tasks.reminders.NotificationActivity
 import org.tasks.reminders.SnoozeActivity
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.getString
 import org.tasks.reminders.SnoozeOption
 import org.tasks.reminders.snoozeOptions
+import org.tasks.resources.getString
 import org.tasks.themes.ColorProvider
 import org.tasks.time.DateTime
 import org.tasks.time.DateTimeUtils2.currentTimeMillis
@@ -551,7 +551,7 @@ class NotificationManager @Inject constructor(
         for ((snoozeOption, snoozeLabel) in snoozeOptions.zip(snoozeLabels)) {
             val timestamp = snoozeOption.timestamp
             val wearableIntent = SnoozeActivity.newIntent(context, id)
-            wearableIntent.action = String.format("snooze-%s-%s", id, timestamp)
+            wearableIntent.action = "snooze-$id-${snoozeOption.label.key}"
             wearableIntent.putExtra(SnoozeActivity.EXTRA_SNOOZE_TIME, timestamp)
             val wearablePendingIntent = PendingIntent.getActivity(
                 context,

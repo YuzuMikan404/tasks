@@ -198,11 +198,8 @@
     <string name="tasker_create_task">할일 만들기</string>
     <string name="tasker_list_notification">목록 알림</string>
     <string name="help">도움말</string>
-    <string name="upgrade_to_pro">프로 서비스로 업그레이드</string>
     <string name="refresh_purchases">구매 새로고침</string>
-    <string name="button_subscribe">신청</string>
     <string name="pro_dashclock_extension">Dashclock 확장프로그램</string>
-    <string name="requires_pro_subscription">프로 서비스 구독이 필요합니다</string>
     <string name="logout">로그아웃</string>
     <string name="reinitialize_account">다시 초기화하기</string>
     <string name="action_create_new_task">새 할일 만들기</string>
@@ -228,12 +225,10 @@
     <string name="choose_new_location">새 위치 선택</string>
     <string name="invalid_backup_file">부적합한 백업 파일</string>
     <string name="icon">아이콘</string>
-    <string name="name_your_price">구독 금액 정하기</string>
     <string name="SSD_sort_my_order">순서 직접 정렬</string>
     <string name="expand_subtasks">하위할일 펼치기</string>
     <string name="collapse_subtasks">하위할일 접기</string>
     <string name="subtasks">하위할일</string>
-    <string name="this_feature_requires_a_subscription">이 기능을 사용하려면 구독해야 합니다</string>
     <string name="choose_synchronization_service">플랫폼 선택</string>
     <string name="caldav_selection_description">개방형 인터넷 표준을 바탕으로 한 동기화</string>
     <string name="etesync_selection_description">종단간 암호화된 동기화</string>
@@ -346,7 +341,6 @@
     <string name="CFC_startBefore_name">시작일…</string>
     <string name="CFC_startBefore_text">시작일: \?</string>
     <string name="save_percent">%d%% 절약</string>
-    <string name="account_not_included">\'구독 금액 정하기\' 구독은 제외</string>
     <string name="upgrade_open_source_description">구독하시면 지속적인 개발을 지원합니다</string>
     <string name="upgrade_tasks_org_account_description">Tasks.org와 동기화 및 다른 사용자와 협업</string>
     <string name="upgrade_more_customization_description">모든 테마, 색상, 아이콘 사용</string>

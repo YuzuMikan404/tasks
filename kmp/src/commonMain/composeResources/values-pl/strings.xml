@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Szukaj</string>
-    <string name="subscribe">Zasubskrybuj</string>
     <string name="filter_my_tasks">Moje zadania</string>
     <string name="filter_notifications">Powiadomienia</string>
     <string name="filter_snoozed">Uśpione</string>
@@ -27,7 +26,6 @@
     <string name="today_lowercase">dzisiaj</string>
     <string name="show_completed">Pokaż ukończone</string>
     <string name="show_unstarted">Pokaż nierozpoczęte</string>
-    <string name="requires_pro_subscription">Wymaga subskrypcji premium</string>
     <string name="new_task">Nowe zadanie</string>
     <string name="save">Zapisz</string>
     <string name="sort_mode">Sortuj</string>
@@ -44,7 +42,6 @@
     <string name="google_tasks_selection_description">Podstawowy serwis, synchronizujący dane z Twoim kontem Google</string>
     <string name="microsoft_selection_description">Synchronizuj z osobistym kontem Microsoft</string>
     <string name="name_your_price">Nazwij swoją cenę</string>
-    <string name="upgrade_to_pro">Upgrade do pro</string>
     <string name="caldav_selection_description">Synchronizacja oparta na otwartych standardach</string>
     <string name="davx5_selection_description">Synchronizuj swoje zadania z aplikacją DAVx⁵</string>
     <string name="etesync_selection_description">Szyfrowana synchronizacja end-to-end</string>
@@ -52,8 +49,6 @@
     <string name="sign_in_to_tasks">Zaloguj się do Tasks.org</string>
     <string name="sign_in_with_google">Zaloguj z Google</string>
     <string name="sign_in_with_github">Zaloguj z GitHub</string>
-    <string name="google_play_subscribers">Subskrybenci Google Play</string>
-    <string name="github_sponsors">Sponsorzy GitHub</string>
     <string name="completed">Zakończone</string>
     <string name="filter_overdue">Przeterminowane</string>
     <string name="no_due_date">Bez terminu</string>
@@ -105,7 +100,6 @@
     <string name="app_password_delete_confirmation">Każda aplikacja korzystająca z tego hasła zostanie wylogowana</string>
     <string name="app_password_enter_description">Nadaj swojemu hasłu nazwę (opcjonalnie)</string>
     <string name="insufficient_sponsorship">Nie znaleziono kwalifikującego się sponsoringu GitHub</string>
-    <string name="button_subscribe">Zasubskrybuj</string>
     <string name="your_subscription_expired">Twoja subskrypcja wygasła. Zasubskrybuj teraz, aby wznowić usługę.</string>
     <string name="insufficient_subscription">Niewystarczający poziom subskrypcji. Zwiększ poziom subskrypcji, aby wznowić usługę.</string>
     <string name="authentication_required">Wymagane uwierzytelnienie</string>
@@ -478,4 +472,11 @@
     <string name="theme_wallpaper">Tapeta</string>
     <string name="theme_day_night">Dzień/noc</string>
     <string name="theme_system_default">Domyślny systemowy</string>
+    <string name="mcp_access_advanced">Zaawansowane</string>
+    <string name="mcp_tools_group_lists">Listy</string>
+    <string name="mcp_tools_group_tags">Tagi</string>
+    <string name="mcp_tools_group_places">Miejsca</string>
+    <string name="mcp_tools_group_reminders">Przypomnienia</string>
+    <string name="mcp_copy">Kopiuj</string>
+    <string name="new_filter">Stwórz nowy filtr</string>
 </resources>

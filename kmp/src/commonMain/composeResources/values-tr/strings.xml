@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Ara</string>
-    <string name="subscribe">Abone ol</string>
     <string name="search_no_results">Sonuç yok</string>
-    <string name="requires_pro_subscription">Pro aboneliği gerektirir</string>
     <string name="subscription_required_description">Yılda 1$ gibi düşük bir ücretle tüm özelliklerin kilidini açın</string>
     <string name="filter_my_tasks">Görevlerim</string>
     <string name="filter_notifications">Bildirimler</string>
@@ -67,7 +65,6 @@
     <string name="microsoft_selection_description_googleplay">İş, okul ya da kişisel Microsoft hesabınızla eşzamanlayın</string>
     <string name="tasks_org_description">Arkadaşlar &amp; Aile Paylaşımı ve E-postayla Görev'i içerir</string>
     <string name="name_your_price">Gönlünüzden kopan</string>
-    <string name="upgrade_to_pro">Pro'ya yükselt</string>
     <string name="legal_disclosure_prefix_using">Tasks.org'u kullanarak</string>
     <string name="caldav_selection_description">Açık internet standartlarında eşzamanlama</string>
     <string name="davx5_selection_description">DAVx⁵ uygulamasıyla görevlerinizi eşzamanlayın</string>
@@ -76,8 +73,6 @@
     <string name="sign_in_to_tasks">Tasks.org'da oturum aç</string>
     <string name="sign_in_with_google">Google ile oturum aç</string>
     <string name="sign_in_with_github">GitHub ile oturum aç</string>
-    <string name="google_play_subscribers">Google Play aboneleri</string>
-    <string name="github_sponsors">GitHub Sponsorları</string>
     <string name="completed">Tamamlandı</string>
     <string name="filter_overdue">Geciken</string>
     <string name="no_due_date">Bitiş tarihi yok</string>
@@ -115,7 +110,6 @@
     <string name="help">Yardım</string>
     <string name="display_name">Gösterim adı</string>
     <string name="upgrade_to_pro_card_description">Tasks.org Cloud eşzamanlama, Arkadaşlar &amp; Aile Paylaşımı ve E-postayla Görev kilidini aç</string>
-    <string name="supporter">Destekçi</string>
     <string name="price_per_month_with_currency">%1$s/ay</string>
     <string name="price_per_year_with_currency">%1$s/yıl</string>
     <string name="supporter_summary">%1$s • Sağ olun!</string>
@@ -148,7 +142,6 @@
     <string name="tos_updated_title">Hizmet Koşullarımızı güncelledik</string>
     <string name="view_tos">Hizmet Koşullarını Görüntüle</string>
     <string name="insufficient_sponsorship">Uygun GitHub sponsorluğu bulunamadı</string>
-    <string name="button_subscribe">Abone ol</string>
     <string name="your_subscription_expired">Aboneliğinizin süresi doldu. Hizmeti sürdürmek için şimdi abone olun.</string>
     <string name="insufficient_subscription">Yetersiz abonelik düzeyi. Hizmeti sürdürmek için lütfen aboneliğinizi yükseltin.</string>
     <string name="authentication_required">Kimlik doğrulama gerekli</string>
@@ -240,7 +233,6 @@
     <string name="error_github_verification_failed">Doğrulama başarısız. Yeniden deneyin.</string>
     <string name="pricing_subtitle">Özgür ve açık kaynaklı. Abonelikler gelişimi destekler ve ek özelliklerin kilidini açar.</string>
     <string name="pricing_cloud_description">Tüm uygulama içi özellikleri aç ve Tasks.org Cloud eşzamanlamasına bağlan.</string>
-    <string name="pricing_nyp_title">Gönlünüzden kopan</string>
     <string name="pricing_from">Şundan başlayarak: %1$s</string>
     <string name="pricing_nyp_description">Abonelik ücretini siz seçin. Tüm uygulama içi özellikleri açar.</string>
     <string name="pricing_recommended">Önerilen</string>
@@ -510,7 +502,7 @@
     </plurals>
     <string name="delete_task">Görevi sil</string>
     <string name="menu_discard_changes">Değişiklikleri göz ardı et</string>
-    <string name="more_options">Daha çok seçenek</string>
+    <string name="more_options">Diğer seçenekler</string>
     <string name="repeat_type_due_description">Görev, yapılması gereken zamana göre tekrarlanır</string>
     <string name="repeat_type_completion_description">Görev, onu ne zaman tamamladığınıza göre tekrarlanır</string>
     <string name="mark_completed">Tamamlandı olarak işaretle</string>
@@ -661,4 +653,45 @@
     <string name="works_with_content_provider_description">Kendi uygulamanızdan Tasks.org verilerini okuyun ve yazın</string>
     <string name="works_with_missing">Eksik bir şey fark ettiniz mi? %1$s veya %2$s adresine e-posta gönderin.</string>
     <string name="works_with_submit_pull_request">Çekme isteği gönderin</string>
+    <string name="mcp_access_advanced">Gelişmiş</string>
+    <string name="mcp_tools_group_lists">Listeler</string>
+    <string name="mcp_tools_group_tags">Etiketler</string>
+    <string name="mcp_tools_group_places">Yerler</string>
+    <string name="mcp_tools_group_reminders">Anımsatıcılar</string>
+    <string name="mcp_copy">Kopyala</string>
+    <string name="mcp_server_summary">Bu bilgisayardaki yapay zeka yardımcısı verilerinizi okusun ve yönetsin</string>
+    <string name="mcp_server_enable">Verilerinizi MCP üzerinden sunun</string>
+    <string name="mcp_server_enable_summary">Yalnızca bu bilgisayarda, 127.0.0.1 adresinde çalışır. Ağa açık hiçbir şey yoktur.</string>
+    <string name="mcp_status_running">%1$d bağlantı noktasında çalışıyor</string>
+    <string name="mcp_status_starting">Başlatılıyor…</string>
+    <string name="mcp_status_stopped">Çalışmıyor</string>
+    <string name="mcp_access">Erişim</string>
+    <string name="mcp_access_read_only">Salt okunur</string>
+    <string name="mcp_access_read_only_summary">Yardımcılar görevlerinizi, listelerinizi, etiketlerinizi, konumlarınızı, anımsatıcılarınızı okuyabilir ve hesaplarınızı eşzamanlayabilir. Ancak hiçbir şeyi değiştiremezler.</string>
+    <string name="mcp_access_read_write">Oku ve yaz</string>
+    <string name="mcp_access_read_write_summary">Yardımcılar ayrıca görevleri, listeleri, etiketleri, yerleri ve anımsatıcıları oluşturabilir, düzenleyebilir ve silebilir.</string>
+    <string name="mcp_access_advanced_summary">Yardımcıların kullanabileceği araçları tam olarak seçin.</string>
+    <string name="mcp_tools">Araçlar</string>
+    <string name="mcp_tools_summary">Kapattığınız bir araç, yardımcıya asla sunulmaz; bu nedenle yardımcı sizden onu tekrar açmanızı isteyemez. Sunucuyu yeniden başlatır.</string>
+    <string name="mcp_tools_enabled">%1$d / %2$d etkinleştirildi</string>
+    <string name="mcp_tools_group_tasks">Görevler</string>
+    <string name="mcp_tools_group_accounts">Hesapları eşzamanla</string>
+    <string name="mcp_connect">Yardımcı bağla</string>
+    <string name="mcp_connect_summary">Bunu yardımcınıza kopyalayın, ardından yeniden başlatın. Belirteç zaten içeride yer alıyor, bu yüzden gizli tutun.</string>
+    <string name="mcp_copied">Kopyalandı</string>
+    <string name="mcp_regenerate_token">Belirteci yeniden oluştur</string>
+    <string name="mcp_regenerate_token_summary">Önceden ayarlanan yardımcılar, onlara yeni bir komut verene kadar çalışmayı durduracaktır.</string>
+    <string name="mcp_manual">Veya elle ayarlayın</string>
+    <string name="mcp_manual_summary">Yerel bir model veya başka herhangi bir MCP istemcisi için. Yayınlanabilir HTTP aktarımı, taşıyıcı belirteci kimlik doğrulaması.</string>
+    <string name="mcp_endpoint">Sunucu adresi</string>
+    <string name="mcp_auth_header">Yetkilendirme başlığı</string>
+    <string name="mcp_reveal">Göster</string>
+    <string name="mcp_hide">Gizle</string>
+    <string name="mcp_clipboard_note">Buraya kopyaladığınız her şey belirteci içerir ve bir dakika sonra panodan silinir.</string>
+    <string name="new_filter">Yeni süzgeç oluştur</string>
+    <string name="sign_in_with_apple">Apple ile oturum aç</string>
+    <string name="new_place">Yeni yer oluştur</string>
+    <string name="subscription_required">Abonelik gereklidir</string>
+    <string name="upgrade">Yükselt</string>
+    <string name="supporter">Tasks.org Destekleyici</string>
 </resources>

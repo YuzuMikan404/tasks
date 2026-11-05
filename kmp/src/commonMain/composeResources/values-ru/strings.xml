@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Поиск</string>
-    <string name="subscribe">Подписаться</string>
     <string name="filter_my_tasks">Мои задачи</string>
     <string name="filter_notifications">Уведомления</string>
     <string name="filter_snoozed">Отложенные</string>
@@ -28,7 +27,6 @@
     <string name="show_unstarted">Показать неначатые</string>
     <string name="show_completed">Показать завершённые</string>
     <string name="search_no_results">Нет результатов</string>
-    <string name="requires_pro_subscription">Требуется Pro‑подписка</string>
     <string name="wear_install_app">Установить на телефон</string>
     <string name="wear_unknown_error">Неизвестная ошибка</string>
     <string name="add_task">Добавить задачу</string>
@@ -50,7 +48,6 @@
     <string name="microsoft_selection_description">Синхронизация с личной учетной записью Microsoft</string>
     <string name="cost_free">Бесплатно</string>
     <string name="name_your_price">Назовите свою цену</string>
-    <string name="upgrade_to_pro">Обновить до версии Pro</string>
     <string name="caldav_selection_description">Синхронизация, основанная на открытых стандартах</string>
     <string name="davx5_selection_description">Синхронизируйте свои задачи с приложением DAVx⁵</string>
     <string name="etesync_selection_description">Синхронизация с использованием сквозного шифрования</string>
@@ -58,8 +55,6 @@
     <string name="sign_in_to_tasks">Войти в Tasks.org</string>
     <string name="sign_in_with_google">Войти через Google</string>
     <string name="sign_in_with_github">Войти через GitHub</string>
-    <string name="google_play_subscribers">Подписчики Google Play</string>
-    <string name="github_sponsors">Спонсоры GitHub</string>
     <string name="completed">Завершено</string>
     <string name="filter_overdue">Просроченное</string>
     <string name="no_due_date">Нет даты завершения</string>
@@ -119,7 +114,6 @@
     <string name="app_password_delete_confirmation">Любое приложение, использующее этот пароль, выйдет из системы</string>
     <string name="app_password_enter_description">Присвойте вашему паролю имя (необязательно)</string>
     <string name="insufficient_sponsorship">Подходящее спонсорство GitHub не найдено</string>
-    <string name="button_subscribe">Подписаться</string>
     <string name="your_subscription_expired">Срок действия вашей подписки истек. Подпишитесь сейчас, чтобы возобновить обслуживание.</string>
     <string name="insufficient_subscription">Недостаточный уровень подписки. Обновите подписку, чтобы возобновить обслуживание.</string>
     <string name="authentication_required">Необходима аутентификация</string>
@@ -408,7 +402,7 @@
     </plurals>
     <string name="delete_task">Удалить задачу</string>
     <string name="menu_discard_changes">Отменить изменения</string>
-    <string name="more_options">Дополнительные параметры</string>
+    <string name="more_options">Ещё</string>
     <string name="quiet_hours_in_effect">Режим тихих часов включен</string>
     <string name="troubleshooting">Решение проблем</string>
     <string name="notification_troubleshooting_summary">Нажмите здесь в случае проблем с уведомлениями</string>
@@ -508,4 +502,13 @@
     <string name="theme_wallpaper">Как обои</string>
     <string name="theme_day_night">День / ночь</string>
     <string name="theme_system_default">Как в системе</string>
+    <string name="mcp_access_advanced">Расширенные</string>
+    <string name="mcp_tools_group_lists">Списки</string>
+    <string name="mcp_tools_group_tags">Теги</string>
+    <string name="mcp_tools_group_places">Места</string>
+    <string name="mcp_tools_group_reminders">Напоминания</string>
+    <string name="mcp_copy">Копировать</string>
+    <string name="new_filter">Создать новый фильтр</string>
+    <string name="delete_tag_warning">Задачи с этим тегом не будут удалены</string>
+    <string name="subscription_required">Необходима подписка</string>
 </resources>

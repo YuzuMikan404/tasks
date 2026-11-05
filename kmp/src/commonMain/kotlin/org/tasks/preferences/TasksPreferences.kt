@@ -42,6 +42,17 @@ class TasksPreferences(private val dataStore: DataStore<Preferences>) {
         }
     }
 
+    suspend fun setIfGreater(key: Preferences.Key<Long>, value: Long, default: Long = 0L): Boolean {
+        var updated = false
+        dataStore.edit {
+            if ((it[key] ?: default) < value) {
+                it[key] = value
+                updated = true
+            }
+        }
+        return updated
+    }
+
     suspend fun <T> getAndSet(key: Preferences.Key<T>, value: T): T? {
         var previous: T? = null
         dataStore.edit {
@@ -90,6 +101,8 @@ class TasksPreferences(private val dataStore: DataStore<Preferences>) {
         val taskListPaneWidth = intPreferencesKey("task_list_pane_width")
         val localListBannerDismissed = booleanPreferencesKey("local_list_banner_dismissed")
         val needsCloudOnboarding = booleanPreferencesKey("needs_cloud_onboarding")
+        val apnsToken = stringPreferencesKey("apns_token")
+        val pushFallbackToken = stringPreferencesKey("push_fallback_token")
         val metadataPrimaryAccount = longPreferencesKey("metadata_primary_account")
         val metadataStoreAccount = longPreferencesKey("metadata_store_account")
         val metadataRev = stringPreferencesKey("metadata_rev")

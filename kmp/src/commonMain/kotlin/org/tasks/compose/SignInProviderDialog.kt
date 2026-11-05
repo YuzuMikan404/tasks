@@ -25,25 +25,30 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import tasks.kmp.generated.resources.Res
 import tasks.kmp.generated.resources.cancel
-import tasks.kmp.generated.resources.github_sponsors
-import tasks.kmp.generated.resources.google_play_subscribers
 import tasks.kmp.generated.resources.help
+import tasks.kmp.generated.resources.ic_apple
 import tasks.kmp.generated.resources.ic_google
 import tasks.kmp.generated.resources.ic_octocat
 import tasks.kmp.generated.resources.sign_in_to_tasks
+import tasks.kmp.generated.resources.sign_in_with_apple
 import tasks.kmp.generated.resources.sign_in_with_github
 import tasks.kmp.generated.resources.sign_in_with_google
 
 enum class SignInProvider {
     GOOGLE,
     GITHUB,
+    APPLE,
 }
+
+val DEFAULT_SIGN_IN_PROVIDERS = listOf(SignInProvider.GOOGLE, SignInProvider.APPLE, SignInProvider.GITHUB)
+val APP_STORE_SIGN_IN_PROVIDERS = listOf(SignInProvider.APPLE, SignInProvider.GOOGLE, SignInProvider.GITHUB)
 
 @Composable
 fun SignInProviderDialog(
     onSelected: (SignInProvider) -> Unit,
     onHelp: () -> Unit,
     onCancel: () -> Unit,
+    providers: List<SignInProvider> = DEFAULT_SIGN_IN_PROVIDERS,
 ) {
     Column(
         modifier = Modifier
@@ -56,19 +61,27 @@ fun SignInProviderDialog(
             modifier = Modifier.padding(16.dp),
             color = MaterialTheme.colorScheme.onSurface,
         )
-        ProviderRow(
-            title = Res.string.sign_in_with_google,
-            description = Res.string.google_play_subscribers,
-            icon = Res.drawable.ic_google,
-            onClick = { onSelected(SignInProvider.GOOGLE) },
-        )
-        ProviderRow(
-            title = Res.string.sign_in_with_github,
-            description = Res.string.github_sponsors,
-            icon = Res.drawable.ic_octocat,
-            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-            onClick = { onSelected(SignInProvider.GITHUB) },
-        )
+        providers.forEach { provider ->
+            when (provider) {
+                SignInProvider.GOOGLE -> ProviderRow(
+                    title = Res.string.sign_in_with_google,
+                    icon = Res.drawable.ic_google,
+                    onClick = { onSelected(SignInProvider.GOOGLE) },
+                )
+                SignInProvider.APPLE -> ProviderRow(
+                    title = Res.string.sign_in_with_apple,
+                    icon = Res.drawable.ic_apple,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    onClick = { onSelected(SignInProvider.APPLE) },
+                )
+                SignInProvider.GITHUB -> ProviderRow(
+                    title = Res.string.sign_in_with_github,
+                    icon = Res.drawable.ic_octocat,
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    onClick = { onSelected(SignInProvider.GITHUB) },
+                )
+            }
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -94,7 +107,6 @@ fun SignInProviderDialog(
 @Composable
 private fun ProviderRow(
     title: StringResource,
-    description: StringResource,
     icon: DrawableResource,
     tint: Color? = null,
     onClick: () -> Unit,
@@ -112,17 +124,10 @@ private fun ProviderRow(
             tint = tint ?: Color.Unspecified,
             modifier = Modifier.padding(end = 16.dp).size(48.dp),
         )
-        Column {
-            Text(
-                text = stringResource(title),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            Text(
-                text = stringResource(description),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        }
+        Text(
+            text = stringResource(title),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
     }
 }

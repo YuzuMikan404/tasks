@@ -1,5 +1,7 @@
 package org.tasks.compose.pickers
 
+import org.tasks.themes.TasksIcons
+import org.tasks.compose.components.SymbolIcon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,9 +15,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerState
@@ -38,6 +37,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
+import androidx.compose.ui.platform.testTag
+import org.tasks.themes.TestTags
+import org.tasks.themes.exposeTestTags
 import org.tasks.compose.PlatformBackHandler
 import org.tasks.previews.PREVIEW_NIGHT_MODE
 import org.tasks.themes.TasksTheme
@@ -68,7 +70,9 @@ fun DatePickerBottomSheet(
         containerColor = MaterialTheme.colorScheme.surface,
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .exposeTestTags()
+                .fillMaxWidth(),
         ) {
             Column(
                 modifier = Modifier
@@ -116,11 +120,11 @@ fun DatePickerBottomSheet(
                                 setDisplayMode(state.displayMode)
                             },
                         ) {
-                            Icon(
-                                imageVector = if (state.displayMode == DisplayMode.Input) {
-                                    Icons.Outlined.CalendarMonth
+                            SymbolIcon(
+                                name = if (state.displayMode == DisplayMode.Input) {
+                                    TasksIcons.CALENDAR_MONTH
                                 } else {
-                                    Icons.Outlined.Keyboard
+                                    TasksIcons.KEYBOARD
                                 },
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
@@ -134,7 +138,8 @@ fun DatePickerBottomSheet(
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         TextButton(
-                            onClick = { accept() }
+                            onClick = { accept() },
+                            modifier = Modifier.testTag(TestTags.DATE_PICKER_OK),
                         ) {
                             Text(stringResource(Res.string.ok))
                         }

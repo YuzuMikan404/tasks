@@ -15,7 +15,6 @@
     <string name="upgrade_more_customization_description">Deblochează toate temele, culorile și pictogramele</string>
     <string name="upgrade_more_customization">Mai multă personalizare</string>
     <string name="pro_free_trial">Noii abonați beneficiază de o perioadă de încercare gratuită de 7 zile. Anulare în orice moment</string>
-    <string name="account_not_included">Nu este inclus în abonamentele \'Spune prețul\'</string>
     <string name="tasks_org_account_required">Cont Tasks.org necesar</string>
     <string name="copied_to_clipboard">%s copiat în clipboard</string>
     <string name="app_passwords_more_info">Sincronizează sarcinile și calendarele cu aplicații desktop și mobile de la terți. Apasă aici pentru mai multe informații</string>
@@ -43,10 +42,8 @@
     <string name="backups_ignore_warnings">Ignoră avertismentele</string>
     <string name="background_location">Locația de fundal</string>
     <string name="foreground_location">Locația de prim-plan</string>
-    <string name="button_subscribe">Abonează-te la</string>
     <string name="refresh_purchases">Reîmprospătează achizițiile</string>
     <string name="subscription">Abonare</string>
-    <string name="upgrade_to_pro">Actualizare la PRO</string>
     <string name="help_and_feedback">Ajutor și reacții</string>
     <string name="help">Ajutor</string>
     <string name="tasker_list_notification">Listă de notificare</string>
@@ -184,7 +181,7 @@
     <string name="premium_record_audio">Înregistrare notă</string>
     <string name="gtasks_error_accountNotFound">Contul %s nu a fost găsit - deconectează-te și conectează-te din nou din setările Google Tasks.</string>
     <string name="gtasks_GLA_authenticating">Autentificare…</string>
-    <string name="gtasks_GTA_clear_completed">Eliminare finalizată</string>
+    <string name="gtasks_GTA_clear_completed">Eliminare finalizat</string>
     <string name="CFC_list_name">În lista…</string>
     <string name="CFC_gtasks_list_text">În listă: \?</string>
     <string name="gcal_completed_title">%s (finalizat)</string>
@@ -336,7 +333,6 @@
     <string name="choose_synchronization_service">Selectează o platformă</string>
     <string name="collapse_subtasks">Restrânge sub-sarcinile</string>
     <string name="expand_subtasks">Extinde sub-sarcinile</string>
-    <string name="name_your_price">Spune prețul</string>
     <string name="invalid_backup_file">Fișier de backup invalid</string>
     <string name="whats_new">Ce este nou</string>
     <string name="choose_new_location">Alege o nouă locație</string>
@@ -361,8 +357,6 @@
     <string name="action_create_new_task">Creează o nouă sarcină</string>
     <string name="reinitialize_account">Reinițializare</string>
     <string name="logout">Deconectează-te</string>
-    <string name="this_feature_requires_a_subscription">Această funcție necesită un abonament</string>
-    <string name="requires_pro_subscription">Necesită un abonament pro</string>
     <string name="pro_dashclock_extension">Extinderea ceasului de bord</string>
     <string name="TPl_notification">Cronometre active pentru %s!</string>
     <string name="delete_tag_confirmation">Ștergi %s\?</string>
@@ -426,7 +420,6 @@
     <string name="import_failed_message">Nu s-a putut citi fișierul copiei de rezervă</string>
     <string name="location_update_interval_summary">Actualizările periodice ale locației îmbunătățesc fiabilitatea geofence-ului</string>
     <string name="rmd_EPr_rmd_time_desc">Notificările pentru sarcinile pentru tot parcursul zilei vor apărea la %1$s</string>
-    <string name="banner_subscription_required_title">Este necesar un abonament</string>
     <string name="banner_subscription_required_body">Plătește oricât dorești pentru a debloca sincronizarea %s</string>
     <string name="per_list_sort_title">Sortare pe listă</string>
     <string name="per_list_sort_summary">Memorizează setările de sortare și grupare pentru fiecare listă în mod independent</string>

@@ -10,9 +10,7 @@
     <string name="yesterday">Εχθές</string>
     <string name="today">Σήμερα</string>
     <string name="search_no_results">Δεν βρέθηκαν αποτελέσματα</string>
-    <string name="requires_pro_subscription">Δυνατότητα χρήσης μέσω Συνδρομής</string>
     <string name="subscription_required_description">Ξεκλειδώστε όλες τις δυνατότητες με τόσα λίγα όσο $1 USD/ χρόνο</string>
-    <string name="subscribe">Συνδρομή</string>
     <string name="filter_my_tasks">Οι Εργασίες μου</string>
     <string name="filter_notifications">Ειδοποιήσεις</string>
     <string name="filter_snoozed">Υπενθυμίσεις που έχουν αναβληθεί</string>
@@ -50,7 +48,6 @@
     <string name="microsoft_selection_description">Συγχρονίστε με τον προσωπικό σας λογαριασμό Microsoft</string>
     <string name="cost_free">Δωρεάν</string>
     <string name="name_your_price">Καθορίστε την τιμή σας</string>
-    <string name="upgrade_to_pro">Αναβάθμιση σε συνδρομή</string>
     <string name="caldav_selection_description">Συγχρονισμός βασισμένος σε ανοιχτά πρότυπα διαδικτύου</string>
     <string name="davx5_selection_description">Συγχρονίστε τις εργασίες σας με την εφαρμογή DAVx⁵</string>
     <string name="etesync_selection_description">Κρυπτογραφημένος συγχρονισμός από άκρο σε άκρο</string>
@@ -58,8 +55,6 @@
     <string name="sign_in_to_tasks">Συνδεθείτε στο Tasks.org</string>
     <string name="sign_in_with_google">Συνδεθείτε μέσω Google</string>
     <string name="sign_in_with_github">Συνδεθείτε μέσω GitHub</string>
-    <string name="google_play_subscribers">Συνδρομητές Google Play</string>
-    <string name="github_sponsors">Χορηγοί GitHub</string>
     <string name="completed">Ολοκληρώθηκε</string>
     <string name="filter_overdue">Εκπρόθεσμα</string>
     <string name="no_due_date">Χωρίς ημερομηνία λήξης</string>
@@ -114,7 +109,6 @@
     <string name="app_password_delete_confirmation">Οποιαδήποτε εφαρμογή χρησιμοποιεί αυτόν τον κωδικό θα αποσυνδεθεί</string>
     <string name="app_password_enter_description">Δώστε ένα όνομα στον κωδικό σας (προαιρετικό)</string>
     <string name="insufficient_sponsorship">Δεν βρέθηκε κατάλληλη χορηγία GitHub</string>
-    <string name="button_subscribe">Εγγραφή στη συνδρομή</string>
     <string name="your_subscription_expired">Η συνδρομή σας έχει λήξει. Γίνετε συνδρομητής τώρα για να συνεχίσετε την υπηρεσία.</string>
     <string name="insufficient_subscription">Ανεπαρκές επίπεδο συνδρομής. Παρακαλούμε αναβαθμίστε τη συνδρομή σας για να συνεχίσετε την υπηρεσία.</string>
     <string name="authentication_required">Απαιτείται πιστοποίηση ταυτότητας</string>
@@ -455,4 +449,11 @@
     <string name="theme_wallpaper">Ταπετσαρία</string>
     <string name="theme_day_night">Μέρα/Νύχτα</string>
     <string name="theme_system_default">Προεπιλογή Συστήματος</string>
+    <string name="mcp_access_advanced">Συνθέτες</string>
+    <string name="mcp_tools_group_lists">Λίστες</string>
+    <string name="mcp_tools_group_tags">Ετικέτες</string>
+    <string name="mcp_tools_group_places">Μέρη/ τοποθεσίες</string>
+    <string name="mcp_tools_group_reminders">Υπενθυμίσεις</string>
+    <string name="mcp_copy">Αντιγραφή</string>
+    <string name="new_filter">Δημιουργία νέου φίλτρου</string>
 </resources>

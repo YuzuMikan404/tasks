@@ -194,11 +194,8 @@
     <string name="tasker_create_task">创建任务</string>
     <string name="tasker_list_notification">列出通知</string>
     <string name="help">帮助</string>
-    <string name="upgrade_to_pro">升级到专业版</string>
     <string name="refresh_purchases">刷新购买</string>
-    <string name="button_subscribe">订阅</string>
     <string name="pro_dashclock_extension">Dashclock 扩展</string>
-    <string name="requires_pro_subscription">需订阅专业版</string>
     <string name="logout">退出登录</string>
     <string name="reinitialize_account">重新初始化</string>
     <string name="action_create_new_task">新建任务</string>
@@ -226,14 +223,12 @@
     <string name="choose_new_location">选择新位置</string>
     <string name="invalid_backup_file">备份文件无效</string>
     <string name="icon">图标</string>
-    <string name="name_your_price">您愿意支付多少费用</string>
     <string name="list_separator_with_space">"， "</string>
     <string name="SSD_sort_my_order">我的顺序</string>
     <string name="expand_subtasks">展开子任务</string>
     <string name="collapse_subtasks">收起子任务</string>
     <string name="subtasks">子任务</string>
     <string name="display_name">显示名称</string>
-    <string name="this_feature_requires_a_subscription">该功能需要订阅</string>
     <string name="choose_synchronization_service">选择平台</string>
     <string name="caldav_selection_description">基于开放的互联网标准的同步</string>
     <string name="etesync_selection_description">端到端加密的同步</string>
@@ -353,7 +348,6 @@
     <string name="CFC_startBefore_name">开始于…</string>
     <string name="CFC_startBefore_text">开始于：?</string>
     <string name="filter_any_start_date">任意开始日期</string>
-    <string name="account_not_included">不包含于“您愿意支付多少费用”订阅</string>
     <string name="subscription">订阅</string>
     <string name="widget_show_title">显示标题</string>
     <string name="tasks_org_account_required">需要 Tasks.org 账号</string>
@@ -416,7 +410,6 @@
     <string name="returning_user">用过 Tasks.org 吗？</string>
     <string name="import_failed">导入失败</string>
     <string name="import_failed_message">无法读取备份文件</string>
-    <string name="banner_subscription_required_title">需要订阅</string>
     <string name="banner_subscription_required_body">支付您想支付的金额解锁 %s 同步</string>
     <string name="email_to_task_address">您的电子邮件地址</string>
     <string name="email_to_task">邮件转任务</string>

@@ -1,5 +1,7 @@
 package org.tasks.compose.accounts
 
+import org.tasks.themes.TasksIcons
+import org.tasks.compose.components.SymbolIcon
 import org.tasks.billing.BillingProvider
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,8 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -64,14 +64,11 @@ import tasks.kmp.generated.resources.cancel
 import tasks.kmp.generated.resources.cost_free
 import tasks.kmp.generated.resources.davx5
 import tasks.kmp.generated.resources.davx5_selection_description
-import tasks.kmp.generated.resources.decsync
-import tasks.kmp.generated.resources.decsync_selection_description
 import tasks.kmp.generated.resources.etesync
 import tasks.kmp.generated.resources.etesync_selection_description
 import tasks.kmp.generated.resources.google_tasks_selection_description
 import tasks.kmp.generated.resources.gtasks_GPr_header
 import tasks.kmp.generated.resources.ic_davx5_icon_green_bg
-import tasks.kmp.generated.resources.ic_decsync
 import tasks.kmp.generated.resources.ic_etesync
 import tasks.kmp.generated.resources.ic_google
 import tasks.kmp.generated.resources.ic_microsoft_tasks
@@ -87,7 +84,6 @@ import tasks.kmp.generated.resources.ok
 import tasks.kmp.generated.resources.tasks_org_account
 import tasks.kmp.generated.resources.tasks_org_description
 import tasks.kmp.generated.resources.terms_of_service_proper
-import tasks.kmp.generated.resources.upgrade_to_pro
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -157,8 +153,8 @@ fun AddAccountScreen(
             TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                        SymbolIcon(
+                            name = TasksIcons.ARROW_BACK,
                             contentDescription = stringResource(Res.string.back),
                         )
                     }
@@ -186,11 +182,7 @@ fun AddAccountScreen(
                     .padding(horizontal = SettingsContentPadding),
             ) {
                 if (configuration.supportsTasksOrg && !hasTasksAccount) {
-                    if (!hasPro) {
-                        SectionHeader(stringResource(Res.string.upgrade_to_pro))
-                    } else {
-                        Spacer(modifier = Modifier.height(SettingsSectionGap))
-                    }
+                    Spacer(modifier = Modifier.height(SettingsSectionGap))
                     SettingsItemCard {
                         AccountTypeRow(
                             title = stringResource(Res.string.tasks_org_account),
@@ -255,7 +247,6 @@ fun AddAccountScreen(
                     if (configuration.supportsOpenTasks) add(Platform.DAVX5)
                     if (configuration.supportsCaldav) add(Platform.CALDAV)
                     if (configuration.supportsEteSync) add(Platform.ETEBASE)
-                    if (configuration.supportsOpenTasks) add(Platform.DECSYNC_CC)
                 }
                 if (proAccounts.isNotEmpty()) {
                     if (!hasPro) {
@@ -312,12 +303,6 @@ fun AddAccountScreen(
                                         icon = Res.drawable.ic_etesync,
                                         description = stringResource(Res.string.etesync_selection_description),
                                         onClick = { signIn(Platform.ETEBASE) },
-                                    )
-                                    Platform.DECSYNC_CC -> AccountTypeRow(
-                                        title = stringResource(Res.string.decsync),
-                                        icon = Res.drawable.ic_decsync,
-                                        description = stringResource(Res.string.decsync_selection_description),
-                                        onClick = { openUrl(Platform.DECSYNC_CC) },
                                     )
                                     else -> {}
                                 }

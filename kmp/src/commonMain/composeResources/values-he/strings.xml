@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">חיפוש</string>
-    <string name="subscribe">הרשמה למינוי</string>
     <string name="filter_my_tasks">המשימות שלי</string>
     <string name="filter_notifications">התראות</string>
     <string name="filter_timer">משימות מתוזמנות</string>
@@ -30,7 +29,6 @@
     <string name="wear_install_app">התקנה בטלפון</string>
     <string name="wear_unknown_error">שגיאה לא ידועה</string>
     <string name="search_no_results">אין תוצאות</string>
-    <string name="requires_pro_subscription">דורש מינוי פרו</string>
     <string name="add_task">הוספת משימה</string>
     <string name="filter_snoozed">בנמנום</string>
     <string name="new_task">משימה חדשה</string>
@@ -67,7 +65,6 @@
     <string name="tasks_org_description">כולל שיתוף חברים ומשפחה ודוא"ל־למשימה</string>
     <string name="microsoft_selection_description_googleplay">סנכרון עם העבודה, בית הספר, או חשבון ה־Microsoft האישי שלך</string>
     <string name="name_your_price">מה המחיר שלך</string>
-    <string name="upgrade_to_pro">שדרוג לגרסת פרו</string>
     <string name="legal_disclosure_prefix_using">על ידי שימוש ב־Tasks.org</string>
     <string name="caldav_selection_description">סנכרון מבוסס על תקני אינטרנט פתוחים</string>
     <string name="davx5_selection_description">סנכרון של המשימות שלך עם היישום DAVx⁵</string>
@@ -76,8 +73,6 @@
     <string name="sign_in_to_tasks">להיכנס אל Tasks.org</string>
     <string name="sign_in_with_google">להיכנס באמצעות Google</string>
     <string name="sign_in_with_github">להיכנס באמצעות GitHub</string>
-    <string name="google_play_subscribers">מנויי Google Play</string>
-    <string name="github_sponsors">נותני חסות GitHub</string>
     <string name="completed">הושלמו</string>
     <string name="filter_overdue">היעד חלף</string>
     <string name="no_due_date">אין תאריך יעד</string>
@@ -115,7 +110,6 @@
     <string name="help">עזרה</string>
     <string name="display_name">שם תצוגה</string>
     <string name="upgrade_to_pro_card_description">פתיחת סנכרון בענן Tasks.org,שיתוף חברים ומשפחה, ודוא"ל־למשימה</string>
-    <string name="supporter">תומך</string>
     <string name="price_per_month_with_currency">%1$s לחודש</string>
     <string name="price_per_year_with_currency">%1$s לשנה</string>
     <string name="supporter_summary">%1$s • תודה לך!</string>
@@ -148,7 +142,6 @@
     <string name="tos_updated_title">עדכנו את תנאי השירות שלנו</string>
     <string name="view_tos">הצגת תנאי השירות</string>
     <string name="insufficient_sponsorship">לא נמצאה חסות GitHub זכאית</string>
-    <string name="button_subscribe">הרשמה למינוי</string>
     <string name="your_subscription_expired">תוקף המינוי שלך פג. יש להירשם למינוי כעת כדי להמשיך את השירות.</string>
     <string name="insufficient_subscription">רמת המינוי אינה מספקת. נא לשדרג את המינוי כדי להמשיך את השירות.</string>
     <string name="authentication_required">נדרש אימות</string>
@@ -538,7 +531,6 @@
     <string name="google_play_subscription">מינוי ב־Google Play</string>
     <string name="github_sponsorship">חסות ב־GitHub</string>
     <string name="error_github_verification_failed">האימות נכשל. נא לנסות שוב.</string>
-    <string name="pricing_nyp_title">מחיר כבקשתך</string>
     <string name="pricing_from">מתוך %1$s</string>
     <string name="pricing_recommended">מומלץ</string>
     <string name="annual">שנתי</string>
@@ -594,4 +586,12 @@
     <string name="theme_day_night">יום/לילה</string>
     <string name="theme_system_default">ברירת מחדל של המערכת</string>
     <string name="works_with_desktop">Tasks.org למחשב שולחני</string>
+    <string name="mcp_access_advanced">מתקדם</string>
+    <string name="mcp_tools_group_lists">רשימות</string>
+    <string name="mcp_tools_group_tags">תגיות</string>
+    <string name="mcp_tools_group_places">מקומות</string>
+    <string name="mcp_tools_group_reminders">תזכורות</string>
+    <string name="mcp_copy">העתקה</string>
+    <string name="new_filter">יצירת מסנן חדש</string>
+    <string name="subscription_required">נדרש מינוי</string>
 </resources>

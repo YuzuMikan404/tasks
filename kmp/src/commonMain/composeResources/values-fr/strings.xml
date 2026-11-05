@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Rechercher</string>
-    <string name="subscribe">S'abonner</string>
     <string name="search_no_results">Aucun résultat</string>
-    <string name="requires_pro_subscription">Nécessite un abonnement pro</string>
     <string name="subscription_required_description">Débloquer toutes les fonctionnalités pour $1 USD/an</string>
     <string name="filter_recently_modified">Récemment modifiée</string>
     <string name="filter_my_tasks">Mes tâches</string>
@@ -67,7 +65,6 @@
     <string name="microsoft_selection_description_googleplay">Synchronisez avec votre travail, votre école ou votre compte Microsoft personnel</string>
     <string name="tasks_org_description">Comprend le partage entre amis et famille et la conversion des courriels en tâches</string>
     <string name="name_your_price">Donnez votre prix</string>
-    <string name="upgrade_to_pro">Mise à niveau vers la version « pro »</string>
     <string name="legal_disclosure_prefix_using">En utilisant Tasks.org</string>
     <string name="caldav_selection_description">Synchronisation basée sur des normes d'Internet ouvertes</string>
     <string name="davx5_selection_description">Synchroniser vos tâches avec l’application « DAVx⁵ »</string>
@@ -76,8 +73,6 @@
     <string name="sign_in_to_tasks">Connectez-vous à « Tasks.org »</string>
     <string name="sign_in_with_google">Connectez-vous avec « Google »</string>
     <string name="sign_in_with_github">Connectez-vous avec « GitHub »</string>
-    <string name="google_play_subscribers">Abonnés « Google Play »</string>
-    <string name="github_sponsors">Parrains « GitHub »</string>
     <string name="completed">Terminé</string>
     <string name="filter_overdue">En retard</string>
     <string name="no_due_date">Aucune date d'échéance</string>
@@ -108,7 +103,7 @@
     <string name="subtasks">Sous-tâches</string>
     <string name="sort_not_available">Non disponible pour les étiquettes, les filtres ou les lieux</string>
     <string name="none">Aucun</string>
-    <string name="ok">Valider</string>
+    <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
     <string name="accept">Accepter</string>
     <string name="back">Retour</string>
@@ -117,7 +112,6 @@
     <string name="show_less">Afficher moins</string>
     <string name="display_name">Afficher le nom</string>
     <string name="upgrade_to_pro_card_description">Débloquez la synchronisation cloud Tasks.org, le partage entre amis et famille et la conversion de courriels en tâches</string>
-    <string name="supporter">Soutenir</string>
     <string name="price_per_month_with_currency">%1$s/mois</string>
     <string name="price_per_year_with_currency">%1$s/an</string>
     <string name="supporter_summary">%1$s • Merci !</string>
@@ -150,7 +144,6 @@
     <string name="tos_updated_title">Nous avons mis à jour nos conditions d'utilisation</string>
     <string name="view_tos">Voir les conditions d'utilisation</string>
     <string name="insufficient_sponsorship">Aucun parrainage « GitHub » éligible n'a été trouvé</string>
-    <string name="button_subscribe">S'abonner</string>
     <string name="your_subscription_expired">Votre abonnement a expiré. Veuillez vous réabonnez dès maintenant pour reprendre le service.</string>
     <string name="insufficient_subscription">Niveau d'abonnement insuffisant. Veuillez mettre à niveau votre abonnement pour reprendre le service.</string>
     <string name="authentication_required">Authentification requise</string>
@@ -242,7 +235,6 @@
     <string name="error_github_verification_failed">La vérification a échoué. Veuillez réessayer.</string>
     <string name="pricing_subtitle">Gratuit et en source ouverte. Les abonnements soutiennent le développement et donnent accès à des fonctionnalités supplémentaires.</string>
     <string name="pricing_cloud_description">Débloquez toutes les fonctionnalités de l'application et connectez-vous à la synchronisation cloud de Tasks.org.</string>
-    <string name="pricing_nyp_title">Faites votre offre</string>
     <string name="pricing_from">De %1$s</string>
     <string name="pricing_nyp_description">Choisissez le montant de votre abonnement. Accédez à toutes les fonctionnalités de l'application.</string>
     <string name="pricing_recommended">Recommandé</string>
@@ -528,7 +520,7 @@
     </plurals>
     <string name="delete_task">Supprimer la tâche</string>
     <string name="menu_discard_changes">Ignorer les modifications</string>
-    <string name="more_options">Plus d’options</string>
+    <string name="more_options">Plus d\'options</string>
     <string name="no_task_selected">Aucune tâche sélectionnée</string>
     <string name="repeat_type_due_description">La tâche se répète en fonction de la date à laquelle elle devait être effectuée</string>
     <string name="repeat_type_completion_description">La tâche se répète en fonction du moment où vous l\'avez réellement terminée</string>
@@ -681,4 +673,43 @@
     <string name="works_with_sync">Applications de synchronisation</string>
     <string name="works_with_services">Services de tâches</string>
     <string name="works_with_todoagenda_description">Widget d\'écran d\'accueil pour le calendrier et les tâches</string>
+    <string name="mcp_access_advanced">Avancé</string>
+    <string name="mcp_tools_group_lists">Listes</string>
+    <string name="mcp_tools_group_tags">Étiquettes</string>
+    <string name="mcp_tools_group_places">Lieux</string>
+    <string name="mcp_tools_group_reminders">Rappels</string>
+    <string name="mcp_copy">Copier</string>
+    <string name="mcp_server_summary">Laissez les assistants IA sur cet ordinateur lire et gérer vos données</string>
+    <string name="mcp_server_enable">Servez vos données via MCP</string>
+    <string name="mcp_server_enable_summary">Fonctionne sur cet ordinateur seulement, à l\'adresse 127.0.0.1. Rien n\'est exposé sur le réseau.</string>
+    <string name="mcp_status_running">S\'exécute sur le port %1$d</string>
+    <string name="mcp_status_starting">Démarrage…</string>
+    <string name="mcp_status_stopped">Ne fonctionne pas</string>
+    <string name="mcp_access">Accès</string>
+    <string name="mcp_access_read_only">Lecture seule</string>
+    <string name="mcp_access_read_only_summary">Les assistants peuvent lire vos tâches, listes, étiquettes, lieux, rappels et comptes de synchronisation. Ils ne peuvent rien changer.</string>
+    <string name="mcp_access_read_write">Lecture et écriture</string>
+    <string name="mcp_access_read_write_summary">Les assistants peuvent également créer, modifier et supprimer les tâches, listes, étiquettes, lieux et rappels.</string>
+    <string name="mcp_access_advanced_summary">Choisissez exactement quels outils les assistants peuvent utiliser.</string>
+    <string name="mcp_tools">Outils</string>
+    <string name="mcp_tools_summary">Un outil que vous désactivez n\'est jamais proposé à l\'assistant, celui-ci ne peut donc pas vous demander de le réactiver. Redémarre le serveur.</string>
+    <string name="mcp_tools_enabled">%1$d sur %2$d sont activés</string>
+    <string name="mcp_tools_group_tasks">Tâches</string>
+    <string name="mcp_tools_group_accounts">Comptes synchronisés</string>
+    <string name="mcp_connect">Connectez un assistant</string>
+    <string name="mcp_connect_summary">Copiez ça dans votre assistant, puis redémarrez-le. Le jeton est déjà inclus, alors gardez-le privé.</string>
+    <string name="mcp_copied">Copié</string>
+    <string name="mcp_regenerate_token">Régénérer le jeton</string>
+    <string name="mcp_regenerate_token_summary">Les assistants déjà configurés cesseront de fonctionner jusqu\'à ce que vous leur transmettiez une nouvelle commande.</string>
+    <string name="mcp_manual">Ou bien configurez-le manuellement</string>
+    <string name="mcp_manual_summary">Pour un modèle local ou tout autre client MCP. Transport HTTP en continu, authentification par jeton de support.</string>
+    <string name="mcp_endpoint">Adresse du serveur</string>
+    <string name="mcp_auth_header">En-tête d\'autorisation</string>
+    <string name="mcp_reveal">Montrer</string>
+    <string name="mcp_hide">Cacher</string>
+    <string name="mcp_clipboard_note">Tout ce que vous copiez ici comporte le jeton et est effacé du presse-papiers au bout d\'une minute.</string>
+    <string name="new_filter">Créer un nouveau filtre</string>
+    <string name="sign_in_with_apple">Se connecter avec Apple</string>
+    <string name="new_place">Créer un nouveau lieu</string>
+    <string name="subscription_required">Abonnement requis</string>
 </resources>

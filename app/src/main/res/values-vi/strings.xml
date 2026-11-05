@@ -56,7 +56,6 @@
     <string name="upgrade_more_customization_description">Mở khoá tất cả chủ đề, màu sắc, và biểu tượng</string>
     <string name="upgrade_more_customization">Nhiều tuỳ biến hơn</string>
     <string name="pro_free_trial">Những người đăng ký mới sẽ nhận khoảng thời gian dùng thử 7 ngày miễn phí. Huỷ vào bất kỳ lúc nào</string>
-    <string name="account_not_included">Không được bao gồm với các gói đăng ký \'Đặt giá của bạn\'</string>
     <string name="tasks_org_account_required">Yêu cầu tài khoản Tasks.org</string>
     <string name="copied_to_clipboard">Đã sao chép %s vào bộ nhớ tạm</string>
     <string name="app_passwords_more_info">Đồng bộ hoá các công việc và lịch của bạn bằng các ứng dụng máy tính và di động của bên thứ ba. Nhấn vào đây để xem thêm thông tin</string>
@@ -127,8 +126,8 @@
     <string name="auto_dismiss_datetime_widget_summary">Tự động đóng khi chọn từ tiện ích</string>
     <string name="auto_dismiss_datetime_widget">Tiện ích</string>
     <string name="auto_dismiss_datetime_edit_summary">Tự động đóng khi chọn từ mục chỉnh sửa công việc</string>
-    <string name="cancel">Huỷ</string>
-    <string name="ok">Ôkê</string>
+    <string name="cancel">Hủy</string>
+    <string name="ok">OK</string>
     <string name="auto_dismiss_datetime_edit">Chỉnh sửa công việc</string>
     <string name="auto_dismiss_datetime_list_summary">Tự động đóng khi chọn từ danh sách công việc</string>
     <string name="auto_dismiss_datetime_list">Danh sách công việc</string>
@@ -154,7 +153,6 @@
     <string name="choose_synchronization_service">Chọn nền tảng</string>
     <string name="collapse_subtasks">Thu gọn các công việc con</string>
     <string name="expand_subtasks">Mở rộng các công việc con</string>
-    <string name="name_your_price">Đặt giá của bạn</string>
     <string name="invalid_backup_file">Tệp sao lưu không hợp lệ</string>
     <string name="whats_new">Có gì mới</string>
     <string name="choose_new_location">Chọn vị trí mới</string>
@@ -179,13 +177,9 @@
     <string name="action_create_new_task">Tạo công việc mới</string>
     <string name="reinitialize_account">Khởi tạo lại</string>
     <string name="logout">Đăng xuất</string>
-    <string name="this_feature_requires_a_subscription">Tính năng này yêu cầu đăng ký</string>
-    <string name="requires_pro_subscription">Yêu cầu đăng ký pro</string>
     <string name="pro_dashclock_extension">Phần mở rộng Dashclock</string>
-    <string name="button_subscribe">Đăng ký</string>
     <string name="refresh_purchases">Làm mới các giao dịch</string>
     <string name="subscription">Đăng ký</string>
-    <string name="upgrade_to_pro">Nâng cấp lên pro</string>
     <string name="help_and_feedback">Trợ giúp &amp; phản hồi</string>
     <string name="help">Trợ giúp</string>
     <string name="tasker_list_notification">Thông báo danh sách</string>

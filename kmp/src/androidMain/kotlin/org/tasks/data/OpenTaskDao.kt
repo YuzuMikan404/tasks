@@ -9,6 +9,7 @@ import android.net.Uri
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.dmfs.provider.tasks.AuthorityUtil
 import org.dmfs.tasks.contract.TaskContract.CommonSyncColumns
 import org.dmfs.tasks.contract.TaskContract.LOAD_PROPERTIES
 import org.dmfs.tasks.contract.TaskContract.Properties
@@ -29,7 +30,7 @@ open class OpenTaskDao(
         private val caldavDao: CaldavDao,
 ) {
     protected val cr: ContentResolver = context.contentResolver
-    val authority: String = context.getString(org.tasks.kmp.R.string.opentasks_authority)
+    val authority: String = AuthorityUtil.taskAuthority(context)
     val tasks: Uri = Tasks.getContentUri(authority)
     val taskLists: Uri = TaskLists.getContentUri(authority)
     val properties: Uri = Properties.getContentUri(authority)
@@ -81,13 +82,19 @@ open class OpenTaskDao(
         val items = ArrayList<Triple<String, String?, String>>()
         cr.query(
                 tasks,
-                arrayOf(Tasks._UID, Tasks.SYNC1, "version"),
+                arrayOf(Tasks._ID, Tasks._UID, Tasks.SYNC1, "version"),
                 "${Tasks.LIST_ID} = $listId",
                 null,
                 null)?.use {
             while (it.moveToNext()) {
+                val uid = it.getString(Tasks._UID)
+                if (uid.isNullOrBlank()) {
+                    val id = it.getLong(Tasks._ID)
+                    Logger.w("OpenTaskDao") { "Skipping task $id in list $listId: no ${Tasks._UID}" }
+                    continue
+                }
                 items.add(Triple(
-                        it.getString(Tasks._UID)!!,
+                        uid,
                         it.getString(Tasks.SYNC1),
                         it.getLong("version").toString()))
             }

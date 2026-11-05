@@ -1,5 +1,6 @@
 package org.tasks.compose.settings
 
+import org.tasks.compose.components.SymbolIcon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,12 +17,6 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Clear
-import androidx.compose.material.icons.outlined.DeleteOutline
-import androidx.compose.material.icons.outlined.PersonAdd
-import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,6 +62,7 @@ import org.tasks.data.entity.CaldavCalendar
 import org.tasks.data.entity.CaldavCalendar.Companion.ACCESS_OWNER
 import org.tasks.data.entity.Task
 import org.tasks.themes.TasksIcons
+import org.tasks.viewmodel.ListSettingsCallbacks
 import tasks.kmp.generated.resources.Res
 import tasks.kmp.generated.resources.back
 import tasks.kmp.generated.resources.cancel
@@ -145,6 +141,50 @@ private val CaldavAccount.canShare: Boolean
 private val CaldavAccount.canRemovePrincipal: Boolean
     get() = serverType in listOf(SERVER_TASKS, SERVER_OWNCLOUD, SERVER_SABREDAV, SERVER_NEXTCLOUD)
 
+@Composable
+fun ListSettingsScreen(
+    viewModel: ListSettingsCallbacks,
+    onSave: () -> Unit,
+    onDelete: () -> Unit,
+    onNavigateBack: () -> Unit,
+    onSelectColor: (PickerColor?) -> Unit,
+    onColorWheelSelected: () -> Unit,
+    onSubscribe: (String) -> Unit,
+    onAddShortcut: (() -> Unit)? = null,
+    onAddWidget: (() -> Unit)? = null,
+    headerContent: @Composable () -> Unit = {},
+) {
+    val state by viewModel.state.collectAsState()
+
+    ListSettingsScreen(
+        state = state,
+        onNameChange = viewModel::setName,
+        onSave = onSave,
+        onDelete = onDelete,
+        onNavigateBack = onNavigateBack,
+        onDiscardDialogChange = { show ->
+            if (show) viewModel.showDiscardDialog() else viewModel.dismissDiscardDialog()
+        },
+        onDismissSnackbar = viewModel::dismissSnackbar,
+        onOpenShareDialog = viewModel::openShareDialog,
+        onCloseShareDialog = viewModel::closeShareDialog,
+        onShare = { input -> viewModel.share(input) },
+        onConfirmRemovePrincipal = viewModel::confirmRemovePrincipal,
+        onRemovePrincipal = viewModel::removePrincipal,
+        onOpenColorPicker = viewModel::openColorPicker,
+        onCloseColorPicker = viewModel::closeColorPicker,
+        onSelectColor = onSelectColor,
+        onColorWheelSelected = onColorWheelSelected,
+        onOpenIconPicker = viewModel::openIconPicker,
+        onCloseIconPicker = viewModel::closeIconPicker,
+        onSelectIcon = viewModel::selectIcon,
+        onSubscribe = onSubscribe,
+        onAddShortcut = onAddShortcut,
+        onAddWidget = onAddWidget,
+        headerContent = headerContent,
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListSettingsScreen(
@@ -198,8 +238,8 @@ fun ListSettingsScreen(
                             onNavigateBack()
                         }
                     }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                        SymbolIcon(
+                            name = TasksIcons.ARROW_BACK,
                             contentDescription = stringResource(Res.string.back),
                         )
                     }
@@ -282,7 +322,7 @@ fun ListSettingsScreen(
                             } else {
                                 stringResource(Res.string.share)
                             },
-                            icon = Icons.Outlined.PersonAdd,
+                            icon = TasksIcons.PERSON_ADD,
                             enabled = hasName && !state.isLoading,
                             onClick = onOpenShareDialog,
                         )
@@ -310,7 +350,7 @@ fun ListSettingsScreen(
                 SettingsItemCard {
                     PreferenceRow(
                         title = stringResource(Res.string.save),
-                        icon = Icons.Outlined.Save,
+                        icon = TasksIcons.SAVE,
                         enabled = state.hasChanges && !state.isLoading,
                         onClick = onSave,
                     )
@@ -325,7 +365,7 @@ fun ListSettingsScreen(
                     modifier = Modifier.padding(horizontal = SettingsContentPadding),
                 ) {
                     DangerCard(
-                        icon = Icons.Outlined.DeleteOutline,
+                        icon = TasksIcons.DELETE,
                         title = stringResource(Res.string.delete),
                         tint = MaterialTheme.colorScheme.error,
                         onClick = { showDeleteDialog = true },
@@ -576,8 +616,8 @@ private fun PrincipalRow(
                 modifier = Modifier.size(24.dp),
                 onClick = onRemove,
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Clear,
+                SymbolIcon(
+                    name = TasksIcons.CLEAR,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

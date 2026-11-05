@@ -137,7 +137,6 @@ import org.tasks.extensions.Context.openUri
 import org.tasks.extensions.Context.toast
 import org.tasks.extensions.Fragment.safeStartActivityForResult
 import org.tasks.extensions.hideKeyboard
-import org.jetbrains.compose.resources.getString
 import org.tasks.extensions.setOnQueryTextListener
 import org.tasks.filters.AstridOrderingFilter
 import org.tasks.filters.CaldavFilter
@@ -157,7 +156,8 @@ import org.tasks.preferences.Device
 import org.tasks.preferences.MainPreferences
 import org.tasks.preferences.Preferences
 import org.tasks.preferences.ResourceResolver.getData
-import org.tasks.scheduling.NotificationSchedulerIntentService
+import org.tasks.resources.getString
+import org.tasks.scheduling.NotificationSchedulerWork
 import org.tasks.service.TaskCompleter
 import org.tasks.sync.SyncAdapters
 import org.tasks.sync.SyncSource
@@ -224,6 +224,7 @@ class TaskListFragment : Fragment(), OnRefreshListener, Toolbar.OnMenuItemClickL
     private lateinit var taskAdapter: TaskAdapter
     private var recyclerAdapter: DragAndDropRecyclerAdapter? = null
     private var dirtyTaskIds: Set<Long> = emptySet()
+    private var reportedFullyDrawn = false
     private val bannerAdapter = BannerAdapter()
     private lateinit var filter: Filter
     private lateinit var search: MenuItem
@@ -304,6 +305,9 @@ class TaskListFragment : Fragment(), OnRefreshListener, Toolbar.OnMenuItemClickL
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        if (!this::taskAdapter.isInitialized) {
+            return
+        }
         val selectedTaskIds: List<Long> = taskAdapter.getSelected()
         outState.putLongArray(EXTRA_SELECTED_TASK_IDS, selectedTaskIds.toLongArray())
         val state = recyclerViewState
@@ -463,6 +467,7 @@ class TaskListFragment : Fragment(), OnRefreshListener, Toolbar.OnMenuItemClickL
                         }
                         swipeRefreshLayout.isRefreshing = it.syncOngoing
                         emptyRefreshLayout.isRefreshing = it.syncOngoing
+                        reportFullyDrawn()
                     }
                 }
             }
@@ -515,7 +520,7 @@ class TaskListFragment : Fragment(), OnRefreshListener, Toolbar.OnMenuItemClickL
                         Manifest.permission.POST_NOTIFICATIONS,
                         onPermissionResult = { success ->
                             if (success) {
-                                NotificationSchedulerIntentService.enqueueWork(context)
+                                NotificationSchedulerWork.enqueueWork(context)
                                 listViewModel.dismissBanner(tookAction = true)
                             }
                         }
@@ -677,6 +682,13 @@ class TaskListFragment : Fragment(), OnRefreshListener, Toolbar.OnMenuItemClickL
         }
         ViewCompat.requestApplyInsets(binding.toolbar)
         return binding.root
+    }
+
+    private fun reportFullyDrawn() {
+        if (!reportedFullyDrawn) {
+            reportedFullyDrawn = true
+            activity?.reportFullyDrawn()
+        }
     }
 
     private fun submitList(tasks: SectionedDataSource) {

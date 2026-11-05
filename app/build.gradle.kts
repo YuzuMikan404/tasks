@@ -14,7 +14,11 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose.compiler)
+    alias(libs.plugins.androidx.baselineprofile)
 }
+
+val appVersionCode: Int by extra
+val appVersionName: String by extra
 
 kotlin {
     compilerOptions {
@@ -48,12 +52,13 @@ android {
     defaultConfig {
         testApplicationId = "org.tasks.test"
         applicationId = libs.versions.applicationId.get()
-        versionCode = libs.versions.versionCode.get().toInt()
-        versionName = libs.versions.versionName.get()
+        versionCode = appVersionCode
+        versionName = appVersionName
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
         testInstrumentationRunner = "org.tasks.TestRunner"
         manifestPlaceholders["appAuthRedirectScheme"] = "org.tasks"
+        resValue("string", "opentasks_authority", "$applicationId.opentasks")
     }
 
     signingConfigs {
@@ -100,14 +105,27 @@ android {
             resValue("string", "google_key", tasks_google_key ?: "")
             resValue("string", "posthog_key", tasks_posthog_key ?: "")
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard.pro")
+            optimization.keepRules {
+                ignoreFrom("com.github.franmontiel:PersistentCookieJar")
+                ignoreFrom("com.github.tasks:ical4android")
+            }
             signingConfig = signingConfigs.getByName("release")
+        }
+        create("nonMinifiedRelease") {
+            initWith(getByName("release"))
+            isMinifyEnabled = false
+            isShrinkResources = false
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
         }
     }
 
     productFlavors {
         create("generic") {
             dimension = "store"
+            proguardFile("proguard-generic.pro")
         }
         create("googleplay") {
             isDefault = true
@@ -144,6 +162,16 @@ android {
     namespace = "org.tasks"
 }
 
+androidComponents {
+    onVariants(selector().withBuildType("nonMinifiedRelease")) { variant ->
+        variant.sources.java?.addStaticSourceDirectory("src/release/java")
+        variant.sources.res?.addStaticSourceDirectory("src/release/res")
+        variant.flavorName?.takeIf { it.isNotEmpty() }?.let { flavor ->
+            variant.sources.res?.addStaticSourceDirectory("src/${flavor}Release/res")
+        }
+    }
+}
+
 configurations.all {
     exclude(group = "org.apache.httpcomponents")
     exclude(group = "org.checkerframework")
@@ -160,8 +188,8 @@ val googleplayImplementation by configurations
 dependencies {
     implementation(projects.data)
     implementation(projects.kmp)
+    baselineProfile(projects.baselineprofile)
     implementation(libs.kermit)
-    implementation(projects.icons)
     implementation(libs.androidx.navigation)
     implementation(libs.androidx.adaptive.navigation.android)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
@@ -193,11 +221,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel)
-    implementation(libs.androidx.room)
+    implementation(libs.androidx.room3)
     implementation(libs.androidx.sqlite)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.appfunctions)
-    implementation(libs.iconics)
     implementation(libs.markwon)
     implementation(libs.markwon.editor)
     implementation(libs.markwon.linkify)
@@ -219,6 +246,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.preference)
+    implementation(libs.androidx.profileinstaller)
     implementation(libs.timber)
     implementation(libs.dashclock.api)
     implementation(libs.locale) {
@@ -243,7 +271,6 @@ dependencies {
     implementation("androidx.compose.material:material")
     implementation("androidx.compose.runtime:runtime-livedata")
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation(libs.coil.compose)

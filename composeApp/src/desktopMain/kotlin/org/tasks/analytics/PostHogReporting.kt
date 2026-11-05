@@ -3,6 +3,7 @@ package org.tasks.analytics
 import co.touchlab.kermit.Logger
 import com.posthog.PostHog
 import com.posthog.PostHogConfig
+import kotlin.coroutines.cancellation.CancellationException
 import org.tasks.TasksBuildConfig
 import org.tasks.preferences.TasksPreferences
 import java.io.File
@@ -80,14 +81,15 @@ class PostHogReporting(
     override fun completeTask(source: String) =
         logEvent(AnalyticsEvents.COMPLETE_TASK, AnalyticsEvents.PARAM_TYPE to source)
 
-    override fun identify(distinctId: String) {
-        logger.d { "identify -> $distinctId" }
+    override fun setSku(sku: String?) {
+        logger.d { "sku -> $sku" }
         if (enabled && collectStatistics) {
-            PostHog.identify(distinctId)
+            if (sku != null) PostHog.register("sku", sku) else PostHog.unregister("sku")
         }
     }
 
     override fun reportException(t: Throwable, fatal: Boolean) {
+        if (t is CancellationException) return
         logger.e(t) { t.message ?: "" }
         if (enabled && collectStatistics) {
             PostHog.capture(

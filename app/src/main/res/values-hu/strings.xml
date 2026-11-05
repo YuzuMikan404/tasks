@@ -201,11 +201,8 @@
     <string name="tasker_create_task">Feladat létrehozása</string>
     <string name="tasker_list_notification">Lista értesítés</string>
     <string name="help">Súgó</string>
-    <string name="upgrade_to_pro">Upgrade pro verzióra</string>
     <string name="refresh_purchases">Vásárlások frissítése</string>
-    <string name="button_subscribe">Előfizetés</string>
     <string name="pro_dashclock_extension">Dashclock kiterjesztés</string>
-    <string name="requires_pro_subscription">Előfizetés szükséges</string>
     <string name="logout">Kijelentkezés</string>
     <string name="reinitialize_account">Újrainicializálás</string>
     <string name="action_create_new_task">Új feladat létrehozása</string>
@@ -230,13 +227,11 @@
     <string name="location_radius_meters">%s m</string>
     <string name="list_separator_with_space">", "</string>
     <string name="icon">Ikon</string>
-    <string name="name_your_price">Nevezd meg az árat</string>
     <string name="SSD_sort_my_order">Egyéni sorrend</string>
     <string name="expand_subtasks">Részfeladatok kibontása</string>
     <string name="collapse_subtasks">Részfeladatok összecsukása</string>
     <string name="subtasks">Részfeladatok</string>
     <string name="display_name">Megjelenített név</string>
-    <string name="this_feature_requires_a_subscription">Ez a funkció csak előfizetéssel vehető igénybe</string>
     <string name="choose_synchronization_service">Platform választása</string>
     <string name="caldav_selection_description">Nyílt Internetes szabványon alapuló szinkronizáció</string>
     <string name="etesync_selection_description">Végponttól végpontig titkosított szinkronizáció</string>
@@ -350,7 +345,6 @@
     <string name="app_passwords_more_info">Feladatok és naptárak szinkronizálása harmadik féltől származó asztali és mobil alkalmazásokkal. Részletes információért kattintson ide</string>
     <string name="local_lists">Helyi listák</string>
     <string name="start_date">Kezdő dátum</string>
-    <string name="account_not_included">A \"Nevezd meg az árat\" előfizetés nem tartalmazza</string>
     <string name="subscription">Előfizetés</string>
     <string name="filter_criteria_unstarted">El nem kezdett</string>
     <string name="filter_any_start_date">Tetszőleges kezdő dátum</string>
@@ -419,7 +413,6 @@
     <string name="returning_user">Visszatérő felhasználó?</string>
     <string name="import_failed_message">A mentés fájlja nem olvasható</string>
     <string name="import_failed">Sikertelen importálás</string>
-    <string name="banner_subscription_required_title">Előfizetés szükséges</string>
     <string name="banner_subscription_required_body">A %s szinkronizáció tetszőleges összeg fizetésével feloldható</string>
     <string name="email_to_task">Feladat e-mailből</string>
     <string name="email_to_task_address">E-mail cím</string>

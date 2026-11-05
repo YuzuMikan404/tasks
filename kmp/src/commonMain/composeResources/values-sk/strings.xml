@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Hľadať</string>
-    <string name="subscribe">Predplatiť</string>
     <string name="filter_my_tasks">Moje úlohy</string>
     <string name="filter_notifications">Oznámenia</string>
     <string name="filter_timer">Úlohy s termínom</string>
@@ -23,7 +22,6 @@
     <string name="wear_install_app">Inštalovať do telefónu</string>
     <string name="wear_unknown_error">Neznáma chyba</string>
     <string name="search_no_results">Žiadne výsledky</string>
-    <string name="requires_pro_subscription">Vyžaduje PRO predplatné</string>
     <string name="subscription_required_description">Odomknite všetky funkcie za smiešny 1 dolár ročne</string>
     <string name="add_task">Pridať úlohu</string>
     <string name="filter_snoozed">Odložené</string>
@@ -49,7 +47,6 @@
     <string name="microsoft_selection_description">Synchronizovať so svojim osobným účtom Microsoft</string>
     <string name="cost_free">Zdarma</string>
     <string name="name_your_price">Zaplaťte ľubovoľnú čiastku</string>
-    <string name="upgrade_to_pro">Rozšíriť na verziu pro</string>
     <string name="caldav_selection_description">Synchronizácia založená na otvorených štandardoch</string>
     <string name="davx5_selection_description">Synchronizujte svoje úlohy pomocou aplikácie DAVx⁵</string>
     <string name="etesync_selection_description">Synchronizácia šifrovaná medzi koncovými uzlami</string>
@@ -57,8 +54,6 @@
     <string name="sign_in_to_tasks">Prihlásiť sa do Tasks.org</string>
     <string name="sign_in_with_google">Prihlásenie účtom Google</string>
     <string name="sign_in_with_github">Prihlásenie pomocou GitHubu</string>
-    <string name="google_play_subscribers">Predplatitelia Google Play</string>
-    <string name="github_sponsors">Sponzori na GitHube</string>
     <string name="completed">Dokončené</string>
     <string name="filter_overdue">Po termíne</string>
     <string name="no_due_date">Bez termínu</string>
@@ -113,7 +108,6 @@
     <string name="app_password_delete_confirmation">Všetky aplikácie používajúce toto heslo budú odhlásené</string>
     <string name="app_password_enter_description">Pomenujte svoje heslo (nepovinné)</string>
     <string name="insufficient_sponsorship">Nenájdené žiadne platné GitHub sponzorovanie</string>
-    <string name="button_subscribe">Prihlásiť sa</string>
     <string name="your_subscription_expired">Platnosť vášho predplatného skončila. Ak chcete službu používať i naďalej, obnovte odber.</string>
     <string name="insufficient_subscription">Nedostatočná úroveň predplatného. Ak chcete službu používať i naďalej, povýšte predplatné na vyššiu úroveň.</string>
     <string name="authentication_required">Vyžaduje sa overenie</string>
@@ -383,7 +377,7 @@
     </plurals>
     <string name="delete_task">Zmazať úlohu</string>
     <string name="menu_discard_changes">Zahodiť zmeny</string>
-    <string name="more_options">Ďalšie možnosti</string>
+    <string name="more_options">Viac možností</string>
     <string name="quiet_hours_in_effect">Režim nerušiť je zapnutý</string>
     <string name="troubleshooting">Riešenie problémov</string>
     <string name="notification_troubleshooting_summary">Kliknite sem, ak máte problémy so zobrazovaním upozornení</string>
@@ -473,4 +467,11 @@
     <string name="theme_wallpaper">Tapeta</string>
     <string name="theme_day_night">Deň/Noc</string>
     <string name="theme_system_default">Podľa systému</string>
+    <string name="mcp_access_advanced">Pokročilé možnosti</string>
+    <string name="mcp_tools_group_lists">Zoznamy</string>
+    <string name="mcp_tools_group_tags">Štítky</string>
+    <string name="mcp_tools_group_places">Miesta</string>
+    <string name="mcp_tools_group_reminders">Pripomienky</string>
+    <string name="mcp_copy">Kopírovať</string>
+    <string name="new_filter">Vytvoriť nový filter</string>
 </resources>

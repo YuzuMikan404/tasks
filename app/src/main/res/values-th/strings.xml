@@ -44,7 +44,6 @@
     <string name="sign_in_with_google">ลงชื่อเข้าใช้ด้วย Google</string>
     <string name="github_sponsors">ผู้สนับสนุน GitHub</string>
     <string name="logout">ออกจากระบบ</string>
-    <string name="this_feature_requires_a_subscription">คุณลักษณะนี้ต้องการการสมัครใช้งาน</string>
     <string name="authorization_cancelled">ยกเลิกการตรวจสอบแล้ว</string>
     <string name="privacy">ข้อมูลส่วนบุคคล</string>
     <string name="open_source">เปิดแหล่งที่มา</string>
@@ -101,7 +100,6 @@
     <string name="choose_synchronization_service">เลือกแพลตฟอร์ม</string>
     <string name="collapse_subtasks">ยุบงานย่อย</string>
     <string name="expand_subtasks">ขยายงานย่อย</string>
-    <string name="name_your_price">ตั้งชื่อราคาของคุณ</string>
     <string name="invalid_backup_file">แฟ้มสํารองข้อมูลไม่ถูกต้อง</string>
     <string name="whats_new">มีอะไรใหม่</string>
     <string name="choose_new_location">เลือกตําแหน่งที่ตั้งใหม่</string>
@@ -125,11 +123,8 @@
     <string name="action_new_task">งานใหม่</string>
     <string name="action_create_new_task">สร้างงานใหม่</string>
     <string name="reinitialize_account">เตรียมใช้งานใหม่</string>
-    <string name="requires_pro_subscription">ต้องสมัครสมาชิกแบบโปร</string>
     <string name="pro_dashclock_extension">ส่วนขยาย Dashclock</string>
-    <string name="button_subscribe">ติดตาม</string>
     <string name="subscription">การบอกรับสมาชิก</string>
-    <string name="upgrade_to_pro">อัปเกรดเป็น Pro</string>
     <string name="refresh_purchases">รีเฟรชการซื้อ</string>
     <string name="help_and_feedback">ความช่วยเหลือและคําติชม</string>
     <string name="help">วิธีใช้</string>
@@ -270,7 +265,6 @@
     <string name="CFC_dueBefore_text">ครบกําหนดเมื่อ: \?</string>
     <string name="next_week">อาทิตย์หน้า</string>
     <string name="day_after_tomorrow">วันหลังจากวันพรุ่งนี้</string>
-    <string name="account_not_included">ไม่รวมอยู่ในการสมัครสมาชิก \'ตั้งชื่อราคาของคุณ\'</string>
     <string name="upgrade_open_source_description">การสมัครใช้งานของคุณสนับสนุนการพัฒนาอย่างต่อเนื่อง</string>
     <string name="upgrade_more_customization_description">ปลดล็อกธีม สี และไอคอนทั้งหมด</string>
     <string name="upgrade_more_customization">การปรับแต่งเพิ่มเติม</string>
@@ -369,4 +363,6 @@
     <string name="app_settings">การตั้งค่าแอป</string>
     <string name="sort_options">ตัวเลือกการกรอง</string>
     <string name="TEA_creation_date">วันที่สร้าง</string>
+    <string name="ok">ตกลง</string>
+    <string name="cancel">ยกเลิก</string>
 </resources>

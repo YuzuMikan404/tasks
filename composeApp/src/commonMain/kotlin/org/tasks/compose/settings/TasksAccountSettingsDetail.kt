@@ -1,10 +1,10 @@
 package org.tasks.compose.settings
 
+import org.tasks.themes.TasksIcons
+import org.tasks.compose.components.SymbolIcon
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,6 +26,7 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import org.tasks.auth.OAuthProvider
 import org.tasks.auth.SignInHandler
 import org.tasks.compose.accounts.Platform
 import org.tasks.TasksUrls
@@ -73,8 +74,8 @@ fun TasksAccountSettingsDetail(
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        SymbolIcon(
+                            name = TasksIcons.ARROW_BACK,
                             contentDescription = stringResource(Res.string.back),
                         )
                     }
@@ -90,7 +91,12 @@ fun TasksAccountSettingsDetail(
             TasksAccountScreen(
                 state = state,
                 onSignIn = {
-                    scope.launch { signInHandler.signIn(Platform.TASKS_ORG) }
+                    val provider = when {
+                        state.isGithub -> OAuthProvider.GITHUB
+                        state.isApple -> OAuthProvider.APPLE
+                        else -> OAuthProvider.GOOGLE
+                    }
+                    scope.launch { signInHandler.signIn(Platform.TASKS_ORG, provider) }
                 },
                 onSubscribe = {
                     uriHandler.openUri(donateUrl)

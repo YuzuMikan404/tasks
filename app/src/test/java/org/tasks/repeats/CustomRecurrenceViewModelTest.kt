@@ -1,18 +1,17 @@
 package org.tasks.repeats
 
-import net.fortuna.ical4j.model.Recur.Frequency.DAILY
-import net.fortuna.ical4j.model.Recur.Frequency.HOURLY
-import net.fortuna.ical4j.model.Recur.Frequency.MINUTELY
-import net.fortuna.ical4j.model.Recur.Frequency.MONTHLY
-import net.fortuna.ical4j.model.Recur.Frequency.SECONDLY
-import net.fortuna.ical4j.model.Recur.Frequency.YEARLY
+import org.tasks.repeats.Frequency.DAILY
+import org.tasks.repeats.Frequency.HOURLY
+import org.tasks.repeats.Frequency.MINUTELY
+import org.tasks.repeats.Frequency.MONTHLY
+import org.tasks.repeats.Frequency.SECONDLY
+import org.tasks.repeats.Frequency.YEARLY
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.tasks.time.DateTime
-import java.time.DayOfWeek
-import java.util.Locale
+import kotlinx.datetime.DayOfWeek
 
 class CustomRecurrenceViewModelTest {
     @Test
@@ -278,6 +277,5 @@ class CustomRecurrenceViewModelTest {
             rrule = recur,
             dueDate = dueDate.millis,
             accountType = 0,
-            locale = Locale.getDefault(),
         ).also(block)
 }

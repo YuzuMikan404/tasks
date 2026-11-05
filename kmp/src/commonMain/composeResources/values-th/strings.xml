@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">ค้น</string>
-    <string name="subscribe">ติดตาม</string>
     <string name="filter_today">วันนี้</string>
     <string name="filter_my_tasks">แผนงานตอนนี้</string>
     <string name="filter_notifications">แจ้ง เตือน</string>
@@ -38,10 +37,8 @@
     <string name="password_required">ต้องใช้รหัสผ่าน</string>
     <string name="caldav_home_set_not_found">ไม่พบชุดบ้าน</string>
     <string name="add_account">เพิ่มบัญชี</string>
-    <string name="requires_pro_subscription">ต้องสมัครสมาชิกแบบโปร</string>
     <string name="google_tasks_selection_description">บริการพื้นฐานที่ซิงโครไนซ์กับบัญชี Google ของคุณ</string>
     <string name="name_your_price">ตั้งชื่อราคาของคุณ</string>
-    <string name="upgrade_to_pro">อัปเกรดเป็น Pro</string>
     <string name="caldav_selection_description">การซิงโครไนซ์ตามมาตรฐานอินเทอร์เน็ตแบบเปิด</string>
     <string name="davx5_selection_description">ซิงโครไนซ์งานของคุณกับแอป davx⁵ของคุณ</string>
     <string name="etesync_selection_description">การทําข้อมูลให้ตรงกันที่เข้ารหัสตั้งแต่ต้นจนจบ</string>
@@ -49,8 +46,6 @@
     <string name="sign_in_to_tasks">ลงชื่อเข้าใช้ Tasks.org</string>
     <string name="sign_in_with_google">ลงชื่อเข้าใช้ด้วย Google</string>
     <string name="sign_in_with_github">เข้าสู่ระบบด้วย GitHub</string>
-    <string name="google_play_subscribers">สมาชิก Google Play</string>
-    <string name="github_sponsors">ผู้สนับสนุน GitHub</string>
     <string name="filter_overdue">เกิน</string>
     <string name="no_due_date">ไม่มีวันที่ครบกําหนด</string>
     <string name="no_start_date">ไม่มีวันที่เริ่มต้น</string>
@@ -92,7 +87,6 @@
     <string name="app_password_delete_confirmation">แอปใดๆ ที่ใช้รหัสผ่านนี้จะออกจากระบบ</string>
     <string name="app_password_enter_description">ตั้งชื่อรหัสผ่านของคุณ (ไม่บังคับ)</string>
     <string name="insufficient_sponsorship">ไม่พบผู้สนับสนุน GitHub ที่มีสิทธิ์</string>
-    <string name="button_subscribe">ติดตาม</string>
     <string name="your_subscription_expired">การสมัครใช้งานของคุณหมดอายุแล้ว สมัครสมาชิกตอนนี้เพื่อกลับมาใช้บริการต่อ</string>
     <string name="insufficient_subscription">ระดับการบอกรับเป็นสมาชิกไม่เพียงพอ โปรดปรับรุ่นการสมัครใช้งานของคุณให้กลับมาใช้บริการต่อ</string>
     <string name="authentication_required">ต้องการการรับรองความถูกต้อง</string>
@@ -356,4 +350,13 @@
     <string name="theme_wallpaper">วอลเปเปอร์</string>
     <string name="theme_day_night">กลางวัน/กลางคืน</string>
     <string name="theme_system_default">ค่าเริ่มต้นของระบบ</string>
+    <string name="mcp_access_advanced">ดึก</string>
+    <string name="mcp_tools_group_lists">รายการ</string>
+    <string name="mcp_tools_group_tags">แท็ก</string>
+    <string name="mcp_tools_group_places">สถานที่</string>
+    <string name="mcp_tools_group_reminders">จดหมายเตือนชําระเงิน</string>
+    <string name="mcp_copy">สำเนา</string>
+    <string name="new_filter">สร้างตัวกรองข้อมูลใหม่</string>
+    <string name="ok">ตกลง</string>
+    <string name="cancel">ยกเลิก</string>
 </resources>

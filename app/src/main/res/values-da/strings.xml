@@ -117,7 +117,6 @@
     <string name="choose_synchronization_service">Vælg tjeneste</string>
     <string name="collapse_subtasks">Skjul underopgaver</string>
     <string name="expand_subtasks">Udvid underopgaver</string>
-    <string name="name_your_price">Bestem din pris</string>
     <string name="invalid_backup_file">Ugyldig sikkerhedskopi-fil</string>
     <string name="whats_new">Hvad er nyt</string>
     <string name="choose_new_location">Vælg ny placering</string>
@@ -141,10 +140,7 @@
     <string name="action_create_new_task">Opret ny opgave</string>
     <string name="reinitialize_account">Geninitialiser</string>
     <string name="logout">Log ud</string>
-    <string name="this_feature_requires_a_subscription">Denne funktion kræver et abonnement</string>
-    <string name="requires_pro_subscription">Kræver pro-abonnement</string>
     <string name="pro_dashclock_extension">Dashclock-udvidelse</string>
-    <string name="button_subscribe">Abonnér</string>
     <string name="help_and_feedback">Hjælp og feedback</string>
     <string name="help">Hjælp</string>
     <string name="tasker_list_notification">Listemeddelelser</string>
@@ -221,7 +217,6 @@
     <string name="widget_show_settings">Vis indstillinger</string>
     <string name="widget_show_checkboxes">Vis afkrydsningsfelter</string>
     <string name="sort_created_group">Oprettet %s</string>
-    <string name="upgrade_to_pro">Opgrader til pro</string>
     <string name="refresh_purchases">Opdater køb</string>
     <string name="EPr_voiceInputEnabled_title">Stemmeinput</string>
     <string name="voice_create_prompt">Tal for at oprette en opgave</string>
@@ -330,7 +325,6 @@
     <string name="device_settings">Enhedsindstillinger</string>
     <string name="last_backup_never">aldrig</string>
     <string name="last_backup">Sidste sikkerhedskopi: %s</string>
-    <string name="account_not_included">Ikke inkluderet i ‘Bestem din pris’-abonnementer</string>
     <string name="backup_location_warning">ADVARSEL: Filer i %s slettes, hvis Tasks afinstalleres! Vælg en brugerdefineret placering for at forhindre Android i at slette dine filer.</string>
     <string name="backups_ignore_warnings_summary">Ignorer backup-advarsler, hvis du ikke har brug for sikkerhedskopier eller har din egen backup-løsning</string>
     <string name="backups_ignore_warnings">Ignorer advarsler</string>
@@ -420,7 +414,6 @@
     <string name="exit">Afslut</string>
     <string name="returning_user">Tilbagevendende bruger?</string>
     <string name="rmd_EPr_rmd_time_desc">Notifikationer for alle daglige opgaver vises kl. %1$s</string>
-    <string name="banner_subscription_required_title">Abonnement kræves</string>
     <string name="banner_subscription_required_body">Betal hvad du vil for at få adgang til %s-synkronisering</string>
     <string name="email_to_task">E-mail til opgave</string>
     <string name="email_to_task_address">Din e-mailadresse</string>

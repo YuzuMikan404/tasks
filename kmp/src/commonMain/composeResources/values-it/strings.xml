@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Cerca</string>
-    <string name="subscribe">Abbonati</string>
     <string name="filter_my_tasks">Le mie attività</string>
     <string name="filter_notifications">Notifiche</string>
     <string name="filter_snoozed">Posticipate</string>
@@ -26,7 +25,6 @@
     <string name="today">Oggi</string>
     <string name="today_lowercase">oggi</string>
     <string name="search_no_results">Nessun risultato</string>
-    <string name="requires_pro_subscription">Richiede versione premium</string>
     <string name="subscription_required_description">Sblocca tutte le funzionalità con $1 USD/anno</string>
     <string name="add_task">Aggiungi attività</string>
     <string name="show_unstarted">Mostra non iniziate</string>
@@ -67,7 +65,6 @@
     <string name="microsoft_selection_description_googleplay">Sincronizza con il tuo account Microsoft personale, di lavoro o di scuola</string>
     <string name="tasks_org_description">Include la condivisione con amici e familiari e Email-to-Task</string>
     <string name="name_your_price">Scegli tu il prezzo</string>
-    <string name="upgrade_to_pro">Aggiorna alla versione Pro</string>
     <string name="legal_disclosure_prefix_using">Utilizzando Tasks.org</string>
     <string name="caldav_selection_description">Sincronizzazione basata su standard aperti di internet</string>
     <string name="davx5_selection_description">Sincronizza le tue attività con l'app DAVx⁵</string>
@@ -76,8 +73,6 @@
     <string name="sign_in_to_tasks">Accedi a Tasks.org</string>
     <string name="sign_in_with_google">Accedi con Google</string>
     <string name="sign_in_with_github">Accedi con GitHub</string>
-    <string name="google_play_subscribers">Abbonati a Google Play</string>
-    <string name="github_sponsors">Sponsor di GitHub</string>
     <string name="completed">Completate</string>
     <string name="filter_overdue">In ritardo</string>
     <string name="no_due_date">Nessuna scadenza</string>
@@ -108,14 +103,13 @@
     <string name="subtasks">Attività secondaria</string>
     <string name="sort_not_available">Non disponibile per etichette, filtri o luoghi</string>
     <string name="none">Nessuno</string>
-    <string name="ok">OK</string>
+    <string name="ok">Ok</string>
     <string name="cancel">Annulla</string>
     <string name="accept">Accetta</string>
     <string name="back">Indietro</string>
     <string name="help">Aiuto</string>
     <string name="display_name">Nome visualizzato</string>
     <string name="upgrade_to_pro_card_description">Sblocca Tasks.org Cloud, la condivisione con amici e familiari e Email-to-Task</string>
-    <string name="supporter">Sostenitore</string>
     <string name="price_per_month_with_currency">%1$s/mese</string>
     <string name="price_per_year_with_currency">%1$s/anno</string>
     <string name="supporter_summary">%1$s • Grazie!</string>
@@ -148,7 +142,6 @@
     <string name="tos_updated_title">Abbiamo aggiornato i Termini di Servizio</string>
     <string name="view_tos">Mostra i Termini di Servizio</string>
     <string name="insufficient_sponsorship">Nessuna sponsorizzazione GitHub idonea trovata</string>
-    <string name="button_subscribe">Abbonati</string>
     <string name="your_subscription_expired">Il tuo abbonamento è scaduto. Abbonati ora per riattivare il servizio.</string>
     <string name="insufficient_subscription">Livello di abbonamento insufficiente. Per favore aggiornalo per riattivare il servizio.</string>
     <string name="authentication_required">Autenticazione richiesta</string>
@@ -546,4 +539,48 @@
     <string name="theme_day_night">Giorno/Notte</string>
     <string name="theme_system_default">Predefinito del sistema</string>
     <string name="works_with_desktop">Tasks.org per desktop</string>
+    <string name="mcp_access_advanced">Avanzate</string>
+    <string name="mcp_tools_group_lists">Liste</string>
+    <string name="mcp_tools_group_tags">Etichette</string>
+    <string name="mcp_tools_group_places">Luoghi</string>
+    <string name="mcp_tools_group_reminders">Promemoria</string>
+    <string name="mcp_copy">Copia</string>
+    <string name="new_filter">Crea nuovo filtro</string>
+    <string name="show_completed_subtasks">Mostra attività secondarie completate</string>
+    <string name="edit_task">Modifica attività</string>
+    <string name="task_title">Titolo attività</string>
+    <string name="no_list_available">Nessuna lista disponibile</string>
+    <string name="failed_to_load_task">Impossibile caricare attività</string>
+    <string name="add_platform_account">Aggiungi account %1$s</string>
+    <string name="sign_in_with_apple">Accedi con Apple</string>
+    <string name="show_more">Mostra di più</string>
+    <string name="show_less">Mostra di meno</string>
+    <string name="migrate_to_cloud">Migra a Tasks.org Cloud</string>
+    <string name="this_device_only">Solo questo dispositivo</string>
+    <string name="logout_confirmation">Disconnettere %1$s?</string>
+    <string name="delete_tag_warning">Le attività con questo tag non saranno eliminate</string>
+    <string name="delete_list_warning">Tutte le attività in questo elenco verranno cancellate. Questo non può essere annullato!</string>
+    <string name="wrong_account">Accesso fallito</string>
+    <string name="wrong_account_message">Il tuo abbonamento è già collegato a %1$s. Se ritieni che si tratti di un errore, contatta %2$s</string>
+    <string name="mcp_server_summary">Lascia che gli assistenti AI su questo computer leggano e gestiscano i tuoi dati</string>
+    <string name="mcp_server_enable">Servi i dati via MCP</string>
+    <string name="mcp_server_enable_summary">Funziona solo su questo computer, al 127.0.0.1. Nulla è esposto alla rete.</string>
+    <string name="mcp_status_running">In esecuzione sulla porta %1$d</string>
+    <string name="mcp_status_stopped">Non in esecuzione</string>
+    <string name="mcp_access">Accesso</string>
+    <string name="mcp_access_read_only">Sola lettura</string>
+    <string name="mcp_access_read_only_summary">Gli assistenti possono leggere le attività, gli elenchi, i tag, i luoghi, i promemoria e gli account di sincronizzazione. Non possono cambiare nulla.</string>
+    <string name="mcp_access_read_write">Lettura e scrittura</string>
+    <string name="mcp_access_read_write_summary">Gli assistenti possono anche creare, modificare ed eliminare attività, elenchi, tag, luoghi e promemoria.</string>
+    <string name="mcp_access_advanced_summary">Scegli esattamente quali strumenti possono utilizzare gli assistenti.</string>
+    <string name="mcp_tools">Strumenti</string>
+    <string name="mcp_tools_summary">Uno strumento che disattivi non viene mai offerto all\'assistente, quindi non può chiedere di riattivarlo. Riavvia il server.</string>
+    <string name="mcp_tools_enabled">%1$d su %2$d attivi</string>
+    <string name="mcp_tools_group_tasks">Attività</string>
+    <string name="mcp_tools_group_accounts">Sincronizza account</string>
+    <string name="mcp_connect">Connetti un assistente</string>
+    <string name="mcp_connect_summary">Copialo nel tuo assistente, quindi riavvialo. Il token è già incluso, quindi mantienilo privato.</string>
+    <string name="mcp_copied">Copiato</string>
+    <string name="mcp_hide">Nascondi</string>
+    <string name="subscription_required">Richiede un abbonamento</string>
 </resources>

@@ -210,11 +210,8 @@
     <string name="tasker_create_task">Vytvoriť úlohu</string>
     <string name="tasker_list_notification">Zoznam upozornení</string>
     <string name="help">Pomoc</string>
-    <string name="upgrade_to_pro">Rozšíriť na verziu pro</string>
     <string name="refresh_purchases">Obnoviť nákupy</string>
-    <string name="button_subscribe">Prihlásiť sa</string>
     <string name="pro_dashclock_extension">Rozšírenie Dashclock</string>
-    <string name="requires_pro_subscription">Vyžaduje platenú verziu pro</string>
     <string name="logout">Odhlásiť sa</string>
     <string name="reinitialize_account">Znovu aktivovať</string>
     <string name="action_create_new_task">Vytvoriť novú úlohu</string>
@@ -284,7 +281,6 @@
     <string name="reset_sort_order">Obnoviť triedenie</string>
     <string name="filter_eisenhower_box_3">Naliehavé, ale nedôležité</string>
     <string name="last_backup">Posledná záloha: %s</string>
-    <string name="this_feature_requires_a_subscription">Táto funkcia vyžaduje predplatné</string>
     <string name="lists">Zoznamy</string>
     <string name="multi_select_reschedule">Preložiť</string>
     <string name="custom_filter_has_subtask">Má podúlohy</string>
@@ -300,7 +296,6 @@
     <string name="background_location">Umiestnenie na pozadí</string>
     <string name="backups_ignore_warnings_summary">Ignorujte varovania týkajúce sa zálohovania, ak ich nepotrebujete alebo riešite zálohovanie po svojom</string>
     <string name="no_google_play_subscription">Nenájdené žiadne predplatné Google Play</string>
-    <string name="name_your_price">Zaplaťte ľubovoľnú čiastku</string>
     <string name="expand_subtasks">Rozbaliť podúlohy</string>
     <string name="action_new_task">Nová úloha</string>
     <string name="background_location_permission_required">Táto aplikácia zbiera údaje o vašej polohe, aby fungovali upozornenia podľa polohy aj keď aplikáciu práve nepoužívate.</string>
@@ -338,7 +333,6 @@
     <string name="migrating_tasks">Prebieha presúvanie úloh</string>
     <string name="migrate_count">Presunúť %s do Tasks.org</string>
     <string name="above_average">Nadpriemerné</string>
-    <string name="account_not_included">Nezahrnuté v predplatnom type „Zaplaťte koľko chcete“</string>
     <string name="snackbar_tasks_completed">%d úloh bolo dokončených</string>
     <string name="cost_money">Cena: $</string>
     <string name="cost_more_money">Cena: $$$</string>

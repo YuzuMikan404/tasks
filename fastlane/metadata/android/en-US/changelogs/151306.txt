@@ -1,0 +1,10 @@
+* Update icon set and add 1,800+ icons
+* Reduced app download and install size
+* Skip invalid tasks instead of stopping sync
+* Restrict credentials to account domain
+* Handle secondly recurrence intervals
+* Use sentence case for 'Clear completed' - @joshuagrady
+* DAVx5 sync fixes
+* Microsoft To Do sync fixes
+* Bug fixes and performance improvements
+* Update translations

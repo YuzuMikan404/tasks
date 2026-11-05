@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">검색</string>
-    <string name="subscribe">신청</string>
     <string name="filter_my_tasks">나의 할일</string>
     <string name="filter_notifications">알림</string>
     <string name="filter_snoozed">알람 미뤄짐</string>
@@ -28,7 +27,6 @@
     <string name="show_unstarted">시작하지 않은 할일 표시</string>
     <string name="show_completed">완료한 할일 표시</string>
     <string name="search_no_results">결과 없음</string>
-    <string name="requires_pro_subscription">프리미엄 기능</string>
     <string name="subscription_required_description">연간 1400원어치의 요금으로 모든 기능을 잠금 해제하세요</string>
     <string name="add_task">할 일 추가</string>
     <string name="wear_install_app">휴대폰에 설치하기</string>
@@ -50,7 +48,6 @@
     <string name="microsoft_selection_description">마이크로소프트 계정과 동기화</string>
     <string name="cost_free">무료</string>
     <string name="name_your_price">구독 금액 정하기</string>
-    <string name="upgrade_to_pro">프로 서비스로 업그레이드</string>
     <string name="caldav_selection_description">개방형 인터넷 표준을 바탕으로 한 동기화</string>
     <string name="davx5_selection_description">DAVx⁵ 앱과 내 할일 동기화</string>
     <string name="etesync_selection_description">종단간 암호화된 동기화</string>
@@ -58,8 +55,6 @@
     <string name="sign_in_to_tasks">Tasks.org에 로그인</string>
     <string name="sign_in_with_google">구글을 이용해서 로그인</string>
     <string name="sign_in_with_github">깃허브를 이용해서 로그인</string>
-    <string name="google_play_subscribers">구글 플레이 구독자</string>
-    <string name="github_sponsors">깃허브 후원자</string>
     <string name="completed">완료</string>
     <string name="filter_overdue">마감일이 지난</string>
     <string name="no_due_date">마감일 없음</string>
@@ -114,7 +109,6 @@
     <string name="app_password_delete_confirmation">이 비밀번호를 사용하는 모든 앱에서 로그아웃 됩니다</string>
     <string name="app_password_enter_description">비밀번호에 이름 짓기 (선택사항)</string>
     <string name="insufficient_sponsorship">적합한 깃허브 후원 자격을 찾을 수 없습니다</string>
-    <string name="button_subscribe">신청</string>
     <string name="your_subscription_expired">구독이 만료되었습니다. 서비스를 재개하려면 지금 구독하세요.</string>
     <string name="insufficient_subscription">구독 수준이 적합하지 않습니다. 서비스를 재개하려면 구독을 업그레이드하세요.</string>
     <string name="authentication_required">인증 필요</string>
@@ -359,7 +353,7 @@
     </plurals>
     <string name="delete_task">할일 지우기</string>
     <string name="menu_discard_changes">변경사항 폐기</string>
-    <string name="more_options">더 많은 옵션</string>
+    <string name="more_options">옵션 더보기</string>
     <string name="quiet_hours_in_effect">무음 시간 동작 중</string>
     <string name="troubleshooting">문제해결</string>
     <string name="notification_troubleshooting_summary">알림 기능에 문제가 있으시면 여기를 누르세요</string>
@@ -449,4 +443,11 @@
     <string name="theme_wallpaper">바탕화면</string>
     <string name="theme_day_night">주간/야간</string>
     <string name="theme_system_default">시스템 기본설정</string>
+    <string name="mcp_access_advanced">고급</string>
+    <string name="mcp_tools_group_lists">목록</string>
+    <string name="mcp_tools_group_tags">태그</string>
+    <string name="mcp_tools_group_places">장소</string>
+    <string name="mcp_tools_group_reminders">알람</string>
+    <string name="mcp_copy">복사</string>
+    <string name="new_filter">새 필터 만들기</string>
 </resources>

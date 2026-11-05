@@ -176,11 +176,8 @@
     <string name="badges_description">Tampilkan jumlah tugas pada ikon peluncur Tasks. Tidak semua peluncur mendukung fitur lencana ini.</string>
     <string name="tasker_create_task">Buat tugas</string>
     <string name="help">Bantuan</string>
-    <string name="upgrade_to_pro">Tingkatkan ke pro</string>
     <string name="refresh_purchases">Segarkan pembelian</string>
-    <string name="button_subscribe">Langganan</string>
     <string name="pro_dashclock_extension">Ekstensi Dashclock</string>
-    <string name="requires_pro_subscription">Memerlukan langganan pro</string>
     <string name="logout">Keluar</string>
     <string name="reinitialize_account">Inisialisasi ulang</string>
     <string name="action_create_new_task">Buat tugas baru</string>
@@ -197,7 +194,6 @@
     <string name="choose_new_location">Pilih lokasi baru</string>
     <string name="invalid_backup_file">Berkas cadangan tidak valid</string>
     <string name="expand_subtasks">Lebarkan subtugas</string>
-    <string name="this_feature_requires_a_subscription">Fitur ini membutuhkan Anda berlangganan versi pro</string>
     <string name="choose_synchronization_service">Pilih sebuah platform</string>
     <string name="caldav_selection_description">Sinkronisasi yang berdasarkan pada standar internet terbuka</string>
     <string name="etesync_selection_description">Enkripsi klien-ke-klien bersumber terbuka</string>
@@ -246,7 +242,7 @@
     <string name="sort_created">Berdasarkan waktu pembuatan</string>
     <string name="WID_dateButtonUnset">Klik untuk mengatur</string>
     <string name="cancel">Batal</string>
-    <string name="ok">OKE</string>
+    <string name="ok">Oke</string>
     <string name="day_before_due">Hari sebelum jatuh tempo</string>
     <string name="start_date">Tanggal mulai</string>
     <string name="TEA_estimatedDuration_label">Berapa lama\?</string>
@@ -257,7 +253,6 @@
     <string name="display_name">Nama tampilan</string>
     <string name="background_location_permission_required">Aplikasi ini mengumpulkan data lokasi untuk mengaktifkan pengingat berdasarkan lokasi bahkan saat aplikasi ditutup atau sedang tidak digunakan.</string>
     <string name="repeats_plural_number_of_times">Ulangi setiap %1$s, terjadi %2$d %3$s</string>
-    <string name="account_not_included">Tidak termasuk dalam langganan \'Berikan penawaran harga Anda\'</string>
     <string name="copied_to_clipboard">%s disalin ke papan klip</string>
     <string name="app_passwords_more_info">Sinkronkan tugas dan kalender Anda dengan aplikasi desktop dan seluler pihak ketiga. Ketuk di sini untuk info selengkapnya</string>
     <string name="app_password">Kata sandi aplikasi</string>
@@ -327,7 +322,6 @@
     <string name="color_wheel">Roda warna</string>
     <string name="decsync_selection_description">Sinkronisasi berdasarkan berkas</string>
     <string name="collapse_subtasks">Ciutkan subtugas</string>
-    <string name="name_your_price">Tetapkan harga dari Anda</string>
     <string name="location_departed">Berangkat pada %s</string>
     <string name="location_arrived">Datang pada %s</string>
     <string name="subscription">Langganan</string>
@@ -391,7 +385,6 @@
     <string name="delete_tasks_warning">%s akan dihapus. Ini tidak dapat dibatalkan!</string>
     <string name="banner_app_updated_title">Aplikasi diperbarui</string>
     <string name="banner_app_updated_description">Tasks baru saja diperbarui ke %s. Apakah Anda ingin melihat catatan rilis?</string>
-    <string name="banner_subscription_required_title">Langganan diperlukan</string>
     <string name="banner_subscription_required_body">Bayar sesuai keinginan Anda untuk membuka kunci sinkronisasi %s</string>
     <string name="donate_nag">Pertimbangkan untuk menunjukkan dukungan Anda dengan donasi!</string>
     <string name="donate_today">Donasi sekarang</string>

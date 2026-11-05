@@ -25,6 +25,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -44,7 +45,7 @@ class Firebase @Inject constructor(
         }
     }
 
-    private val posthogEnabled: Boolean = run {
+    private val posthogEnabled: Boolean by lazy {
         val apiKey = context.getString(R.string.posthog_key)
         if (preferences.isTrackingEnabled && apiKey.isNotBlank()) {
             PostHogAndroid.setup(
@@ -254,6 +255,7 @@ class Firebase @Inject constructor(
     }
 
     override fun reportException(t: Throwable, fatal: Boolean) {
+        if (t is CancellationException) return
         Timber.e(t)
         crashlytics?.recordException(t)
     }
@@ -280,10 +282,10 @@ class Firebase @Inject constructor(
     override fun completeTask(source: String) =
         logEvent(R.string.event_complete_task, R.string.param_type to source)
 
-    override fun identify(distinctId: String) {
-        Timber.d("identify -> $distinctId")
+    override fun setSku(sku: String?) {
+        Timber.d("sku -> $sku")
         if (posthogEnabled) {
-            PostHog.identify(distinctId)
+            if (sku != null) PostHog.register("sku", sku) else PostHog.unregister("sku")
         }
     }
 
@@ -306,12 +308,8 @@ class Firebase @Inject constructor(
     }
 
     fun logEventOncePerDay(@StringRes event: Int, vararg p: Pair<Int, Any>) {
-        val eventName = context.getString(event)
-        val prefKey = "last_logged_$eventName"
-        val today = currentTimeMillis().startOfDay()
-        val lastLogged = preferences.getLong(prefKey, 0L)
-        if (lastLogged < today) {
-            preferences.setLong(prefKey, today)
+        val prefKey = "last_logged_${context.getString(event)}"
+        if (preferences.setLongIfGreater(prefKey, currentTimeMillis().startOfDay())) {
             logEvent(event, *p)
         }
     }

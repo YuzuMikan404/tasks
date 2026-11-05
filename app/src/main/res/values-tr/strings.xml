@@ -83,7 +83,7 @@
     <string name="calendar_event_not_found">Takvim etkinliği bulunamadı</string>
     <string name="gcal_completed_title">%s (tamamlandı)</string>
     <string name="CFC_gtasks_list_text">Liste içinde: ?</string>
-    <string name="gtasks_GTA_clear_completed">Tamamlanları Temizle</string>
+    <string name="gtasks_GTA_clear_completed">Tamamlanları temizle</string>
     <string name="gtasks_GLA_authenticating">Kimlik doğrulanıyor…</string>
     <string name="gtasks_error_accountNotFound">%s hesabı bulunamadı—lütfen çıkış yapıp Google Görevler ayarlarından yeniden oturum açın.</string>
     <string name="premium_record_audio">Bir not kaydet</string>
@@ -200,11 +200,8 @@
     <string name="tasker_create_task">Görev oluştur</string>
     <string name="tasker_list_notification">Bildirimi listele</string>
     <string name="help">Yardım</string>
-    <string name="upgrade_to_pro">Pro\'ya yükselt</string>
     <string name="refresh_purchases">Satın alımları yenile</string>
-    <string name="button_subscribe">Abone ol</string>
     <string name="pro_dashclock_extension">Dashclock eklentisi</string>
-    <string name="requires_pro_subscription">Pro aboneliği gerektirir</string>
     <string name="logout">Oturumu kapat</string>
     <string name="reinitialize_account">Yeniden başlat</string>
     <string name="action_create_new_task">Yeni görev oluştur</string>
@@ -230,13 +227,11 @@
     <string name="url">URL</string>
     <string name="list_separator_with_space">", "</string>
     <string name="icon">Simge</string>
-    <string name="name_your_price">Gönlünüzden kopan</string>
     <string name="SSD_sort_my_order">Düzenim</string>
     <string name="expand_subtasks">Alt görevleri genişlet</string>
     <string name="collapse_subtasks">Alt görevleri gizle</string>
     <string name="subtasks">Alt görevler</string>
     <string name="display_name">Gösterim adı</string>
-    <string name="this_feature_requires_a_subscription">Bu özellik abonelik gerektiriyor</string>
     <string name="choose_synchronization_service">Platform seç</string>
     <string name="caldav_selection_description">Açık internet standartlarında eşzamanlama</string>
     <string name="etesync_selection_description">Uçtan uca şifreli eşzamanlama</string>
@@ -356,7 +351,6 @@
     <string name="CFC_startBefore_name">Başlangıç…</string>
     <string name="CFC_startBefore_text">Başlangıç: \?</string>
     <string name="filter_any_start_date">Herhangi başlangıç tarihi</string>
-    <string name="account_not_included">\'Fiyat belirle\' aboneliklerini içermez</string>
     <string name="subscription">Abonelik</string>
     <string name="widget_show_title">Başlığı göster</string>
     <string name="tasks_org_account_required">Tasks.org hesabı gerekli</string>
@@ -419,7 +413,6 @@
     <string name="returning_user">Geri gelen kullanıcı mısınız?</string>
     <string name="import_failed">İçe aktarma başarısız</string>
     <string name="import_failed_message">Yedek dosyası okunamadı</string>
-    <string name="banner_subscription_required_title">Abonelik gereklidir</string>
     <string name="banner_subscription_required_body">%s eşzamanlama kilidini açmak için dilediğinizi ödeyin</string>
     <string name="email_to_task">E-postayla görev</string>
     <string name="email_to_task_address">E-posta adresiniz</string>

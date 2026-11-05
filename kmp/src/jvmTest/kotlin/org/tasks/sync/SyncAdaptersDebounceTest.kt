@@ -1,6 +1,6 @@
 package org.tasks.sync
 
-import androidx.room.Room
+import androidx.room3.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -131,6 +131,18 @@ class SyncAdaptersDebounceTest {
         awaitSync()
 
         assertEquals(listOf(SyncSource.USER_INITIATED), synced)
+    }
+
+    @Test
+    fun quietRequestsStillSync() = runBlocking {
+        setupAccount()
+        val adapters = syncAdapters()
+        quiet()
+
+        adapters.sync(SyncSource.APP_RESUME)
+        awaitSync()
+
+        assertEquals(listOf(SyncSource.APP_RESUME), synced)
     }
 
     @Test

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Sök</string>
-    <string name="subscribe">Prenumerera</string>
     <string name="filter_my_tasks">Mina uppgifter</string>
     <string name="filter_notifications">Aviseringar</string>
     <string name="filter_snoozed">Senarelagda</string>
@@ -27,7 +26,6 @@
     <string name="today_lowercase">idag</string>
     <string name="search_no_results">Inga resultat</string>
     <string name="subscription_required_description">Lås upp alla funktioner för så lite som $1 USD/år</string>
-    <string name="requires_pro_subscription">Kräver Pro-prenumeration</string>
     <string name="add_task">Lägg till uppgift</string>
     <string name="show_unstarted">Visa uppgifter som inte har påbörjats</string>
     <string name="show_completed">Visa slutförda</string>
@@ -58,7 +56,6 @@
     <string name="name_your_price_blurb">Betala valfritt belopp för att låsa upp teman, ikoner och dessa avancerade synkroniseringsalternativ</string>
     <string name="microsoft_selection_description_googleplay">Synkronisera med ditt arbets-, skol- eller personliga Microsoft-konto</string>
     <string name="name_your_price">Ange ditt pris</string>
-    <string name="upgrade_to_pro">Uppgradera till Pro</string>
     <string name="legal_disclosure_prefix_using">Genom att använda Tasks.org</string>
     <string name="caldav_selection_description">Synkronisering baserad på öppna internetstandarder</string>
     <string name="davx5_selection_description">Synkronisera dina uppgifter med DAVx⁵-appen</string>
@@ -67,8 +64,6 @@
     <string name="sign_in_to_tasks">Logga in på Tasks.org</string>
     <string name="sign_in_with_google">Logga in med Google</string>
     <string name="sign_in_with_github">Logga in med GitHub</string>
-    <string name="google_play_subscribers">Google Play-prenumeranter</string>
-    <string name="github_sponsors">GitHub-sponsorer</string>
     <string name="completed">Slutförd</string>
     <string name="filter_overdue">Förfallna</string>
     <string name="no_due_date">Inget förfallodatum</string>
@@ -126,7 +121,6 @@
     <string name="tos_updated_title">Vi har uppdaterat våra användarvillkor</string>
     <string name="view_tos">Visa användarvillkor</string>
     <string name="insufficient_sponsorship">Inget giltigt GitHub-sponsorskap hittades</string>
-    <string name="button_subscribe">Prenumerera</string>
     <string name="your_subscription_expired">Din prenumeration har löpt ut. Prenumerera nu för att återuppta tjänsten.</string>
     <string name="insufficient_subscription">Otillräcklig prenumerationsnivå. Uppgradera din prenumeration för att återuppta tjänsten.</string>
     <string name="authentication_required">Autentisering krävs</string>
@@ -211,7 +205,6 @@
     <string name="show_more">Visa mer</string>
     <string name="show_less">Visa mindre</string>
     <string name="upgrade_to_pro_card_description">Lås upp Tasks.org-molnsynkronisering, delning med vänner och familj samt e-post till uppgift</string>
-    <string name="supporter">Stödjare</string>
     <string name="supporter_summary_no_price">Tack!</string>
     <string name="supporter_summary">%1$s • Tack!</string>
     <string name="sign_in_to_connect">Logga in för att ansluta ditt Tasks.org-konto</string>
@@ -262,7 +255,6 @@
     <string name="error_github_verification_failed">Verifieringen misslyckades. Försök igen.</string>
     <string name="pricing_subtitle">Kostnadsfri programvara med öppen källkod. Prenumerationer stöder utvecklingen och låser upp fler funktioner.</string>
     <string name="pricing_cloud_description">Lås upp alla appfunktioner och synkronisera med Tasks.org Cloud.</string>
-    <string name="pricing_nyp_title">Ange ditt pris</string>
     <string name="pricing_from">Från %1$s</string>
     <string name="pricing_nyp_description">Välj ditt eget prenumerationspris och lås upp alla appfunktioner.</string>
     <string name="pricing_recommended">Rekommenderad</string>
@@ -620,4 +612,12 @@
     <string name="theme_day_night">Dag/natt</string>
     <string name="theme_system_default">Följ systemet</string>
     <string name="works_with_desktop">Tasks.org för datorer</string>
+    <string name="mcp_access_advanced">Avancerat</string>
+    <string name="mcp_tools_group_lists">Listor</string>
+    <string name="mcp_tools_group_tags">Etiketter</string>
+    <string name="mcp_tools_group_places">Platser</string>
+    <string name="mcp_tools_group_reminders">Påminnelser</string>
+    <string name="mcp_copy">Kopiera</string>
+    <string name="new_filter">Skapa ett nytt filter</string>
+    <string name="subscription_required">Prenumeration krävs</string>
 </resources>

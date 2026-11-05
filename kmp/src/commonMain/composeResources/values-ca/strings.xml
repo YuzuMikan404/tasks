@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Cerca</string>
-    <string name="subscribe">Subscriu-te</string>
     <string name="filter_my_tasks">Tasques actives</string>
     <string name="filter_notifications">Notificacions</string>
     <string name="filter_timer">Tasques sent cronometrades</string>
@@ -21,7 +20,6 @@
     <string name="yesterday_lowercase">ahir</string>
     <string name="today">Avui</string>
     <string name="today_lowercase">avui</string>
-    <string name="requires_pro_subscription">Característica pro</string>
     <string name="default_list">Llista per defecte</string>
     <string name="drawer_places">Llocs</string>
     <string name="drawer_local_lists">Llistes locals</string>
@@ -50,7 +48,6 @@
     <string name="microsoft_selection_description">Sincronitza amb el teu compte personal de Microsoft</string>
     <string name="cost_free">Gratuït</string>
     <string name="name_your_price">Preu flexible</string>
-    <string name="upgrade_to_pro">Actualitza a pro</string>
     <string name="caldav_selection_description">Sincronització basada en estàndards oberts d'Internet</string>
     <string name="davx5_selection_description">Sincronitza les teves tasques amb l'aplicació DAVx5</string>
     <string name="etesync_selection_description">Sincronització xifrada d'extrem a extrem</string>
@@ -58,8 +55,6 @@
     <string name="sign_in_to_tasks">Inicieu la sessió a Tasks.org</string>
     <string name="sign_in_with_google">Inicieu sessió amb Google</string>
     <string name="sign_in_with_github">Inicieu sessió amb GitHub</string>
-    <string name="google_play_subscribers">Subscriptors de Google Play</string>
-    <string name="github_sponsors">Patrocinadors de GitHub</string>
     <string name="completed">Completat</string>
     <string name="filter_overdue">Vençuda</string>
     <string name="no_due_date">Sense data de venciment</string>
@@ -90,7 +85,7 @@
     <string name="subtasks">Subtasques</string>
     <string name="sort_not_available">No disponible per a etiquetes, filtres o llocs</string>
     <string name="none">Cap</string>
-    <string name="ok">OK</string>
+    <string name="ok">D\'acord</string>
     <string name="cancel">Cancel·la</string>
     <string name="back">Enrere</string>
     <string name="help">Ajuda</string>
@@ -114,7 +109,6 @@
     <string name="app_password_delete_confirmation">Qualsevol aplicació que utilitzi aquesta contrasenya serà eliminada</string>
     <string name="app_password_enter_description">Doneu un nom a la vostra contrasenya (opcional)</string>
     <string name="insufficient_sponsorship">No s'ha trobat cap patrocini elegible de GitHub</string>
-    <string name="button_subscribe">Subscriu-te</string>
     <string name="your_subscription_expired">La vostra subscripció ha caducat. Subscriu-te ara per reprendre el servei.</string>
     <string name="insufficient_subscription">Nivell de subscripció insuficient. Actualitzeu la vostra subscripció per reprendre el servei.</string>
     <string name="authentication_required">Es requereix autenticació</string>
@@ -475,4 +469,11 @@
     <string name="theme_wallpaper">Fons de pantalla</string>
     <string name="theme_day_night">Dia/Nit</string>
     <string name="theme_system_default">Predeterminat del sistema</string>
+    <string name="mcp_access_advanced">Avançat</string>
+    <string name="mcp_tools_group_lists">Llistes</string>
+    <string name="mcp_tools_group_tags">Etiquetes</string>
+    <string name="mcp_tools_group_places">Llocs</string>
+    <string name="mcp_tools_group_reminders">Recordatoris</string>
+    <string name="mcp_copy">Copia</string>
+    <string name="new_filter">Crea un filtre</string>
 </resources>

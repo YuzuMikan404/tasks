@@ -210,11 +210,8 @@
     <string name="tasker_create_task">יצירת משימה</string>
     <string name="tasker_list_notification">התראת רשימה</string>
     <string name="help">עזרה</string>
-    <string name="upgrade_to_pro">שדרוג לגרסת פרו</string>
     <string name="refresh_purchases">ריענון רכישות</string>
-    <string name="button_subscribe">הרשמה למינוי</string>
     <string name="pro_dashclock_extension">הרחבת Dashclock</string>
-    <string name="requires_pro_subscription">דורש מינוי פרו</string>
     <string name="logout">התנתקות</string>
     <string name="reinitialize_account">אתחול מחדש</string>
     <string name="action_create_new_task">יצירת משימה חדשה</string>
@@ -238,7 +235,6 @@
     <string name="invalid_backup_file">קובץ גיבוי לא תקין</string>
     <string name="list_separator_with_space">",‏ "</string>
     <string name="icon">סמל</string>
-    <string name="name_your_price">מה המחיר שלך</string>
     <string name="places">מקומות</string>
     <string name="no_date">אין תאריך</string>
     <string name="chip_appearance_text_only">טקסט בלבד</string>
@@ -247,7 +243,6 @@
     <string name="collapse_subtasks">כיווץ תתי־משימות</string>
     <string name="expand_subtasks">הרחבת תתי־משימות</string>
     <string name="action_new_task">משימה חדשה</string>
-    <string name="this_feature_requires_a_subscription">תכונה זו דורשת מינוי</string>
     <string name="help_and_feedback">עזרה &amp; משוב</string>
     <string name="widget_due_date_hidden">מוסתר</string>
     <string name="widget_due_date_below_title">מתחת לכותרת</string>
@@ -364,7 +359,6 @@
     <string name="upgrade_more_customization_description">ביטול נעילה של כל ערכות הנושא, הצבעים, והסמלים</string>
     <string name="upgrade_more_customization">התאמה אישית נוספת</string>
     <string name="pro_free_trial">מנויים חדשים מקבלים 7 ימי ניסיון בחינם. ניתן לבטל בכל עת</string>
-    <string name="account_not_included">לא כלול במינויי \'מה המחיר שלך\'</string>
     <string name="tasks_org_account_required">נדרש חשבון Tasks.org</string>
     <string name="privacy">פרטיות</string>
     <string name="open_source">קוד פתוח</string>
@@ -421,7 +415,6 @@
     <string name="import_failed">הייבוא נכשל</string>
     <string name="import_failed_message">לא היה ניתן לקרוא קובץ גיבוי</string>
     <string name="rmd_EPr_rmd_time_desc">התראות עבור משימות של יום שלם יופיעו ב־%1$s</string>
-    <string name="banner_subscription_required_title">נדרש מינוי</string>
     <string name="banner_subscription_required_body">שלם כפי רצונך כדי לפתוח סנכרון %s</string>
     <string name="subscription_required_fdroid">נדרש מינוי כדי להשתמש בסנכרון Tasks.org. מינויים מוכרחים להיות מותחלים מגרסת ה־Google Play של Tasks.</string>
     <string name="sponsorship_required_fdroid">נדרשת חסות GitHub כדי להשתמש בסנכרון Tasks.org. יש ללחוץ למטה כדי לתת חסות.</string>

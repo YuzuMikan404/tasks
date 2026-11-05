@@ -1,8 +1,10 @@
 package org.tasks.googleapis
 
+import co.touchlab.kermit.Logger
 import com.todoroo.astrid.repeats.RepeatTaskHelper
-import org.jetbrains.compose.resources.getString
 import org.tasks.analytics.Reporting
+import org.tasks.auth.TasksOAuthClient
+import org.tasks.auth.isUnauthorized
 import org.tasks.broadcast.RefreshBroadcaster
 import org.tasks.data.TaskSaver
 import org.tasks.data.dao.AlarmDao
@@ -12,12 +14,13 @@ import org.tasks.data.dao.GoogleTaskDao
 import org.tasks.data.dao.TaskDao
 import org.tasks.data.entity.CaldavAccount
 import org.tasks.preferences.AppPreferences
+import org.tasks.resources.getString
 import org.tasks.security.KeyStoreEncryption
 import org.tasks.service.TaskCompleter
 import org.tasks.service.TaskDeleter
 import tasks.kmp.generated.resources.Res
 import tasks.kmp.generated.resources.cannot_access_account
-import tasks.kmp.generated.resources.requires_pro_subscription
+import tasks.kmp.generated.resources.subscription_required
 
 class DesktopGoogleTasksSynchronizer(
     private val caldavDao: CaldavDao,
@@ -36,6 +39,7 @@ class DesktopGoogleTasksSynchronizer(
     private val encryption: KeyStoreEncryption,
     createTask: suspend () -> org.tasks.data.entity.Task,
     private val proxyAuthProvider: ProxyAuthProvider,
+    private val oauthClient: TasksOAuthClient,
 ) {
     private val synchronizer = GoogleTaskSynchronizer(
         caldavDao = caldavDao,
@@ -57,7 +61,7 @@ class DesktopGoogleTasksSynchronizer(
 
     suspend fun sync(account: CaldavAccount, hasPro: Boolean) {
         val error = when {
-            !hasPro -> getString(Res.string.requires_pro_subscription)
+            !hasPro -> getString(Res.string.subscription_required)
             account.password.isNullOrBlank() -> getString(Res.string.cannot_access_account)
             else -> null
         }
@@ -67,13 +71,22 @@ class DesktopGoogleTasksSynchronizer(
             refreshBroadcaster.broadcastRefresh()
             return
         }
+        if (account.isUnauthorized()) {
+            Logger.d(TAG) { "$account: needs sign-in, skipping sync" }
+            return
+        }
         val credentials = GoogleTasksCredentialsAdapter(
             account = account,
             encryption = encryption,
             proxyAuthProvider = proxyAuthProvider,
             caldavDao = caldavDao,
+            oauthClient = oauthClient,
         )
         val invoker = GtasksInvoker(credentials)
         synchronizer.sync(account, invoker)
+    }
+
+    companion object {
+        private const val TAG = "DesktopGoogleTasksSynchronizer"
     }
 }

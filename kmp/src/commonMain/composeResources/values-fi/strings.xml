@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Etsi</string>
-    <string name="subscribe">Tilaa</string>
     <string name="filter_my_tasks">Omat tehtävät</string>
     <string name="filter_notifications">Ilmoitukset</string>
     <string name="filter_snoozed">Torkutetut</string>
@@ -28,7 +27,6 @@
     <string name="show_unstarted">Näytä aloittamattomat</string>
     <string name="show_completed">Näytä valmiit</string>
     <string name="wear_unknown_error">Tuntematon virhe</string>
-    <string name="requires_pro_subscription">Pro-ominaisuus</string>
     <string name="subscription_required_description">Avaa kaikkien ominaisuuksien lukitus jopa 1 $ USD/vuosi</string>
     <string name="add_task">Lisää tehtävä</string>
     <string name="search_no_results">Ei tuloksia</string>
@@ -61,7 +59,6 @@
     <string name="tasks_org_description">Sisältää perhe- ja ystäväjaon sekä sähköpostista tehtäväksi -toiminnon</string>
     <string name="microsoft_selection_description_googleplay">Synkronoi työ-, koulu- tai henkilökohtaisen Microsoft tilin kanssa</string>
     <string name="name_your_price">Nimeä hintasi</string>
-    <string name="upgrade_to_pro">Päivitä pro versioon</string>
     <string name="caldav_selection_description">Avoimiin verkkostandardeihin pohjautuva synkronointi</string>
     <string name="davx5_selection_description">Tehtävien synkronointi DAVx⁵sovelluksen kanssa</string>
     <string name="etesync_selection_description">End-to-end-salattu synkronointi</string>
@@ -69,8 +66,6 @@
     <string name="sign_in_to_tasks">Kirjautuminen Tasks.org</string>
     <string name="sign_in_with_google">Kirjaudu sisään Googlen avulla</string>
     <string name="sign_in_with_github">Kirjaudu sisään GitHubilla</string>
-    <string name="google_play_subscribers">Google Play -tilaajat</string>
-    <string name="github_sponsors">GitHubin sponsorit</string>
     <string name="completed">Valmiit</string>
     <string name="filter_overdue">Myöhässä oleva</string>
     <string name="no_due_date">Ei eräpäivää</string>
@@ -102,12 +97,11 @@
     <string name="sort_not_available">Ei käytettävissä tunnisteiden, suodattimien tai paikkojen kanssa</string>
     <string name="none">Ei mitään</string>
     <string name="ok">OK</string>
-    <string name="cancel">Peruuta</string>
+    <string name="cancel">Peru</string>
     <string name="back">Takaisin</string>
     <string name="help">Apua</string>
     <string name="display_name">Näytetään nimellä</string>
     <string name="upgrade_to_pro_card_description">Avaa Tasks.org-pilvisynkronointi, perhe- ja ystäväjako sekä sähköpostista tehtäväksi -toiminto</string>
-    <string name="supporter">Tukija</string>
     <string name="price_per_month_with_currency">%1$s/kuukausi</string>
     <string name="price_per_year_with_currency">%1$s/vuosi</string>
     <string name="donate_nag">Harkitse tuen osoittamista lahjoituksella!</string>
@@ -127,7 +121,6 @@
     <string name="app_password_delete_confirmation">Kaikki tätä salasanaa käyttävät sovellukset kirjautuvat ulos</string>
     <string name="app_password_enter_description">Anna salasanalle nimi (valinnainen)</string>
     <string name="insufficient_sponsorship">Ei löydetty hyväksyttävää GitHub-sponsorointia</string>
-    <string name="button_subscribe">Tilaa</string>
     <string name="your_subscription_expired">Tilauksesi on päättynyt. Tilaa nyt jatkaaksesi palvelua.</string>
     <string name="insufficient_subscription">Riittämätön tilaustaso. Päivitä tilauksesi palvelun jatkamiseksi.</string>
     <string name="authentication_required">Vaadittu tunnistautuminen</string>
@@ -380,7 +373,7 @@
     </plurals>
     <string name="delete_task">Poista tehtävä</string>
     <string name="menu_discard_changes">Hylkää muutokset</string>
-    <string name="more_options">Lisää vaihtoehtoja</string>
+    <string name="more_options">Lisää asetuksia</string>
     <string name="quiet_hours_in_effect">Hiljaiset tunnit käytössä</string>
     <string name="troubleshooting">Ongelmien ratkaisu</string>
     <string name="notification_troubleshooting_summary">Paina tästä jos ilmoitusten kanssa on ongelmia</string>
@@ -474,4 +467,12 @@
     <string name="theme_wallpaper">Taustakuva</string>
     <string name="theme_day_night">Päivä/Yö</string>
     <string name="theme_system_default">Järjestelmän oletus</string>
+    <string name="mcp_access_advanced">Kehittyneet</string>
+    <string name="mcp_tools_group_lists">Listat</string>
+    <string name="mcp_tools_group_tags">Tunnisteet</string>
+    <string name="mcp_tools_group_places">Paikat</string>
+    <string name="mcp_tools_group_reminders">Muistutukset</string>
+    <string name="mcp_copy">Kopio</string>
+    <string name="new_filter">Luo uusi suodatin</string>
+    <string name="subscription_required">Tilaus vaaditaan</string>
 </resources>

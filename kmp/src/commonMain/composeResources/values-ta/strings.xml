@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">தேடு</string>
-    <string name="subscribe">பதிவு</string>
     <string name="filter_my_tasks">என் வேலைகள்</string>
     <string name="filter_notifications">அறிவிப்புகள்</string>
     <string name="filter_timer">பணிகள் முடிந்துவிட்டன</string>
@@ -24,7 +23,6 @@
     <string name="show_unstarted">தொடங்காதவற்றை காட்டு</string>
     <string name="show_completed">நிகழ்ச்சி முடிந்தது</string>
     <string name="search_no_results">முடிவுகள் இல்லை</string>
-    <string name="requires_pro_subscription">தொழில்முறை நற்பொருத்தம்</string>
     <string name="subscription_required_description">வருடத்திற்கு US 1 அமெரிக்க டாலர் வரை அனைத்து அம்சங்களையும் திறக்கவும்</string>
     <string name="filter_snoozed">உறக்கநிலை</string>
     <string name="wear_install_app">தொலைபேசியில் நிறுவவும்</string>
@@ -50,7 +48,6 @@
     <string name="microsoft_selection_description">உங்கள் தனிப்பட்ட நுண்மென் கணக்குடன் ஒத்திசைக்கவும்</string>
     <string name="cost_free">இலவசம்</string>
     <string name="name_your_price">உங்கள் விலைக்கு பெயரிடுங்கள்</string>
-    <string name="upgrade_to_pro">சார்புக்கு மேம்படுத்தவும்</string>
     <string name="caldav_selection_description">திறந்த இணைய தரங்களின் அடிப்படையில் ஒத்திசைவு</string>
     <string name="davx5_selection_description">உங்கள் பணிகளை DAVX⁵ பயன்பாட்டுடன் ஒத்திசைக்கவும்</string>
     <string name="etesync_selection_description">திறந்த மூல, இறுதி முதல் இறுதி மறைகுறியாக்க ஒத்திசைவு</string>
@@ -58,8 +55,6 @@
     <string name="sign_in_to_tasks">Tasks.org இல் உள்நுழைக</string>
     <string name="sign_in_with_google">Google உடன் உள்நுழைக</string>
     <string name="sign_in_with_github">கிதுபுடன் உள்நுழைக</string>
-    <string name="google_play_subscribers">கூகிள் பிளே சந்தாதாரர்கள்</string>
-    <string name="github_sponsors">அறிவிலிமையம் ஒப்புரவாளர்கள்</string>
     <string name="completed">முடிந்தது</string>
     <string name="filter_overdue">காலம் கடந்த</string>
     <string name="no_due_date">முடிக்கப்பட வேண்டிய தேதி இல்லை</string>
@@ -91,7 +86,7 @@
     <string name="sort_not_available">குறிச்சொற்கள், வடிப்பான்கள் அல்லது இடங்களுக்கு கிடைக்கவில்லை</string>
     <string name="none">எதுவுமில்லை</string>
     <string name="ok">சரி</string>
-    <string name="cancel">கைவிடு</string>
+    <string name="cancel">ரத்துசெய்</string>
     <string name="back">மீண்டும்</string>
     <string name="help">உதவி</string>
     <string name="display_name">பெயர்</string>
@@ -114,7 +109,6 @@
     <string name="app_password_delete_confirmation">இந்த கடவுச்சொல்லைப் பயன்படுத்தும் எந்த பயன்பாடும் பதிவு செய்யப்படும்</string>
     <string name="app_password_enter_description">உங்கள் கடவுச்சொல்லை ஒரு பெயரைக் கொடுங்கள் (விரும்பினால்)</string>
     <string name="insufficient_sponsorship">தகுதியான அறிவிலிமையம் ச்பான்சர்சிப் எதுவும் கிடைக்கவில்லை</string>
-    <string name="button_subscribe">பதிவு</string>
     <string name="your_subscription_expired">உங்கள் சந்தா காலாவதியானது. சேவையை மீண்டும் தொடங்க இப்போது குழுசேரவும்.</string>
     <string name="insufficient_subscription">போதுமான சந்தா நிலை. சேவையை மீண்டும் தொடங்க உங்கள் சந்தாவை மேம்படுத்தவும்.</string>
     <string name="authentication_required">ஏற்பு தேவை</string>
@@ -459,4 +453,11 @@
     <string name="theme_wallpaper">சுவர்</string>
     <string name="theme_day_night">பகல் / இரவு</string>
     <string name="theme_system_default">கணினி இயல்புநிலை</string>
+    <string name="mcp_access_advanced">மேம்படுத்தபட்ட</string>
+    <string name="mcp_tools_group_lists">பட்டியல்கள்</string>
+    <string name="mcp_tools_group_tags">குறிச்சொற்கள்</string>
+    <string name="mcp_tools_group_places">இடங்கள்</string>
+    <string name="mcp_tools_group_reminders">நினைவூட்டல்கள்</string>
+    <string name="mcp_copy">நகலெடுக்கவும்</string>
+    <string name="new_filter">புதிய வடிப்பானை உருவாக்கவும்</string>
 </resources>

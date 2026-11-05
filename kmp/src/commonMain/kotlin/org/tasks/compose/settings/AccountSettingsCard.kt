@@ -1,5 +1,7 @@
 package org.tasks.compose.settings
 
+import org.tasks.themes.TasksIcons
+import org.tasks.compose.components.SymbolIcon
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,15 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.outlined.OpenInNew
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.ErrorOutline
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.RemoveCircleOutline
-import androidx.compose.material.icons.outlined.RocketLaunch
-import androidx.compose.material.icons.outlined.WorkspacePremium
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -29,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -49,7 +41,8 @@ import tasks.kmp.generated.resources.supporter
 import tasks.kmp.generated.resources.supporter_summary
 import tasks.kmp.generated.resources.supporter_summary_no_price
 import tasks.kmp.generated.resources.tasks_org
-import tasks.kmp.generated.resources.upgrade_to_pro
+import tasks.kmp.generated.resources.tasks_org_account
+import tasks.kmp.generated.resources.upgrade
 import tasks.kmp.generated.resources.upgrade_to_pro_card_description
 import org.tasks.data.entity.CaldavAccount
 
@@ -83,9 +76,10 @@ fun AccountSettingsCard(
     state: ProCardState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    iconOverride: ImageVector? = null,
+    iconOverride: String? = null,
     showChevron: Boolean = true,
     environmentLabel: String? = null,
+    titleOverride: String? = null,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -104,7 +98,7 @@ fun AccountSettingsCard(
             val defaultTint = MaterialTheme.colorScheme.onSurfaceVariant
             val errorColor = MaterialTheme.colorScheme.error
 
-            var iconVector: ImageVector? = null
+            var iconVector: String? = null
             var useAppIcon = false
             val iconTint: Color
             val title: String
@@ -114,7 +108,7 @@ fun AccountSettingsCard(
             when (state) {
                 is ProCardState.Upgrade -> {
                     iconTint = ProGoldColor
-                    title = stringResource(Res.string.upgrade_to_pro)
+                    title = stringResource(Res.string.upgrade)
                     summary = stringResource(Res.string.upgrade_to_pro_card_description)
                     showError = false
                 }
@@ -163,7 +157,7 @@ fun AccountSettingsCard(
                     showError = state.account.hasError
                 }
                 is ProCardState.Donate -> {
-                    iconVector = Icons.Outlined.FavoriteBorder
+                    iconVector = TasksIcons.FAVORITE_BORDER
                     iconTint = defaultTint
                     title = stringResource(Res.string.donate)
                     summary = stringResource(Res.string.donate_nag)
@@ -175,15 +169,15 @@ fun AccountSettingsCard(
                 .padding(start = SettingsContentPadding)
                 .size(SettingsIconSize)
             if (iconOverride != null) {
-                Icon(
-                    imageVector = iconOverride,
+                SymbolIcon(
+                    name = iconOverride,
                     contentDescription = null,
                     modifier = iconModifier,
                     tint = iconTint
                 )
             } else if (iconVector != null) {
-                Icon(
-                    imageVector = iconVector,
+                SymbolIcon(
+                    name = iconVector,
                     contentDescription = null,
                     modifier = iconModifier,
                     tint = iconTint
@@ -196,8 +190,8 @@ fun AccountSettingsCard(
                     tint = iconTint
                 )
             } else {
-                Icon(
-                    imageVector = Icons.Outlined.WorkspacePremium,
+                SymbolIcon(
+                    name = TasksIcons.WORKSPACE_PREMIUM,
                     contentDescription = null,
                     modifier = iconModifier,
                     tint = iconTint
@@ -213,7 +207,7 @@ fun AccountSettingsCard(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = title,
+                    text = titleOverride ?: title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -240,8 +234,8 @@ fun AccountSettingsCard(
                     strokeWidth = 2.dp,
                 )
             } else if (showError) {
-                Icon(
-                    imageVector = Icons.Outlined.ErrorOutline,
+                SymbolIcon(
+                    name = TasksIcons.ERROR_OUTLINE,
                     contentDescription = null,
                     modifier = Modifier
                         .padding(end = SettingsContentPadding)
@@ -249,8 +243,8 @@ fun AccountSettingsCard(
                     tint = errorColor
                 )
             } else if (showChevron) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
+                SymbolIcon(
+                    name = TasksIcons.KEYBOARD_ARROW_RIGHT,
                     contentDescription = null,
                     modifier = Modifier
                         .padding(end = SettingsContentPadding)
@@ -288,25 +282,26 @@ fun ManageSubscriptionSheetContent(
             AccountSettingsCard(
                 state = ProCardState.Upgrade,
                 onClick = onUpgrade,
-                iconOverride = Icons.Outlined.RocketLaunch,
+                iconOverride = TasksIcons.ROCKET_LAUNCH,
                 showChevron = false,
+                titleOverride = stringResource(Res.string.tasks_org_account),
             )
         }
         if (showModify) {
             SettingsItemCard {
                 PreferenceRow(
                     title = stringResource(Res.string.manage_subscription),
-                    icon = Icons.Outlined.Edit,
+                    icon = TasksIcons.EDIT,
                     iconTint = MaterialTheme.colorScheme.onSurfaceVariant,
                     onClick = onModify,
                 )
             }
         }
         DangerCard(
-            icon = Icons.Outlined.RemoveCircleOutline,
+            icon = TasksIcons.REMOVE_CIRCLE_OUTLINE,
             title = stringResource(Res.string.button_unsubscribe),
             tint = MaterialTheme.colorScheme.error,
-            trailingIcon = Icons.AutoMirrored.Outlined.OpenInNew,
+            trailingIcon = TasksIcons.OPEN_IN_NEW,
             onClick = onCancel,
         )
     }

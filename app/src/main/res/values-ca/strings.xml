@@ -104,7 +104,7 @@
     <string name="astrid_sort_order_summary">Activa el mode d\'ordenació manual d\'Astrid per a «Les meves tasques», «Avui» i «etiquetes». Aquest mode d\'ordenació serà substituït per «El meu ordre» en una actualització futura</string>
     <string name="astrid_sort_order">Ordenació manual d\'Astrid</string>
     <string name="cancel">Cancel·la</string>
-    <string name="ok">OK</string>
+    <string name="ok">D\'acord</string>
     <string name="filter_any_start_date">Qualsevol data d\'inici</string>
     <string name="CFC_tag_name">Etiqueta…</string>
     <string name="CFC_startBefore_text">Comença per: \?</string>
@@ -172,13 +172,11 @@
     <string name="repeats_plural_number_of_times">Es repeteix cada %1$s, ocurreix %2$d%3$s</string>
     <string name="tasker_create_task">Crear tasca</string>
     <string name="tasker_list_notification">Notificació de llista</string>
-    <string name="upgrade_to_pro">Actualitza a pro</string>
     <string name="subscription">Subscripció</string>
     <string name="linkify">Mostra els enllaços</string>
     <string name="linkify_description">Afegeix enllaçaos a llocs web, adreces, i números de telèfon</string>
     <string name="location_remind_departure">Recordar a la sortida</string>
     <string name="user">Usuari</string>
-    <string name="button_subscribe">Subscriu-te</string>
     <string name="refresh_purchases">Actualitza les compres</string>
     <string name="missing_permissions">Falten permisos</string>
     <string name="choose_new_location">Escollir una nova ubicació</string>
@@ -204,7 +202,6 @@
     <string name="action_create_new_task">Crear una tasca nova</string>
     <string name="action_new_task">Tasca nova</string>
     <string name="expand_subtasks">Expandir subtasques</string>
-    <string name="name_your_price">Preu flexible</string>
     <string name="tags">Etiquetes</string>
     <string name="password">Contrasenya</string>
     <string name="help_and_feedback">Ajuda i comentaris</string>
@@ -288,8 +285,6 @@
     <string name="dont_add_to_calendar">No afegiu al calendari</string>
     <string name="badges_description">Mostreu un recompte de tasques a la icona del llançador de tasques. No tots els llançadors suporten insígnies.</string>
     <string name="pro_dashclock_extension">Extensió Dashclock</string>
-    <string name="requires_pro_subscription">Requereix una subscripció pro</string>
-    <string name="this_feature_requires_a_subscription">Aquesta característica requereix una subscripció</string>
     <string name="logout">Surt</string>
     <string name="delete_tasks_warning">%s serà eliminat. Això no es pot desfer!</string>
     <string name="reinitialize_account">Reinicialitzeu</string>
@@ -392,7 +387,6 @@
     <string name="app_passwords_more_info">Sincronitzeu les vostres tasques i calendaris amb l\'escriptori de tercers i les aplicacions mòbils. Fes clic aquí per a més informació</string>
     <string name="copied_to_clipboard">%s copiat al porta-retalls</string>
     <string name="tasks_org_account_required">Cal un compte de Tasks.org</string>
-    <string name="account_not_included">No inclòs amb les subscripcions \'Preu flexible\'</string>
     <string name="pro_free_trial">Els nous abonats reben una prova gratuïta de 7 dies. Cancel·leu en qualsevol moment</string>
     <string name="upgrade_more_customization">Més personalització</string>
     <string name="upgrade_more_customization_description">Desbloquegeu tots els temes, colors i icones</string>

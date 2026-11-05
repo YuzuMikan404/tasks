@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">ابحث</string>
-    <string name="subscribe">اشترك</string>
     <string name="filter_my_tasks">مهامي</string>
     <string name="filter_notifications">إشعارات</string>
     <string name="filter_timer">المهام التي أؤقتت</string>
@@ -32,7 +31,6 @@
     <string name="wear_unknown_error">خطأ غير معروف</string>
     <string name="search_no_results">لا نتائج</string>
     <string name="add_task">إضافة مهمة</string>
-    <string name="requires_pro_subscription">يتطلب اشتراك احترافي</string>
     <string name="new_task">مهمة جديدة</string>
     <string name="save">حفظ</string>
     <string name="sort_mode">رتب</string>
@@ -50,7 +48,6 @@
     <string name="microsoft_selection_description">مزامنة مع حساب مايكروسوفت الخاص بك</string>
     <string name="cost_free">مجاناً</string>
     <string name="name_your_price">سمي سعرك</string>
-    <string name="upgrade_to_pro">طور لاصدار متقدم</string>
     <string name="caldav_selection_description">التزامن على أساس معايير الإنترنت المفتوحة</string>
     <string name="davx5_selection_description">مزامنة مهامك مع تطبيق DAVx⁵</string>
     <string name="etesync_selection_description">مزامنة مشفرة من طرف إلى طرف</string>
@@ -58,8 +55,6 @@
     <string name="sign_in_to_tasks">تسجيل الدخول إلى Tasks.org</string>
     <string name="sign_in_with_google">تسجيل الدخول بجوجل</string>
     <string name="sign_in_with_github">تسجيل الدخول بGitHub</string>
-    <string name="google_play_subscribers">مشتركي جوجل بلاي</string>
-    <string name="github_sponsors">رعاة GitHub</string>
     <string name="completed">مكتمل</string>
     <string name="filter_overdue">متأخر</string>
     <string name="no_due_date">بدون تاريخ استحقاق</string>
@@ -114,7 +109,6 @@
     <string name="app_password_delete_confirmation">سيسجَّل خروج أي تطبيق يستعمل كلمة السرّ هذه</string>
     <string name="app_password_enter_description">أعط كلمة سرّك اسمًا (اختياري)</string>
     <string name="insufficient_sponsorship">لم يتم العثور على رعاية من GitHub</string>
-    <string name="button_subscribe">اشترك</string>
     <string name="your_subscription_expired">لقد انتهى اشتراكك. اشترك الآن لإكمال الخدمة.</string>
     <string name="insufficient_subscription">مستوى الاشتراك غير كافٍ. يرجى ترقية اشتراكك لاستئناف الخدمة.</string>
     <string name="authentication_required">يستلزم التوثيق</string>
@@ -445,7 +439,7 @@
     </plurals>
     <string name="delete_task">حذف المهمة</string>
     <string name="menu_discard_changes">تجاهل التغييرات</string>
-    <string name="more_options">خيارات أكثر</string>
+    <string name="more_options">المزيد من الخيارات</string>
     <string name="quiet_hours_in_effect">ساعات الهدوء سارية المفعول</string>
     <string name="troubleshooting">استكشاف الأخطاء وإصلاحها</string>
     <string name="notification_troubleshooting_summary">انقر هنا إذا كنت تواجه مشاكل في الإشعارات</string>
@@ -535,4 +529,11 @@
     <string name="theme_wallpaper">خلفية</string>
     <string name="theme_day_night">صباحي/مسائي</string>
     <string name="theme_system_default">افتراضيات النظام</string>
+    <string name="mcp_access_advanced">متقدم</string>
+    <string name="mcp_tools_group_lists">القوائم</string>
+    <string name="mcp_tools_group_tags">علامات</string>
+    <string name="mcp_tools_group_places">الأماكن</string>
+    <string name="mcp_tools_group_reminders">تذكيرات</string>
+    <string name="mcp_copy">نسخ</string>
+    <string name="new_filter">أنشأ تصفيةً جديدة</string>
 </resources>

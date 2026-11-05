@@ -7,14 +7,17 @@ plugins {
     id("com.google.firebase.crashlytics")
 }
 
+val appVersionCode: Int by extra
+val appVersionName: String by extra
+
 android {
     namespace = "org.tasks"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "org.tasks"
-        versionCode = libs.versions.versionCode.get().toInt() + 1
-        versionName = libs.versions.versionName.get()
+        versionCode = appVersionCode + 1
+        versionName = appVersionName
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         minSdk = 30
     }
@@ -41,10 +44,15 @@ android {
             val tasks_posthog_key: String? by project
             resValue("string", "posthog_key", tasks_posthog_key ?: "")
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            optimization.keepRules {
+                ignoreFrom("com.github.franmontiel:PersistentCookieJar")
+                ignoreFrom("com.github.tasks:ical4android")
+            }
             signingConfig = signingConfigs.getByName("release")
         }
     }
@@ -83,7 +91,6 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material.icons.extended)
     implementation(platform(libs.firebase))
     implementation(libs.firebase.crashlytics)
     implementation(libs.posthog.android)

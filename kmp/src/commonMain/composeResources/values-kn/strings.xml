@@ -2,8 +2,6 @@
 <resources>
     <string name="search">ಹುಡುಕು</string>
     <string name="search_no_results">ಯಾವುದೇ ಫಲಿತಾಂಶವಿಲ್ಲ</string>
-    <string name="requires_pro_subscription">ಪ್ರೋ ವೈಶಿಷ್ಟ್ಯ</string>
-    <string name="subscribe">ಸದಸ್ಯರಾಗಿ</string>
     <string name="settings">ಸೆಟ್ಟಿಂಗ್</string>
     <string name="sort_mode">ವಿಂಗಡಿಸು</string>
     <string name="ok">ಸರಿ</string>
@@ -26,4 +24,6 @@
     <string name="action_open">ತೆರೆ</string>
     <string name="customize_drawer">ಡ್ರಾಯರ್ ಅನ್ನು ಕಸ್ಟಮೈಸ್ ಮಾಡಿ</string>
     <string name="customize_drawer_summary">ಮೆನು ಐಟಂಗಳನ್ನು ಮರುಜೋಡಿಸಲು ಎಳೆದು ಬಿಡಿ</string>
+    <string name="new_filter">ಹೊಸ ಫಿಲ್ಟರ್ ರಚಿಸಿ</string>
+    <string name="more_options">ಇನ್ನಷ್ಟು ಆಯ್ಕೆಗಳು</string>
 </resources>

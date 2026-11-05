@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">تلاش</string>
-    <string name="subscribe">سبسکرائب</string>
     <string name="filter_my_tasks">میرے ٹاسکس</string>
     <string name="filter_notifications">نوٹیفیکیشنز</string>
     <string name="filter_timer">ٹاسک کا وقت متعین کیا جا رہا ہے</string>
@@ -36,10 +35,8 @@
     <string name="password_required">پاسورڈ مطلوب ہے</string>
     <string name="caldav_home_set_not_found">ہوم سیٹ نہیں ملا</string>
     <string name="add_account">اکاؤنٹ داخل کریں</string>
-    <string name="requires_pro_subscription">پرو سبسکرپشن کی ضرورت ہے</string>
     <string name="google_tasks_selection_description">بنیادی سروس جو آپ کے گوگل اکاؤنٹ کے ساتھ سنکرونائز ہوتی</string>
     <string name="name_your_price">اپنی قیمت بتائیں</string>
-    <string name="upgrade_to_pro">پرو پر اپ گریڈ کریں</string>
     <string name="ok">ٹھیک ہے</string>
     <string name="cancel">منسوخ کریں</string>
     <string name="caldav_selection_description">اوپن انٹرنیٹ میعارات پر مبنی سنکرونائزیشن</string>
@@ -66,7 +63,6 @@
     <string name="logout_warning">اس اکاؤنٹ کاتمام ڈیٹا آپ کی ڈٰوائس سے ختم ہو جائے گا</string>
     <string name="remove">ختم کریں</string>
     <string name="delete_tag_confirmation">%1$s کو ڈیلیٹ کریں؟</string>
-    <string name="button_subscribe">سبسکرائب</string>
     <string name="url">یو آر ایل</string>
     <string name="user">صارف</string>
     <string name="password">پاسورڈ</string>
@@ -299,4 +295,9 @@
     <string name="theme_wallpaper">وال پیپر</string>
     <string name="theme_day_night">دن/رات</string>
     <string name="theme_system_default">سسٹم ڈیفالٹ</string>
+    <string name="mcp_tools_group_tags">ٹیگز</string>
+    <string name="mcp_tools_group_reminders">یاد دہانی</string>
+    <string name="mcp_copy">کاپی کریں</string>
+    <string name="new_filter">نیا فلٹر بنائیں</string>
+    <string name="more_options">مزید اختیارات</string>
 </resources>

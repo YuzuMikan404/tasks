@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Tìm kiếm</string>
-    <string name="subscribe">Đăng ký</string>
     <string name="filter_my_tasks">Công việc của tôi</string>
     <string name="filter_notifications">Thông báo</string>
     <string name="filter_snoozed">Đã đặt báo lại</string>
@@ -41,11 +40,9 @@
     <string name="password_required">Yêu cầu mật khẩu</string>
     <string name="caldav_home_set_not_found">Không tìm thấy bộ trang chủ</string>
     <string name="add_account">Thêm tài khoản</string>
-    <string name="requires_pro_subscription">Yêu cầu đăng ký pro</string>
     <string name="google_tasks_selection_description">Dịch vụ cơ bản đồng bộ hoá với tài khoản Google của bạn</string>
     <string name="microsoft_selection_description">Đồng bộ với tài khoản Microsoft cá nhân</string>
     <string name="name_your_price">Đặt giá của bạn</string>
-    <string name="upgrade_to_pro">Nâng cấp lên pro</string>
     <string name="caldav_selection_description">Đồng bộ hoá dựa trên các tiêu chuẩn internet mở</string>
     <string name="davx5_selection_description">Đồng bộ hoá các công việc của bạn bằng ứng dụng DAVx⁵</string>
     <string name="etesync_selection_description">Đồng bộ hoá được mã hoá đầu cuối</string>
@@ -53,8 +50,6 @@
     <string name="sign_in_to_tasks">Đăng nhập vào Tasks.org</string>
     <string name="sign_in_with_google">Đăng nhập bằng Google</string>
     <string name="sign_in_with_github">Đăng nhập bằng GitHub</string>
-    <string name="google_play_subscribers">Người đăng ký trên Google Play</string>
-    <string name="github_sponsors">Nhà tài trợ trên GitHub</string>
     <string name="completed">Hoàn tất</string>
     <string name="filter_overdue">Quá hạn</string>
     <string name="no_due_date">Không có ngày hạn</string>
@@ -85,8 +80,8 @@
     <string name="subtasks">Công việc con</string>
     <string name="sort_not_available">Không có sẵn cho tag, bộ lọc hay nơi chốn</string>
     <string name="none">Không có</string>
-    <string name="ok">Ôkê</string>
-    <string name="cancel">Huỷ</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Hủy</string>
     <string name="back">Quay lại</string>
     <string name="help">Trợ giúp</string>
     <string name="display_name">Tên hiển thị</string>
@@ -106,7 +101,6 @@
     <string name="app_password_delete_confirmation">Bất kỳ ứng dụng nào đang sử dụng mật khẩu này sẽ bị đăng xuất</string>
     <string name="app_password_enter_description">Đặt tên cho mật khẩu của bạn (không bắt buộc)</string>
     <string name="insufficient_sponsorship">Không tìm thấy sự tài trợ GitHub đủ điều kiện</string>
-    <string name="button_subscribe">Đăng ký</string>
     <string name="your_subscription_expired">Đăng ký của bạn đã hết hạn. Đăng ký ngay để tiếp tục dịch vụ.</string>
     <string name="insufficient_subscription">Không đủ cấp độ đăng ký. Vui lòng nâng cấp đăng ký của bạn để tiếp tục dịch vụ.</string>
     <string name="authentication_required">Yêu cầu xác thực</string>
@@ -333,7 +327,7 @@
     </plurals>
     <string name="delete_task">Xoá công việc</string>
     <string name="menu_discard_changes">Bỏ các thay đổi</string>
-    <string name="more_options">Nhiều tuỳ chọn hơn</string>
+    <string name="more_options">Tùy chọn khác</string>
     <string name="troubleshooting">Xử lý sự cố</string>
     <string name="notification_troubleshooting_summary">Nhấn vào đây nếu bạn đang gặp vấn đề với các thông báo</string>
     <string name="disable_battery_optimizations">Tắt tối ưu hoá pin</string>
@@ -412,4 +406,11 @@
     <string name="theme_wallpaper">Hình nền</string>
     <string name="theme_day_night">Ngày/Đêm</string>
     <string name="theme_system_default">Mặc định hệ thống</string>
+    <string name="mcp_access_advanced">Nâng cao</string>
+    <string name="mcp_tools_group_lists">Danh sách</string>
+    <string name="mcp_tools_group_tags">Thẻ</string>
+    <string name="mcp_tools_group_places">Địa điểm</string>
+    <string name="mcp_tools_group_reminders">Lời nhắc</string>
+    <string name="mcp_copy">Sao chép</string>
+    <string name="new_filter">Tạo bộ lọc mới</string>
 </resources>

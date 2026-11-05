@@ -8,15 +8,12 @@ import com.etebase.client.exceptions.PermissionDeniedException
 import com.etebase.client.exceptions.ServerErrorException
 import com.etebase.client.exceptions.TemporaryServerErrorException
 import com.etebase.client.exceptions.UnauthorizedException
-import net.fortuna.ical4j.model.property.ProdId
-import org.jetbrains.compose.resources.getString
 import org.tasks.analytics.AnalyticsEvents.INITIAL_SYNC_COMPLETE
 import org.tasks.analytics.AnalyticsEvents.PARAM_TASK_COUNT
 import org.tasks.analytics.AnalyticsEvents.PARAM_TYPE
 import org.tasks.analytics.Constants
 import org.tasks.analytics.Reporting
 import org.tasks.broadcast.RefreshBroadcaster
-import org.tasks.caldav.Task.Companion.prodId
 import org.tasks.caldav.VtodoCache
 import org.tasks.caldav.iCalendar
 import org.tasks.caldav.iCalendar.Companion.fromVtodo
@@ -26,12 +23,12 @@ import org.tasks.data.dao.DirtyDao
 import org.tasks.data.entity.CaldavAccount
 import org.tasks.data.entity.CaldavCalendar
 import org.tasks.data.entity.CaldavTask
-import org.tasks.kmp.PROD_ID
+import org.tasks.resources.getString
 import org.tasks.service.TaskDeleter
 import org.tasks.time.DateTimeUtils2.currentTimeMillis
 import tasks.kmp.generated.resources.Res
 import tasks.kmp.generated.resources.password_required
-import tasks.kmp.generated.resources.requires_pro_subscription
+import tasks.kmp.generated.resources.subscription_required
 
 class EtebaseSynchronizer(
     private val caldavDao: CaldavDao,
@@ -43,16 +40,10 @@ class EtebaseSynchronizer(
     private val vtodoCache: VtodoCache,
     private val reporting: Reporting,
 ) {
-    companion object {
-        init {
-            prodId = ProdId(PROD_ID)
-        }
-    }
-
     suspend fun sync(account: CaldavAccount, hasPro: Boolean) {
         Logger.d("EtebaseSynchronizer") { "Synchronizing $account" }
         if (!hasPro) {
-            setError(account, getString(Res.string.requires_pro_subscription))
+            setError(account, getString(Res.string.subscription_required))
             return
         }
         if (account.password.isNullOrEmpty()) {

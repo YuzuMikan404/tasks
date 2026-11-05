@@ -1,5 +1,7 @@
 package org.tasks.compose.drawer
 
+import org.tasks.themes.TasksIcons
+import org.tasks.compose.components.SymbolIcon
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
@@ -36,12 +38,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.PeopleOutline
-import androidx.compose.material.icons.outlined.PermIdentity
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.SyncProblem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -81,11 +77,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import androidx.compose.ui.platform.testTag
+import org.tasks.themes.TestTags
 import org.tasks.compose.components.Chevron
 import org.tasks.data.AccountIcon
 import org.tasks.data.composeIcon
 import org.tasks.data.composeTitle
 import org.tasks.data.entity.CaldavAccount
+import org.tasks.filters.FilterProvider
 import org.tasks.filters.NavigationDrawerSubheader
 import org.tasks.compose.components.SearchBar
 import org.tasks.compose.components.TasksIcon
@@ -98,6 +97,10 @@ import org.tasks.themes.ColorTone
 import org.tasks.themes.tonalColor
 import tasks.kmp.generated.resources.Res
 import tasks.kmp.generated.resources.create_a_list
+import tasks.kmp.generated.resources.new_filter
+import tasks.kmp.generated.resources.new_list
+import tasks.kmp.generated.resources.new_place
+import tasks.kmp.generated.resources.new_tag
 import tasks.kmp.generated.resources.not_signed_in
 import tasks.kmp.generated.resources.search
 import tasks.kmp.generated.resources.sign_in
@@ -156,6 +159,7 @@ fun TaskListDrawer(
     val bottomGutter = searchButtonInset + SearchButtonSize + SearchButtonGap + bottomNavPadding
     Box(
         modifier = Modifier
+            .testTag(TestTags.NAVIGATION_DRAWER)
             .fillMaxSize()
             .consumeWindowInsets(PaddingValues(bottom = bottomNavPadding))
             .imePadding(),
@@ -306,8 +310,8 @@ private fun SearchFab(
                     modifier = Modifier.size(SearchButtonSize),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Search,
+                    SymbolIcon(
+                        name = TasksIcons.SEARCH,
                         contentDescription = stringResource(Res.string.search),
                     )
                 }
@@ -398,10 +402,10 @@ fun FilterItem(
                     maxLines = 1,
                 )
                 if (item.shareCount > 0) {
-                    Icon(
-                        imageVector = when (item.shareCount) {
-                            1 -> Icons.Outlined.PermIdentity
-                            else -> Icons.Outlined.PeopleOutline
+                    SymbolIcon(
+                        name = when (item.shareCount) {
+                            1 -> TasksIcons.PERM_IDENTITY
+                            else -> TasksIcons.PEOPLE_OUTLINE
                         },
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurface,
@@ -465,9 +469,16 @@ fun HeaderItem(
                 }
             } else {
                 IconButton(onClick = onAddClick) {
-                    Icon(
-                        imageVector = Icons.Outlined.Add,
-                        contentDescription = null,
+                    SymbolIcon(
+                        name = TasksIcons.ADD,
+                        contentDescription = stringResource(
+                            when (item.header.addIntentRc) {
+                                FilterProvider.REQUEST_NEW_TAGS -> Res.string.new_tag
+                                FilterProvider.REQUEST_NEW_FILTER -> Res.string.new_filter
+                                FilterProvider.REQUEST_NEW_PLACE -> Res.string.new_place
+                                else -> Res.string.new_list
+                            }
+                        ),
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
                 }
@@ -475,8 +486,8 @@ fun HeaderItem(
         }
         if (item.hasError) {
             IconButton(onClick = onErrorClick) {
-                Icon(
-                    imageVector = Icons.Outlined.SyncProblem,
+                SymbolIcon(
+                    name = TasksIcons.SYNC_PROBLEM,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.error,
                 )

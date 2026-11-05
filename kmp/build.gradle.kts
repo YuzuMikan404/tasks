@@ -2,6 +2,7 @@
 
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -10,6 +11,23 @@ plugins {
     alias(libs.plugins.kotlin.compose.compiler)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
+}
+
+val appVersionCode: Int by extra
+val appVersionName: String by extra
+
+val libicalDir = layout.buildDirectory.dir("libical")
+
+val buildLibical by tasks.registering(Exec::class) {
+    inputs.file("build-libical.sh").withPathSensitivity(PathSensitivity.NONE)
+    outputs.dir(libicalDir.map { it.dir("libical.xcframework") })
+    outputs.dir(libicalDir.map { it.dir("src/zoneinfo") })
+    outputs.cacheIf { true }
+    commandLine("./build-libical.sh", libicalDir.get().asFile.relativeTo(projectDir).path)
+}
+
+fun libicalSlice(target: KotlinNativeTarget) = libicalDir.map {
+    it.dir("libical.xcframework/" + if (target.name.contains("Simulator")) "ios-arm64-simulator" else "ios-arm64")
 }
 
 kotlin {
@@ -23,6 +41,14 @@ kotlin {
     jvm {
         compilerOptions {
             jvmTarget.set(JvmTarget.fromTarget(libs.versions.jdk.get()))
+        }
+    }
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { target ->
+        target.compilations.getByName("main").cinterops.create("libical") {
+            definitionFile.set(file("src/nativeInterop/cinterop/libical.def"))
+            includeDirs(libicalSlice(target).map { it.dir("Headers") })
+            extraOpts("-libraryPath", libicalSlice(target).get().asFile.path)
+            tasks.named(interopProcessingTaskName).configure { dependsOn(buildLibical) }
         }
     }
     sourceSets {
@@ -59,55 +85,61 @@ kotlin {
                 implementation(files("../libs/client-jvm-2.3.2.jar"))
             }
         }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.ktor.client.mock)
+        }
         val jvmTest by getting {
             dependencies {
                 implementation(libs.junit)
-                implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.mockito.kotlin)
-                implementation(libs.androidx.room)
+                implementation(libs.androidx.room3)
                 implementation(libs.androidx.sqlite)
+                implementation(libs.okhttp.mockwebserver)
             }
         }
         val androidUnitTest by getting {
             dependencies {
                 implementation(libs.junit)
                 implementation(libs.robolectric)
-                implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.mockito.kotlin)
-                implementation(libs.androidx.room)
+                implementation(libs.androidx.room3)
                 implementation(libs.androidx.sqlite)
             }
         }
         jvmCommonMain.dependencies {
-            implementation(libs.androidx.sqlite)
             api(libs.ical4j)
-            api(libs.bitfire.dav4jvm.get().toString()) {
-                exclude(group = "junit")
-                exclude(group = "org.ogce", module = "xpp3")
-            }
             api(libs.google.api.tasks)
-            api(libs.ktor.client.core)
+            api(libs.okhttp)
             implementation(libs.ktor.client.okhttp)
-            implementation(libs.ktor.client.logging)
-            implementation(libs.ktor.content.negotiation)
-            implementation(libs.ktor.serialization)
             compileOnly(libs.xpp3)
             compileOnly(files("../libs/client-jvm-2.3.2.jar"))
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
             api(projects.cert4android)
             implementation(projects.data)
+            implementation(libs.androidx.sqlite)
+            api(libs.okio)
+            api(libs.dav4kmp)
+            api(libs.ktor.client.core)
+            implementation(libs.ktor.client.auth)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.content.negotiation)
+            implementation(libs.ktor.serialization)
             api(compose.components.resources)
             implementation(compose.foundation)
             implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
             implementation(compose.runtime)
             implementation(libs.jetbrains.compose.ui.tooling.preview)
             implementation(libs.confettikit)
             implementation(libs.androidx.datastore)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.kermit)
-            implementation(libs.kotlinx.datetime)
+            api(libs.kotlinx.datetime)
             implementation(libs.kotlinx.immutable)
             implementation(libs.kotlinx.serialization)
             implementation(libs.material.kolor)
@@ -132,10 +164,10 @@ artifacts {
     add(jvmTestOutput.name, jvmTestJar)
 }
 
-val generateJvmBuildConfig by tasks.registering {
-    val outputDir = layout.buildDirectory.dir("generated/jvmBuildConfig")
-    val versionCode = libs.versions.versionCode.get()
-    val versionName = libs.versions.versionName.get()
+fun registerBuildConfig(objectName: String) = tasks.register("generate${objectName}") {
+    val outputDir = layout.buildDirectory.dir("generated/${objectName}")
+    val versionCode = appVersionCode
+    val versionName = appVersionName
     val applicationId = libs.versions.applicationId.get()
     val tasks_dev_url: String? by project
     val devUrl = tasks_dev_url ?: ""
@@ -153,12 +185,12 @@ val generateJvmBuildConfig by tasks.registering {
     inputs.property("debug", debug)
     outputs.dir(outputDir)
     doLast {
-        outputDir.get().asFile.resolve("JvmBuildConfig.kt").apply {
+        outputDir.get().asFile.resolve("${objectName}.kt").apply {
             parentFile.mkdirs()
             writeText("""
                 |package org.tasks.kmp
                 |
-                |object JvmBuildConfig {
+                |object $objectName {
                 |    const val VERSION_CODE = $versionCode
                 |    const val VERSION_NAME = "$versionName"
                 |    const val APPLICATION_ID = "$applicationId"
@@ -171,13 +203,33 @@ val generateJvmBuildConfig by tasks.registering {
     }
 }
 
+val generateJvmBuildConfig = registerBuildConfig("JvmBuildConfig")
+val generateIosBuildConfig = registerBuildConfig("IosBuildConfig")
+
 kotlin.sourceSets.named("jvmMain") {
     kotlin.srcDir(generateJvmBuildConfig)
+}
+
+kotlin.sourceSets.named("iosMain") {
+    kotlin.srcDir(generateIosBuildConfig)
+}
+
+val libicalZoneinfo by tasks.registering(Sync::class) {
+    dependsOn(buildLibical)
+    from(libicalDir.map { it.dir("src/zoneinfo") }) {
+        include("**/*.ics")
+        into("files/zoneinfo")
+    }
+    into(layout.buildDirectory.dir("generated/zoneinfo"))
 }
 
 compose.resources {
     publicResClass = true
     generateResClass = always
+    customDirectory(
+        sourceSetName = "iosMain",
+        directoryProvider = libicalZoneinfo.map { layout.buildDirectory.dir("generated/zoneinfo").get() },
+    )
 }
 
 android {
@@ -190,8 +242,8 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
-        buildConfigField("int", "VERSION_CODE", libs.versions.versionCode.get())
-        buildConfigField("String", "VERSION_NAME", "\"${libs.versions.versionName.get()}\"")
+        buildConfigField("int", "VERSION_CODE", "$appVersionCode")
+        buildConfigField("String", "VERSION_NAME", "\"$appVersionName\"")
         buildConfigField("String", "APPLICATION_ID", "\"${libs.versions.applicationId.get()}\"")
         val tasks_dev_url: String? by project
         buildConfigField("String", "DEV_URL", "\"${tasks_dev_url ?: ""}\"")

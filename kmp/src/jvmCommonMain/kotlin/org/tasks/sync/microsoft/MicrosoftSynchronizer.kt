@@ -26,13 +26,14 @@ import org.tasks.data.entity.CaldavCalendar.Companion.ACCESS_UNKNOWN
 import org.tasks.data.entity.CaldavTask
 import org.tasks.data.entity.Task
 import org.tasks.filters.CaldavFilter
+import org.tasks.http.ConnectionException
 import org.tasks.http.HttpException
 import org.tasks.http.NetworkException
 import org.tasks.http.NotFoundException
 import org.tasks.http.ServiceUnavailableException
 import org.tasks.http.UnauthorizedException
-import org.jetbrains.compose.resources.getString
 import org.tasks.preferences.AppPreferences
+import org.tasks.resources.getString
 import org.tasks.service.TaskDeleter
 import org.tasks.sync.microsoft.MicrosoftConverter.applyRemote
 import org.tasks.sync.microsoft.MicrosoftConverter.applySubtask
@@ -48,7 +49,8 @@ import java.security.NoSuchAlgorithmException
 import javax.net.ssl.SSLException
 import tasks.kmp.generated.resources.Res
 import tasks.kmp.generated.resources.cannot_access_account
-import tasks.kmp.generated.resources.requires_pro_subscription
+import tasks.kmp.generated.resources.network_error
+import tasks.kmp.generated.resources.subscription_required
 
 
 class MicrosoftSynchronizer(
@@ -70,7 +72,7 @@ class MicrosoftSynchronizer(
     suspend fun sync(account: CaldavAccount, hasPro: Boolean) {
         Logger.d(TAG) { "Synchronizing $account" }
         if (!hasPro) {
-            setError(account, getString(Res.string.requires_pro_subscription))
+            setError(account, getString(Res.string.subscription_required))
             return
         }
         if (!clientProvider.hasCredentials(account)) {
@@ -93,13 +95,13 @@ class MicrosoftSynchronizer(
         } catch (e: CancellationException) {
             throw e
         } catch (e: SocketTimeoutException) {
-            setError(account, e.message)
+            setNetworkError(account, e)
         } catch (e: SSLException) {
             setError(account, e.message)
         } catch (e: ConnectException) {
-            setError(account, e.message)
+            setNetworkError(account, e)
         } catch (e: UnknownHostException) {
-            setError(account, e.message)
+            setNetworkError(account, e)
         } catch (e: UnauthorizedException) {
             setError(account, e.message)
         } catch (e: ServiceUnavailableException) {
@@ -119,6 +121,8 @@ class MicrosoftSynchronizer(
                 }
             }
             setError(account, message)
+        } catch (e: ConnectionException) {
+            setNetworkError(account, e)
         } catch (e: Exception) {
             setError(account, e.message)
             reporting.reportException(e)
@@ -400,9 +404,7 @@ class MicrosoftSynchronizer(
                     microsoft.paginateTasks(nextPageToken)
                 }
             } catch (e: NetworkException) {
-                val invalidDeltaToken = local.ctag != null &&
-                    (e.graphCode == "syncStateNotFound" || e.graphCode == "ResourceNotFound")
-                if (invalidDeltaToken) {
+                if (local.ctag != null && e.isDeltaTokenExpired()) {
                     Logger.e(TAG) { "$local: delta token no longer valid, resetting ctag: ${e.message}" }
                     local.ctag = null
                     caldavDao.update(local)
@@ -541,6 +543,15 @@ class MicrosoftSynchronizer(
         }
     }
 
+    private fun NetworkException.isDeltaTokenExpired() =
+        (this as? HttpException)?.code == 410 ||
+                DELTA_EXPIRED_CODES.any { it.equals(graphCode, ignoreCase = true) }
+
+    private suspend fun setNetworkError(account: CaldavAccount, e: Exception) {
+        Logger.e(TAG) { "$account: ${e.message}" }
+        setError(account, getString(Res.string.network_error))
+    }
+
     private suspend fun setError(account: CaldavAccount, message: String?) {
         account.error = message
         caldavDao.setError(account.id, message)
@@ -553,6 +564,8 @@ class MicrosoftSynchronizer(
     companion object {
         private const val TAG = "MicrosoftSynchronizer"
         private const val MAX_SYNC_ITERATIONS = 3
+        private val DELTA_EXPIRED_CODES =
+            listOf("syncStateNotFound", "resyncRequired", "ResourceNotFound")
         private val json = Json {
             ignoreUnknownKeys = true
         }

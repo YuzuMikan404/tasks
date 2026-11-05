@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Traži</string>
-    <string name="subscribe">Pretplati se</string>
     <string name="filter_my_tasks">Moji zadaci</string>
     <string name="filter_notifications">Obavijesti</string>
     <string name="filter_snoozed">Odgođeno</string>
@@ -16,7 +15,6 @@
     <string name="drawer_places">Mjesta</string>
     <string name="drawer_local_lists">Popisi na uređaju</string>
     <string name="search_no_results">Nema rezultata</string>
-    <string name="requires_pro_subscription">Zahtijeva „Pro” pretplatu</string>
     <string name="subscription_required_description">Otključaj sve funkcije za samo 1 $ godišnje</string>
     <string name="tmrw">Sutra</string>
     <string name="tomorrow_abbrev_lowercase">sutra</string>
@@ -67,7 +65,6 @@
     <string name="microsoft_selection_description_googleplay">Sinkroniziraj sa svojim poslovnim, školskim ili osobnim Microsoft računom</string>
     <string name="tasks_org_description">Uključuje dijeljenje s prijateljima i obitelji te slanje e-maila u zadatak</string>
     <string name="name_your_price">Odredi tvoju cijenu</string>
-    <string name="upgrade_to_pro">Nadogradi na Pro verziju</string>
     <string name="legal_disclosure_prefix_using">Korištenjem Tasks.org-a</string>
     <string name="caldav_selection_description">Sinkronizacija temeljena na otvorenim internetskim standardima</string>
     <string name="davx5_selection_description">Sinkroniziraj tvoje zadatke s DAVx⁵</string>
@@ -76,8 +73,6 @@
     <string name="sign_in_to_tasks">Prijavi se na Tasks.org</string>
     <string name="sign_in_with_google">Google prijava</string>
     <string name="sign_in_with_github">GitHub prijava</string>
-    <string name="google_play_subscribers">Google Play pretplatnici</string>
-    <string name="github_sponsors">GitHub sponzori</string>
     <string name="completed">Obavljeno</string>
     <string name="filter_overdue">Prekoračen rok</string>
     <string name="no_due_date">Bez datuma roka</string>
@@ -109,13 +104,12 @@
     <string name="sort_not_available">Nije dostupno za oznake, filtre i mjesta</string>
     <string name="none">Ništa</string>
     <string name="ok">U redu</string>
-    <string name="cancel">Prekini</string>
+    <string name="cancel">Odustani</string>
     <string name="accept">Prihvati</string>
     <string name="back">Natrag</string>
     <string name="help">Pomoć</string>
     <string name="display_name">Prikaži ime</string>
     <string name="upgrade_to_pro_card_description">Otključaj Tasks.org sinkronizaciju u oblaku, dijeljenje s prijateljima i obitelji te slanje e-maila u zadatak</string>
-    <string name="supporter">Podržavatelj</string>
     <string name="price_per_month_with_currency">%1$s/mjesec</string>
     <string name="price_per_year_with_currency">%1$s/godina</string>
     <string name="supporter_summary">%1$s • Hvala!</string>
@@ -148,7 +142,6 @@
     <string name="tos_updated_title">Aktualizirali smo naše uvjete pružanja usluge</string>
     <string name="view_tos">Pogledaj uvjete pružanja usluge</string>
     <string name="insufficient_sponsorship">Nije pronađeno nijedno odgovarajuće sponzorstvo za GitHub</string>
-    <string name="button_subscribe">Pretplati se</string>
     <string name="your_subscription_expired">Tvoja je pretplata istekla. Pretplati se za nastavljanje korištenja usluge.</string>
     <string name="insufficient_subscription">Nedovoljna razina pretplate. Nadogradi pretplatu za daljnju upotrebu usluge.</string>
     <string name="authentication_required">Autentifikacija je obavezna</string>
@@ -275,7 +268,6 @@
     <string name="blog_feed_all">Sve objave</string>
     <string name="pricing_cloud_feature_3">Slanje zadataka putem e-maila s privatnim sandučićom za dolaznu poštu</string>
     <string name="pricing_cloud_feature_2">Dijeljenje popisa prijatelja i obitelji</string>
-    <string name="pricing_nyp_title">Odredi cijenu</string>
     <string name="pricing_cloud_description">Otključaj sve funkcije u aplikaciji i poveži se s Tasks.org sinkronizacijom u oblaku.</string>
     <string name="pricing_subtitle">Slobodna aplikacija otvorenog koda. Pretplate podržavaju razvoj i otključavaju dodatne funkcije.</string>
     <string name="sponsor_on_github">Sponzoriraj na GitHubu</string>
@@ -620,4 +612,12 @@
     <string name="theme_day_night">Dan/Noć</string>
     <string name="theme_system_default">Standardne postavke sustava</string>
     <string name="works_with_desktop">Tasks.org za desktop</string>
+    <string name="mcp_access_advanced">Napredno</string>
+    <string name="mcp_tools_group_lists">Popisi</string>
+    <string name="mcp_tools_group_tags">Oznake</string>
+    <string name="mcp_tools_group_places">Mjesta</string>
+    <string name="mcp_tools_group_reminders">Podsjetnici</string>
+    <string name="mcp_copy">Kopiraj</string>
+    <string name="new_filter">Stvori filtar</string>
+    <string name="subscription_required">Potrebna je pretplata</string>
 </resources>

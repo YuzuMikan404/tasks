@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Ieškoti</string>
-    <string name="subscribe">Prenumeruoti</string>
     <string name="filter_my_tasks">Mano užduotys</string>
     <string name="filter_notifications">Pranešimai</string>
     <string name="filter_snoozed">Užmigdyta</string>
@@ -39,12 +38,10 @@
     <string name="password_required">Reikalingas slaptažodis</string>
     <string name="caldav_home_set_not_found">Kalendorių rinkinio direktorija nerasta</string>
     <string name="add_account">Pridėti paskyrą</string>
-    <string name="requires_pro_subscription">Reikalinga „pro“ prenumerata</string>
     <string name="google_tasks_selection_description">Paprasta paslauga, kuri atlieka sinchronizaciją su jūsų Google paskyra</string>
     <string name="microsoft_selection_description">Sinchronizuoti su asmenine Microsoft paskyra</string>
     <string name="name_your_price">Nustatykite savo kainą</string>
-    <string name="upgrade_to_pro">Atnaujinti į pro versiją</string>
-    <string name="ok">Patvirtinti</string>
+    <string name="ok">Gerai</string>
     <string name="cancel">Atšaukti</string>
     <string name="caldav_selection_description">Sinchronizacija paremta atviro interneto standartais</string>
     <string name="davx5_selection_description">Sinchronizuoti užduotis su DAVx⁵ programėle</string>
@@ -53,8 +50,6 @@
     <string name="sign_in_to_tasks">Prisijungti prie Tasks.org</string>
     <string name="sign_in_with_google">Prisijungti naudojant Google</string>
     <string name="sign_in_with_github">Prisijungti naudojant GitHub</string>
-    <string name="google_play_subscribers">Google Play prenumeratoriai</string>
-    <string name="github_sponsors">GitHub rėmėjai</string>
     <string name="completed">Įvykdyta</string>
     <string name="filter_overdue">Pavėluota</string>
     <string name="no_due_date">Be pabaigos datos</string>
@@ -98,7 +93,6 @@
     <string name="app_password_delete_confirmation">Bet kuri programa, kuri naudoja šį slaptažodį, bus atjungta</string>
     <string name="app_password_enter_description">Suteikti savo slaptažodžiui vardą (neprivaloma)</string>
     <string name="insufficient_sponsorship">Nerasta tinkamo GitHub rėmimo</string>
-    <string name="button_subscribe">Prenumeruoti</string>
     <string name="your_subscription_expired">Jūsų prenumeratos galiojimo laikas baigėsi. Prenumeruokite dabar, norėdami tęsti paslaugą.</string>
     <string name="insufficient_subscription">Nepakankamas prenumeratos lygis. Atnaujinkite savo prenumeratą, kad būtų tęsiama paslauga.</string>
     <string name="authentication_required">Autentifikacija privaloma</string>
@@ -350,7 +344,7 @@
     </plurals>
     <string name="delete_task">Ištrinti užduotį</string>
     <string name="menu_discard_changes">Atmesti pakeitimus</string>
-    <string name="more_options">Daugiau pasirinkimų</string>
+    <string name="more_options">Daugiau parinkčių</string>
     <string name="troubleshooting">Trikčių šalinimas</string>
     <string name="notification_troubleshooting_summary">Bakstelėkite čia, jei kyla problemų dėl pranešimų</string>
     <string name="disable_battery_optimizations">Išjungti baterijos optimizaciją</string>
@@ -427,4 +421,11 @@
     <string name="theme_wallpaper">Fono vaizdas</string>
     <string name="theme_day_night">Diena/Naktis</string>
     <string name="theme_system_default">Sistemos numatyta</string>
+    <string name="mcp_access_advanced">Išplėstiniai</string>
+    <string name="mcp_tools_group_lists">Sąrašai</string>
+    <string name="mcp_tools_group_tags">Etiketė</string>
+    <string name="mcp_tools_group_places">Vietos</string>
+    <string name="mcp_tools_group_reminders">Priminimai</string>
+    <string name="mcp_copy">Kopijuoti</string>
+    <string name="new_filter">Sukurti naują filtrą</string>
 </resources>

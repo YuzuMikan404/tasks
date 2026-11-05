@@ -83,7 +83,7 @@
     <string name="calendar_event_not_found">Evento non trovato</string>
     <string name="gcal_completed_title">%s (completato)</string>
     <string name="CFC_gtasks_list_text">Nella lista: ?</string>
-    <string name="gtasks_GTA_clear_completed">Elimina attività completate</string>
+    <string name="gtasks_GTA_clear_completed">Elimina completate</string>
     <string name="gtasks_GLA_authenticating">Autenticazione…</string>
     <string name="gtasks_error_accountNotFound">Account %s non trovato—esci ed accedi nuovamente dalle impostazioni di Google Tasks.</string>
     <string name="premium_record_audio">Registra una nota</string>
@@ -205,11 +205,8 @@
     <string name="tasker_create_task">Crea attività</string>
     <string name="tasker_list_notification">Elenca notifiche</string>
     <string name="help">Aiuto</string>
-    <string name="upgrade_to_pro">Aggiorna alla versione Pro</string>
     <string name="refresh_purchases">Aggiorna acquisti</string>
-    <string name="button_subscribe">Abbonati</string>
     <string name="pro_dashclock_extension">Estensione Dashclock</string>
-    <string name="requires_pro_subscription">Richiede versione premium</string>
     <string name="logout">Esci</string>
     <string name="reinitialize_account">Reinizializza</string>
     <string name="action_create_new_task">Crea nuova attività</string>
@@ -254,8 +251,6 @@
     <string name="caldav_selection_description">Sincronizzazione basata su standard aperti di internet</string>
     <string name="choose_synchronization_service">Seleziona una piattaforma</string>
     <string name="collapse_subtasks">Comprimi attività secondarie</string>
-    <string name="name_your_price">Scegli tu il prezzo</string>
-    <string name="this_feature_requires_a_subscription">Questa funzione richiede un abbonamento</string>
     <string name="help_and_feedback">Aiuto e suggerimenti</string>
     <string name="url">URL</string>
     <string name="password">Password</string>
@@ -351,7 +346,7 @@
     <string name="no_google_play_subscription">Nessun abbonamento Google Play idoneo trovato</string>
     <string name="decsync_selection_description">Sincronizzazione basata sui file</string>
     <string name="cancel">Annulla</string>
-    <string name="ok">OK</string>
+    <string name="ok">Ok</string>
     <string name="filter_any_start_date">Qualsiasi data di inizio</string>
     <string name="no_start_date">Nessuna data di inizio</string>
     <string name="filter_criteria_unstarted">Non iniziate</string>
@@ -361,7 +356,6 @@
     <string name="app_password">Password dell\'app</string>
     <string name="copied_to_clipboard">%s copiato</string>
     <string name="local_lists">Liste locali</string>
-    <string name="account_not_included">Non incluso negli abbonamenti con prezzo a scelta</string>
     <string name="subscription">Abbonamento</string>
     <string name="CFC_startBefore_text">Inizia: \?</string>
     <string name="CFC_startBefore_name">Inizia…</string>
@@ -426,7 +420,6 @@
     <string name="returning_user">Ripristino i dati?</string>
     <string name="import_failed">Importazione non riuscita</string>
     <string name="import_failed_message">Impossibile leggere il file di backup</string>
-    <string name="banner_subscription_required_title">Richiede un abbonamento</string>
     <string name="banner_subscription_required_body">Paga quanto vuoi per sbloccare la sincronizzazione %s</string>
     <string name="email_to_task_address">Il tuo indirizzo email</string>
     <string name="advanced_tools_description">Google Places, CalDAV, EteSync ed altro ancora!</string>
@@ -445,4 +438,6 @@
     <string name="upgrade_desktop_app_description">Accesso in anteprima alla nuova app per desktop</string>
     <string name="p_per_list_sort">ordina_per_lista</string>
     <string name="sort_options">Opzioni di ordinamento</string>
+    <string name="write_permission_label">Modifica attività</string>
+    <string name="permission_write_tasks">Aggiungi, modifica ed elimina attività, elenchi, tag e luoghi</string>
 </resources>

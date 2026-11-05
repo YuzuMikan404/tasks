@@ -247,13 +247,9 @@
     <string name="tasker_list_notification">Llistar avisu</string>
     <string name="help">Aida</string>
     <string name="help_and_feedback">Aida y comentarios</string>
-    <string name="upgrade_to_pro">Anovar a pro</string>
     <string name="subscription">Soscripción</string>
     <string name="refresh_purchases">Anovar les compres</string>
-    <string name="button_subscribe">Soscribise</string>
     <string name="pro_dashclock_extension">Estensión Dashclock</string>
-    <string name="requires_pro_subscription">Requier soscripción pro</string>
-    <string name="this_feature_requires_a_subscription">Esta carauteristica requier una soscripción</string>
     <string name="logout">Zarrar sesión</string>
     <string name="delete_tasks_warning">%s desaniciarase. ¡Esto nun se puee desfacer!</string>
     <string name="reinitialize_account">Reaniciar</string>
@@ -281,7 +277,6 @@
     <string name="banner_app_updated_description">Tasks ta acabantes d\'anovase a %s. Quies ver les notes de la versión?</string>
     <string name="whats_new">Novedaes</string>
     <string name="invalid_backup_file">Copia de seguranza invalida</string>
-    <string name="name_your_price">Preciu flexible</string>
     <string name="expand_subtasks">Espander subxeres</string>
     <string name="collapse_subtasks">Encoyer subxeres</string>
     <string name="choose_synchronization_service">Selecciona una plataforma</string>

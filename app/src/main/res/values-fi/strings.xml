@@ -210,7 +210,6 @@
     <string name="choose_synchronization_service">Valitse alusta</string>
     <string name="collapse_subtasks">Pienennä alitehtävät</string>
     <string name="expand_subtasks">Laajenna alitehtävät</string>
-    <string name="name_your_price">Nimeä hintasi</string>
     <string name="invalid_backup_file">Epäsopiva varmuuskopiotiedosto</string>
     <string name="choose_new_location">Valitse uusi sijainti</string>
     <string name="open_map">Avaa kartta</string>
@@ -229,9 +228,6 @@
     <string name="show_description">Näytä kuvaus</string>
     <string name="action_create_new_task">Lisää uusi tehtävä</string>
     <string name="logout">Kirjaudu ulos</string>
-    <string name="this_feature_requires_a_subscription">Tämä ominaisuus vaatii tilauksen</string>
-    <string name="requires_pro_subscription">Edellyttää pro-tilauksen</string>
-    <string name="button_subscribe">Tilaa</string>
     <string name="help_and_feedback">Apu &amp; palaute</string>
     <string name="list_separator_with_space">", "</string>
     <string name="url">URL</string>
@@ -263,7 +259,6 @@
     <string name="widget_show_dividers">Näytä jakajat</string>
     <string name="action_new_task">Uusi tehtävä</string>
     <string name="pro_dashclock_extension">Dashclock-laajennus</string>
-    <string name="upgrade_to_pro">Päivitä pro versioon</string>
     <string name="filter_no_priority">Ei tärkeyttä</string>
     <string name="filter_medium_priority">Normaali tärkeys</string>
     <string name="filter_overdue">Myöhässä oleva</string>
@@ -313,7 +308,6 @@
     <string name="upgrade_more_customization_description">Avaa kaikki teemat, värit ja kuvakkeet</string>
     <string name="upgrade_more_customization">Lisää räätälöintiä</string>
     <string name="pro_free_trial">Uudet tilaajat saavat 7 päivän ilmaisen kokeilujakson. Peruuta milloin tahansa</string>
-    <string name="account_not_included">Ei sisälly \"Nimeä hintasi\" -tilauksiin</string>
     <string name="tasks_org_account_required">Tarvitaan Tasks.org-tili</string>
     <string name="copied_to_clipboard">%s kopioitu leikepöydälle</string>
     <string name="app_passwords_more_info">Synkronoi tehtävät ja kalenterit kolmansien osapuolten työpöytä- ja mobiilisovellusten kanssa. Napauta tästä saadaksesi lisätietoja</string>
@@ -368,7 +362,7 @@
     <string name="CFC_startBefore_text">Aloita: \?</string>
     <string name="ok">OK</string>
     <string name="now">Nyt</string>
-    <string name="cancel">Peruuta</string>
+    <string name="cancel">Peru</string>
     <string name="custom_filter_has_reminder">Sisältää muistutuksen</string>
     <string name="TEA_creation_date">Luontipäivä</string>
     <string name="snackbar_tasks_completed">%d tehtävää suoritettu</string>
@@ -413,5 +407,4 @@
     <string name="import_failed">Tuonti epäonnistui</string>
     <string name="import_failed_message">Varmuuskopiota ei voitu lukea</string>
     <string name="rmd_EPr_rmd_time_desc">Koko päivän tehtävien ilmoitukset näkyvät klo %1$s</string>
-    <string name="banner_subscription_required_title">Tilaus vaaditaan</string>
 </resources>

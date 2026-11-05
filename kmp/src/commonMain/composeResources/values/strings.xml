@@ -2,11 +2,10 @@
 <resources>
     <string name="search">Search</string>
     <string name="search_no_results">No results</string>
-    <string name="requires_pro_subscription">Requires pro subscription</string>
     <string name="password_required">Password required</string>
     <string name="caldav_home_set_not_found">Home set not found</string>
     <string name="subscription_required_description">Unlock all features for as little as $1 USD/year</string>
-    <string name="subscribe">Subscribe</string>
+    <string name="upgrade">Upgrade</string>
     <string name="filter_my_tasks">My Tasks</string>
     <string name="filter_notifications">Notifications</string>
     <string name="filter_snoozed">Snoozed</string>
@@ -79,7 +78,6 @@
     <string name="name_your_price">Name your price</string>
     <string name="name_your_price_blurb">Pay what you want to unlock themes, icons, and these advanced sync options</string>
     <string name="tasks_org_description">Includes Friends &amp; Family Sharing and Email-to-Task</string>
-    <string name="upgrade_to_pro">Upgrade to pro</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="accept">Accept</string>
@@ -88,8 +86,7 @@
     <string name="sign_in_to_tasks">Sign in to Tasks.org</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_in_with_github">Sign in with GitHub</string>
-    <string name="google_play_subscribers">Google Play subscribers</string>
-    <string name="github_sponsors">GitHub Sponsors</string>
+    <string name="sign_in_with_apple">Sign in with Apple</string>
     <string name="completed">Completed</string>
     <string name="filter_overdue">Overdue</string>
     <string name="no_due_date">No due date</string>
@@ -124,7 +121,7 @@
     <string name="show_less">Show less</string>
     <string name="display_name">Display name</string>
     <string name="upgrade_to_pro_card_description">Unlock Tasks.org Cloud sync, Friends &amp; Family Sharing, and Email-to-Task</string>
-    <string name="supporter">Supporter</string>
+    <string name="supporter">Tasks.org Supporter</string>
     <string name="supporter_summary_no_price">Thank you!</string>
     <string name="price_per_month_with_currency">%1$s/month</string>
     <string name="price_per_year_with_currency">%1$s/year</string>
@@ -167,7 +164,6 @@
     <string name="tos_updated_title">We've updated our Terms of Service</string>
     <string name="view_tos">View Terms of Service</string>
     <string name="insufficient_sponsorship">No eligible GitHub sponsorship found</string>
-    <string name="button_subscribe">Subscribe</string>
     <string name="your_subscription_expired">Your subscription has expired. Subscribe now to resume service.</string>
     <string name="insufficient_subscription">Insufficient subscription level. Please upgrade your subscription to resume service.</string>
     <string name="authentication_required">Authentication required</string>
@@ -342,7 +338,6 @@
     <string name="error_github_verification_failed">Verification failed. Please try again.</string>
     <string name="pricing_subtitle">Free and open source. Subscriptions support development and unlock additional features.</string>
     <string name="pricing_cloud_description">Unlock all in-app features and connect to Tasks.org Cloud sync.</string>
-    <string name="pricing_nyp_title">Name-your-price</string>
     <string name="pricing_from">From %1$s</string>
     <string name="pricing_nyp_description">Choose your own subscription price. Unlocks all in-app features.</string>
     <string name="pricing_recommended">Recommended</string>
@@ -394,6 +389,8 @@
     <string name="cannot_access_account">Cannot access account</string>
     <string name="new_list">Create new list</string>
     <string name="new_tag">Create new tag</string>
+    <string name="new_filter">Create new filter</string>
+    <string name="new_place">Create new place</string>
     <string name="enter_tag_name">Enter tag name</string>
     <string name="add_tag">Add tag</string>
     <string name="priority_high">High</string>
@@ -697,4 +694,5 @@
     <string name="theme_wallpaper">Wallpaper</string>
     <string name="theme_day_night">Day/Night</string>
     <string name="theme_system_default">System default</string>
+    <string name="subscription_required">Subscription required</string>
 </resources>

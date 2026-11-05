@@ -206,11 +206,8 @@
     <string name="tasker_create_task">Skapa uppgift</string>
     <string name="tasker_list_notification">Visa avisering</string>
     <string name="help">Hjälp</string>
-    <string name="upgrade_to_pro">Uppgradera till Pro</string>
     <string name="refresh_purchases">Uppdatera köp</string>
-    <string name="button_subscribe">Prenumerera</string>
     <string name="pro_dashclock_extension">DashClock-tillägg</string>
-    <string name="requires_pro_subscription">Kräver Pro-prenumeration</string>
     <string name="logout">Logga ut</string>
     <string name="reinitialize_account">Initiera om kontot</string>
     <string name="action_create_new_task">Skapa ny uppgift</string>
@@ -233,7 +230,6 @@
     <string name="choose_new_location">Välj en ny plats</string>
     <string name="invalid_backup_file">Ogiltig säkerhetskopieringsfil</string>
     <string name="icon">Ikon</string>
-    <string name="name_your_price">Ange ditt pris</string>
     <string name="SSD_sort_my_order">Min ordning</string>
     <string name="lists">Listor</string>
     <string name="sort_modified_group">Ändrad %s</string>
@@ -270,7 +266,6 @@
     <string name="upgrade_more_customization_description">Lås upp alla teman, färger och ikoner</string>
     <string name="upgrade_more_customization">Mer anpassning</string>
     <string name="pro_free_trial">Nya prenumeranter får en kostnadsfri provperiod på sju dagar. Säg upp när som helst.</string>
-    <string name="account_not_included">Ingår inte i prenumerationer med ”Ange ditt pris”</string>
     <string name="tasks_org_account_required">Tasks.org-konto krävs</string>
     <string name="app_passwords_more_info">Synkronisera uppgifter och kalendrar med skrivbords- och mobilappar från tredje part. Tryck här för mer information.</string>
     <string name="app_password">Applösenord</string>
@@ -340,7 +335,6 @@
     <string name="collapse_subtasks">Fäll in deluppgifter</string>
     <string name="expand_subtasks">Fäll ut deluppgifter</string>
     <string name="whats_new">Nyheter</string>
-    <string name="this_feature_requires_a_subscription">Den här funktionen kräver en prenumeration</string>
     <string name="subscription">Prenumeration</string>
     <string name="widget_due_date_below_title">Under titeln</string>
     <string name="widget_due_date_after_title">Efter titeln</string>
@@ -423,7 +417,6 @@
     <string name="email_to_task">E-post till uppgift</string>
     <string name="email_to_task_address">Din e-postadress</string>
     <string name="rmd_EPr_rmd_time_desc">Aviseringar för heldagsuppgifter visas vid %1$s</string>
-    <string name="banner_subscription_required_title">Prenumeration krävs</string>
     <string name="banner_subscription_required_body">Betala valfritt belopp för att låsa upp synkronisering med %s</string>
     <string name="p_per_list_sort">per_list_sort</string>
     <string name="per_list_sort_summary">Kom ihåg sorterings- och grupperingsinställningarna separat för varje lista.</string>

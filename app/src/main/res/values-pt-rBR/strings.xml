@@ -205,11 +205,8 @@
     <string name="tasker_create_task">Criar tarefa</string>
     <string name="tasker_list_notification">Listar notificações</string>
     <string name="help">Ajuda</string>
-    <string name="upgrade_to_pro">Comprar assinatura</string>
     <string name="refresh_purchases">Atualizar compras</string>
-    <string name="button_subscribe">Assinar</string>
     <string name="pro_dashclock_extension">Extensão Dashclock</string>
-    <string name="requires_pro_subscription">Requer inscrição Pro</string>
     <string name="logout">Sair</string>
     <string name="reinitialize_account">Reinicializar</string>
     <string name="action_create_new_task">Criar nova tarefa</string>
@@ -260,11 +257,9 @@
     <string name="choose_synchronization_service">Escolha uma plataforma</string>
     <string name="collapse_subtasks">Recolher sub-tarefas</string>
     <string name="expand_subtasks">Expandir sub-tarefas</string>
-    <string name="name_your_price">Dê o seu preço</string>
     <string name="invalid_backup_file">Arquivo de backup inválido</string>
     <string name="whats_new">Novidades</string>
     <string name="action_new_task">Nova tarefa</string>
-    <string name="this_feature_requires_a_subscription">Essa função requer uma assinatura</string>
     <string name="help_and_feedback">Ajuda &amp; feedback</string>
     <string name="list_separator_with_space">", "</string>
     <string name="url">URL</string>
@@ -352,7 +347,6 @@
     <string name="upgrade_more_customization_description">Desbloqueie todos os temas, cores e ícones</string>
     <string name="upgrade_more_customization">Mais customização</string>
     <string name="pro_free_trial">Novos assinantes recebem 7 dias de teste grátis. Cancele a qualquer momento</string>
-    <string name="account_not_included">Não incluído nas assinaturas de \'Dê o seu preço\'</string>
     <string name="tasks_org_account_required">É necessária uma conta em Tasks.org</string>
     <string name="copied_to_clipboard">%s copiado para a área de transferência</string>
     <string name="app_passwords_more_info">Sincronize suas tarefas e calendários com aplicativos móveis e de desktop de terceiros. Toque aqui para obter mais informações</string>
@@ -425,7 +419,6 @@
     <string name="email_to_task_address">Seu email</string>
     <string name="rmd_EPr_rmd_time_desc">Notificações para tarefas de dia todo aparecerão as %1$s</string>
     <string name="tos_updated_title">Nós atualizamos nossos Termos de serviço</string>
-    <string name="banner_subscription_required_title">Inscrição necessária</string>
     <string name="banner_subscription_required_body">Pague o que quiser para desbloquear sincronização %s</string>
     <string name="p_per_list_sort">classificacao_por_lista</string>
     <string name="per_list_sort_title">Classificação por lista</string>
@@ -445,4 +438,6 @@
     <string name="widget_view_more_tasks">Ver mais tarefas</string>
     <string name="read_more">Ler mais</string>
     <string name="sort_options">Opções de ordem</string>
+    <string name="permission_write_tasks">Adicionar, alterar e excluir suas tarefas, listas, etiquetas e locais</string>
+    <string name="write_permission_label">Modificar tarefas</string>
 </resources>

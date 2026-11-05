@@ -208,11 +208,8 @@
     <string name="tasker_create_task">Sortu zeregina</string>
     <string name="tasker_list_notification">Zerrenda-jakinarazpena</string>
     <string name="help">Laguntza</string>
-    <string name="upgrade_to_pro">Aldatu pro bertsiora</string>
     <string name="refresh_purchases">Freskatu erosketak</string>
-    <string name="button_subscribe">Harpidetu</string>
     <string name="pro_dashclock_extension">Dashclock luzapena</string>
-    <string name="requires_pro_subscription">Pro harpidetza eskatzen du</string>
     <string name="logout">Amaitu saioa</string>
     <string name="reinitialize_account">Berrhasi</string>
     <string name="action_create_new_task">Sortu zeregin berria</string>
@@ -235,13 +232,11 @@
     <string name="choose_new_location">Hautatu kokaleku berria</string>
     <string name="invalid_backup_file">Baliogabeko babes-kopia fitxategia</string>
     <string name="icon">Ikonoa</string>
-    <string name="name_your_price">Jarri zuk prezioa</string>
     <string name="SSD_sort_my_order">Nire eskaria</string>
     <string name="expand_subtasks">Hedatu azpi-zereginak</string>
     <string name="collapse_subtasks">Tolestu azpi-zereginak</string>
     <string name="subtasks">Azpi-zereginak</string>
     <string name="display_name">Erakutsi izena</string>
-    <string name="this_feature_requires_a_subscription">Ezaugarri honek harpidetza eskatzen du</string>
     <string name="choose_synchronization_service">Hautatu plataforma</string>
     <string name="caldav_selection_description">Internet estandar irekietan oinarritutako sinkronizazioa</string>
     <string name="etesync_selection_description">Muturretik-muturrera zifratutako sinkronizazioa</string>
@@ -343,7 +338,6 @@
     <string name="SSD_sort_start">Hasiera dataren arabera</string>
     <string name="github_sponsor">Babeslea</string>
     <string name="github_sponsors">GitHub babesleak</string>
-    <string name="account_not_included">Ez dago \"hautatu zure prezioa\" harpidetzetan barne</string>
     <string name="copied_to_clipboard">%s arbelera kopiatuta</string>
     <string name="app_passwords_more_info">Sinkronizatu zure zeregin eta egutegiak hirugarrengoen mahaigaineko zein mugikorrerako aplikazioekin. Sakatu hemen gehiago jakiteko</string>
     <string name="app_password">Aplikazioaren pasahitza</string>
@@ -377,7 +371,7 @@
     <string name="snackbar_tasks_completed">%d atazak osatuta</string>
     <string name="dismiss">Baztertu</string>
     <string name="hint_customize_edit_title">Informazio gehiegi\?</string>
-    <string name="cancel">Ezeztatu</string>
+    <string name="cancel">Utzi</string>
     <string name="ok">Ados</string>
     <string name="custom_filter_has_reminder">Oroigarria dauka</string>
     <string name="hint_customize_edit_body">Pantaila pertsonaliza dezakezu, eremuak berrantolatzen edo ezabatzen</string>

@@ -12,14 +12,13 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.os.CancellationSignal
-import androidx.room.immediateTransaction
-import androidx.room.useWriterConnection
+import androidx.room3.immediateTransaction
+import androidx.room3.useWriterConnection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.tasks.analytics.Analytics
@@ -53,13 +52,7 @@ abstract class TasksApiProvider : ContentProvider() {
 
     private val batchDispatch = ThreadLocal<((suspend () -> Any?) -> Any?)?>()
 
-    override fun onCreate(): Boolean {
-        scope.launch {
-            Database.opened.first { it }
-            runCatching { startWatching(dependencies.database) }
-        }
-        return true
-    }
+    override fun onCreate(): Boolean = true
 
     override fun getType(uri: Uri): String = when (URI_MATCHER.match(uri)) {
         TASKS -> Tasks.TYPE_DIR
@@ -304,21 +297,22 @@ abstract class TasksApiProvider : ContentProvider() {
         startWatching(dependencies.database)
     }
 
-    @Synchronized
     private fun startWatching(database: Database) {
-        if (watching === database) return
-        val resolver = context?.contentResolver ?: return
-        watchJob?.cancel()
-        watching = database
-        watchJob = scope.launch {
-            database
-                .invalidationTracker
-                .createFlow(*NOTIFY.keys.toTypedArray(), emitInitialState = false)
-                .collect { changed ->
-                    changed
-                        .flatMapTo(mutableSetOf()) { NOTIFY[it].orEmpty() }
-                        .forEach { resolver.notifyChange(collectionUri(it), null) }
-                }
+        synchronized(this) {
+            if (watching === database) return
+            val resolver = context?.contentResolver ?: return
+            watchJob?.cancel()
+            watching = database
+            watchJob = scope.launch {
+                database
+                    .invalidationTracker
+                    .createFlow(*NOTIFY.keys.toTypedArray(), emitInitialState = true)
+                    .collect { changed ->
+                        changed
+                            .flatMapTo(mutableSetOf()) { NOTIFY[it].orEmpty() }
+                            .forEach { resolver.notifyChange(collectionUri(it), null) }
+                    }
+            }
         }
     }
 

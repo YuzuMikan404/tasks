@@ -133,7 +133,7 @@
     <string name="astrid_sort_order_summary">在我的工作、今天與和標籤畫面啟用來自 Astrid 的手動排序模式。這種排序模式未來將被「我的順序」取代</string>
     <string name="astrid_sort_order">Astrid 手動排序</string>
     <string name="cancel">取消</string>
-    <string name="ok">OK</string>
+    <string name="ok">確定</string>
     <string name="name_cannot_be_empty">名稱不能為空白</string>
     <string name="pick_from_storage">從儲存空間選擇</string>
     <string name="pick_from_gallery">從相簿中選擇</string>
@@ -250,13 +250,9 @@
     <string name="show_description">顯示訂閱</string>
     <string name="action_new_task">新工作</string>
     <string name="action_create_new_task">建立新工作</string>
-    <string name="this_feature_requires_a_subscription">此功能需要訂閱</string>
     <string name="logout">登出</string>
-    <string name="requires_pro_subscription">需要訂閱專業版</string>
-    <string name="button_subscribe">訂閱</string>
     <string name="refresh_purchases">刷新付款</string>
     <string name="subscription">訂閱</string>
-    <string name="upgrade_to_pro">升級至專業版</string>
     <string name="help_and_feedback">幫助與回饋</string>
     <string name="help">幫助</string>
     <string name="tasker_create_task">建立工作</string>
@@ -323,7 +319,6 @@
     <string name="TEA_creation_date">建立日期</string>
     <string name="decsync_selection_description">基於檔案的同步</string>
     <string name="hint_customize_edit_body">您可以透過重新排列或移除欄位來自訂此畫面</string>
-    <string name="name_your_price">自行設定價格</string>
     <string name="background_location_permission_required">Tasks 收集位置資料以啟用基於位置的提醒，即使應用程式關閉或未使用。</string>
     <string name="upgrade_more_customization_description">解鎖所有主題、顏色和圖示</string>
     <string name="back">返回</string>
@@ -361,7 +356,6 @@
     <string name="privacy">隱私</string>
     <string name="open_source">開源</string>
     <string name="app_passwords_more_info">使用第三方桌面和移動應用程式同步您的任務和行事曆。點擊此處了解更多資訊</string>
-    <string name="account_not_included">並不包含「隨意價格」訂閱</string>
     <string name="pro_free_trial">新訂閱者享有 7 天免費試用。隨時取消</string>
     <string name="upgrade_tasks_org_account_description">與 Tasks.org 同步，並與其他用戶協作</string>
     <string name="upgrade_more_customization">更多自訂</string>
@@ -391,7 +385,6 @@
     <string name="yesterday">昨天</string>
     <string name="delete_tasks_warning">%s 將被刪除。此操作無法撤銷！</string>
     <string name="banner_app_updated_description">Tasks 已更新至 %s。是否要查看更新說明？</string>
-    <string name="banner_subscription_required_title">需要訂閱</string>
     <string name="banner_subscription_required_body">支付您想要的金額以解鎖 %s 同步</string>
     <string name="subscription_required_fdroid">使用 Tasks.org 同步需要訂閱。訂閱必須從 Google Play 版本的 Tasks 應用程式發起。</string>
     <string name="sponsorship_required_fdroid">使用 Tasks.org 同步需要 GitHub 贊助。點擊下方成為贊助者。</string>

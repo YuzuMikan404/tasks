@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search">Buscar</string>
-    <string name="subscribe">Suscribirte</string>
     <string name="search_no_results">Sin resultados</string>
-    <string name="requires_pro_subscription">Requiere subscripción profesional</string>
     <string name="subscription_required_description">Desbloquea todas las funciones por tan solo $1 USD al año</string>
     <string name="filter_my_tasks">Mis tareas</string>
     <string name="filter_notifications">Notificaciones</string>
@@ -50,7 +48,6 @@
     <string name="microsoft_selection_description">Sincronizar con su cuenta personal de Microsoft</string>
     <string name="cost_free">Gratis</string>
     <string name="name_your_price">Precio flexible</string>
-    <string name="upgrade_to_pro">Actualizar a profesional</string>
     <string name="caldav_selection_description">Sincronización basada en estándares abiertos de Internet</string>
     <string name="davx5_selection_description">Sincronice sus tareas con la aplicación DAVx⁵</string>
     <string name="etesync_selection_description">Sincronización cifrada de extremo a extremo</string>
@@ -58,8 +55,6 @@
     <string name="sign_in_to_tasks">Ingrese a Tasks.org</string>
     <string name="sign_in_with_google">Acceder con Google</string>
     <string name="sign_in_with_github">Acceder con GitHub</string>
-    <string name="google_play_subscribers">Suscriptores de Google Play</string>
-    <string name="github_sponsors">Patrocinadores de GitHub</string>
     <string name="completed">Terminado</string>
     <string name="filter_overdue">Atrasada</string>
     <string name="no_due_date">Sin fecha límite</string>
@@ -114,7 +109,6 @@
     <string name="app_password_delete_confirmation">Se cerrará la sesión de cualquier aplicación que utilice esta contraseña</string>
     <string name="app_password_enter_description">Dé un nombre a su contraseña (opcional)</string>
     <string name="insufficient_sponsorship">No se encontró ningún patrocinio de GitHub elegible</string>
-    <string name="button_subscribe">Suscribe</string>
     <string name="your_subscription_expired">Vuestra suscripción ha expirado. Suscribe ahora a resume servicio.</string>
     <string name="insufficient_subscription">Nivel de suscripción insuficiente. Actualice su suscripción para reanudar el servicio.</string>
     <string name="authentication_required">Se necesita autenticación</string>
@@ -210,7 +204,6 @@
     <string name="show_more">Mostrar más</string>
     <string name="show_less">Mostrar menos</string>
     <string name="upgrade_to_pro_card_description">Desbloquea la Sincronización en la Nube de Tasks.org, Compartir con Amigos y Familia y Correo electrónico a tarea</string>
-    <string name="supporter">Simpatizante</string>
     <string name="supporter_summary_no_price">¡Gracias!</string>
     <string name="supporter_summary">%1$s • ¡Gracias!</string>
     <string name="sign_in_to_connect">Inicia sesión para vincular tu cuenta de Tasks.org</string>
@@ -557,4 +550,12 @@
     <string name="theme_wallpaper">Fondo de pantalla</string>
     <string name="theme_day_night">Día/noche</string>
     <string name="theme_system_default">Valor predeterminado del sistema</string>
+    <string name="mcp_access_advanced">Avanzado</string>
+    <string name="mcp_tools_group_lists">Listas</string>
+    <string name="mcp_tools_group_tags">Etiquetas</string>
+    <string name="mcp_tools_group_places">Lugares</string>
+    <string name="mcp_tools_group_reminders">Recordatorios</string>
+    <string name="mcp_copy">Copiar</string>
+    <string name="new_filter">Crear filtro nuevo</string>
+    <string name="subscription_required">Suscripción necesaria</string>
 </resources>

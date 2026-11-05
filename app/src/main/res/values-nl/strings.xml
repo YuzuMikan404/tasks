@@ -195,11 +195,8 @@
     <string name="badges_description">Toon taken teller bij pictogram van Tasks. Niet alle launchers ondersteunen badges.</string>
     <string name="tasker_create_task">Taak maken</string>
     <string name="tasker_list_notification">Lijst melding</string>
-    <string name="upgrade_to_pro">Opwaarderen naar pro</string>
     <string name="refresh_purchases">Aankopen bijwerken</string>
-    <string name="button_subscribe">Abonneren</string>
     <string name="pro_dashclock_extension">Dashclock extensie</string>
-    <string name="requires_pro_subscription">Vereist Pro-abonnement</string>
     <string name="logout">Uitloggen</string>
     <string name="reinitialize_account">Herinitialiseren</string>
     <string name="action_create_new_task">Nieuwe taak maken</string>
@@ -225,7 +222,6 @@
     <string name="backup_directory">Backup-map</string>
     <string name="location_radius_meters">%s m</string>
     <string name="filter">Filter</string>
-    <string name="name_your_price">Bepaal je eigen prijs</string>
     <string name="restart_later">Later</string>
     <string name="url">URL</string>
     <string name="list_separator_with_space">", "</string>
@@ -236,7 +232,6 @@
     <string name="collapse_subtasks">Subtaken inklappen</string>
     <string name="subtasks">Subtaken</string>
     <string name="display_name">Weergavenaam</string>
-    <string name="this_feature_requires_a_subscription">Voor deze functie is een abonnement vereist</string>
     <string name="choose_synchronization_service">Een platform kiezen</string>
     <string name="caldav_selection_description">Synchroniseren op eigen open source CalDAV-server of bij derden</string>
     <string name="etesync_selection_description">End-to-end versleuteld synchroniseren met EteSync</string>
@@ -356,7 +351,6 @@
     <string name="filter_any_start_date">Elke begindatum</string>
     <string name="CFC_startBefore_name">Begint op…</string>
     <string name="CFC_startBefore_text">Begindatum: \?</string>
-    <string name="account_not_included">Niet inbegrepen bij \"Bepaal je eigen prijs\" abonnementen</string>
     <string name="subscription">Abonnement</string>
     <string name="widget_show_title">Titel tonen</string>
     <string name="tasks_org_account_required">Een Tasks.org account vereist</string>
@@ -425,7 +419,6 @@
     <string name="write_permission_label">Taken wijzigen</string>
     <string name="sort_options">Sortering</string>
     <string name="location_update_interval_summary">Periodieke locatie-updates verbeteren de betrouwbaarheid van de geofence</string>
-    <string name="banner_subscription_required_title">Abonnement vereist</string>
     <string name="banner_subscription_required_body">Betaal wat je wilt om de synchronisatie met %s vrij te geven</string>
     <string name="p_per_list_sort">sortering_op_lijst</string>
     <string name="permission_write_tasks">Taken, lijsten, labels en plaatsen toevoegen, wijzigen en verwijderen</string>
