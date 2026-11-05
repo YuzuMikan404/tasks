@@ -6,11 +6,13 @@ import unittest
 from unittest.mock import patch
 
 from resolve_upstream_conflicts import (
+    APPIMAGE_APPRUN_PATH,
     MANAGED_PATHS,
     PATCH_MAIN_PATH,
     merge_ignore_rules,
     patch_paths,
     reapply,
+    resolve_appimage_apprun_conflict,
     resolve_patch_main_conflict,
     validate_patch,
 )
@@ -171,6 +173,84 @@ class ReapplyWindowsForkPatchTest(unittest.TestCase):
             self.assertIn("upstream-rule", merged_rules)
             self.assertEqual(merged_rules.count("shared-rule"), 1)
 
+    def test_appimage_apprun_conflict_keeps_upstream_file_and_executable_mode(self):
+        with TemporaryDirectory() as directory:
+            repo = Path(directory)
+            target = repo / APPIMAGE_APPRUN_PATH
+            target.parent.mkdir(parents=True)
+
+            def git(*args):
+                return subprocess.run(
+                    ("git", *args),
+                    cwd=repo,
+                    check=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    encoding="utf-8",
+                )
+
+            git("init", "-q", "-b", "fork")
+            git("config", "user.name", "Test")
+            git("config", "user.email", "test@example.com")
+            git("config", "core.filemode", "false")
+            (repo / "base.txt").write_text("base\n", encoding="utf-8")
+            git("add", "base.txt")
+            git("commit", "-qm", "base")
+            base_commit = git("rev-parse", "HEAD").stdout.strip()
+
+            apprun_content = '#!/bin/bash\nexec "$APPDIR/bin/tasks-org" "$@"\n'
+            target.write_text(apprun_content, encoding="utf-8")
+            git("add", APPIMAGE_APPRUN_PATH)
+            git("update-index", "--chmod=-x", "--", APPIMAGE_APPRUN_PATH)
+            git("commit", "-qm", "fork AppRun")
+
+            git("switch", "-q", "-c", "upstream", base_commit)
+            target.parent.mkdir(parents=True)
+            target.write_text(apprun_content, encoding="utf-8")
+            git("add", APPIMAGE_APPRUN_PATH)
+            git("update-index", "--chmod=+x", "--", APPIMAGE_APPRUN_PATH)
+            git("commit", "-qm", "upstream AppRun")
+            git("switch", "-q", "fork")
+            merge = subprocess.run(
+                ("git", "merge", "--no-edit", "upstream"),
+                cwd=repo,
+                check=False,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                encoding="utf-8",
+            )
+            self.assertNotEqual(merge.returncode, 0)
+            unmerged_entries = git(
+                "ls-files", "-u", "--", APPIMAGE_APPRUN_PATH
+            ).stdout.splitlines()
+            self.assertEqual(len(unmerged_entries), 2)
+            self.assertEqual(
+                {entry.split()[0] for entry in unmerged_entries},
+                {"100644", "100755"},
+            )
+            self.assertEqual(
+                len({entry.split()[1] for entry in unmerged_entries}),
+                1,
+            )
+
+            previous_directory = os.getcwd()
+            try:
+                os.chdir(repo)
+                resolve_appimage_apprun_conflict()
+            finally:
+                os.chdir(previous_directory)
+
+            self.assertEqual(
+                target.read_text(encoding="utf-8"),
+                apprun_content,
+            )
+            index_entry = git("ls-files", "--stage", "--", APPIMAGE_APPRUN_PATH).stdout
+            self.assertTrue(index_entry.startswith("100755 "), index_entry)
+            unresolved = git("diff", "--name-only", "--diff-filter=U").stdout
+            self.assertEqual(unresolved, "")
+
     def test_merge_ignore_rules_preserves_unique_rules_from_both_sides(self):
         merged = merge_ignore_rules(
             "fork-only\nshared\n",
@@ -186,6 +266,7 @@ class ReapplyWindowsForkPatchTest(unittest.TestCase):
         self, run_git, git_output, apply_patch_mock, validate_patch_mock
     ):
         git_output.side_effect = [
+            "",
             "100644 1111111 2\t.gitignore\n100644 2222222 3\t.gitignore\n",
             "fork-only\nshared\n",
             "upstream-only\nshared\n",

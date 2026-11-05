@@ -43,6 +43,7 @@ PATCH_MARKERS = {
 
 PATCH_FILE = Path(__file__).with_name("windows-fork.patch")
 PATCH_MAIN_PATH = "composeApp/src/desktopMain/kotlin/main.kt"
+APPIMAGE_APPRUN_PATH = ".github/actions/appimage/AppRun"
 
 
 def patch_paths(text: str) -> set[str]:
@@ -114,6 +115,15 @@ def resolve_gitignore_conflict() -> None:
     run_git("add", "--", ".gitignore")
 
 
+def resolve_appimage_apprun_conflict() -> None:
+    if not git_output("ls-files", "-u", "--", APPIMAGE_APPRUN_PATH).strip():
+        return
+
+    run_git("checkout", "--theirs", "--", APPIMAGE_APPRUN_PATH)
+    run_git("add", "--", APPIMAGE_APPRUN_PATH)
+    run_git("update-index", "--chmod=+x", "--", APPIMAGE_APPRUN_PATH)
+
+
 def resolve_patch_main_conflict() -> None:
     base_content = git_output("show", f":1:{PATCH_MAIN_PATH}")
     upstream_content = git_output("show", f":2:{PATCH_MAIN_PATH}")
@@ -160,6 +170,7 @@ def apply_windows_fork_patch() -> None:
 
 def reapply(upstream_ref: str) -> None:
     validate_patch()
+    resolve_appimage_apprun_conflict()
     resolve_gitignore_conflict()
     run_git("checkout", upstream_ref, "--", *MANAGED_PATHS)
     apply_windows_fork_patch()

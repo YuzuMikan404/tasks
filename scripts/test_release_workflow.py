@@ -243,6 +243,7 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
             self.prepare,
         )
         self.assertIn("      .gitattributes) ;;", self.prepare)
+        self.assertIn("      .github/actions/appimage/AppRun) ;;", self.prepare)
 
     def test_desktop_tests_run_on_linux_not_windows(self):
         self.assertIn("./gradlew :composeApp:desktopTest --console=plain", self.prepare)

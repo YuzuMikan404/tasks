@@ -171,6 +171,7 @@ else
     case "$conflict" in
       .gitattributes) ;;
       .github/workflows/*) ;;
+      .github/actions/appimage/AppRun) ;;
       .github/actions/setup-project-jdk/*) ;;
       .gitignore) ;;
       composeApp/build.gradle.kts) ;;
