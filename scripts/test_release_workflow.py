@@ -103,6 +103,15 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
             self.assertIn("CONVEYOR_AGREE_TO_LICENSE", workflow)
             self.assertIn("desktop-linux-appimage", workflow)
 
+    def test_conveyor_release_builds_do_not_require_a_signing_key(self):
+        for workflow in (self.workflow, self.manual_workflow):
+            self.assertNotIn("SIGNING_KEY", workflow)
+            self.assertNotIn("CONVEYOR_SIGNING_KEY", workflow)
+        conveyor_config = (REPO / "composeApp/conveyor.conf").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn("signing-key", conveyor_config)
+
     def test_release_completion_checks_every_supported_asset(self):
         required_suffixes = (
             "_amd64.deb",

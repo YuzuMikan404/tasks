@@ -325,7 +325,6 @@ jobs:
         working-directory: composeApp
         env:
           CONVEYOR_AGREE_TO_LICENSE: "1"
-          SIGNING_KEY: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           APP_BASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/latest/download
         run: |
           conveyor --logs-dir="$RUNNER_TEMP/conveyor-logs" \
@@ -455,7 +454,6 @@ jobs:
         working-directory: composeApp
         env:
           CONVEYOR_AGREE_TO_LICENSE: "1"
-          SIGNING_KEY: ${{ secrets.CONVEYOR_SIGNING_KEY }}
         run: |
           conveyor --logs-dir="$RUNNER_TEMP/conveyor-logs" "-Kapp.machines=${{ matrix.machine }}" make "${{ matrix.target }}"
 
@@ -537,7 +535,6 @@ jobs:
         working-directory: composeApp
         env:
           CONVEYOR_AGREE_TO_LICENSE: "1"
-          SIGNING_KEY: ${{ secrets.CONVEYOR_SIGNING_KEY }}
         run: |
           conveyor --logs-dir="$RUNNER_TEMP/conveyor-logs" "-Kapp.machines=${{ matrix.machine }}" make unnotarized-mac-zip
 
