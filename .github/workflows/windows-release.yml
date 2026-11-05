@@ -189,12 +189,12 @@ jobs:
         include:
           - platform: msix-amd64
             machine: windows.amd64
-            target: windows-msix
+            target: site
             package_pattern: "*.x64.msix"
             appinstaller_pattern: "*.appinstaller"
           - platform: msix-aarch64
             machine: windows.aarch64
-            target: windows-msix
+            target: site
             package_pattern: "*.arm64.msix"
             appinstaller_pattern: "*.appinstaller"
           - platform: zip-amd64
@@ -244,16 +244,16 @@ jobs:
             make "${{ matrix.target }}"
 
       - name: Verify App Installer update URL
-        if: ${{ matrix.target == 'windows-msix' }}
+        if: ${{ matrix.target == 'site' }}
         shell: bash
         env:
           APP_BASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/latest/download
           APPINSTALLER_PATTERN: ${{ matrix.appinstaller_pattern }}
         run: |
           set -euo pipefail
-          mapfile -t appinstallers < <(find composeApp/output -maxdepth 1 -type f -name "$APPINSTALLER_PATTERN" -print)
+          mapfile -t appinstallers < <(find composeApp/output -type f -name "$APPINSTALLER_PATTERN" -print)
           if [ "${#appinstallers[@]}" -ne 1 ]; then
-            echo "::error::Expected one App Installer manifest for this MSIX architecture."
+            echo "::error::Expected one App Installer manifest for this MSIX architecture; found ${#appinstallers[@]}."
             exit 1
           fi
           if ! grep -Fq "$APP_BASE_URL/" "${appinstallers[0]}"; then
@@ -269,7 +269,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p release-files
-          mapfile -t packages < <(find composeApp/output -maxdepth 1 -type f -name "$PACKAGE_PATTERN" -print)
+          mapfile -t packages < <(find composeApp/output -type f -name "$PACKAGE_PATTERN" -print)
           if [ "${#packages[@]}" -ne 1 ]; then
             echo "::error::Expected one Conveyor output matching $PACKAGE_PATTERN; found ${#packages[@]}."
             exit 1
@@ -277,7 +277,7 @@ jobs:
           assets=("${packages[0]}")
 
           if [ -n "$APPINSTALLER_PATTERN" ]; then
-            mapfile -t appinstallers < <(find composeApp/output -maxdepth 1 -type f -name "$APPINSTALLER_PATTERN" -print)
+            mapfile -t appinstallers < <(find composeApp/output -type f -name "$APPINSTALLER_PATTERN" -print)
             if [ "${#appinstallers[@]}" -ne 1 ]; then
               echo "::error::Expected one Windows App Installer manifest; found ${#appinstallers[@]}."
               exit 1
@@ -372,7 +372,7 @@ jobs:
           ASSET_PATTERN: ${{ matrix.asset_pattern }}
         run: |
           set -euo pipefail
-          mapfile -t assets < <(find composeApp/output -maxdepth 1 -type f -name "$ASSET_PATTERN" -print)
+          mapfile -t assets < <(find composeApp/output -type f -name "$ASSET_PATTERN" -print)
           if [ "${#assets[@]}" -ne 1 ]; then
             echo "::error::Expected exactly one Conveyor output matching $ASSET_PATTERN; found ${#assets[@]}."
             exit 1

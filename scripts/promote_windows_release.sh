@@ -15,8 +15,6 @@ normalize_release() {
     "_arm64.deb"
     "-linux-amd64.tar.gz"
     "-linux-aarch64.tar.gz"
-    "-mac-amd64.zip"
-    "-mac-aarch64.zip"
     "tasks-org-linux-x86_64.AppImage"
     "tasks-org-linux-x86_64.AppImage.zsync"
     "tasks-org-linux-aarch64.AppImage"
@@ -131,7 +129,7 @@ else
   gh release create "$tag" "${release_files[@]}" \
     --repo "$GITHUB_REPOSITORY" --target "$EXPECTED_CANDIDATE" \
     --title "Tasks.org Desktop $VERSION" \
-    --notes "Windows MSI, MSIX, and ZIP builds for x64 and ARM64; Linux DEB, tarball, and AppImage builds for x86_64 and ARM64; and macOS ZIP builds for Intel and Apple Silicon, based on the official Tasks.org $VERSION release. Windows MSIX installs use App Installer updates. AppImage updates use zsync. macOS packages are not notarized."
+    --notes "Windows MSI, MSIX, and ZIP builds for x64 and ARM64, plus Linux DEB, tarball, and AppImage builds for x86_64 and ARM64, based on the official Tasks.org $VERSION release. Windows MSIX installs use App Installer updates. AppImage updates use zsync."
 fi
 
 git push origin --delete "$CANDIDATE_BRANCH" ||

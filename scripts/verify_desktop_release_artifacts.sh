@@ -15,8 +15,6 @@ required_patterns=(
   "*_arm64.deb:1"
   "*-linux-amd64.tar.gz:1"
   "*-linux-aarch64.tar.gz:1"
-  "*-mac-amd64.zip:1"
-  "*-mac-aarch64.zip:1"
   "tasks-org-linux-x86_64.AppImage:1"
   "tasks-org-linux-x86_64.AppImage.zsync:1"
   "tasks-org-linux-aarch64.AppImage:1"
@@ -39,6 +37,22 @@ for required in "${required_patterns[@]}"; do
     fi
     (cd "$release_dir" && sha256sum --check "$(basename "$checksum")")
   done
+done
+
+mac_amd64_assets=("$release_dir"/*-mac-amd64.zip)
+mac_aarch64_assets=("$release_dir"/*-mac-aarch64.zip)
+if [ "${#mac_amd64_assets[@]}" -ne "${#mac_aarch64_assets[@]}" ] ||
+  [ "${#mac_amd64_assets[@]}" -gt 1 ]; then
+  echo "::error::macOS release assets must include exactly one asset per architecture or be omitted."
+  exit 1
+fi
+for asset in "${mac_amd64_assets[@]}" "${mac_aarch64_assets[@]}"; do
+  checksum="$asset.sha256"
+  if [ ! -f "$checksum" ]; then
+    echo "::error::Missing checksum for $(basename "$asset")."
+    exit 1
+  fi
+  (cd "$release_dir" && sha256sum --check "$(basename "$checksum")")
 done
 
 appinstaller_assets=("$release_dir"/*.appinstaller)

@@ -276,12 +276,12 @@ jobs:
         include:
           - platform: msix-amd64
             machine: windows.amd64
-            target: windows-msix
+            target: site
             package_pattern: "*.x64.msix"
             appinstaller_pattern: "*.appinstaller"
           - platform: msix-aarch64
             machine: windows.aarch64
-            target: windows-msix
+            target: site
             package_pattern: "*.arm64.msix"
             appinstaller_pattern: "*.appinstaller"
           - platform: zip-amd64
@@ -338,16 +338,16 @@ jobs:
             make "${{ matrix.target }}"
 
       - name: Verify App Installer update URL
-        if: ${{ matrix.target == 'windows-msix' }}
+        if: ${{ matrix.target == 'site' }}
         shell: bash
         env:
           APP_BASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/latest/download
           APPINSTALLER_PATTERN: ${{ matrix.appinstaller_pattern }}
         run: |
           set -euo pipefail
-          mapfile -t appinstallers < <(find composeApp/output -maxdepth 1 -type f -name "$APPINSTALLER_PATTERN" -print)
+          mapfile -t appinstallers < <(find composeApp/output -type f -name "$APPINSTALLER_PATTERN" -print)
           if [ "${#appinstallers[@]}" -ne 1 ]; then
-            echo "::error::Expected one App Installer manifest for this MSIX architecture."
+            echo "::error::Expected one App Installer manifest for this MSIX architecture; found ${#appinstallers[@]}."
             exit 1
           fi
           if ! grep -Fq "$APP_BASE_URL/" "${appinstallers[0]}"; then
@@ -363,7 +363,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p release-files
-          mapfile -t packages < <(find composeApp/output -maxdepth 1 -type f -name "$PACKAGE_PATTERN" -print)
+          mapfile -t packages < <(find composeApp/output -type f -name "$PACKAGE_PATTERN" -print)
           if [ "${#packages[@]}" -ne 1 ]; then
             echo "::error::Expected one Conveyor output matching $PACKAGE_PATTERN; found ${#packages[@]}."
             exit 1
@@ -371,7 +371,7 @@ jobs:
           assets=("${packages[0]}")
 
           if [ -n "$APPINSTALLER_PATTERN" ]; then
-            mapfile -t appinstallers < <(find composeApp/output -maxdepth 1 -type f -name "$APPINSTALLER_PATTERN" -print)
+            mapfile -t appinstallers < <(find composeApp/output -type f -name "$APPINSTALLER_PATTERN" -print)
             if [ "${#appinstallers[@]}" -ne 1 ]; then
               echo "::error::Expected one Windows App Installer manifest; found ${#appinstallers[@]}."
               exit 1
@@ -473,7 +473,7 @@ jobs:
           ASSET_PATTERN: ${{ matrix.asset_pattern }}
         run: |
           set -euo pipefail
-          mapfile -t assets < <(find composeApp/output -maxdepth 1 -type f -name "$ASSET_PATTERN" -print)
+          mapfile -t assets < <(find composeApp/output -type f -name "$ASSET_PATTERN" -print)
           if [ "${#assets[@]}" -ne 1 ]; then
             echo "::error::Expected exactly one Conveyor output matching $ASSET_PATTERN; found ${#assets[@]}."
             exit 1
@@ -490,92 +490,6 @@ jobs:
           path: ${{ runner.temp }}/conveyor-logs/
 
       - name: Upload validated Linux candidate
-        uses: actions/upload-artifact@v7
-        with:
-          name: desktop-${{ matrix.platform }}
-          path: release-files/*
-          if-no-files-found: error
-
-  macos:
-    name: Build macOS candidate (${{ matrix.platform }})
-    needs: [prepare, desktop_jar]
-    if: ${{ needs.prepare.outputs.needs_update == 'true' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: macos-amd64
-            machine: mac.amd64
-            asset_pattern: "*-mac-amd64.zip"
-          - platform: macos-aarch64
-            machine: mac.aarch64
-            asset_pattern: "*-mac-aarch64.zip"
-
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: ${{ needs.prepare.outputs.candidate_branch }}
-
-      - name: Verify candidate SHA
-        shell: bash
-        env:
-          EXPECTED_SHA: ${{ needs.prepare.outputs.candidate_sha }}
-        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
-
-      - uses: ./.github/actions/setup-project-jdk
-
-      - uses: gradle/actions/setup-gradle@v5
-
-      - name: Download desktop jars
-        uses: actions/download-artifact@v8
-        with:
-          name: shared-desktop-jar
-
-      - name: Install Conveyor
-        shell: bash
-        run: |
-          set -euo pipefail
-          scripts/fetch "$RUNNER_TEMP/conveyor.tar.gz" "https://downloads.hydraulic.dev/conveyor/conveyor-22.0-linux-amd64.tar.gz" "768ea002e99149deb502a9177c11f2f00dcbffa976e505f7f424a5492287ee3c"
-          sudo tar xf "$RUNNER_TEMP/conveyor.tar.gz" -C /usr/local --strip-components=1
-
-      - name: Build ${{ matrix.platform }}
-        shell: bash
-        working-directory: composeApp
-        env:
-          CONVEYOR_AGREE_TO_LICENSE: "1"
-          SIGNING_KEY: ${{ secrets.CONVEYOR_SIGNING_KEY }}
-        run: |
-          if [ -z "${SIGNING_KEY:-}" ]; then
-            echo "::error::Set the CONVEYOR_SIGNING_KEY Actions secret to a persistent Conveyor root key."
-            exit 1
-          fi
-          conveyor --logs-dir="$RUNNER_TEMP/conveyor-logs" "-Kapp.machines=${{ matrix.machine }}" make unnotarized-mac-zip
-
-      - name: Prepare release files
-        shell: bash
-        env:
-          ASSET_PATTERN: ${{ matrix.asset_pattern }}
-        run: |
-          set -euo pipefail
-          mapfile -t assets < <(find composeApp/output -maxdepth 1 -type f -name "$ASSET_PATTERN" -print)
-          if [ "${#assets[@]}" -ne 1 ]; then
-            echo "::error::Expected exactly one Conveyor output matching $ASSET_PATTERN; found ${#assets[@]}."
-            exit 1
-          fi
-          mkdir -p release-files
-          cp "${assets[0]}" release-files/
-          (cd release-files && sha256sum "$(basename "${assets[0]}")") > "release-files/$(basename "${assets[0]}").sha256"
-
-      - name: Upload Conveyor logs
-        if: failure()
-        uses: actions/upload-artifact@v7
-        with:
-          name: conveyor-logs-${{ matrix.platform }}
-          path: ${{ runner.temp }}/conveyor-logs/
-
-      - name: Upload validated macOS candidate
         uses: actions/upload-artifact@v7
         with:
           name: desktop-${{ matrix.platform }}
@@ -634,9 +548,8 @@ jobs:
       - windows
       - windows_bundle
       - linux
-      - macos
       - appimage
-    if: ${{ needs.windows.result == 'success' && needs.windows_bundle.result == 'success' && needs.linux.result == 'success' && needs.macos.result == 'success' && needs.appimage.result == 'success' }}
+    if: ${{ needs.windows.result == 'success' && needs.windows_bundle.result == 'success' && needs.linux.result == 'success' && needs.appimage.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -678,10 +591,9 @@ jobs:
       - windows
       - windows_bundle
       - linux
-      - macos
       - appimage
       - publish
-    if: ${{ always() && (needs.prepare.result == 'failure' || needs.maintenance.result == 'failure' || needs.sqlite_natives.result == 'failure' || needs.desktop_jar.result == 'failure' || needs.windows.result == 'failure' || needs.windows_bundle.result == 'failure' || needs.linux.result == 'failure' || needs.macos.result == 'failure' || needs.appimage.result == 'failure' || needs.publish.result == 'failure') }}
+    if: ${{ always() && (needs.prepare.result == 'failure' || needs.maintenance.result == 'failure' || needs.sqlite_natives.result == 'failure' || needs.desktop_jar.result == 'failure' || needs.windows.result == 'failure' || needs.windows_bundle.result == 'failure' || needs.linux.result == 'failure' || needs.appimage.result == 'failure' || needs.publish.result == 'failure') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -699,7 +611,6 @@ jobs:
           WINDOWS_RESULT: ${{ needs.windows.result }}
           WINDOWS_BUNDLE_RESULT: ${{ needs.windows_bundle.result }}
           LINUX_RESULT: ${{ needs.linux.result }}
-          MACOS_RESULT: ${{ needs.macos.result }}
           APPIMAGE_RESULT: ${{ needs.appimage.result }}
           PUBLISH_RESULT: ${{ needs.publish.result }}
         run: bash scripts/report_upstream_failure.sh

@@ -65,31 +65,28 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
         )
 
     def test_publish_requires_the_complete_build_matrix(self):
-        for job in ("windows", "windows_bundle", "linux", "macos", "appimage"):
+        for job in ("windows", "windows_bundle", "linux", "appimage"):
             self.assertIn(f"needs.{job}.result == 'success'", self.workflow)
+        self.assertNotIn("needs.macos", self.workflow)
+        self.assertNotIn("  macos:", self.workflow)
         self.assertIn("      - windows_bundle", self.workflow)
         self.assertIn("Atomically promote and publish candidate", self.workflow)
         self.assertIn("verify_desktop_release_artifacts.sh release-files", self.promote)
 
-    def test_linux_and_macos_match_the_upstream_release_matrix(self):
+    def test_windows_and_linux_automatic_release_preserves_manual_macos_builds(self):
         expected_targets = (
             "debian-package",
             "linux-tarball",
-            "unnotarized-mac-zip",
-            "windows-msix",
+            "site",
             "windows-zip",
             "windows.amd64",
             "windows.aarch64",
             "linux.amd64.glibc",
             "linux.aarch64.glibc",
-            "mac.amd64",
-            "mac.aarch64",
             "*_amd64.deb",
             "*_arm64.deb",
             "*-linux-amd64.tar.gz",
             "*-linux-aarch64.tar.gz",
-            "*-mac-amd64.zip",
-            "*-mac-aarch64.zip",
             "*.x64.msix",
             "*.arm64.msix",
             "*-windows-amd64.zip",
@@ -99,19 +96,33 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
         for workflow in (self.workflow, self.manual_workflow):
             for target in expected_targets:
                 self.assertIn(target, workflow)
+            self.assertEqual(workflow.count("target: site"), 2)
+            self.assertNotIn("target: windows-msix", workflow)
             self.assertIn("shared-desktop-jar", workflow)
             self.assertIn("CONVEYOR_AGREE_TO_LICENSE", workflow)
             self.assertIn("desktop-linux-appimage", workflow)
+            self.assertIn("matrix.target == 'site'", workflow)
+            self.assertIn(
+                'find composeApp/output -type f -name "$APPINSTALLER_PATTERN"',
+                workflow,
+            )
+        self.assertIn("unnotarized-mac-zip", self.manual_workflow)
+        self.assertNotIn("unnotarized-mac-zip", self.workflow)
+        self.assertIn('make "${{ matrix.target }}"', self.workflow)
+        self.assertIn('make "${{ matrix.target }}"', self.manual_workflow)
 
     def test_conveyor_release_builds_require_a_persistent_signing_key(self):
-        for workflow in (self.workflow, self.manual_workflow):
+        for workflow, expected_builds in (
+            (self.workflow, 2),
+            (self.manual_workflow, 3),
+        ):
             self.assertEqual(
                 workflow.count("SIGNING_KEY: ${{ secrets.CONVEYOR_SIGNING_KEY }}"),
-                3,
+                expected_builds,
             )
             self.assertEqual(
                 workflow.count("Set the CONVEYOR_SIGNING_KEY Actions secret"),
-                3,
+                expected_builds,
             )
         conveyor_config = (REPO / "composeApp/conveyor.conf").read_text(
             encoding="utf-8"
@@ -155,6 +166,7 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
             "*.appinstaller:2",
         ):
             self.assertIn(pattern, verifier)
+        self.assertIn('mac_amd64_assets=("$release_dir"/*-mac-amd64.zip)', verifier)
 
     def test_manual_publish_downloads_and_verifies_all_artifacts(self):
         for pattern in (
@@ -204,6 +216,37 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
                 encoding="utf-8",
             )
             self.assertEqual(valid.returncode, 0, valid.stderr)
+
+            for name in names[11:13]:
+                (release_dir / name).unlink()
+                (release_dir / f"{name}.sha256").unlink()
+            without_macos = subprocess.run(
+                (self.bash_executable(), str(verifier), str(release_dir)),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                encoding="utf-8",
+            )
+            self.assertEqual(without_macos.returncode, 0, without_macos.stderr)
+
+            mac_amd64 = release_dir / names[11]
+            mac_amd64.write_bytes(names[11].encode("ascii"))
+            mac_amd64_checksum = (
+                f"{hashlib.sha256(mac_amd64.read_bytes()).hexdigest()}  {names[11]}\n"
+            )
+            (release_dir / f"{names[11]}.sha256").write_bytes(
+                mac_amd64_checksum.encode("ascii")
+            )
+            incomplete_macos = subprocess.run(
+                (self.bash_executable(), str(verifier), str(release_dir)),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                encoding="utf-8",
+            )
+            self.assertNotEqual(incomplete_macos.returncode, 0)
+            mac_amd64.unlink()
+            (release_dir / f"{names[11]}.sha256").unlink()
 
             arm_manifest = release_dir / names[6]
             unrelated_arm_manifest = release_dir / "unrelated-arm64.appinstaller"
