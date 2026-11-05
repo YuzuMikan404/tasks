@@ -507,7 +507,7 @@ jobs:
           set -euo pipefail
           for asset in release-files/*; do
             test -f "$asset" || { echo "::error::Missing AppImage output."; exit 1; }
-            sha256sum "$asset" > "$asset.sha256"
+            (cd release-files && sha256sum "$(basename "$asset")") > "$asset.sha256"
           done
 
       - name: Upload validated AppImages

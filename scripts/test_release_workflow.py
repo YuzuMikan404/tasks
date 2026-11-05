@@ -129,6 +129,14 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
         )
         self.assertIn("signing-key = ${?SIGNING_KEY}", conveyor_config)
 
+    def test_appimage_checksums_use_release_relative_asset_names(self):
+        checksum_command = (
+            '(cd release-files && sha256sum "$(basename "$asset")") '
+            '> "$asset.sha256"'
+        )
+        self.assertIn(checksum_command, self.workflow)
+        self.assertIn(checksum_command, self.manual_workflow)
+
     def test_release_completion_checks_every_supported_asset(self):
         required_suffixes = (
             "_amd64.deb",
