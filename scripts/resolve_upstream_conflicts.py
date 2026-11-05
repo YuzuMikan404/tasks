@@ -77,8 +77,44 @@ def run_git(*args: str) -> None:
     subprocess.run(("git", *args), check=True)
 
 
+def git_output(*args: str) -> str:
+    result = subprocess.run(
+        ("git", *args),
+        check=True,
+        stdout=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+    )
+    return result.stdout
+
+
+def merge_ignore_rules(fork_content: str, upstream_content: str) -> str:
+    lines = fork_content.splitlines()
+    seen = set(lines)
+    for line in upstream_content.splitlines():
+        if line not in seen:
+            lines.append(line)
+            seen.add(line)
+    return "\n".join(lines) + "\n"
+
+
+def resolve_gitignore_conflict() -> None:
+    if not git_output("ls-files", "-u", "--", ".gitignore").strip():
+        return
+
+    fork_content = git_output("show", ":2:.gitignore")
+    upstream_content = git_output("show", ":3:.gitignore")
+    Path(".gitignore").write_text(
+        merge_ignore_rules(fork_content, upstream_content),
+        encoding="utf-8",
+        newline="\n",
+    )
+    run_git("add", "--", ".gitignore")
+
+
 def reapply(upstream_ref: str) -> None:
     validate_patch()
+    resolve_gitignore_conflict()
     run_git("checkout", upstream_ref, "--", *MANAGED_PATHS)
     run_git("apply", "--3way", "--index", PATCH_FILE.as_posix())
 

@@ -56,6 +56,7 @@ else
     [ -z "$conflict" ] && continue
     case "$conflict" in
       .github/workflows/*) ;;
+      .gitignore) ;;
       composeApp/build.gradle.kts) ;;
       composeApp/src/desktopMain/kotlin/main.kt) ;;
       composeApp/src/desktopMain/kotlin/org/tasks/analytics/PostHogReporting.kt) ;;
