@@ -107,8 +107,6 @@ if [ "$same_upstream_tag" = true ]; then
     "_arm64.deb"
     "-linux-amd64.tar.gz"
     "-linux-aarch64.tar.gz"
-    "-mac-amd64.zip"
-    "-mac-aarch64.zip"
     "tasks-org-linux-x86_64.AppImage"
     "tasks-org-linux-x86_64.AppImage.zsync"
     "tasks-org-linux-aarch64.AppImage"
@@ -128,28 +126,12 @@ if [ "$same_upstream_tag" = true ]; then
       appinstaller_assets+=("$name")
     fi
   done <<< "$release_assets"
-  if [ "${#appinstaller_assets[@]}" -ne 2 ]; then
-    echo "Expected one App Installer manifest per architecture; found ${#appinstaller_assets[@]}."
+  if ! bash scripts/verify_appinstaller_assets.sh "${appinstaller_assets[@]}"; then
     release_complete=false
-  else
-    arm64_appinstallers=()
-    x64_appinstallers=()
-    for name in "${appinstaller_assets[@]}"; do
-      if [[ "$name" == *-arm64.appinstaller ]]; then
-        arm64_appinstallers+=("$name")
-      else
-        x64_appinstallers+=("$name")
-      fi
-    done
-    if [ "${#arm64_appinstallers[@]}" -ne 1 ] || [ "${#x64_appinstallers[@]}" -ne 1 ] ||
-      [ "${x64_appinstallers[0]:-}" != "${arm64_appinstallers[0]%-arm64.appinstaller}.appinstaller" ]; then
-      echo "Expected matching x64 and ARM64 App Installer manifests."
-      release_complete=false
-    fi
   fi
 
   if [ "$release_complete" = true ]; then
-    echo "Desktop release windows-v$latest already has all supported Windows, Linux, and macOS packages."
+    echo "Desktop release windows-v$latest already has all required Windows and Linux packages."
     echo "needs_update=false" >> "$GITHUB_OUTPUT"
     echo "candidate_sha=$base_sha" >> "$GITHUB_OUTPUT"
     echo "candidate_branch=" >> "$GITHUB_OUTPUT"

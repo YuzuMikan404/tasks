@@ -55,28 +55,6 @@ for asset in "${mac_amd64_assets[@]}" "${mac_aarch64_assets[@]}"; do
 done
 
 mapfile -t appinstaller_assets < <(find "$release_dir" -type f -name "*.appinstaller" -print)
-arm64_appinstallers=()
-x64_appinstallers=()
-for asset in "${appinstaller_assets[@]}"; do
-  name="$(basename "$asset")"
-  if [[ "$name" == *-arm64.appinstaller ]]; then
-    arm64_appinstallers+=("$name")
-  else
-    x64_appinstallers+=("$name")
-  fi
-done
-if [ "${#arm64_appinstallers[@]}" -ne 1 ]; then
-  echo "::error::Missing ARM64 App Installer manifest."
-  exit 1
-fi
-if [ "${#x64_appinstallers[@]}" -ne 1 ]; then
-  echo "::error::Missing x64 App Installer manifest."
-  exit 1
-fi
-expected_x64_name="${arm64_appinstallers[0]%-arm64.appinstaller}.appinstaller"
-if [ "${x64_appinstallers[0]}" != "$expected_x64_name" ]; then
-  echo "::error::x64 and ARM64 App Installer manifests do not belong to the same application."
-  exit 1
-fi
+bash scripts/verify_appinstaller_assets.sh "${appinstaller_assets[@]}"
 
 echo "All required desktop assets and SHA-256 checksums are present and valid."

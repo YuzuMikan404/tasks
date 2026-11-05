@@ -143,8 +143,6 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
             "_arm64.deb",
             "-linux-amd64.tar.gz",
             "-linux-aarch64.tar.gz",
-            "-mac-amd64.zip",
-            "-mac-aarch64.zip",
             "tasks-org-linux-x86_64.AppImage",
             "tasks-org-linux-aarch64.AppImage",
             "tasks-org-linux-x86_64.AppImage.zsync",
@@ -165,6 +163,8 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
         )
         for suffix in required_suffixes:
             self.assertIn(suffix, verifier)
+        for suffix in ("-mac-amd64.zip", "-mac-aarch64.zip"):
+            self.assertNotIn(f'    "{suffix}"', self.prepare)
         self.assertIn('"$asset.sha256"', verifier)
         for pattern in (
             "tasks-org-*.x64.msix",
@@ -182,6 +182,32 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
             'find "$release_dir" -type f -name "$pattern"',
             verifier,
         )
+
+    def test_appinstaller_asset_validation_requires_a_matching_architecture_pair(self):
+        validator = REPO / "scripts/verify_appinstaller_assets.sh"
+        cases = (
+            (("tasks-org.appinstaller", "tasks-org-arm64.appinstaller"), 0),
+            (("tasks-org.appinstaller",), 1),
+            (("tasks-org.appinstaller", "other-arm64.appinstaller"), 1),
+            (
+                (
+                    "tasks-org.appinstaller",
+                    "tasks-org-arm64.appinstaller",
+                    "unexpected.appinstaller",
+                ),
+                1,
+            ),
+        )
+        for assets, expected_returncode in cases:
+            with self.subTest(assets=assets):
+                result = subprocess.run(
+                    (self.bash_executable(), str(validator), *assets),
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    encoding="utf-8",
+                )
+                self.assertEqual(result.returncode, expected_returncode, result.stdout)
 
     def test_manual_publish_downloads_and_verifies_all_artifacts(self):
         for pattern in (
