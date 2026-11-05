@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import re
 import subprocess
 from tempfile import TemporaryDirectory
 import unittest
@@ -9,6 +10,10 @@ from resolve_upstream_conflicts import (
     APPIMAGE_APPRUN_PATH,
     MANAGED_PATHS,
     PATCH_MAIN_PATH,
+    SQLITE_ARM64_CHECK,
+    SQLITE_ARM64_CHECK_FIXED,
+    SQLITE_NATIVES_SCRIPT_PATH,
+    fix_sqlite_arm64_check,
     merge_ignore_rules,
     patch_paths,
     reapply,
@@ -258,6 +263,45 @@ class ReapplyWindowsForkPatchTest(unittest.TestCase):
         )
         self.assertEqual(merged, "fork-only\nshared\nupstream-only\n")
 
+    @patch("resolve_upstream_conflicts.run_git")
+    def test_sqlite_arm64_check_accepts_file_command_architecture_names(self, run_git):
+        with TemporaryDirectory() as directory:
+            path = Path(directory, SQLITE_NATIVES_SCRIPT_PATH)
+            path.parent.mkdir(parents=True)
+            path.write_text(SQLITE_ARM64_CHECK + "\n", encoding="utf-8")
+            previous_directory = os.getcwd()
+            try:
+                os.chdir(directory)
+                fix_sqlite_arm64_check()
+                fixed = path.read_text(encoding="utf-8")
+            finally:
+                os.chdir(previous_directory)
+
+            python_pattern = r"PE32\+ executable.*\(DLL\).*(Aarch64|ARM64)"
+            for architecture in ("Aarch64", "ARM64"):
+                output = (
+                    "aarch64-windows-gnu/sqliteJni.dll: "
+                    f"PE32+ executable for MS Windows 6.00 (DLL), {architecture}, 6 sections"
+                )
+                self.assertIsNotNone(re.search(python_pattern, output))
+            self.assertIn(SQLITE_ARM64_CHECK_FIXED, fixed)
+            run_git.assert_called_once_with("add", "--", SQLITE_NATIVES_SCRIPT_PATH)
+
+    @patch("resolve_upstream_conflicts.run_git")
+    def test_sqlite_arm64_check_rejects_unexpected_upstream_script(self, run_git):
+        with TemporaryDirectory() as directory:
+            path = Path(directory, SQLITE_NATIVES_SCRIPT_PATH)
+            path.parent.mkdir(parents=True)
+            path.write_text("build target with an unknown check\n", encoding="utf-8")
+            previous_directory = os.getcwd()
+            try:
+                os.chdir(directory)
+                with self.assertRaisesRegex(ValueError, "Unrecognized ARM64 check"):
+                    fix_sqlite_arm64_check()
+            finally:
+                os.chdir(previous_directory)
+        run_git.assert_not_called()
+
     @patch("resolve_upstream_conflicts.validate_patch")
     @patch("resolve_upstream_conflicts.apply_windows_fork_patch")
     @patch("resolve_upstream_conflicts.git_output")
@@ -275,10 +319,17 @@ class ReapplyWindowsForkPatchTest(unittest.TestCase):
             previous_directory = os.getcwd()
             try:
                 os.chdir(directory)
+                sqlite_script = Path(SQLITE_NATIVES_SCRIPT_PATH)
+                sqlite_script.parent.mkdir(parents=True)
+                sqlite_script.write_text(SQLITE_ARM64_CHECK + "\n", encoding="utf-8")
                 reapply("refs/tags/upstream-16.0")
                 self.assertEqual(
                     Path(".gitignore").read_text(encoding="utf-8"),
                     "fork-only\nshared\nupstream-only\n",
+                )
+                self.assertIn(
+                    SQLITE_ARM64_CHECK_FIXED,
+                    sqlite_script.read_text(encoding="utf-8"),
                 )
             finally:
                 os.chdir(previous_directory)
@@ -291,6 +342,7 @@ class ReapplyWindowsForkPatchTest(unittest.TestCase):
                 unittest.mock.call(
                     "checkout", "refs/tags/upstream-16.0", "--", *MANAGED_PATHS
                 ),
+                unittest.mock.call("add", "--", SQLITE_NATIVES_SCRIPT_PATH),
             ],
         )
         apply_patch_mock.assert_called_once_with()
@@ -312,9 +364,10 @@ class ReapplyWindowsForkPatchTest(unittest.TestCase):
 
     @patch("resolve_upstream_conflicts.validate_patch")
     @patch("resolve_upstream_conflicts.apply_windows_fork_patch")
+    @patch("resolve_upstream_conflicts.fix_sqlite_arm64_check")
     @patch("resolve_upstream_conflicts.run_git")
     def test_reapply_starts_from_upstream_then_applies_patch(
-        self, run_git, apply_patch_mock, validate_patch_mock
+        self, run_git, fix_sqlite_mock, apply_patch_mock, validate_patch_mock
     ):
         reapply("refs/tags/upstream-16.0")
         validate_patch_mock.assert_called_once_with()
@@ -323,6 +376,7 @@ class ReapplyWindowsForkPatchTest(unittest.TestCase):
             run_git.call_args_list[0].args,
             ("checkout", "refs/tags/upstream-16.0", "--", *MANAGED_PATHS),
         )
+        fix_sqlite_mock.assert_called_once_with()
         apply_patch_mock.assert_called_once_with()
 
 

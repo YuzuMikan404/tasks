@@ -44,6 +44,15 @@ PATCH_MARKERS = {
 PATCH_FILE = Path(__file__).with_name("windows-fork.patch")
 PATCH_MAIN_PATH = "composeApp/src/desktopMain/kotlin/main.kt"
 APPIMAGE_APPRUN_PATH = ".github/actions/appimage/AppRun"
+SQLITE_NATIVES_SCRIPT_PATH = "composeApp/build-sqlite-natives.sh"
+SQLITE_ARM64_CHECK = (
+    'build aarch64-windows-gnu windows windows_arm64 sqliteJni.dll '
+    '"PE32+ executable (DLL).*Aarch64"'
+)
+SQLITE_ARM64_CHECK_FIXED = (
+    'build aarch64-windows-gnu windows windows_arm64 sqliteJni.dll '
+    '"PE32+ executable.*(DLL).*\\(Aarch64\\|ARM64\\)"'
+)
 
 
 def patch_paths(text: str) -> set[str]:
@@ -124,6 +133,20 @@ def resolve_appimage_apprun_conflict() -> None:
     run_git("update-index", "--chmod=+x", "--", APPIMAGE_APPRUN_PATH)
 
 
+def fix_sqlite_arm64_check() -> None:
+    path = Path(SQLITE_NATIVES_SCRIPT_PATH)
+    text = path.read_text(encoding="utf-8")
+    old_count = text.count(SQLITE_ARM64_CHECK)
+    if old_count > 1:
+        raise ValueError("Unexpected duplicate ARM64 check in SQLite native build script.")
+    if old_count == 1:
+        text = text.replace(SQLITE_ARM64_CHECK, SQLITE_ARM64_CHECK_FIXED)
+        path.write_text(text, encoding="utf-8", newline="\n")
+        run_git("add", "--", SQLITE_NATIVES_SCRIPT_PATH)
+    elif SQLITE_ARM64_CHECK_FIXED not in text:
+        raise ValueError("Unrecognized ARM64 check in SQLite native build script.")
+
+
 def resolve_patch_main_conflict() -> None:
     base_content = git_output("show", f":1:{PATCH_MAIN_PATH}")
     upstream_content = git_output("show", f":2:{PATCH_MAIN_PATH}")
@@ -174,6 +197,7 @@ def reapply(upstream_ref: str) -> None:
     resolve_gitignore_conflict()
     run_git("checkout", upstream_ref, "--", *MANAGED_PATHS)
     apply_windows_fork_patch()
+    fix_sqlite_arm64_check()
 
 
 def main(argv: list[str] | None = None) -> int:
