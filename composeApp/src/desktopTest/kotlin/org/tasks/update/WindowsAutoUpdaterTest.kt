@@ -16,4 +16,16 @@ class WindowsAutoUpdaterTest {
     fun ignoresInsignificantTrailingZeroes() {
         assertEquals(0, compareVersions("15.11", "15.11.0"))
     }
+
+    @Test
+    fun checksumAssetNameIncludesInstallerExtension() {
+        assertEquals(
+            "tasks-org-windows-x64-15.13.msi.sha256",
+            checksumAssetName("tasks-org-windows-x64-15.13.msi"),
+        )
+        assertEquals(
+            "tasks-org-linux-x64-15.13.deb.sha256",
+            checksumAssetName("tasks-org-linux-x64-15.13.deb"),
+        )
+    }
 }

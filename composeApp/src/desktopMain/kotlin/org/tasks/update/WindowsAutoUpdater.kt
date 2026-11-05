@@ -44,11 +44,11 @@ internal suspend fun prepareDesktopUpdate(dataDir: File, platform: Platform): De
 
     runCatching {
         val release = requestText(RELEASE_API)
-        checkedAt.writeText(System.currentTimeMillis().toString())
         val root = Json.parseToJsonElement(release).jsonObject
         val version = root.getValue("tag_name").jsonPrimitive.content
             .removePrefix("windows-v")
         if (compareVersions(version, TasksBuildConfig.VERSION_NAME) <= 0) {
+            checkedAt.writeText(System.currentTimeMillis().toString())
             return@runCatching null
         }
 
@@ -59,7 +59,7 @@ internal suspend fun prepareDesktopUpdate(dataDir: File, platform: Platform): De
             Platform.MAC -> return@runCatching null
         }
         val installerName = "$packageStem.${if (platform == Platform.WINDOWS) "msi" else "deb"}"
-        val checksumName = "$packageStem.sha256"
+        val checksumName = checksumAssetName(installerName)
         val installerUrl = assets.firstOrNull {
             it["name"]?.jsonPrimitive?.content == installerName
         }?.get("browser_download_url")?.jsonPrimitive?.content
@@ -75,11 +75,14 @@ internal suspend fun prepareDesktopUpdate(dataDir: File, platform: Platform): De
         if (!installer.isFile || sha256(installer) != expectedHash) {
             downloadVerified(installerUrl, installer, expectedHash)
         }
+        checkedAt.writeText(System.currentTimeMillis().toString())
         DesktopUpdate(version, installer, platform)
     }.onFailure { error ->
         Logger.w(error, tag = TAG) { "Automatic update check failed" }
     }.getOrNull()
 }
+
+internal fun checksumAssetName(installerName: String): String = "$installerName.sha256"
 
 /** Starts the verified native package. The caller should immediately finish the normal close. */
 internal fun launchDesktopUpdate(update: DesktopUpdate): Boolean = runCatching {
