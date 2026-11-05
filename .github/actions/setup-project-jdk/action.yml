@@ -1,0 +1,19 @@
+name: Set up project JDK
+description: Select the JDK version declared in gradle/libs.versions.toml
+
+runs:
+  using: composite
+  steps:
+    - name: Resolve project JDK
+      id: resolve
+      shell: bash
+      run: |
+        set -euo pipefail
+        version="$(bash scripts/read_jdk_version.sh gradle/libs.versions.toml)"
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+
+    - name: Set up JDK
+      uses: actions/setup-java@v5
+      with:
+        distribution: temurin
+        java-version: ${{ steps.resolve.outputs.version }}

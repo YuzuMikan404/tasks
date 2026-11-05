@@ -24,8 +24,57 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  sqlite_natives:
+    name: Build shared SQLite native libraries
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Get SQLite native build versions
+        id: sqlite
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "zig=0.16.0" >> "$GITHUB_OUTPUT"
+          version="$(sed -n 's/.*"androidx.sqlite:sqlite-bundled", version = "\([^"]*\)".*/\1/p' gradle/libs.versions.toml)"
+          test -n "$version" || { echo "::error::SQLite version not found in gradle/libs.versions.toml"; exit 1; }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Cache SQLite native libraries
+        id: cache-sqlite
+        uses: actions/cache@v6
+        with:
+          path: ${{ runner.temp }}/sqlite-natives
+          key: sqlite-natives-${{ steps.sqlite.outputs.version }}-zig${{ steps.sqlite.outputs.zig }}-${{ hashFiles('composeApp/build-sqlite-natives.sh') }}
+
+      - name: Build SQLite native libraries
+        if: ${{ steps.cache-sqlite.outputs.cache-hit != 'true' }}
+        shell: bash
+        env:
+          ZIG_VERSION: ${{ steps.sqlite.outputs.zig }}
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RUNNER_TEMP/zig"
+          "$RUNNER_TEMP/zig/bin/pip" install "ziglang==$ZIG_VERSION"
+          ZIG="$RUNNER_TEMP/zig/bin/python -m ziglang" composeApp/build-sqlite-natives.sh "$RUNNER_TEMP/sqlite-natives"
+
+      - name: Upload SQLite native libraries
+        uses: actions/upload-artifact@v7
+        with:
+          name: sqlite-natives-${{ github.sha }}
+          path: ${{ runner.temp }}/sqlite-natives/
+          if-no-files-found: error
+
   windows:
-    name: Test and build Windows MSI
+    name: Build Windows MSI
+    needs: sqlite_natives
     runs-on: windows-latest
     timeout-minutes: 45
 
@@ -33,22 +82,21 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v6
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "21"
+      - uses: ./.github/actions/setup-project-jdk
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Test desktop entitlement policy
-        run: .\gradlew.bat :composeApp:desktopTest --console=plain
+      - name: Download SQLite native libraries
+        uses: actions/download-artifact@v8
+        with:
+          name: sqlite-natives-${{ github.sha }}
+          path: ${{ runner.temp }}/sqlite-natives
 
       - name: Build Windows MSI
         env:
           POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
-        run: .\gradlew.bat :composeApp:packageMsi -Prelease --console=plain
+        run: .\gradlew.bat :composeApp:packageMsi -Prelease "-PsqliteNatives=$env:RUNNER_TEMP\sqlite-natives" --console=plain
 
       - name: Prepare release files
         id: files
@@ -75,10 +123,10 @@ jobs:
 
           $hash = (Get-FileHash $releaseMsi -Algorithm SHA256).Hash.ToLowerInvariant()
           "$hash  $([System.IO.Path]::GetFileName($releaseMsi))" |
-            Set-Content "release-files/tasks-org-windows-x64-$safeLabel.sha256"
+            Set-Content "$releaseMsi.sha256"
 
           "msi=$releaseMsi" >> $env:GITHUB_OUTPUT
-          "sha256=release-files/tasks-org-windows-x64-$safeLabel.sha256" >> $env:GITHUB_OUTPUT
+          "sha256=$releaseMsi.sha256" >> $env:GITHUB_OUTPUT
 
       - name: Upload Windows build artifact
         uses: actions/upload-artifact@v7
@@ -87,16 +135,9 @@ jobs:
           path: release-files/*
           if-no-files-found: error
 
-      - name: Upload desktop test report
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: windows-test-report-${{ github.sha }}
-          path: composeApp/build/reports/tests/desktopTest/
-          if-no-files-found: warn
-
-  linux:
-    name: Build Linux DEB
+  desktop_jar:
+    name: Build shared desktop jars
+    needs: sqlite_natives
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -104,43 +145,362 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v6
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "21"
+      - uses: ./.github/actions/setup-project-jdk
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v5
 
-      - name: Build Linux DEB
+      - name: Download SQLite native libraries
+        uses: actions/download-artifact@v8
+        with:
+          name: sqlite-natives-${{ github.sha }}
+          path: ${{ runner.temp }}/sqlite-natives
+
+      - name: Install Compose test dependencies
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libgl1 libx11-6
+
+      - name: Test desktop
+        run: ./gradlew :composeApp:desktopTest --console=plain
+
+      - name: Build desktop jars
         env:
           POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
-        run: ./gradlew :composeApp:packageDeb -Prelease --console=plain
+        run: ./gradlew :composeApp:desktopJar -Prelease -PsqliteNatives="$RUNNER_TEMP/sqlite-natives" --console=plain
+
+      - name: Upload desktop jars
+        uses: actions/upload-artifact@v7
+        with:
+          name: shared-desktop-jar
+          path: |
+            cert4android/build/libs/cert4android-jvm.jar
+            composeApp/build/libs/composeApp-desktop*.jar
+            data/build/libs/data-jvm.jar
+            kmp/build/libs/kmp-jvm.jar
+          if-no-files-found: error
+
+  windows_bundle:
+    name: Build Windows ${{ matrix.platform }}
+    needs: desktop_jar
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: msix-amd64
+            machine: windows.amd64
+            target: windows-msix
+            package_pattern: "*.x64.msix"
+            appinstaller_pattern: "*.appinstaller"
+          - platform: msix-aarch64
+            machine: windows.aarch64
+            target: windows-msix
+            package_pattern: "*.arm64.msix"
+            appinstaller_pattern: "*.appinstaller"
+          - platform: zip-amd64
+            machine: windows.amd64
+            target: windows-zip
+            package_pattern: "*-windows-amd64.zip"
+          - platform: zip-aarch64
+            machine: windows.aarch64
+            target: windows-zip
+            package_pattern: "*-windows-aarch64.zip"
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - uses: ./.github/actions/setup-project-jdk
+
+      - uses: gradle/actions/setup-gradle@v5
+
+      - name: Download desktop jars
+        uses: actions/download-artifact@v8
+        with:
+          name: shared-desktop-jar
+
+      - name: Install Conveyor
+        shell: bash
+        run: |
+          set -euo pipefail
+          scripts/fetch "$RUNNER_TEMP/conveyor.tar.gz" "https://downloads.hydraulic.dev/conveyor/conveyor-22.0-linux-amd64.tar.gz" "768ea002e99149deb502a9177c11f2f00dcbffa976e505f7f424a5492287ee3c"
+          sudo tar xf "$RUNNER_TEMP/conveyor.tar.gz" -C /usr/local --strip-components=1
+
+      - name: Build ${{ matrix.platform }}
+        shell: bash
+        working-directory: composeApp
+        env:
+          CONVEYOR_AGREE_TO_LICENSE: "1"
+          SIGNING_KEY: ${{ secrets.CONVEYOR_SIGNING_KEY }}
+          APP_BASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/latest/download
+        run: |
+          conveyor --logs-dir="$RUNNER_TEMP/conveyor-logs" \
+            "-Kapp.machines=${{ matrix.machine }}" \
+            "-Kapp.site.base-url=$APP_BASE_URL" \
+            make "${{ matrix.target }}"
+
+      - name: Verify App Installer update URL
+        if: ${{ matrix.target == 'windows-msix' }}
+        shell: bash
+        env:
+          APP_BASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/latest/download
+          APPINSTALLER_PATTERN: ${{ matrix.appinstaller_pattern }}
+        run: |
+          set -euo pipefail
+          mapfile -t appinstallers < <(find composeApp/output -maxdepth 1 -type f -name "$APPINSTALLER_PATTERN" -print)
+          if [ "${#appinstallers[@]}" -ne 1 ]; then
+            echo "::error::Expected one App Installer manifest for this MSIX architecture."
+            exit 1
+          fi
+          if ! grep -Fq "$APP_BASE_URL/" "${appinstallers[0]}"; then
+            echo "::error::App Installer manifest does not point to this repository's latest Release downloads."
+            exit 1
+          fi
 
       - name: Prepare release files
         shell: bash
         env:
-          RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || inputs.release_tag }}
+          PACKAGE_PATTERN: ${{ matrix.package_pattern }}
+          APPINSTALLER_PATTERN: ${{ matrix.appinstaller_pattern }}
         run: |
-          deb="$(find composeApp/build/compose/binaries/main/deb -maxdepth 1 -type f -name '*.deb' -print -quit)"
-          test -n "$deb" || { echo "The Linux DEB was not generated."; exit 1; }
-
+          set -euo pipefail
           mkdir -p release-files
-          if [ -n "$RELEASE_TAG" ]; then
-            label="${RELEASE_TAG#windows-v}"
-          else
-            label="${GITHUB_SHA:0:9}"
+          mapfile -t packages < <(find composeApp/output -maxdepth 1 -type f -name "$PACKAGE_PATTERN" -print)
+          if [ "${#packages[@]}" -ne 1 ]; then
+            echo "::error::Expected one Conveyor output matching $PACKAGE_PATTERN; found ${#packages[@]}."
+            exit 1
           fi
-          safe_label="$(printf '%s' "$label" | sed 's/[^A-Za-z0-9._-]/-/g')"
-          release_deb="release-files/tasks-org-linux-x64-$safe_label.deb"
-          cp "$deb" "$release_deb"
-          sha256sum "$release_deb" > "release-files/tasks-org-linux-x64-$safe_label.sha256"
+          assets=("${packages[0]}")
+
+          if [ -n "$APPINSTALLER_PATTERN" ]; then
+            mapfile -t appinstallers < <(find composeApp/output -maxdepth 1 -type f -name "$APPINSTALLER_PATTERN" -print)
+            if [ "${#appinstallers[@]}" -ne 1 ]; then
+              echo "::error::Expected one Windows App Installer manifest; found ${#appinstallers[@]}."
+              exit 1
+            fi
+            assets+=("${appinstallers[0]}")
+          fi
+
+          for asset in "${assets[@]}"; do
+            name="$(basename "$asset")"
+            cp "$asset" "release-files/$name"
+            (cd release-files && sha256sum "$name") > "release-files/$name.sha256"
+          done
+
+      - name: Upload Conveyor logs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: conveyor-logs-windows-${{ matrix.platform }}
+          path: ${{ runner.temp }}/conveyor-logs/
+
+      - name: Upload Windows ${{ matrix.platform }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: desktop-windows-${{ matrix.platform }}
+          compression-level: 0
+          path: release-files/*
+          if-no-files-found: error
+
+  linux:
+    name: Build Linux package (${{ matrix.platform }})
+    needs: desktop_jar
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux-deb-amd64
+            target: debian-package
+            machine: linux.amd64.glibc
+            asset_pattern: "*_amd64.deb"
+          - platform: linux-deb-aarch64
+            target: debian-package
+            machine: linux.aarch64.glibc
+            asset_pattern: "*_arm64.deb"
+          - platform: linux-tar-gz-amd64
+            target: linux-tarball
+            machine: linux.amd64.glibc
+            asset_pattern: "*-linux-amd64.tar.gz"
+          - platform: linux-tar-gz-aarch64
+            target: linux-tarball
+            machine: linux.aarch64.glibc
+            asset_pattern: "*-linux-aarch64.tar.gz"
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - uses: ./.github/actions/setup-project-jdk
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Download desktop jars
+        uses: actions/download-artifact@v8
+        with:
+          name: shared-desktop-jar
+
+      - name: Install Conveyor
+        shell: bash
+        run: |
+          set -euo pipefail
+          scripts/fetch "$RUNNER_TEMP/conveyor.tar.gz" "https://downloads.hydraulic.dev/conveyor/conveyor-22.0-linux-amd64.tar.gz" "768ea002e99149deb502a9177c11f2f00dcbffa976e505f7f424a5492287ee3c"
+          sudo tar xf "$RUNNER_TEMP/conveyor.tar.gz" -C /usr/local --strip-components=1
+
+      - name: Build ${{ matrix.platform }}
+        shell: bash
+        working-directory: composeApp
+        env:
+          CONVEYOR_AGREE_TO_LICENSE: "1"
+          SIGNING_KEY: ${{ secrets.CONVEYOR_SIGNING_KEY }}
+        run: |
+          conveyor --logs-dir="$RUNNER_TEMP/conveyor-logs" "-Kapp.machines=${{ matrix.machine }}" make "${{ matrix.target }}"
+
+      - name: Prepare release files
+        shell: bash
+        env:
+          ASSET_PATTERN: ${{ matrix.asset_pattern }}
+        run: |
+          set -euo pipefail
+          mapfile -t assets < <(find composeApp/output -maxdepth 1 -type f -name "$ASSET_PATTERN" -print)
+          if [ "${#assets[@]}" -ne 1 ]; then
+            echo "::error::Expected exactly one Conveyor output matching $ASSET_PATTERN; found ${#assets[@]}."
+            exit 1
+          fi
+          mkdir -p release-files
+          cp "${assets[0]}" release-files/
+          (cd release-files && sha256sum "$(basename "${assets[0]}")") > "release-files/$(basename "${assets[0]}").sha256"
+
+      - name: Upload Conveyor logs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: conveyor-logs-${{ matrix.platform }}
+          path: ${{ runner.temp }}/conveyor-logs/
 
       - name: Upload Linux build artifact
         uses: actions/upload-artifact@v7
         with:
-          name: tasks-org-linux-${{ github.sha }}
+          name: desktop-${{ matrix.platform }}
+          path: release-files/*
+          if-no-files-found: error
+
+  macos:
+    name: Build macOS package (${{ matrix.platform }})
+    needs: desktop_jar
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-amd64
+            machine: mac.amd64
+            asset_pattern: "*-mac-amd64.zip"
+          - platform: macos-aarch64
+            machine: mac.aarch64
+            asset_pattern: "*-mac-aarch64.zip"
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - uses: ./.github/actions/setup-project-jdk
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Download desktop jars
+        uses: actions/download-artifact@v8
+        with:
+          name: shared-desktop-jar
+
+      - name: Install Conveyor
+        shell: bash
+        run: |
+          set -euo pipefail
+          scripts/fetch "$RUNNER_TEMP/conveyor.tar.gz" "https://downloads.hydraulic.dev/conveyor/conveyor-22.0-linux-amd64.tar.gz" "768ea002e99149deb502a9177c11f2f00dcbffa976e505f7f424a5492287ee3c"
+          sudo tar xf "$RUNNER_TEMP/conveyor.tar.gz" -C /usr/local --strip-components=1
+
+      - name: Build ${{ matrix.platform }}
+        shell: bash
+        working-directory: composeApp
+        env:
+          CONVEYOR_AGREE_TO_LICENSE: "1"
+          SIGNING_KEY: ${{ secrets.CONVEYOR_SIGNING_KEY }}
+        run: conveyor --logs-dir="$RUNNER_TEMP/conveyor-logs" "-Kapp.machines=${{ matrix.machine }}" make unnotarized-mac-zip
+
+      - name: Prepare release files
+        shell: bash
+        env:
+          ASSET_PATTERN: ${{ matrix.asset_pattern }}
+        run: |
+          set -euo pipefail
+          mapfile -t assets < <(find composeApp/output -maxdepth 1 -type f -name "$ASSET_PATTERN" -print)
+          if [ "${#assets[@]}" -ne 1 ]; then
+            echo "::error::Expected exactly one Conveyor output matching $ASSET_PATTERN; found ${#assets[@]}."
+            exit 1
+          fi
+          mkdir -p release-files
+          cp "${assets[0]}" release-files/
+          (cd release-files && sha256sum "$(basename "${assets[0]}")") > "release-files/$(basename "${assets[0]}").sha256"
+
+      - name: Upload Conveyor logs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: conveyor-logs-${{ matrix.platform }}
+          path: ${{ runner.temp }}/conveyor-logs/
+
+      - name: Upload macOS build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: desktop-${{ matrix.platform }}
+          path: release-files/*
+          if-no-files-found: error
+
+  appimage:
+    name: Build Linux AppImages
+    needs: linux
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            .github/actions
+            scripts
+
+      - uses: ./.github/actions/appimage
+        with:
+          tarballs: desktop-linux-tar-gz-*
+          name: appimage-raw
+          update-url: ${{ github.server_url }}/${{ github.repository }}/releases/download/${{ github.ref_type == 'tag' && github.ref_name || inputs.release_tag || github.sha }}
+
+      - name: Download built AppImages
+        uses: actions/download-artifact@v8
+        with:
+          name: appimage-raw
+          path: release-files
+          merge-multiple: true
+
+      - name: Create AppImage checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          for asset in release-files/*; do
+            test -f "$asset" || { echo "::error::Missing AppImage output."; exit 1; }
+            sha256sum "$asset" > "$asset.sha256"
+          done
+
+      - name: Upload validated AppImages
+        uses: actions/upload-artifact@v7
+        with:
+          name: desktop-linux-appimage
           path: release-files/*
           if-no-files-found: error
 
@@ -148,18 +508,48 @@ jobs:
     name: Create desktop GitHub Release
     needs:
       - windows
+      - windows_bundle
       - linux
+      - macos
+      - appimage
     if: ${{ github.ref_type == 'tag' || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+
       - name: Download desktop build artifacts
         uses: actions/download-artifact@v8
         with:
-          pattern: tasks-org-*-${{ github.sha }}
+          pattern: tasks-org-windows-${{ github.sha }}
           path: release-files
           merge-multiple: true
+
+      - name: Download Windows bundle artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: desktop-windows-*
+          path: release-files
+          merge-multiple: true
+
+      - name: Download Linux build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: desktop-linux-*
+          path: release-files
+          merge-multiple: true
+
+      - name: Download macOS build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: desktop-macos-*
+          path: release-files
+          merge-multiple: true
+
+      - name: Verify desktop release artifacts
+        run: bash scripts/verify_desktop_release_artifacts.sh release-files
 
       - name: Create or update GitHub Release
         shell: bash
@@ -177,7 +567,7 @@ jobs:
             "$RELEASE_TAG" release-files/*
             --target "$GITHUB_SHA"
             --title "Tasks.org Desktop ${RELEASE_TAG#windows-v}"
-            --notes "Windows and Linux desktop builds based on the official Tasks.org release, with the desktop generic entitlement enabled."
+            --notes "Windows MSI, MSIX, and ZIP builds for x64 and ARM64; Linux DEB, tarball, and AppImage builds for x86_64 and ARM64; and macOS ZIP builds for Intel and Apple Silicon, based on the official Tasks.org release. Windows MSIX installs use App Installer updates. AppImage updates use zsync. macOS packages are not notarized."
           )
           if [ "$PRERELEASE" = "true" ]; then
             args+=(--prerelease)

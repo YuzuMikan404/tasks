@@ -1,1 +1,4 @@
 .gitignore merge=union
+*.patch text eol=lf
+*.sh text eol=lf
+scripts/fetch text eol=lf

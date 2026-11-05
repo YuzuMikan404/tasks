@@ -3,35 +3,86 @@ set -euo pipefail
 
 normalize_release() {
   : "${VERSION:?VERSION is required}"
-  release="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/windows-v$VERSION")"
-  msi_name="tasks-org-windows-x64-$VERSION.msi"
-  deb_name="tasks-org-linux-x64-$VERSION.deb"
-  msi_id="$(jq -r '.assets[] | select(.name | endswith(".msi")) | .id' <<< "$release" | head -n 1)"
-  msi_digest="$(jq -r '.assets[] | select(.name | endswith(".msi")) | .digest' <<< "$release" | head -n 1)"
-  deb_id="$(jq -r '.assets[] | select(.name | endswith(".deb")) | .id' <<< "$release" | head -n 1)"
-  deb_digest="$(jq -r '.assets[] | select(.name | endswith(".deb")) | .digest' <<< "$release" | head -n 1)"
+  tag="windows-v$VERSION"
+  release="$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$tag")"
+  required_suffixes=(
+    "tasks-org-windows-x64-$VERSION.msi"
+    "-windows-amd64.zip"
+    "-windows-aarch64.zip"
+    ".x64.msix"
+    ".arm64.msix"
+    "_amd64.deb"
+    "_arm64.deb"
+    "-linux-amd64.tar.gz"
+    "-linux-aarch64.tar.gz"
+    "-mac-amd64.zip"
+    "-mac-aarch64.zip"
+    "tasks-org-linux-x86_64.AppImage"
+    "tasks-org-linux-x86_64.AppImage.zsync"
+    "tasks-org-linux-aarch64.AppImage"
+    "tasks-org-linux-aarch64.AppImage.zsync"
+  )
 
-  test -n "$msi_id"
-  test -n "$msi_digest"
-  test "$msi_digest" != "null"
-  test -n "$deb_id"
-  test -n "$deb_digest"
-  test "$deb_digest" != "null"
-  gh api --method PATCH "repos/$GITHUB_REPOSITORY/releases/assets/$msi_id" -f "name=$msi_name" >/dev/null
-  gh api --method PATCH "repos/$GITHUB_REPOSITORY/releases/assets/$deb_id" -f "name=$deb_name" >/dev/null
+  checksum_dir="$(mktemp -d)"
+  checksums=()
+  for suffix in "${required_suffixes[@]}"; do
+    asset="$(
+      jq -er --arg suffix "$suffix" \
+        '[.assets[] | select(.name | endswith($suffix))] | if length == 1 then .[0].name else error("Expected one asset ending in " + $suffix) end' \
+        <<< "$release"
+    )"
+    digest="$(
+      jq -er --arg name "$asset" \
+        '.assets[] | select(.name == $name) | .digest | select(startswith("sha256:"))' \
+        <<< "$release"
+    )"
+    checksum="$checksum_dir/$asset.sha256"
+    printf '%s  %s\n' "${digest#sha256:}" "$asset" > "$checksum"
+    checksums+=("$checksum")
+  done
 
-  jq -r '.assets[] | select(.name | endswith(".sha256")) | .name' <<< "$release" |
-    while IFS= read -r old_checksum; do
-      gh release delete-asset "windows-v$VERSION" "$old_checksum" --repo "$GITHUB_REPOSITORY" --yes
-    done
+  mapfile -t appinstaller_assets < <(
+    jq -er '[.assets[] | select(.name | endswith(".appinstaller"))] | if length == 2 then .[].name else error("Expected two App Installer manifests") end' \
+      <<< "$release"
+  )
+  arm64_manifest_count=0
+  for asset in "${appinstaller_assets[@]}"; do
+    if [[ "$asset" == *-arm64.appinstaller ]]; then
+      arm64_manifest_count=$((arm64_manifest_count + 1))
+    fi
+    digest="$(
+      jq -er --arg name "$asset" \
+        '.assets[] | select(.name == $name) | .digest | select(startswith("sha256:"))' \
+        <<< "$release"
+    )"
+    checksum="$checksum_dir/$asset.sha256"
+    printf '%s  %s\n' "${digest#sha256:}" "$asset" > "$checksum"
+    checksums+=("$checksum")
+  done
+  if [ "$arm64_manifest_count" -ne 1 ]; then
+    echo "Expected exactly one ARM64 App Installer manifest."
+    exit 1
+  fi
+  arm64_manifest="${appinstaller_assets[0]}"
+  for asset in "${appinstaller_assets[@]}"; do
+    if [[ "$asset" == *-arm64.appinstaller ]]; then
+      arm64_manifest="$asset"
+    fi
+  done
+  x64_manifest="${arm64_manifest%-arm64.appinstaller}.appinstaller"
+  x64_manifest_found=false
+  for asset in "${appinstaller_assets[@]}"; do
+    if [ "$asset" = "$x64_manifest" ]; then
+      x64_manifest_found=true
+    fi
+  done
+  if [ "$x64_manifest_found" != true ]; then
+    echo "Expected matching x64 and ARM64 App Installer manifests."
+    exit 1
+  fi
 
-  printf '%s  %s\n' "${msi_digest#sha256:}" "$msi_name" > "tasks-org-windows-x64-$VERSION.sha256"
-  printf '%s  %s\n' "${deb_digest#sha256:}" "$deb_name" > "tasks-org-linux-x64-$VERSION.sha256"
-  gh release upload "windows-v$VERSION" \
-    "tasks-org-windows-x64-$VERSION.sha256" \
-    "tasks-org-linux-x64-$VERSION.sha256" \
-    --repo "$GITHUB_REPOSITORY" --clobber
-  gh release edit "windows-v$VERSION" --repo "$GITHUB_REPOSITORY" --title "Tasks.org Desktop $VERSION" --prerelease=false --latest
+  gh release upload "$tag" "${checksums[@]}" --repo "$GITHUB_REPOSITORY" --clobber
+  gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --title "Tasks.org Desktop $VERSION" --prerelease=false --latest
 }
 
 if [ "${1:-}" = "--normalize-only" ]; then
@@ -47,6 +98,9 @@ fi
 candidate="$(git rev-parse HEAD)"
 test "$candidate" = "$EXPECTED_CANDIDATE"
 git merge-base --is-ancestor "$EXPECTED_BASE" "$candidate"
+
+# Validate all package and checksum assets before making the candidate visible on main.
+bash scripts/verify_desktop_release_artifacts.sh release-files
 
 # Compare-and-swap prevents a validated candidate from overwriting newer main work.
 git fetch origin main
@@ -69,20 +123,15 @@ if [ "$candidate" != "$current_main" ]; then
 fi
 
 tag="windows-v$VERSION"
-msi="release-files/tasks-org-windows-x64-$VERSION.msi"
-checksum="release-files/tasks-org-windows-x64-$VERSION.sha256"
-deb="release-files/tasks-org-linux-x64-$VERSION.deb"
-deb_checksum="release-files/tasks-org-linux-x64-$VERSION.sha256"
-test -f "$msi"
-test -f "$checksum"
-test -f "$deb"
-test -f "$deb_checksum"
-
+release_files=(release-files/*)
 if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-  gh release upload "$tag" "$msi" "$checksum" "$deb" "$deb_checksum" --repo "$GITHUB_REPOSITORY" --clobber
+  gh release upload "$tag" "${release_files[@]}" --repo "$GITHUB_REPOSITORY" --clobber
   gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --title "Tasks.org Desktop $VERSION" --prerelease=false --latest
 else
-  gh release create "$tag" "$msi" "$checksum" "$deb" "$deb_checksum" --repo "$GITHUB_REPOSITORY" --target "$EXPECTED_CANDIDATE" --title "Tasks.org Desktop $VERSION" --notes "Windows and Linux desktop builds based on the official Tasks.org $VERSION release, with the desktop generic entitlement enabled."
+  gh release create "$tag" "${release_files[@]}" \
+    --repo "$GITHUB_REPOSITORY" --target "$EXPECTED_CANDIDATE" \
+    --title "Tasks.org Desktop $VERSION" \
+    --notes "Windows MSI, MSIX, and ZIP builds for x64 and ARM64; Linux DEB, tarball, and AppImage builds for x86_64 and ARM64; and macOS ZIP builds for Intel and Apple Silicon, based on the official Tasks.org $VERSION release. Windows MSIX installs use App Installer updates. AppImage updates use zsync. macOS packages are not notarized."
 fi
 
 git push origin --delete "$CANDIDATE_BRANCH" ||
@@ -93,7 +142,7 @@ set +e
 for title in "Upstream merge conflict needs manual resolution" "Upstream update needs manual attention"; do
   gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "in:title \"$title\"" --json number --jq '.[].number' |
     while IFS= read -r issue; do
-      gh issue close "$issue" --repo "$GITHUB_REPOSITORY" --comment "Resolved automatically while publishing Windows release $VERSION."
+      gh issue close "$issue" --repo "$GITHUB_REPOSITORY" --comment "Resolved automatically while publishing desktop release $VERSION."
     done
 done
 set -e

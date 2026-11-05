@@ -7,6 +7,7 @@ import argparse
 from pathlib import Path
 import subprocess
 import sys
+from tempfile import TemporaryDirectory
 
 
 MANAGED_PATHS = (
@@ -41,6 +42,7 @@ PATCH_MARKERS = {
 }
 
 PATCH_FILE = Path(__file__).with_name("windows-fork.patch")
+PATCH_MAIN_PATH = "composeApp/src/desktopMain/kotlin/main.kt"
 
 
 def patch_paths(text: str) -> set[str]:
@@ -112,11 +114,55 @@ def resolve_gitignore_conflict() -> None:
     run_git("add", "--", ".gitignore")
 
 
+def resolve_patch_main_conflict() -> None:
+    base_content = git_output("show", f":1:{PATCH_MAIN_PATH}")
+    upstream_content = git_output("show", f":2:{PATCH_MAIN_PATH}")
+    fork_content = git_output("show", f":3:{PATCH_MAIN_PATH}")
+    Path(PATCH_MAIN_PATH).write_text(upstream_content, encoding="utf-8", newline="\n")
+
+    with TemporaryDirectory() as directory:
+        base_file = Path(directory, "base.kt")
+        fork_file = Path(directory, "fork.kt")
+        base_file.write_text(base_content, encoding="utf-8", newline="\n")
+        fork_file.write_text(fork_content, encoding="utf-8", newline="\n")
+        subprocess.run(
+            (
+                "git",
+                "merge-file",
+                "--ours",
+                PATCH_MAIN_PATH,
+                str(base_file),
+                str(fork_file),
+            ),
+            check=True,
+        )
+
+    run_git("add", "--", PATCH_MAIN_PATH)
+
+
+def apply_windows_fork_patch() -> None:
+    result = subprocess.run(
+        ("git", "apply", "--3way", "--index", PATCH_FILE.as_posix()),
+        check=False,
+    )
+    if result.returncode == 0:
+        return
+
+    conflicts = git_output("diff", "--name-only", "--diff-filter=U").splitlines()
+    if conflicts != [PATCH_MAIN_PATH]:
+        raise subprocess.CalledProcessError(result.returncode, result.args)
+
+    resolve_patch_main_conflict()
+    remaining = git_output("diff", "--name-only", "--diff-filter=U").splitlines()
+    if remaining:
+        raise ValueError(f"Unresolved patch conflicts remain: {', '.join(remaining)}")
+
+
 def reapply(upstream_ref: str) -> None:
     validate_patch()
     resolve_gitignore_conflict()
     run_git("checkout", upstream_ref, "--", *MANAGED_PATHS)
-    run_git("apply", "--3way", "--index", PATCH_FILE.as_posix())
+    apply_windows_fork_patch()
 
 
 def main(argv: list[str] | None = None) -> int:

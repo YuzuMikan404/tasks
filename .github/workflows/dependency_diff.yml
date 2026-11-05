@@ -26,11 +26,7 @@ jobs:
         with:
             ref: ${{ github.head_ref }}
 
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: '21'
+      - uses: ./.github/actions/setup-project-jdk
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
