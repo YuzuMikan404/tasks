@@ -2,7 +2,6 @@
 set -euo pipefail
 
 release_dir="${1:-release-files}"
-shopt -s nullglob
 
 required_patterns=(
   "tasks-org-windows-x64-*.msi:1"
@@ -24,7 +23,7 @@ required_patterns=(
 for required in "${required_patterns[@]}"; do
   pattern="${required%:*}"
   expected_count="${required##*:}"
-  matches=("$release_dir"/$pattern)
+  mapfile -t matches < <(find "$release_dir" -type f -name "$pattern" -print)
   if [ "${#matches[@]}" -ne "$expected_count" ]; then
     echo "::error::Expected $expected_count release asset(s) matching $pattern; found ${#matches[@]}."
     exit 1
@@ -35,12 +34,12 @@ for required in "${required_patterns[@]}"; do
       echo "::error::Missing checksum for $(basename "$asset")."
       exit 1
     fi
-    (cd "$release_dir" && sha256sum --check "$(basename "$checksum")")
+    (cd "$(dirname "$checksum")" && sha256sum --check "$(basename "$checksum")")
   done
 done
 
-mac_amd64_assets=("$release_dir"/*-mac-amd64.zip)
-mac_aarch64_assets=("$release_dir"/*-mac-aarch64.zip)
+mapfile -t mac_amd64_assets < <(find "$release_dir" -type f -name "*-mac-amd64.zip" -print)
+mapfile -t mac_aarch64_assets < <(find "$release_dir" -type f -name "*-mac-aarch64.zip" -print)
 if [ "${#mac_amd64_assets[@]}" -ne "${#mac_aarch64_assets[@]}" ] ||
   [ "${#mac_amd64_assets[@]}" -gt 1 ]; then
   echo "::error::macOS release assets must include exactly one asset per architecture or be omitted."
@@ -52,10 +51,10 @@ for asset in "${mac_amd64_assets[@]}" "${mac_aarch64_assets[@]}"; do
     echo "::error::Missing checksum for $(basename "$asset")."
     exit 1
   fi
-  (cd "$release_dir" && sha256sum --check "$(basename "$checksum")")
+  (cd "$(dirname "$checksum")" && sha256sum --check "$(basename "$checksum")")
 done
 
-appinstaller_assets=("$release_dir"/*.appinstaller)
+mapfile -t appinstaller_assets < <(find "$release_dir" -type f -name "*.appinstaller" -print)
 arm64_appinstallers=()
 x64_appinstallers=()
 for asset in "${appinstaller_assets[@]}"; do

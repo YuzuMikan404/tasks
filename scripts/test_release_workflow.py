@@ -166,7 +166,14 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
             "*.appinstaller:2",
         ):
             self.assertIn(pattern, verifier)
-        self.assertIn('mac_amd64_assets=("$release_dir"/*-mac-amd64.zip)', verifier)
+        self.assertIn(
+            'find "$release_dir" -type f -name "*-mac-amd64.zip"',
+            verifier,
+        )
+        self.assertIn(
+            'find "$release_dir" -type f -name "$pattern"',
+            verifier,
+        )
 
     def test_manual_publish_downloads_and_verifies_all_artifacts(self):
         for pattern in (
@@ -216,6 +223,27 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
                 encoding="utf-8",
             )
             self.assertEqual(valid.returncode, 0, valid.stderr)
+
+            nested_dir = release_dir / "appimage"
+            nested_dir.mkdir()
+            for name in names[13:17]:
+                (release_dir / name).rename(nested_dir / name)
+                (release_dir / f"{name}.sha256").rename(
+                    nested_dir / f"{name}.sha256"
+                )
+            nested_appimages = subprocess.run(
+                (self.bash_executable(), str(verifier), str(release_dir)),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                encoding="utf-8",
+            )
+            self.assertEqual(nested_appimages.returncode, 0, nested_appimages.stderr)
+            for name in names[13:17]:
+                (nested_dir / name).rename(release_dir / name)
+                (nested_dir / f"{name}.sha256").rename(
+                    release_dir / f"{name}.sha256"
+                )
 
             for name in names[11:13]:
                 (release_dir / name).unlink()
