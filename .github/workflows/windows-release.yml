@@ -231,8 +231,13 @@ jobs:
         working-directory: composeApp
         env:
           CONVEYOR_AGREE_TO_LICENSE: "1"
+          SIGNING_KEY: ${{ secrets.CONVEYOR_SIGNING_KEY }}
           APP_BASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/latest/download
         run: |
+          if [ -z "${SIGNING_KEY:-}" ]; then
+            echo "::error::Set the CONVEYOR_SIGNING_KEY Actions secret to a persistent Conveyor root key."
+            exit 1
+          fi
           conveyor --logs-dir="$RUNNER_TEMP/conveyor-logs" \
             "-Kapp.machines=${{ matrix.machine }}" \
             "-Kapp.site.base-url=$APP_BASE_URL" \
@@ -353,7 +358,12 @@ jobs:
         working-directory: composeApp
         env:
           CONVEYOR_AGREE_TO_LICENSE: "1"
+          SIGNING_KEY: ${{ secrets.CONVEYOR_SIGNING_KEY }}
         run: |
+          if [ -z "${SIGNING_KEY:-}" ]; then
+            echo "::error::Set the CONVEYOR_SIGNING_KEY Actions secret to a persistent Conveyor root key."
+            exit 1
+          fi
           conveyor --logs-dir="$RUNNER_TEMP/conveyor-logs" "-Kapp.machines=${{ matrix.machine }}" make "${{ matrix.target }}"
 
       - name: Prepare release files
@@ -427,7 +437,13 @@ jobs:
         working-directory: composeApp
         env:
           CONVEYOR_AGREE_TO_LICENSE: "1"
-        run: conveyor --logs-dir="$RUNNER_TEMP/conveyor-logs" "-Kapp.machines=${{ matrix.machine }}" make unnotarized-mac-zip
+          SIGNING_KEY: ${{ secrets.CONVEYOR_SIGNING_KEY }}
+        run: |
+          if [ -z "${SIGNING_KEY:-}" ]; then
+            echo "::error::Set the CONVEYOR_SIGNING_KEY Actions secret to a persistent Conveyor root key."
+            exit 1
+          fi
+          conveyor --logs-dir="$RUNNER_TEMP/conveyor-logs" "-Kapp.machines=${{ matrix.machine }}" make unnotarized-mac-zip
 
       - name: Prepare release files
         shell: bash
