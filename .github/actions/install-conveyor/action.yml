@@ -1,5 +1,5 @@
 name: Install Conveyor
-description: Set up JDK, Gradle and Conveyor
+description: Install and cache Conveyor and its linker JDK
 
 inputs:
   version:
@@ -12,8 +12,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: ./.github/actions/setup-gradle
-
     - name: Cache Conveyor distribution
       uses: actions/cache@v6
       with:

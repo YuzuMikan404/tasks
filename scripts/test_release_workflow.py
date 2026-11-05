@@ -129,6 +129,39 @@ class ReleaseWorkflowSafetyTest(unittest.TestCase):
         )
         self.assertIn("signing-key = ${?SIGNING_KEY}", conveyor_config)
 
+    def test_conveyor_installation_is_shared_and_cached_in_release_workflows(self):
+        install_action = (
+            REPO / ".github/actions/install-conveyor/action.yml"
+        ).read_text(encoding="utf-8")
+        save_action = (
+            REPO / ".github/actions/save-conveyor-linker-jdk/action.yml"
+        ).read_text(encoding="utf-8")
+        self.assertIn("uses: actions/cache@v6", install_action)
+        self.assertIn("key: conveyor-dist-${{ inputs.version }}-${{ inputs.sha256 }}", install_action)
+        self.assertIn("uses: actions/cache/restore@v6", install_action)
+        self.assertIn("uses: actions/cache/save@v6", save_action)
+        self.assertNotIn(".github/actions/setup-gradle", install_action)
+
+        for workflow, expected_builds in (
+            (self.workflow, 2),
+            (self.manual_workflow, 3),
+        ):
+            with self.subTest(expected_builds=expected_builds):
+                self.assertEqual(
+                    workflow.count("uses: ./.github/actions/install-conveyor"),
+                    expected_builds,
+                )
+                self.assertEqual(
+                    workflow.count(
+                        "uses: ./.github/actions/save-conveyor-linker-jdk"
+                    ),
+                    expected_builds,
+                )
+                self.assertNotIn("downloads.hydraulic.dev/conveyor/", workflow)
+
+        self.assertIn(".github/actions/install-conveyor/**", self.workflow)
+        self.assertIn(".github/actions/save-conveyor-linker-jdk/**", self.workflow)
+
     def test_appimage_checksums_use_release_relative_asset_names(self):
         checksum_command = (
             '(cd release-files && sha256sum "$(basename "$asset")") '

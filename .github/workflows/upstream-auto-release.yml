@@ -11,6 +11,8 @@ on:
       - ".github/workflows/upstream-auto-release.yml"
       - ".github/workflows/windows-release.yml"
       - ".github/actions/appimage/**"
+      - ".github/actions/install-conveyor/**"
+      - ".github/actions/save-conveyor-linker-jdk/**"
       - ".github/actions/setup-project-jdk/**"
       - "composeApp/conveyor.conf"
       - "gradle/libs.versions.toml"
@@ -313,12 +315,7 @@ jobs:
         with:
           name: shared-desktop-jar
 
-      - name: Install Conveyor
-        shell: bash
-        run: |
-          set -euo pipefail
-          scripts/fetch "$RUNNER_TEMP/conveyor.tar.gz" "https://downloads.hydraulic.dev/conveyor/conveyor-22.0-linux-amd64.tar.gz" "768ea002e99149deb502a9177c11f2f00dcbffa976e505f7f424a5492287ee3c"
-          sudo tar xf "$RUNNER_TEMP/conveyor.tar.gz" -C /usr/local --strip-components=1
+      - uses: ./.github/actions/install-conveyor
 
       - name: Build ${{ matrix.platform }}
         shell: bash
@@ -336,6 +333,8 @@ jobs:
             "-Kapp.machines=${{ matrix.machine }}" \
             "-Kapp.site.base-url=$APP_BASE_URL" \
             make "${{ matrix.target }}"
+
+      - uses: ./.github/actions/save-conveyor-linker-jdk
 
       - name: Verify App Installer update URL
         if: ${{ matrix.target == 'site' }}
@@ -447,12 +446,7 @@ jobs:
         with:
           name: shared-desktop-jar
 
-      - name: Install Conveyor
-        shell: bash
-        run: |
-          set -euo pipefail
-          scripts/fetch "$RUNNER_TEMP/conveyor.tar.gz" "https://downloads.hydraulic.dev/conveyor/conveyor-22.0-linux-amd64.tar.gz" "768ea002e99149deb502a9177c11f2f00dcbffa976e505f7f424a5492287ee3c"
-          sudo tar xf "$RUNNER_TEMP/conveyor.tar.gz" -C /usr/local --strip-components=1
+      - uses: ./.github/actions/install-conveyor
 
       - name: Build ${{ matrix.platform }}
         shell: bash
@@ -466,6 +460,8 @@ jobs:
             exit 1
           fi
           conveyor --logs-dir="$RUNNER_TEMP/conveyor-logs" "-Kapp.machines=${{ matrix.machine }}" make "${{ matrix.target }}"
+
+      - uses: ./.github/actions/save-conveyor-linker-jdk
 
       - name: Prepare release files
         shell: bash
